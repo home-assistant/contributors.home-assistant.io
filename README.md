@@ -113,15 +113,3 @@ Colors, spacing, and typography come from the Home Assistant frontend. `src/styl
 ### Skills and review instructions
 
 Rules live in [`.github/copilot-instructions.md`](.github/copilot-instructions.md). Workflows that apply them live in [`.github/skills/`](.github/skills/), also linked as `.claude/skills`, so Copilot and Claude Code read the same files. [`.github/instructions/`](.github/instructions/) has the short checklists for Copilot code review. Skills link to the rules instead of repeating them: when you rename a section of the rules, update the skills and checklists that name it.
-
-## Repository setup
-
-Things a maintainer sets up once, by hand:
-
-- **Labels**: create every label in [`.github/labels.yml`](.github/labels.yml). Nothing creates them, and a new area needs its own `area: <id>` label.
-- **Actions**: under **Settings** > **Actions** > **General**, turn on **Allow GitHub Actions to create and approve pull requests**. The demos and symbols workflows need it.
-- **Netlify**: build from `main` with [`netlify.toml`](netlify.toml). Add developers.home-assistant.io, design.home-assistant.io, and data.home-assistant.io as domain aliases, so their redirects work.
-- **Daily build**: in Netlify, under **Build hooks**, add a hook for `main`. In GitHub, under **Settings** > **Secrets and variables** > **Actions**, add its URL as the secret `NETLIFY_BUILD_HOOK`. Without it, the workflow only warns.
-- **Plausible**: add the goals `Page helpful` and `Page not helpful`, or the votes don't show on the dashboard.
-- **Task issues**: [`task.yml`](.github/ISSUE_TEMPLATE/task.yml) needs the Task issue type of the organization.
-- **CodeQL**: once the repository is public, turn on the default setup under **Settings** > **Code security**.

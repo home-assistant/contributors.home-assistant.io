@@ -7,8 +7,9 @@ name: Daily build
 #
 # It calls a Netlify build hook: a URL that starts a build when it gets a
 # POST. The URL is in the repository secret NETLIFY_BUILD_HOOK. Anyone with
-# the URL can start builds, so it stays a secret. How to set it up is in
-# "Repository setup" in README.md.
+# the URL can start builds, so it stays a secret. To set it up, add a build
+# hook for `main` in Netlify, under Build hooks, and store its URL as that
+# secret under Settings > Secrets and variables > Actions.
 
 on:
   schedule:
@@ -29,7 +30,7 @@ jobs:
           NETLIFY_BUILD_HOOK: ${{ secrets.NETLIFY_BUILD_HOOK }} # zizmor: ignore[secrets-outside-env] The hook only starts a build, an environment adds nothing.
         run: |
           if [ -z "$NETLIFY_BUILD_HOOK" ]; then
-            echo "::warning::The NETLIFY_BUILD_HOOK secret is not set, so no build was started. See \"Repository setup\" in README.md."
+            echo "::warning::The NETLIFY_BUILD_HOOK secret is not set, so no build was started. Add a Netlify build hook for main as that secret."
             exit 0
           fi
 
