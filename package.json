@@ -2,7 +2,7 @@
   "name": "contributors.home-assistant.io",
   "private": true,
   "type": "module",
-  "packageManager": "pnpm@12.11.1",
+  "packageManager": "pnpm@12.11.2",
   "engines": {
     "node": ">=22.12.0"
   },
