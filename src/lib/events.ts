@@ -67,6 +67,7 @@ interface Feed {
   shape?: (events: CalendarEvent[]) => CalendarEvent[];
 }
 
+// A new Community Day calendar is one more entry here.
 const FEEDS: Feed[] = [
   { id: "developers", url: CALENDAR.ics },
   {

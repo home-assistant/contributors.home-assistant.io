@@ -9,7 +9,7 @@ The Design pages show real frontend components, bundled from the [frontend](http
 
 Never edit files in `public/components/` or `public/static/` by hand. They are generated.
 
-A workflow, `.github/workflows/update-demos.yml`, rebuilds the demos from the frontend `dev` branch every Monday, and opens or updates a pull request labeled `demos`. "The weekly rebuild" in `README.md` has the details. When that pull request is open, review it with step 4 below instead of building again. Run this skill by hand to build another commit, to add a component, or when the workflow fails.
+A workflow, `.github/workflows/update-demos.yml`, rebuilds the demos from the frontend `dev` branch every Monday, and opens or updates a pull request labeled `demos`. The header of that workflow has the details, and the repository settings it needs. When that pull request is open, review it with step 4 below instead of building again. Run this skill by hand to build another commit, to add a component, or when the workflow fails.
 
 ## 1. Get the frontend
 

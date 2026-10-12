@@ -31,6 +31,8 @@
 //
 // - Documented, but not in the source: probably renamed or removed. This
 //   is the list to act on.
+// - Linked or documented, but gone from the source: a source file the page
+//   links, or an element it documents, no longer exists. Act on this too.
 // - Not found, but the component inherits from a package: check by hand.
 // - In the source, but not documented: maybe on purpose, maybe forgotten.
 //
@@ -39,14 +41,14 @@
 //   pnpm check:component-docs --ref some-branch      # another branch, tag, or commit
 //   pnpm check:component-docs --from /path/frontend  # another checkout
 //   pnpm check:component-docs --json report.json    # also write the report as JSON
-//   pnpm check:component-docs --strict               # fail on documented but missing
+//   pnpm check:component-docs --strict               # fail on missing or gone
 //
 // It only reads the frontend with Git. It needs no installed dependencies,
 // and the state of the working copy does not matter. Run `git fetch` in the
 // frontend checkout first, to check against the latest.
 //
 // The report goes to stdout, as Markdown. The exit code is 0, unless
-// --strict is set and something documented is missing from the source.
+// --strict is set and something documented is missing or gone.
 
 import { execFileSync } from "node:child_process";
 import { readdir, readFile, writeFile } from "node:fs/promises";

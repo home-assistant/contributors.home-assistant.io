@@ -28,6 +28,15 @@
 // - intents, like `HassTurnOn`: a name, not a class
 // - a method of a variable, like `response.as_dict()`: only `hass.`,
 //   `this.`, `self.`, a module, a class, or an alias qualifies a symbol
+//
+// A mention that links to nothing is one of these:
+//
+// - A symbol the index does not read yet: widen what the generator reads,
+//   if it is public API of that repository.
+// - An ambiguous name, like `setConfig()`, which every card, badge, and row
+//   has: qualify it on the page, like `LovelaceCard.setConfig`, or leave it.
+// - A typo or an outdated name: fix the page.
+// - Code of another project, like `ClientSession` of aiohttp: it stays plain.
 
 import { createResolver, INDEXES } from "../../src/lib/code-symbols.mjs";
 

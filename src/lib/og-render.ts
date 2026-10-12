@@ -5,7 +5,11 @@
 // and turns it into an SVG with the text as shapes. resvg makes that a PNG.
 // Rendering is the slow part, so every PNG is cached in node_modules/.cache/og/
 // by a hash of everything that goes into it: change the text, a color, or
-// a font, and only the cards that changed render again.
+// a font, and only the cards that changed render again. `pnpm clean` leaves
+// that folder alone: delete it to render every card again.
+//
+// To work on the design, run `pnpm dev` and open a card in the browser, like
+// http://localhost:4321/og/design/components/badge.png. Try a long title too.
 
 import { Resvg } from "@resvg/resvg-js";
 import { createHash } from "node:crypto";

@@ -34,7 +34,7 @@ git -C ../frontend fetch origin dev
 pnpm check:component-docs
 ```
 
-It compares the "In code" section of every component page with the frontend source on `origin/dev`, and lists per page what is documented but no longer in the source, what may come from a Web Awesome or Material base class (check those by hand), and what is in the source but not documented. Before you start, it shows what is already wrong on the page. When you are done, the page must have nothing under "Documented, but not in the source". How it works is in "The written reference drifts" in `README.md`.
+It compares the "In code" section of every component page with the frontend source on `origin/dev`, and lists per page what is documented but no longer in the source, what may come from a Web Awesome or Material base class (check those by hand), and what is in the source but not documented. Before you start, it shows what is already wrong on the page. When you are done, the page must have nothing under "Documented, but not in the source". How it works is in the header of `scripts/check-component-docs.mjs`.
 
 ## 2. Follow the template
 

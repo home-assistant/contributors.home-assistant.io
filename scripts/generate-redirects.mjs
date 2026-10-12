@@ -12,7 +12,13 @@
 // A map is a tab-separated file with two columns: the old path and the new
 // one. One file per area keeps them reviewable. When two files map the same
 // old path, overrides.tsv wins, then the first file in alphabetical order.
-// Lines starting with # are comments.
+// Lines starting with # are comments. Old paths of developers.home-assistant.io
+// start with /docs/, old paths of the data site with
+// data.home-assistant.io/.
+//
+// The old design site used hash routes, which a server never sees. Those
+// are mapped in the browser, by src/components/docs/DesignHashRedirect.astro
+// with src/data/design-redirects.json.
 //
 // Usage:
 //   pnpm redirects

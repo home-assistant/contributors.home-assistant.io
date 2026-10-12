@@ -15,7 +15,8 @@
 //   Generated with scripts/symbols/frontend.mjs.
 //
 // The rules for what links live here, so the generators and this plugin
-// always agree on them.
+// always agree on them. A rule that needs a new exception goes here too,
+// with the evidence in a comment.
 //
 // A wrong card is worse than no card. So a mention only links when it can
 // mean one thing:

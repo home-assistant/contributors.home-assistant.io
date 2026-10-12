@@ -5,20 +5,24 @@
 //
 // It reads core from a commit of a core checkout, with Git:
 //
-// - homeassistant/core.py, config_entries.py, data_entry_flow.py, and
-//   exceptions.py
+// - homeassistant/core.py, core_config.py, config_entries.py,
+//   data_entry_flow.py, exceptions.py, and setup.py
 // - the classes in homeassistant/const.py, like the `UnitOf...` enums, and
 //   `Platform`
 // - everything in homeassistant/helpers/ and homeassistant/util/
-// - the entity base classes: homeassistant/components/<domain>/__init__.py
-//   and the classes in its const.py, for every entity platform, like
-//   `SensorEntity` and `SensorDeviceClass`
+// - the entity base classes: homeassistant/components/<domain>/__init__.py,
+//   entity.py, and the classes in its const.py, for every entity platform,
+//   like `SensorEntity` and `SensorDeviceClass`
 // - tests/common.py, like `MockConfigEntry`
+// - the rest of every entity platform, of homeassistant/auth/, and of the
+//   components at least SHARED_API_IMPORTERS other integrations import
+//   from, like bluetooth: their methods only link qualified
 // - every module of homeassistant/, like `homeassistant.components.fan`,
 //   for its docstring, when a page names it
 //
 // scripts/symbols/extract.py parses them with the parser of Python itself,
-// so it needs the Python version core needs. For every public class,
+// so it needs the Python version core needs: the one in .python-version of
+// core. The weekly workflow reads it from there too. For every public class,
 // function, and method it records the kind, the module, the signature, the
 // first sentence of the docstring, and the line.
 //
