@@ -31,10 +31,11 @@ When a user ignores a discovered device, Home Assistant creates an ignored confi
 | USB | `usb` | `async_step_usb` | `UsbServiceInfo` |
 | MQTT | `mqtt` | `async_step_mqtt` | `MqttServiceInfo` |
 | Bluetooth | `bluetooth` | `async_step_bluetooth` | `BluetoothServiceInfoBleak` |
+| LoRaWAN | `lorawan` | `async_step_integration_discovery` | `LoRaWANDiscoveryInfo` |
 | A Supervisor app | None | `async_step_hassio` | `HassioServiceInfo` |
 | Another integration | None | `async_step_integration_discovery` | Defined by that integration |
 
-The service info classes live in `homeassistant.helpers.service_info`, except the Bluetooth one, which comes from `homeassistant.components.bluetooth`. For example:
+The service info classes live in `homeassistant.helpers.service_info`, except two: the Bluetooth one comes from `homeassistant.components.bluetooth`, and the LoRaWAN one from `homeassistant.components.lorawan`. For example:
 
 ```python
 from homeassistant.helpers.service_info.zeroconf import ZeroconfServiceInfo

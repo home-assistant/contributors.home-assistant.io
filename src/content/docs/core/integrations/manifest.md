@@ -241,6 +241,20 @@ Model names of HomeKit devices. A device matches when its full model name, or th
 }
 ```
 
+### lorawan
+
+A list of LoRaWAN matchers. Each matcher is a pair of a stack, like `"chirpstack"` or `"tts"`, and the brand ID the network server uses for your vendor, as a string or an integer. Your integration needs `config_flow` set to `true`, and `lorawan` in its `dependencies`.
+
+```json
+{
+  "config_flow": true,
+  "dependencies": ["lorawan"],
+  "lorawan": [["chirpstack", 744], ["tts", "sensecap"]]
+}
+```
+
+A device that matches one of the pairs starts the `integration_discovery` step of your config flow. The matcher only selects your integration: your library decides which models it supports. See [LoRaWAN devices](/core/internals/lorawan/).
+
 ### mqtt
 
 A list of MQTT topics to subscribe to for discovery. Add `mqtt` to `dependencies` (or `after_dependencies`) as well.

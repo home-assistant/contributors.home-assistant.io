@@ -23,6 +23,7 @@
 /docs/api_lib_auth	/core/integrations/api-library/
 /docs/api_lib_data_models	/core/integrations/api-library/
 /docs/modbus/introduction	/core/internals/modbus/
+/docs/lorawan	/core/internals/lorawan/
 /docs/intent_index	/core/internals/intents/
 /docs/intent_handling	/core/internals/intents/
 /docs/intent_firing	/core/internals/intents/

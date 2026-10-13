@@ -47,6 +47,7 @@ If you are new to core, read these three first. They explain things you run into
 - [WebSocket API](/core/internals/websocket-api/): the API the frontend uses, and how to add your own commands.
 - [Instance discovery](/core/internals/instance-discovery/): how apps find Home Assistant on the network.
 - [Modbus devices](/core/internals/modbus/): libraries for Modbus devices, and sharing one connection.
+- [LoRaWAN devices](/core/internals/lorawan/): registering a network server, and exposing the devices on it.
 
 ## Voice and AI
 
