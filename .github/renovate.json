@@ -3,7 +3,7 @@
   "extends": ["config:recommended", "helpers:pinGitHubActionDigests"],
 
   "baseBranchPatterns": ["main"],
-  "enabledManagers": ["github-actions", "nodenv", "npm"],
+  "enabledManagers": ["devcontainer", "dockerfile", "github-actions", "nodenv", "npm"],
 
   "minimumReleaseAge": "3 days",
 
