@@ -111,6 +111,31 @@ While it runs, the pipeline sends `event` messages over the connection, with the
 | `run-end` | Always | Nothing. |
 | `error` | On error | A `code` and a `message`. |
 
+### Event order
+
+A full run, from the wake word to the spoken answer, sends the events in this order:
+
+```mermaid
+flowchart TD
+    A[run-start] --> B[wake_word-start] --> C[wake_word-end]
+    C --> D[stt-start] --> E[stt-vad-start] --> F[stt-vad-end]
+    F --> G[stt-end] --> H[intent-start]
+    H --> I[intent-progress]
+    I --> I
+    I --> J[intent-end]
+    H --> J
+    J --> K[tts-start] --> L[tts-end] --> M[run-end]
+```
+
+Not every run sends all of them:
+
+- A run only sends the events of the stages between its `start_stage` and `end_stage`. A run that starts at `intent` with text goes from `run-start` straight to `intent-start`.
+- `stt-vad-start` and `stt-vad-end` only come when Home Assistant detects the end of the voice command itself, for a speech-to-text provider that needs it.
+- `intent-progress` only comes from agents that stream their response, and can come many times.
+- When the response has no text to speak, the run skips text to speech and goes from `intent-end` to `run-end`, unless it plays the acknowledgement sound instead.
+- When no wake word is heard before the audio ends, `wake_word-end` comes without a wake word, followed by `run-end`.
+- When a stage fails, the run sends `error`, then `run-end`. No other events follow.
+
 ### Error codes
 
 - `wake-engine-missing`: no wake word engine is installed.
