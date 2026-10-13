@@ -26,7 +26,7 @@ This part of the site walks through all of it, task by task. It is written for p
 - [Build a Python library](/core/integrations/api-library/): the library every integration uses to talk to its device or service.
 - [Create an integration](/core/integrations/create/): what is accepted in core, the scaffold script, and the smallest possible integration.
 - [File structure](/core/integrations/file-structure/): which file does what, and where Home Assistant looks for integrations.
-- [Test your integration](/core/integrations/tests/): how to test an integration, with fixtures, mocks, and snapshots.
+- [Writing tests](/core/development/tests/), in the development workflow: how to test an integration, with fixtures, mocks, and snapshots.
 
 ## Setup and configuration
 

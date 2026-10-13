@@ -58,4 +58,4 @@ A custom integration can ship its own icon and logo in a `brand/` folder inside 
 
 ## Tests
 
-Tests live outside the integration folder, in `tests/components/<domain>/`. See [test your integration](/core/integrations/tests/).
+Tests live outside the integration folder, in `tests/components/<domain>/`. See [writing tests](/core/development/tests/).

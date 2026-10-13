@@ -369,7 +369,7 @@
 /core/integrations/repairs/	severity-of-an-issue	create-an-issue
 /core/integrations/reproduce-state/	adding-support	add-support
 /core/integrations/system-health/	implementing-the-system-health-platform	add-system-health
-/core/integrations/tests/	sharing-test-fixtures-with-other-integrations	sharing-fixtures-with-other-integrations
+/core/development/tests/	sharing-test-fixtures-with-other-integrations	sharing-fixtures-with-other-integrations
 /core/integrations/translations/	conditions	triggers-and-conditions
 /core/integrations/translations/	entity-attribute-name-and-state-of-entity-components	entity-components
 /core/integrations/translations/	name-of-devices	devices

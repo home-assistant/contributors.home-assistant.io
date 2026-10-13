@@ -5,7 +5,7 @@
 /docs/creating_integration_manifest	/core/integrations/manifest/
 /docs/creating_integration_brand	/core/integrations/brands/
 /docs/core/integration/brand_images	/core/integrations/brands/
-/docs/creating_integration_tests_file_structure	/core/integrations/tests/
+/docs/creating_integration_tests_file_structure	/core/development/tests/
 /docs/config_entries_index	/core/integrations/config-entries/
 /docs/core/integration/config_flow	/core/integrations/config-flow/
 /docs/data_entry_flow_index	/core/integrations/flow-steps/

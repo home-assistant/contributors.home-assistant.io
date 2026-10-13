@@ -10,7 +10,7 @@ Go through this list before you commit. The pull request template asks you to co
 ## Code
 
 - [ ] The code is formatted with Ruff (`ruff format`), and the [Git hooks](/core/development/checks/) pass.
-- [ ] The tests pass, and new code has [tests](/core/integrations/tests/).
+- [ ] The tests pass, and new code has [tests](/core/development/tests/).
 - [ ] There is no commented out code.
 - [ ] You understand every line, and you can explain it. This also applies to code an AI tool wrote for you.
 - [ ] If a module is fully typed, it is listed in `.strict-typing`.

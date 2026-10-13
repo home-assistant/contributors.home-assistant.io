@@ -57,5 +57,5 @@ Snapshot testing in Home Assistant is build on top of [Syrupy](https://github.co
 which has been extended to handle Home Assistant-specific data structures.
 
 More information on testing integrations,
-can be found [in our documentation](/core/integrations/tests/#snapshot-tests).
+can be found [in our documentation](/core/development/tests/#snapshot-tests).
 

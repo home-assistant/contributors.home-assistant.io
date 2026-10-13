@@ -96,7 +96,7 @@ Keep the change small and focused on one thing. Then run the tests for the integ
 pytest tests/components/YOUR_INTEGRATION
 ```
 
-If you fixed a bug, add a test that fails without your fix and passes with it. See [test your integration](/core/integrations/tests/) for how tests in core are written, and [running the tests](/core/development/testing/) for more ways to run them.
+If you fixed a bug, add a test that fails without your fix and passes with it. See [writing tests](/core/development/tests/) for how tests in core are written, and [running the tests](/core/development/testing/) for more ways to run them.
 
 ## 5. Commit and push
 

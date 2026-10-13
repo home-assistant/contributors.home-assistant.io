@@ -16,7 +16,7 @@ The config flow is the first thing a user sees of your integration. If it breaks
 
 Testing recovery matters as much as testing the error. A flow that shows "cannot connect" but then stays stuck, even after the user fixed the problem, is a broken flow. And asserting the unique ID makes sure that a change in how it is derived does not go unnoticed: that would break duplicate detection for every existing user.
 
-Writing these tests is also a good way into testing in core. Once the config flow is covered, testing the rest of the integration is a smaller step. See [test your integration](/core/integrations/tests/).
+Writing these tests is also a good way into testing in core. Once the config flow is covered, testing the rest of the integration is a smaller step. See [writing tests](/core/development/tests/).
 
 ## Example
 

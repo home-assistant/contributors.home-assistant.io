@@ -6,7 +6,7 @@ sidebarGroup: Write code
 order: 4
 ---
 
-Every change to core is tested. Core uses [pytest](https://docs.pytest.org/), and this page is about running the tests: which commands, which options, and what CI does with them. How to write good tests for an integration, with fixtures, mocks, and snapshots, is on [test your integration](/core/integrations/tests/).
+Every change to core is tested. Core uses [pytest](https://docs.pytest.org/), and this page is about running the tests: which commands, which options, and what CI does with them. How to write good tests for an integration, with fixtures, mocks, and snapshots, is on [writing tests](/core/development/tests/).
 
 ## Run the tests
 
@@ -76,7 +76,7 @@ Snapshot tests compare the result of your code with a stored `.ambr` file. Creat
 pytest tests/components/example --snapshot-update
 ```
 
-Commit the snapshot files with your change, and read their diff. See [snapshot tests](/core/integrations/tests/#snapshot-tests).
+Commit the snapshot files with your change, and read their diff. See [snapshot tests](/core/development/tests/#snapshot-tests).
 
 ## New dependencies
 

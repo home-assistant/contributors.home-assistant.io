@@ -59,4 +59,4 @@ Users post diagnostics in public issues. Make sure nothing sensitive ends up in 
 
 ## Test diagnostics
 
-Test the output with a snapshot, so changes to it show up in review. The test helpers `get_diagnostics_for_config_entry` and `get_diagnostics_for_device` in `tests/components/diagnostics` return what users would download. See [snapshot tests](/core/integrations/tests/#snapshot-tests).
+Test the output with a snapshot, so changes to it show up in review. The test helpers `get_diagnostics_for_config_entry` and `get_diagnostics_for_device` in `tests/components/diagnostics` return what users would download. See [snapshot tests](/core/development/tests/#snapshot-tests).

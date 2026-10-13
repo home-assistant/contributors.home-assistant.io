@@ -1,9 +1,8 @@
 ---
-title: Test your integration
+title: Writing tests
 description: How the tests of an integration are organized, how to test through Home Assistant instead of around it, and how to use fixtures, mocks, and snapshots.
-sidebarLabel: Tests
-sidebarGroup: Getting started
-order: 6
+sidebarGroup: Write code
+order: 4.5
 ---
 
 Every integration in core comes with tests, and every change to it comes with tests too. Tests prove that your change works, and more importantly, that it keeps working when someone else changes something next year. This page is about writing those tests. The commands to run them, check coverage, and update snapshots are on [running the tests](/core/development/testing/).

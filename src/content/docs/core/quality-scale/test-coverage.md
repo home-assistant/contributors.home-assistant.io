@@ -24,7 +24,7 @@ pytest tests/components/my_integration \
   --cov-report term-missing
 ```
 
-The report lists every module with its coverage, and the line numbers that no test runs. Write tests through the way Home Assistant uses the integration: set up a config entry, then check states and call actions, instead of calling functions of the integration directly. See [test your integration](/core/integrations/tests/) for how to write those tests.
+The report lists every module with its coverage, and the line numbers that no test runs. Write tests through the way Home Assistant uses the integration: set up a config entry, then check states and call actions, instead of calling functions of the integration directly. See [writing tests](/core/development/tests/) for how to write those tests.
 
 ## How it is checked
 

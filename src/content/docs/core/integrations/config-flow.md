@@ -339,4 +339,4 @@ class ExampleConfigFlowHandler(SchemaConfigFlowHandler, domain=DOMAIN):
 
 ## Test your config flow
 
-Integrations in core need full test coverage of `config_flow.py`. Test every path: success, every error, every abort, and that a second setup of the same device aborts. See [test your integration](/core/integrations/tests/).
+Integrations in core need full test coverage of `config_flow.py`. Test every path: success, every error, every abort, and that a second setup of the same device aborts. See [writing tests](/core/development/tests/).

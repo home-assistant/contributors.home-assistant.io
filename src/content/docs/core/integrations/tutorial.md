@@ -575,7 +575,7 @@ Integration not in the list? Check the log for errors first, then do a hard refr
 
 ## 9. Write the tests
 
-Every new integration in core comes with tests, and the config flow needs full coverage. Tests run without the real device: you mock the library, and let Home Assistant run for real. [Test your integration](/core/integrations/tests/) explains the ideas behind this.
+Every new integration in core comes with tests, and the config flow needs full coverage. Tests run without the real device: you mock the library, and let Home Assistant run for real. [Writing tests](/core/development/tests/) explains the ideas behind this.
 
 Start with the shared fixtures, in `tests/components/example_air/conftest.py`:
 

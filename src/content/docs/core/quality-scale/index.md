@@ -64,7 +64,7 @@ Technical excellence: async dependencies, a shared web session, and strict typin
 ## Related pages
 
 - [Building integrations](/core/integrations/): how integrations work, and the files they are made of.
-- [Test your integration](/core/integrations/tests/): the tests that several rules ask for.
+- [Writing tests](/core/development/tests/): the tests that several rules ask for.
 - [Write integration documentation](/writing/guides/integration/): the documentation rules are about the integration page on [home-assistant.io](https://www.home-assistant.io/).
 - [Make your strings translatable](/translate/guides/developers/): for the translation rules.
 

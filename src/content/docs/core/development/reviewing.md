@@ -76,7 +76,7 @@ These rarely get many comments, but they carry the biggest security risk.
 
 ## 3. Tests
 
-- Tests live in `tests/components/<domain>/`, use type hints, and go through the public interfaces of Home Assistant. See [test your integration](/core/integrations/tests/).
+- Tests live in `tests/components/<domain>/`, use type hints, and go through the public interfaces of Home Assistant. See [writing tests](/core/development/tests/).
 - They mock the library, not Home Assistant, with shared fixtures in `conftest.py`.
 - Platforms use `snapshot_platform`. Time uses the `freezer` fixture. Nothing patches `sys.modules`.
 - Config flow tests cover every step and every error, and continue after an error until the entry is created. Read them early: they often reveal problems in the rest of the code.

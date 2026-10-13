@@ -17,7 +17,8 @@ This section covers that path. It applies to everything in core, from a one line
 - [Development environment](/core/development/environment/): the development container, or a manual setup on Linux, macOS, or Windows.
 - [Code style](/core/development/style/): formatting, docstrings, logging, and the conventions reviewers look for.
 - [Type hints](/core/development/typing/): how core uses mypy, and how to opt in to strict checking.
-- [Running the tests](/core/development/testing/): pytest, coverage, snapshots, and what CI runs. How to write tests for an integration is on [test your integration](/core/integrations/tests/).
+- [Running the tests](/core/development/testing/): pytest, coverage, snapshots, and what CI runs.
+- [Writing tests](/core/development/tests/): how the tests of an integration are organized, with fixtures, mocks, and snapshots.
 - [Linters, hassfest, and CI](/core/development/checks/): the checks that run on every commit and every pull request.
 - [Validating input](/core/development/input-validation/): schemas for config flows, actions, and YAML.
 

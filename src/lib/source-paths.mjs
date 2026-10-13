@@ -111,7 +111,7 @@ export const NOT_REPOSITORY_PATHS = {
   "companion/apple/get-started.md": ["Configuration/HomeAssistant.overrides.xcconfig"],
   "os/operating-system/test.md": ["tests/haos.qcow2"],
   // The example integrations of the tutorials.
-  "core/integrations/tests.md": ["tests/components/example/snapshots/"],
+  "core/development/tests.md": ["tests/components/example/snapshots/"],
   "core/integrations/tutorial.md": [
     "core_integrations/example_air/",
     "source/_integrations/example_air.markdown",
