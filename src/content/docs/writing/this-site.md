@@ -22,7 +22,11 @@ The rule that matters most in all of them: never invent anything. Every statemen
 
 ## Preview the site locally
 
-For anything bigger than a small fix, run the site on your own machine. You need Node.js 24 (the version is in `.node-version`) and pnpm.
+For anything bigger than a small fix, run the site on your own machine.
+
+The easiest way is the dev container: everything the site needs comes ready-made, on Windows, macOS, and Linux alike. Open the repository in [VS Code](https://code.visualstudio.com/docs/devcontainers/containers) with Docker installed, and select **Reopen in Container**. Or start a [GitHub Codespace](https://docs.github.com/en/codespaces) on the repository, which runs in your browser and needs nothing on your machine. Either way, the dependencies are installed when the container is created, and you only run `pnpm dev`. In VS Code, **Terminal** > **Run Task** also runs the checks for you.
+
+Without the dev container, you need Node.js 24 (the version is in `.node-version`) and pnpm. Then install and start the site:
 
 ```shell
 pnpm install
