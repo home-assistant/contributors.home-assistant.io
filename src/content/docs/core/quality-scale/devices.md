@@ -47,7 +47,7 @@ Most integrations set the device information once, in a shared base entity in `e
 
 ## How it is checked
 
-Checked in review. `DeviceInfo` is a class with typed fields, so mypy catches unknown fields when the integration is typed.
+Checked in review. `DeviceInfo` is a dataclass with typed fields, so mypy catches unknown fields when the integration is typed.
 
 ## Exceptions
 
