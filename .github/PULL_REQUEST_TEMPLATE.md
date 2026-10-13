@@ -66,6 +66,14 @@ Moved or renamed pages:
 - [ ] New claims about how something works list their sources above.
 - [ ] I understand the changes I am submitting and can explain them in my own words.
 - [ ] Any generated content has been carefully reviewed for correctness and compliance with project standards.
+- [ ] I have read the [Open Home Foundation AI Policy][ai-policy].
 
+Select exactly one option that describes AI usage in this contribution:
+
+- [ ] I have not used AI for this contribution.
+- [ ] AI assistance was used for this contribution.
+- [ ] AI fully generated the content for this contribution, but I've reviewed and understood it before submitting and will respond without AI during review.
+
+[ai-policy]: https://contributors.home-assistant.io/start/ai-policy/
 [authoring]: https://github.com/home-assistant/contributors.home-assistant.io/blob/main/.github/copilot-instructions.md
 [redirects]: https://github.com/home-assistant/contributors.home-assistant.io/tree/main/redirects
