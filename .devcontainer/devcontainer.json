@@ -1,0 +1,49 @@
+// A ready-made environment for the site: Node.js 24, pnpm, and the dependencies
+// installed. Open the repository in VS Code and choose "Reopen in Container",
+// or open it in a GitHub Codespace. Then run pnpm dev.
+{
+  "name": "contributors.home-assistant.io",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+  "postCreateCommand": "git config --global --add safe.directory ${containerWorkspaceFolder} && pnpm install --frozen-lockfile",
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+  // Node.js resolves localhost to IPv6 first, so the development server
+  // would only listen on [::1], where the port forwarding of VS Code never
+  // looks. With this, it listens on 127.0.0.1.
+  "containerEnv": {
+    "NODE_OPTIONS": "--dns-result-order=ipv4first"
+  },
+  // The development server binds to localhost inside the container, so the
+  // port is forwarded rather than published.
+  "forwardPorts": [4321],
+  "portsAttributes": {
+    "4321": {
+      "label": "Site",
+      "onAutoForward": "notify"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "astro-build.astro-vscode",
+        "unifiedjs.vscode-mdx",
+        "bierner.markdown-mermaid",
+        "streetsidesoftware.code-spell-checker",
+        "GitHub.vscode-pull-request-github"
+      ],
+      "settings": {
+        "[markdown]": {
+          "editor.wordWrap": "on"
+        },
+        "[mdx]": {
+          "editor.wordWrap": "on"
+        }
+      }
+    }
+  },
+  "remoteUser": "node"
+}

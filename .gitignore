@@ -4,6 +4,9 @@ dist/
 
 # Dependencies
 node_modules/
+# Where pnpm keeps its store when the home folder is on another
+# filesystem, like in a dev container
+.pnpm-store/
 
 # Python bytecode, from running scripts/symbols/extract.py
 __pycache__/
