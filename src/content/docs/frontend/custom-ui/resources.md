@@ -39,7 +39,7 @@ lovelace:
       type: module
 ```
 
-With `resource_mode: yaml`, the **Resources** page in the UI no longer manages them. Restart Home Assistant after a change.
+With `resource_mode: yaml`, the **Resources** page in the UI no longer manages them. After a change, run the `lovelace.reload_resources` [action](/glossary/action/), or restart Home Assistant, then reload the page in your browser.
 
 ## Resource types
 
@@ -48,7 +48,11 @@ With `resource_mode: yaml`, the **Resources** page in the UI no longer manages t
 | `module` | A JavaScript module. Use this for everything new. |
 | `css` | A stylesheet. |
 | `js` | A classic JavaScript file, without `import` and `export`. Deprecated. |
-| `html` | An HTML import. Deprecated. |
+| `html` | An HTML import. Deprecated, and no longer loaded by the frontend. |
+
+The UI only offers `module` and `css` for a new resource. It shows `js` and `html` only for an existing resource that already has that type.
+
+In safe mode, Home Assistant loads no resources at all, so custom cards don't show up there.
 
 ## Registering pickers
 

@@ -104,6 +104,8 @@ pnpm dev:serve --stop
 
 Only one development server or production build can run at a time, because they share the build output. Starting a second one tells you which one is running, and how to stop it. A cold build waits up to 180 seconds to become ready. Set `HA_DEV_SERVER_TIMEOUT` to a number of seconds to change that.
 
+When a server runs in the background, its log is written to `node_modules/.cache/ha-dev-server/`. When the script detects that a coding agent started it, a plain `pnpm dev` or `pnpm dev:*` goes to the background by itself, so it does not block the agent. Set `HA_DEV_BACKGROUND=0` to keep it in the foreground.
+
 ## Browser settings
 
 The frontend uses a service worker and caching, which can show you an old build after a change. In the developer tools of your browser:

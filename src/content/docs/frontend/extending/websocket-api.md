@@ -49,6 +49,8 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     return True
 ```
 
+Your integration does not need `websocket_api` as a dependency in its manifest. The command is registered either way, and is available as soon as the WebSocket API runs.
+
 A function decorated with `@callback` runs in the [event loop](/glossary/event-loop/), so it must not do any I/O. When your command has to wait, for a device or the network, make it `async` and add `@websocket_api.async_response` below `websocket_command`:
 
 ```python

@@ -14,7 +14,7 @@ The state cards live in [`src/state-summary/`](https://github.com/home-assistant
 
 This example adds a state card for a domain called `example`.
 
-1. Add `"example"` to `DOMAINS_WITH_CARD` in `src/common/const.ts`. Keep the list in alphabetical order.
+1. Add `"example"` to `DOMAINS_WITH_CARD` in `src/common/const.ts`.
 2. Create `src/state-summary/state-card-example.ts`, with an element called `state-card-example`. It gets `hass`, `stateObj`, and `inDialog`, which is `true` when the card is shown in the more-info dialog.
 3. Import it in `src/state-summary/state-card-content.ts`:
 

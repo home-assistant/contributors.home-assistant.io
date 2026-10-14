@@ -151,7 +151,7 @@ window.customStrategies.push({
 | `strategyType` | Yes | `"dashboard"`. |
 | `name` | | The name in the dialog. |
 | `description` | | A short description below the name. |
-| `documentationURL` | | A link to your documentation. |
+| `documentationURL` | | A link to your documentation. The frontend does not show it anywhere yet. |
 
 The resource has to be loaded for the dialog to see it. After adding or updating it, reload the page and open the dialog again.
 

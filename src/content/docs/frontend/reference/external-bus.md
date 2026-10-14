@@ -174,7 +174,7 @@ All commands get a result back. On success, `result` is `null`.
 | `improv/discovered_device` | `{ name }` | An Improv Wi-Fi device was found. |
 | `improv/device_setup_done` | | Setting up the Improv Wi-Fi device is done. |
 | `kiosk_mode/set` | `{ enable }` | Turn kiosk mode on or off. |
-| `matter/commission/finish` | `{ name, success }` | Commissioning a Matter device ended. |
+| `matter/commission/finish` | `{ name, success }` | Commissioning a Matter device ended. `name`, when not `null`, is proposed as the name of the new device. With `success: false`, the frontend closes its dialog and shows that adding the device failed, unless the device already showed up. |
 | `navigate` | `{ path, options? }` | Go to a page. `path` starts with `/`, like `/config/voice-assistants/assistants`. `options.replace` replaces the current history entry, and `options.data` is stored in the history state. |
 | `notifications/show` | | Open the notifications. |
 | `restart` | | Reconnect the frontend to Home Assistant. |

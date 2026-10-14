@@ -65,7 +65,7 @@ The panel opens at `/example`, with a link in the sidebar.
 | `name` | The tag name of your element. Required. |
 | `url_path` | The URL of the panel. Defaults to `name`. Must be unique. |
 | `sidebar_title` | The text in the sidebar. Without it, the panel is not in the sidebar. |
-| `sidebar_icon` | The icon in the sidebar. |
+| `sidebar_icon` | The icon in the sidebar. Defaults to `mdi:bookmark`. |
 | `module_url` | The URL of your JavaScript module. Set this one, `js_url`, or both: without either, the panel is not registered. |
 | `js_url` | The URL of a classic JavaScript file. When you set both, the legacy build of the frontend uses this one, and the modern build `module_url`. |
 | `config` | Anything you want to pass to the panel. It shows up as `panel.config`, next to a `_panel_custom` key that Home Assistant adds with the panel settings. |
