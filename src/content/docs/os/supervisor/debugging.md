@@ -13,11 +13,13 @@ The Supervisor ships with [debugpy](https://github.com/microsoft/debugpy), so yo
 The debugger only starts when debug mode is on. Debug mode is read at startup, so restart the Supervisor after you change it:
 
 ```shell
-ha supervisor options --debug
+ha supervisor options --debug=true
 ha supervisor restart
 ```
 
-The Supervisor now listens for a debugger on port 33333. To debug what happens during startup, use `--debug-block` as well. The Supervisor then waits until a debugger is attached before it continues.
+Write `=true` out. The CLI reads a bare `--debug` as `false`, so it turns debug mode off.
+
+The Supervisor now listens for a debugger on port 33333. To debug what happens during startup, add `--debug-block=true` as well. The Supervisor then waits until a debugger is attached before it continues.
 
 Turn it off again with `ha supervisor options --debug=false`.
 

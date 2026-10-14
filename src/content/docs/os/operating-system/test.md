@@ -29,7 +29,7 @@ qemu-system-x86_64 -enable-kvm -name haos -smp 2 -m 2G \
 
 The boot ends at the Home Assistant CLI prompt, `ha >`. Type `login` to get a root shell on the host.
 
-On an Arm machine, the `generic_aarch64` target builds the same set of virtual machine images for Arm.
+On an Arm machine, use the `generic_aarch64` target. Next to its disk image, it builds QCOW2, VMDK, and VDI images for Arm virtual machines.
 
 ## Run the automated tests
 
