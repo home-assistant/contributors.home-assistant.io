@@ -46,8 +46,6 @@ The main app, used by most people. Android Auto is part of it: the phone project
 
 The app that runs on the car itself. It compiles the sources of `:app` with its own manifest. The automotive APIs only exist from API 29, so its minimum SDK is higher.
 
-Debug builds don't show up in a real car. The only way to test in a real vehicle is through the internal testing track of the Play Store, which gets every merged pull request.
-
 ### Wear OS
 
 A separate app, but not standalone: it needs the phone app to onboard and to get the server credentials. After that, it talks to Home Assistant directly.

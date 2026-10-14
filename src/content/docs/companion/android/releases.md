@@ -16,8 +16,6 @@ Every merged pull request ships to internal testers right away. Every week, the 
 
 When a pull request is merged into `main`, CI builds the release versions and publishes them to the internal testing track on the Play Store. Internal testers get every change immediately. The app does a lot, so they can't test every feature on every build.
 
-This is also the only way to test Android Automotive in a real car: debug builds don't show up in a vehicle.
-
 APKs of every commit on `main` are also attached to the [On Push workflow runs](https://github.com/home-assistant/android/actions/workflows/onPush.yml).
 
 ### Weekly beta
