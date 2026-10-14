@@ -63,7 +63,8 @@ class MyEntity(CoordinatorEntity[MyCoordinator]):
 
 ## How it is checked
 
-Checked in review.
+- Pylint suggests moving a class to the module it belongs in (`home-assistant-enforce-class-module`). It flags a subclass of `DataUpdateCoordinator` outside `coordinator.py`, and a base entity that derives straight from a class like `Entity` or `CoordinatorEntity` outside `entity.py`.
+- The rest is checked in review.
 
 ## Exceptions
 
