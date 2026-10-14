@@ -148,8 +148,8 @@ sudo dnf install autoconf openssl-devel libxml2-devel libxslt-devel \
 On Arch or Manjaro:
 
 ```shell
-sudo pacman -Sy base-devel autoconf libxml2 libxslt libjpeg-turbo libffi systemd zlib \
-  pkgconf ffmpeg gcc cmake
+sudo pacman -Sy base-devel autoconf libxml2 libxslt libjpeg-turbo \
+  libffi systemd zlib pkgconf ffmpeg gcc cmake
 ```
 
 On macOS, install [Homebrew](https://brew.sh/) and use it to install the dependencies:

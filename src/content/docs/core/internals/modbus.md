@@ -17,6 +17,8 @@ The Home Assistant project maintains [`modbus-connection`](https://github.com/ho
 - A framework to model a device: map its registers and coils to typed Python attributes, and read the whole device in as few requests as possible.
 - A `pytest` plugin, to test your library without hardware.
 
+For a complete example, see [sofar-modbus](https://github.com/darkrain-nl/sofar-modbus), a device library built on `modbus-connection`, and the [`sofar` integration](https://github.com/home-assistant/core/tree/dev/homeassistant/components/sofar) that uses it.
+
 Your library takes a `ModbusUnit` from `modbus-connection`, the connection to one unit on a Modbus link, and does everything through it. It never opens a connection itself. That is what makes the next part work.
 
 ## Share one connection
@@ -47,7 +49,7 @@ async def async_setup_entry(
     ...
 ```
 
-Collect the connection details in your own config flow, like any other. Two integrations that ask with the same details get units on one connection, and their requests queue up behind each other. Use `ModbusSerialParams` for a serial link.
+Collect the connection details in your own config flow, like any other. Two integrations that ask with the same details get units on one connection, and their requests queue up behind each other. For other links, use `ModbusUdpParams`, `ModbusTlsParams`, or `ModbusSerialParams`.
 
 The connection is not stored anywhere. It exists while some config entry holds a unit on it, and closes when the last of them unloads. Your entry data stays yours.
 

@@ -91,7 +91,7 @@ When something goes wrong, `success` is `false` and `error` has a `code` and a `
 }
 ```
 
-Error codes include `invalid_format`, `not_found`, `not_allowed`, `unauthorized`, `unknown_command`, `id_reuse`, `home_assistant_error`, `service_validation_error`, `template_error`, `timeout`, and `unknown_error`. When the error comes from a `HomeAssistantError` with translation information, the error also has `translation_domain`, `translation_key`, and `translation_placeholders`, so the frontend can show it in the user's language.
+Error codes include `invalid_format`, `not_found`, `not_allowed`, `not_supported`, `unauthorized`, `unknown_command`, `id_reuse`, `home_assistant_error`, `service_validation_error`, `template_error`, `timeout`, and `unknown_error`. When the error comes from a `HomeAssistantError` with translation information, the error also has `translation_domain`, `translation_key`, and `translation_placeholders`, so the frontend can show it in the user's language.
 
 ## Core commands
 

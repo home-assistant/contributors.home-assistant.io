@@ -43,8 +43,8 @@ The Bronze tier of the [integration quality scale](/core/quality-scale/) is the 
 - **Library**: open source, with a license on PyPI that matches its LICENSE file, and compatible with Apache 2.0. MIT, BSD, Apache 2.0, LGPL, MPL 2.0, ISC, and the Unlicense are fine. GPL and AGPL are not, and neither is a dependency of the library under those licenses. Be careful with a library that was inactive for years and recently changed maintainers.
 - **`quality_scale.yaml`**: every Bronze rule is `done`, or `exempt` with a valid reason. Spot check that `done` is true.
 - **Config flow**: tests the connection before it creates the entry, shows a clear error when that fails, and sets a unique ID so the same device cannot be added twice.
-- **Discovery**: Zeroconf, DHCP, and SSDP patterns only match the intended devices. Every discovery method in `manifest.json` has its `async_step_*` in the config flow.
-- **Strings**: everything the user sees is in `strings.json`, in sentence case, using the common strings where they fit.
+- **Discovery**: Zeroconf, DHCP, and SSDP patterns only match the intended devices. A pattern that is too broad claims devices it should not. Every discovery method in `manifest.json` has its `async_step_*` in the config flow. A step started by the user should win over a discovery flow for the same device: pass `raise_on_progress=False` to `async_set_unique_id` there. An integration with Zeroconf can add DHCP as a fallback, for networks where mDNS does not work well. For devices that change their IP address or host name, `registered_devices` in the DHCP matchers lets devices that are already set up be discovered again.
+- **Strings**: everything the user sees is in `strings.json`, in sentence case, using the common strings where they fit. Strings render as Markdown, so code-like values, like entity IDs, action names, and file names, go in backticks. Brand and protocol names do not, and keep their official spelling, like Z-Wave.
 
 ### New features
 
@@ -52,6 +52,8 @@ The Bronze tier of the [integration quality scale](/core/quality-scale/) is the 
 - Backward-incompatible changes are described for users. Whether something breaks for users is a human judgment, and one AI reviewers often get wrong.
 - If the data stored in a config entry changes, the config flow `VERSION` is bumped, `async_migrate_entry` migrates old entries, and tests cover the migration. A bumped version without migration code is just as wrong.
 - `async_unload_entry` cleans up everything the setup created.
+- Error handling does not read `entry.runtime_data` when setup failed: it may not be set yet.
+- New entities have complete device info: manufacturer, model, serial number, and firmware version, where the device provides them.
 
 ### Bug fixes
 
@@ -90,7 +92,7 @@ Entity questions take most of the attention of reviewers.
 
 - Something for the dashboard, the main function of the device: no category.
 - A setting that changes how the device behaves, like a mode or a threshold: `EntityCategory.CONFIG`.
-- Information for debugging, like firmware version, signal strength, or an IP address: `EntityCategory.DIAGNOSTIC`. If it is only useful for debugging, it is also disabled by default with `entity_registry_enabled_default=False`.
+- Information for debugging, like firmware version, signal strength, or an IP address, and buttons with the `identify` device class: `EntityCategory.DIAGNOSTIC`. If it is only useful for debugging, it is also disabled by default with `entity_registry_enabled_default=False`.
 
 Don't over classify. Entities with a category are hidden from default dashboards and from voice assistants.
 

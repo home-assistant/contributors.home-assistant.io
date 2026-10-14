@@ -35,12 +35,12 @@ An auth provider confirms who someone is. It defines a login flow, built on the 
 
 Home Assistant ships these providers in `homeassistant/auth/providers/`:
 
-- `homeassistant`: usernames and passwords stored in the configuration directory. Always there.
+- `homeassistant`: usernames and passwords stored in the configuration directory. This is the provider Home Assistant uses when `auth_providers` is not configured.
 - `trusted_networks`: log in without a password from configured networks.
 - `command_line`: verify a username and password with an external command.
-- `insecure_example`: an example for development and tests. Never use it for real.
+- `insecure_example`: an example for development and tests. Configuration validation refuses it in `configuration.yaml`, because it is for testing only.
 
-The user configures which providers are active under `auth_providers:` in the `homeassistant:` section of `configuration.yaml`. There can be several instances of the same provider, each with its own ID. They do not share credentials.
+The user configures which providers are active under `auth_providers:` in the `homeassistant:` section of `configuration.yaml`. There can be several instances of the same provider, each with its own `id`. They do not share credentials.
 
 > [!NOTE]
 > Only built-in auth providers are supported. A custom integration cannot add one.
@@ -94,7 +94,7 @@ A multi-factor authentication (MFA) module adds a second step to logging in, aft
 - `notify`: a one-time password sent through a notify action.
 - `insecure_example`: an example for development and tests.
 
-The user configures them under `auth_mfa_modules:` in the `homeassistant:` section of `configuration.yaml`. Like auth providers, only built-in modules are supported.
+The user configures them under `auth_mfa_modules:` in the `homeassistant:` section of `configuration.yaml`. Without that key, Home Assistant loads `totp`. Like auth providers, only built-in modules are supported.
 
 ### Build an MFA module
 
@@ -112,4 +112,4 @@ A module is a subclass of `MultiFactorAuthModule` in `homeassistant/auth/mfa_mod
 
 Users set up modules from their profile. The setup is a data entry flow too, a subclass of `SetupFlow`. For `totp`, that flow generates a secret, shows it as a QR code, and asks for a code to confirm the authenticator app and the clock agree. Only then is the module enabled for the user.
 
-During a login, the MFA step runs in a session with an expiration time. The module checks both the code and that the session has not expired.
+During a login, the MFA step runs in a session that expires after 5 minutes. The module checks both the code and that the session has not expired.

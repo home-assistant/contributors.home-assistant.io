@@ -77,7 +77,7 @@ Over the WebSocket API, send `conversation/process` with the same fields:
 
 The intent did something, like turning on a light. `data.success` lists the targets that were acted on, and `data.failed` the ones that failed. Each target has a `name`, a `type`, and an optional `id`. The type is one of `floor`, `area`, `domain`, `device_class`, `device`, `entity`, or `custom`.
 
-Targets build on each other, from general to specific. "Turn off all lights" has one target, `domain` light. "Open the kitchen blinds" has three: `area` kitchen, `domain` cover, and `device_class` blind.
+Targets build on each other, from general to specific. "Turn off all lights" has one target, `domain` light. "Turn on the kitchen lights" has two: `area` kitchen and `domain` light. "Open the kitchen blinds" has three: `area` kitchen, `domain` cover, and `device_class` blind.
 
 ### Query answer
 
@@ -119,4 +119,5 @@ Loading the sentences of a language takes a moment. To have them ready before th
 
 - `conversation/agent/list`: the available agents, optionally filtered by `language` and `country`.
 - `conversation/sentences/list` (admin): the sentences registered by sentence triggers in automations.
+- `conversation/agent/homeassistant/language_scores`: how well the built-in agent supports each language, and the preferred language for the given `language` and `country`.
 - `conversation/agent/homeassistant/debug`: shows how the built-in agent matches a list of `sentences`, without acting on them. Useful while writing sentences.

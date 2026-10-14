@@ -66,6 +66,7 @@ For how an integration is put together around these entry points, see [building 
 | `internal_url` | `str \| None` | URL the user configured for the local network. |
 | `external_url` | `str \| None` | URL the user configured for outside the network. |
 | `config_dir` | `str` | Path of the configuration directory. |
+| `api` | `ApiConfig \| None` | Configuration of the HTTP server, once the `http` integration has set it up. |
 | `components` | `set[str]` | Integrations that are loaded. |
 | `config_source` | `ConfigSource` | Where the configuration comes from: `default`, `discovered`, `storage` (set in the UI), or `yaml`. |
 | `allowlist_external_dirs` | `set[str]` | Folders integrations may read files from. |
@@ -81,7 +82,7 @@ A few helper methods are worth knowing:
 
 - `hass.config.path("my_file.json")` returns a path inside the configuration directory.
 - `hass.config.cache_path("my_cache")` returns a path in the cache directory, for data that can be regenerated and does not belong in backups.
-- `hass.config.is_allowed_path(path)` and `hass.config.is_allowed_external_url(url)` check against the allowlists. Use them before you touch a path or URL that came from a user.
+- `hass.config.is_allowed_path(path)` and `hass.config.is_allowed_external_url(url)` check against the allowlists. Use them before you touch a path or URL that came from a user. `is_allowed_path` does blocking I/O: call it in the executor with `hass.async_add_executor_job`, not in the event loop.
 - `hass.config.distance(lat, lon)` returns the distance from the home, in the length unit of the unit system (kilometers or miles).
 
 Do not read the URLs directly to build a link. Use `get_url(hass)` from `homeassistant.helpers.network`: it picks the right URL for the situation and knows about Home Assistant Link.

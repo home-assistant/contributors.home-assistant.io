@@ -126,6 +126,8 @@ While it runs, the pipeline sends `event` messages over the connection, with the
 - `intent-not-supported`: the conversation agent is not available.
 - `intent-failed`: an error during intent recognition.
 - `tts-not-supported`: the text-to-speech provider is not available, or does not support the options.
+- `duplicate_wake_up_detected`: another device already answered the same wake word.
+- `timeout`: the whole run took longer than its `timeout`.
 
 ## Send audio
 
@@ -134,6 +136,8 @@ Once you get `run-start`, send the audio as binary WebSocket messages, as soon a
 ```text
 01a1b2c3
 ```
+
+The audio is raw PCM: 16-bit mono samples, at the `sample_rate` you passed. Home Assistant converts other sample rates to 16,000 Hz.
 
 To mark the end of the audio, send a binary message with only the handler ID byte.
 
