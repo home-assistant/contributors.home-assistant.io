@@ -47,7 +47,7 @@ Most integrations set the device information once, in a shared base entity in `e
 
 ## How it is checked
 
-Checked in review. `DeviceInfo` is a dataclass with typed fields, so mypy catches unknown fields when the integration is typed.
+Checked in review. The device information must be a `DeviceInfo`, not a plain dictionary. Home Assistant still accepts a dictionary for now, but only mypy rejects it, and only when the integration is typed. See [register a device through an entity](/core/integrations/device-registry/#register-a-device-through-an-entity).
 
 ## Exceptions
 
