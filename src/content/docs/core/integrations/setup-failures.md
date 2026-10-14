@@ -53,7 +53,7 @@ Raise them from `async_setup_entry` of the integration itself. A platform's `asy
 
 If you use a [data update coordinator](/core/integrations/fetching-data/), `await coordinator.async_config_entry_first_refresh()` raises `ConfigEntryNotReady` for you when the first update fails, and an `ConfigEntryAuthFailed` from the coordinator starts reauthentication at any time, not only during setup.
 
-If your integration supports discovery, Home Assistant also retries as soon as it discovers the device again.
+If your integration supports discovery, Home Assistant also retries as soon as it discovers the device again. When setup fails while Home Assistant is still starting, the retry waits until startup has finished.
 
 ### The message
 

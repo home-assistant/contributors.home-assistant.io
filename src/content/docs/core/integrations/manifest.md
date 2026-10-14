@@ -104,6 +104,8 @@ uv pip install -e ../my-library
 hass --skip-pip-packages my-library
 ```
 
+To keep Home Assistant from installing or replacing any package at all, start it with `hass --skip-pip` instead.
+
 In the development container, the folder next to your checkout does not exist: see [try your library in Home Assistant](/core/integrations/api-library/#try-your-library-in-home-assistant).
 
 Or point the requirement to a git reference, which can be a branch, tag, or commit:
@@ -250,6 +252,8 @@ A list of MQTT topics to subscribe to for discovery. Add `mqtt` to `dependencies
   "mqtt": ["tasmota/discovery/#"]
 }
 ```
+
+Before your integration subscribes to topics itself, wait for the MQTT client with `await mqtt.async_wait_for_mqtt_client(hass)`. It waits while MQTT is being set up, and returns `True` once the client is available, or `False` when MQTT is not set up or does not become available in time.
 
 ### dhcp
 

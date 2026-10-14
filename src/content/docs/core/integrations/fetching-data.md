@@ -91,7 +91,7 @@ What the parts do:
 
 And what the exceptions do:
 
-- `UpdateFailed`: the update failed. The coordinator logs it once (not on every failed poll), marks the entities unavailable, and tries again at the next interval. With `retry_after`, it waits that many seconds instead. That only works after setup: during the first refresh, `retry_after` is ignored.
+- `UpdateFailed`: the update failed. The coordinator logs it once (not on every failed poll), marks the entities unavailable, and tries again at the next interval. With `retry_after`, it waits that many seconds instead. During the first refresh, `retry_after` is passed on to the `ConfigEntryNotReady` that fails the setup, so the [setup retry](/core/integrations/setup-failures/) honors it.
 - `ConfigEntryAuthFailed`: the credentials no longer work. The coordinator stops polling and starts [reauthentication](/core/integrations/reauth-reconfigure/#reauthentication).
 - Timeouts and `aiohttp` client errors are handled by the coordinator itself, and so are the [OAuth 2.0 token errors](/core/integrations/oauth2/#errors).
 
@@ -106,7 +106,7 @@ await coordinator.async_config_entry_first_refresh()
 entry.runtime_data = coordinator
 ```
 
-If the first refresh fails, `async_config_entry_first_refresh` raises `ConfigEntryNotReady`, and Home Assistant [retries the setup](/core/integrations/setup-failures/). Your entities then always start with data.
+If the first refresh fails, `async_config_entry_first_refresh` raises `ConfigEntryNotReady`, and Home Assistant [retries the setup](/core/integrations/setup-failures/). Your entities then always start with data. Call it only from `async_setup_entry`: in any other config entry state, it raises an error. If a failed first update should not stop the setup, call `await coordinator.async_refresh()` instead.
 
 ### Entities that use the coordinator
 

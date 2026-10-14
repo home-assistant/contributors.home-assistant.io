@@ -55,7 +55,9 @@ Users post diagnostics in public issues. Make sure nothing sensitive ends up in 
 - Location data, like coordinates and addresses
 - Personal information, like names and email addresses
 
-`async_redact_data` replaces the values of the keys you list with `**REDACTED**`, also in nested dictionaries and lists. Check the output of your diagnostics by hand: data from an API often holds more than you expect.
+`async_redact_data` replaces the values of the keys you list with `**REDACTED**`, also in nested dictionaries and lists. Values that are `None` or an empty string stay as they are, so you can still see that a value is not set. Check the output of your diagnostics by hand: data from an API often holds more than you expect.
+
+To include a device or entity registry entry, convert it with `device_entry_as_dict` or `entity_entry_as_dict` from `homeassistant.components.diagnostics`. They leave out the internal fields of the entry.
 
 ## Test diagnostics
 

@@ -122,6 +122,8 @@ await self.async_set_unique_id(serial_number)
 self._abort_if_unique_id_configured(updates={CONF_HOST: host})
 ```
 
+The reload only happens when the entry is loaded or waiting to retry its setup. Pass `reload_on_update=False` to update the entry without a reload. Even without changes, a discovery reloads an entry that is waiting to retry its setup: the device is evidently online again.
+
 ### What makes a good unique ID
 
 It must be a string, stable, and not something the user can change.

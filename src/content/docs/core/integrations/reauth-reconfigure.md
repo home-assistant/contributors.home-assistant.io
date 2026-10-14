@@ -103,13 +103,12 @@ Add the step to `strings.json`, using the shared title:
           "token": "[%key:common::config_flow::data::api_token%]"
         }
       }
-    },
-    "abort": {
-      "reauth_successful": "[%key:common::config_flow::abort::reauth_successful%]"
     }
   }
 }
 ```
+
+The `reauth_successful` and `reconfigure_successful` abort messages come from Home Assistant itself, so they do not go in your `strings.json`. Only a custom abort reason, passed as `reason`, needs its own string. Add the `unique_id_mismatch` abort reason, though, for when the user logs in to a different account.
 
 For OAuth 2.0, reauthentication sends the user through the login of the service again. See [OAuth 2.0](/core/integrations/oauth2/#reauthentication).
 
@@ -159,4 +158,4 @@ Many integrations share the code of the `user` step and the `reconfigure` step, 
 
 ## Update without reloading
 
-If your integration picks up the change by itself, use `async_update_and_abort` instead. It takes the same arguments, but does not reload the entry.
+If your integration picks up the change by itself, use `async_update_and_abort` instead. It takes the same arguments, except `reload_even_if_entry_is_unchanged`, and does not reload the entry.
