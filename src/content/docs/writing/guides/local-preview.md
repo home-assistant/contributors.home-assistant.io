@@ -17,9 +17,9 @@ The easiest way is Visual Studio Code with a devcontainer. It sets up everything
 
 ## Without a devcontainer
 
-You need Ruby and Node.js. The required versions are in the [`.ruby-version`](https://github.com/home-assistant/home-assistant.io/blob/current/.ruby-version) and [`.nvmrc`](https://github.com/home-assistant/home-assistant.io/blob/current/.nvmrc) files of the repository. Node.js is needed because generating the site also builds its Astro part.
+You need Ruby and Node.js. The versions the project uses are in the [`.ruby-version`](https://github.com/home-assistant/home-assistant.io/blob/current/.ruby-version) and [`.nvmrc`](https://github.com/home-assistant/home-assistant.io/blob/current/.nvmrc) files of the repository. Node.js is needed because generating the site also builds its Astro part.
 
-1. Install Ruby, Bundler, and Node.js for your system. For Ruby and Bundler:
+1. Install Ruby, Bundler, and Node.js for your system. The Ruby package of your Linux distribution can be older than the version in `.ruby-version`. If `bundle` fails with it, install Ruby with mise instead. For Ruby and Bundler:
 
    - Fedora:
 
@@ -43,7 +43,7 @@ You need Ruby and Node.js. The required versions are in the [`.ruby-version`](ht
      export PATH="$(brew --prefix "$RUBY_FORMULA")/bin:$PATH"
      ```
 
-   - With [mise](https://mise.jdx.dev/): the repository tells mise to read the Ruby version from `.ruby-version`. Run `mise trust`, `mise install ruby`, and `gem install bundler`. Ruby is built from source this way, so your system needs a compiler and development libraries first.
+   - With [mise](https://mise.jdx.dev/): the repository tells mise to read the Ruby version from `.ruby-version`. Run `mise trust`, `mise install ruby`, and `gem install bundler`. mise downloads a precompiled Ruby where one exists for your system, and builds it from source otherwise. That build needs a compiler and development libraries.
 
 2. In your clone of the repository, install the dependencies:
 
