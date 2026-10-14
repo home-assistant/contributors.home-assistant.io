@@ -141,7 +141,7 @@ Arguments of `async_get_or_create` which are not device info fields, such as `co
 
 ### Dict behaviour
 
-Some dict behaviour is gone, as no integration was relying on it: `copy`, `setdefault`, `values`, `clear`, `popitem`, `pop`, `del device_info[key]`, merging with `|` or `|=`, iterating over a device info, and `len()`. Testing a field with `in` keeps working.
+Some rarely used dict behaviour is gone: `copy`, `setdefault`, `values`, `clear`, `popitem`, `pop`, `del device_info[key]`, merging with `|` or `|=`, iterating over a device info, and `len()`. Testing a field with `in` keeps working.
 
 A device info is no longer a `dict`: `isinstance(device_info, dict)` returns `False`. Use `isinstance(device_info, DeviceInfo)`, or `device_info.as_dict()` where a plain dictionary is needed. An empty `DeviceInfo()` is no longer falsy either.
 
