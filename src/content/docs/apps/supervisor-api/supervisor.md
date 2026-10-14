@@ -86,11 +86,11 @@ Does the same as `POST /reload_updates`, and also reloads the app store. Prefer 
 | `POST` | `/supervisor/restart` | Restart the Supervisor |
 | `POST` | `/supervisor/repair` | Repair the installation |
 | `GET` | `/supervisor/stats` | Resource usage of the Supervisor |
-| `GET` | `/supervisor/logs` | Logs of the Supervisor, and the other [log endpoints](/apps/supervisor-api/#log-endpoints) |
+| `GET` | `/supervisor/logs` | Logs of the Supervisor, and the other [log endpoints](/apps/supervisor-api/#log-endpoints). When the journal cannot deliver them, you get the Docker logs of the container instead |
 
 ### `GET /supervisor/ping`
 
-Returns success when the Supervisor is up. This is the only endpoint that needs no token.
+Returns success when the Supervisor is up. It needs no token, so you can call it before anything else.
 
 ### `GET /supervisor/info`
 
@@ -122,7 +122,7 @@ Returns success when the Supervisor is up. This is the only endpoint that needs 
 | Key | Type | Required | Description |
 | --- | --- | --- | --- |
 | `channel` | string | No | `stable`, `beta`, or `dev` |
-| `timezone` | string | No | Time zone, like `Europe/Amsterdam` |
+| `timezone` | string | No | Time zone, like `Europe/Amsterdam`. Also sets the time zone of the host |
 | `logging` | string | No | `debug`, `info`, `warning`, `error`, or `critical` |
 | `debug` | boolean | No | Debug mode |
 | `debug_block` | boolean | No | Wait for a debugger at startup |
@@ -130,13 +130,13 @@ Returns success when the Supervisor is up. This is the only endpoint that needs 
 | `auto_update` | boolean | No | Update the Supervisor automatically |
 | `detect_blocking_io` | string | No | `on`, `off`, or `on-at-startup` |
 | `country` | string | No | Country code |
-| `feature_flags` | dictionary | No | Development feature flags to turn on or off |
+| `feature_flags` | dictionary | No | Development feature flags to turn on or off, like `{"supervisor_v2_api": true}`. Flags you leave out keep their value |
 | `wait_boot` | integer | No | Deprecated |
 | `addons_repositories` | list | No | Deprecated. Replaces the list of repositories. Use the [repository endpoints](/apps/supervisor-api/store/#repositories) |
 
 ### `POST /supervisor/update`
 
-Updates the Supervisor to the latest version. Fails when there is no update. Only the `dev` channel accepts a `version` key.
+Updates the Supervisor to the latest version. Fails when there is no update. A `version` key only works in a Supervisor development environment, where `SUPERVISOR_DEV` is set. Everywhere else, the Supervisor ignores it and installs the latest version.
 
 ### `POST /supervisor/reload`
 
@@ -183,15 +183,16 @@ Returns one [job model](/apps/supervisor-api/models/#job), with its child jobs. 
   "reference": "a1b2c3d4",
   "uuid": "e2b7a9c4f1d34e5a8b6c0d1e2f3a4b5c",
   "progress": 0,
-  "stage": "apps",
+  "stage": "addons",
   "done": false,
-  "parent_id": null,
   "errors": [],
   "created": "2026-10-01T09:30:00.000000+00:00",
   "extra": null,
   "child_jobs": []
 }
 ```
+
+Some jobs still use their older names here. Backup and restore jobs report stages like `addons` instead of `apps`, and the job that updates an app is `addon_manager_update`.
 
 ### `DELETE /jobs/<job_id>`
 
@@ -201,11 +202,11 @@ Removes a job from the list. Fails when the job is not done.
 
 | Key | Type | Required | Description |
 | --- | --- | --- | --- |
-| `ignore_conditions` | list | No | Conditions to ignore before starting a job, like `healthy` or `internet_host`. This can break things, so only use it to debug |
+| `ignore_conditions` | list | No | Conditions to ignore before starting a job, like `healthy` or `internet_host`. Replaces the current list. This can break things, so only use it to debug |
 
 ### `POST /jobs/reset`
 
-Resets the job settings to the defaults.
+Resets the job settings to the defaults, so no conditions are ignored anymore.
 
 ## Resolution
 
@@ -220,7 +221,7 @@ The resolution center finds problems with the system and suggests fixes. An issu
 | `DELETE` | `/resolution/suggestion/<suggestion>` | Dismiss a suggestion |
 | `POST` | `/resolution/check/<check>/options` | Turn a check on or off |
 | `POST` | `/resolution/check/<check>/run` | Run a check |
-| `POST` | `/resolution/healthcheck` | Run all checks |
+| `POST` | `/resolution/healthcheck` | Run all checks, and apply the fixes that run by themselves |
 
 `<issue>` and `<suggestion>` are UUIDs. `<check>` is the slug of a check.
 

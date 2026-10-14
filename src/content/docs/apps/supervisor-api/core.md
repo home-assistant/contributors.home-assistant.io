@@ -7,7 +7,7 @@ order: 4
 
 There are two kinds of endpoints under `/core`. The first kind controls the Home Assistant Core container: start, stop, update, and its settings. The second kind is a proxy to the API of Home Assistant itself, so your app can read states and call actions without knowing a password or port.
 
-The same endpoints are also available under `/homeassistant` instead of `/core`, the older name. Use `/core`.
+Most of these endpoints are also available under `/homeassistant` instead of `/core`, the older name. The proxy there has no `DELETE`. Use `/core`.
 
 | Method | Path | Description |
 | --- | --- | --- |
@@ -93,12 +93,12 @@ Updates Home Assistant Core. Fails while the Supervisor is still starting up or 
 | Key | Type | Required | Description |
 | --- | --- | --- | --- |
 | `version` | string | No | Version to install. Default is the latest version |
-| `backup` | boolean | No | Make a backup before the update |
+| `backup` | boolean | No | Make a backup before the update. Default `false` |
 | `background` | boolean | No | Return a `job_id` right away instead of waiting. Default `false` |
 
 ### `POST /core/start`
 
-Starts Home Assistant Core.
+Starts Home Assistant Core. Like restart and rebuild, it fails while the Supervisor is still starting up or restoring a backup.
 
 ### `POST /core/stop`
 
