@@ -57,7 +57,9 @@ Someone who uses an attribute in an automation or a template needs to tell "this
 - An attribute that is expected is always in the dictionary. When it has no value right now, its value is `None`.
 - An attribute that is not expected is not in the dictionary at all.
 
-An attribute is expected when the entity supports it: when it belongs to a feature in `supported_features` that the entity supports, or, for an extra state attribute, when the device provides that value. The light base class works this way. A light that supports effects always has the `effect` attribute, and it is `None` while the light is off. A light without effect support has no `effect` attribute.
+An unavailable entity is the exception: it leaves out the state attributes of its domain and its extra state attributes, as described above.
+
+An attribute is expected when the entity supports it, for example when it belongs to a feature in `supported_features` that the entity supports. Whether the device has a value for it right now doesn't matter: that is what `None` is for. The light base class works this way. A light that supports effects always has the `effect` attribute, and it is `None` while the light is off. A light without effect support has no `effect` attribute.
 
 This was decided in the [architecture discussion on entity attributes](https://github.com/home-assistant/architecture/discussions/680).
 
