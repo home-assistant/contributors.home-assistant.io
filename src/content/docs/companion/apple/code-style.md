@@ -50,7 +50,7 @@ Image(systemSymbol: .house)
 
 ### Suppressing a rule
 
-Be careful with `// swiftlint:disable`. CI comments on every pull request that adds one, so a maintainer can check that it is really needed. Every suppression needs a good reason.
+Be careful with `// swiftlint:disable`. CI looks for new ones in every pull request, and comments when it finds one (on pull requests from a branch in the repository itself), so a maintainer can check that it is really needed. Every suppression needs a good reason.
 
 ## Conventions
 

@@ -24,6 +24,7 @@ Libraries you will run into most:
 - [SFSafeSymbols](https://github.com/SFSafeSymbols/SFSafeSymbols): type-safe SF Symbols.
 - [KeychainAccess](https://github.com/kishikawakatsumi/KeychainAccess): keychain storage.
 - [XCGLogger](https://github.com/DaveWoodCom/XCGLogger): logging, through `Current.Log`.
+- [ObjectMapper](https://github.com/tristanhimmelman/ObjectMapper): JSON mapping in older models.
 
 ## The source folders
 

@@ -108,7 +108,7 @@ Be as specific as you can, and tell the user how to fix the problem when you kno
 
 ### Rate limits
 
-Push services cost money, and a broken automation can send thousands of notifications. Use a rate limit. The push service of the official apps allows 500 notifications per device per day by default.
+Push services cost money, and a broken automation can send thousands of notifications. Use a rate limit. The push service of the official apps allows 500 notifications per device per day by default, and the count resets at midnight UTC.
 
 Home Assistant doesn't limit anything itself. Your server does, and tells Home Assistant about it. Add `rateLimits` to your responses:
 

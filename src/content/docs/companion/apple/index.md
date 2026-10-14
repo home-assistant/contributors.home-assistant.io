@@ -48,6 +48,10 @@ The full list is in [architecture](/companion/apple/architecture/#the-source-fol
 - [Continuous integration](/companion/apple/ci/): what runs on your pull request, and what happens after a merge.
 - [Releases](/companion/apple/releases/): from a merged pull request to App Store Connect, and Mac releases on GitHub.
 
+## Translate
+
+The text of the app is translated on Lokalise, in its own iOS project. You don't need a Mac or Xcode for that. See [your first translation](/translate/first-contribution/).
+
 ## Who to talk to
 
 - The **#apple-apps** channel on the [Home Assistant Discord](https://www.home-assistant.io/join-chat). Pick the developer role under **Channels & Roles** first.
