@@ -34,7 +34,7 @@ Changed the hostname, or no mDNS on your network? Use the IP address of the devi
 
 ### Turn it off again
 
-Import a `CONFIG` drive *without* an `authorized_keys` file. The import removes all keys and stops the SSH server. Through the API, a `DELETE` on the same endpoint removes all keys of root.
+Import a `CONFIG` drive *without* an `authorized_keys` file. The import removes all keys and stops the SSH server. Through the API, a `DELETE` on `/os/ssh/authorized_keys` removes all of root's authorized keys.
 
 ## The local console
 
