@@ -35,7 +35,7 @@ Set every value in its _native_ unit, and tell Home Assistant which unit that is
 | `ozone` | `float \| None` | `None` | The ozone level. |
 | `precision` | `float` | Tenths for °C, whole numbers for °F | The precision of temperatures, after conversion. |
 
-When a `native_*_unit` is `None`, the base class assumes the value is already in the default unit of the user's unit system, and converts nothing. So set the unit for every kind of value you report.
+When a `native_*_unit` is `None`, the base class assumes the value is already in the default unit of the user's unit system, and converts from that unit when the user picked another one for the entity. So set the unit for every kind of value you report.
 
 The generic properties every entity has, like `name` or `available`, are on [the entity class](/core/entities/entity-class/). In practice, every weather entity sets at least `condition`, `native_temperature`, and `native_temperature_unit`.
 
@@ -112,7 +112,7 @@ Cache the forecasts you fetch, so you do not call the API every time someone ask
 
 `CoordinatorWeatherEntity` connects a weather entity to [coordinators](/glossary/coordinator/): one for the current observation, and optionally one per forecast type. Pass them to `__init__` as `daily_coordinator`, `hourly_coordinator`, and `twice_daily_coordinator`. Instead of the async forecast methods, you implement the callbacks `_async_forecast_daily`, `_async_forecast_hourly`, and `_async_forecast_twice_daily`, which read from coordinator data. Listeners are updated when a coordinator updates.
 
-The forecast coordinators must be a `TimestampDataUpdateCoordinator`. The entity only listens to a forecast coordinator while someone is subscribed to that forecast type. When a forecast is requested and the data of its coordinator is older than its `update_interval`, the entity refreshes the coordinator first. Pass `daily_forecast_valid`, `hourly_forecast_valid`, or `twice_daily_forecast_valid` to `__init__` to set how old a forecast may get before the entity returns `None` instead. It defaults to the `update_interval` of the coordinator.
+The forecast coordinators must be a `TimestampDataUpdateCoordinator`. The entity only listens to a forecast coordinator while someone is subscribed to that forecast type. When a forecast is requested and the data of its coordinator is older than its `update_interval`, the entity refreshes the coordinator first. Pass `daily_forecast_valid`, `hourly_forecast_valid`, or `twice_daily_forecast_valid` to `__init__` to set how old a forecast may get before the entity returns `None` instead. It defaults to the `update_interval` of the coordinator. A coordinator without an `update_interval`, like one that only receives pushed data, skips both checks: the entity never refreshes it and never rejects its forecast as too old.
 
 `SingleCoordinatorWeatherEntity` is the shortcut for one coordinator that holds both the observation and the forecasts.
 
