@@ -29,7 +29,7 @@ AppArmor limits what the processes in your container can do: which files they ca
 
 Put an `apparmor.txt` in your app folder, and the Supervisor loads it as the profile of your app instead. A profile fitted to your app is a strong second line of defense: even if an attacker finds a hole in your software, they can only do what the profile allows. It also raises the security rating.
 
-The file must hold exactly one top-level `profile` line. The Supervisor replaces the name on that line with the ID of your app, like `local_example`, when it loads the profile, so use the slug of your app as the name. This example is for an app with the slug `example` that runs `/usr/bin/my_program` with S6 overlay:
+The file must hold exactly one top-level `profile` line. The Supervisor replaces the name on that line with the ID of your app, like `local_example`, when it loads the profile, so use the slug of your app as the name. This example is for an app with the slug `example` that runs `/usr/bin/my_program` with S6 overlay. The rules for `/etc/services.d`, `/etc/cont-init.d`, and `/etc/cont-finish.d` cover the legacy service format, and the rule for `/etc/s6-overlay` covers the [s6-rc format](/apps/guides/s6-overlay/#the-s6-rc-layout):
 
 ```text
 #include <tunables/global>
@@ -51,6 +51,7 @@ profile example flags=(attach_disconnected,mediate_deleted) {
   /etc/services.d/** rwix,
   /etc/cont-init.d/** rwix,
   /etc/cont-finish.d/** rwix,
+  /etc/s6-overlay/** rwix,
   /run/{,**} rwk,
   /dev/tty rw,
 
