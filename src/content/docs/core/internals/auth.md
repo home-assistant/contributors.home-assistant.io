@@ -112,4 +112,4 @@ A module is a subclass of `MultiFactorAuthModule` in `homeassistant/auth/mfa_mod
 
 Users set up modules from their profile. The setup is a data entry flow too, a subclass of `SetupFlow`. For `totp`, that flow generates a secret, shows it as a QR code, and asks for a code to confirm the authenticator app and the clock agree. Only then is the module enabled for the user.
 
-A login expires 5 minutes after it starts. The login flow checks that before it calls `async_validate`, so your module only checks the code.
+The MFA step has a time limit: when more than 5 minutes have passed since the login started, the login flow aborts it with `login_expired` before it calls `async_validate`. Your module only checks the code.
