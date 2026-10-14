@@ -142,7 +142,7 @@ A tool without `integration` is reported: as an error for core integrations, and
 
 `async_call` gets `hass`, a `ToolInput`, and the `LLMContext` of the request:
 
-- `ToolInput` has the `tool_name`, the `tool_args` (validated against `parameters`), an `id` for the call, and `external`: `True` when the call runs outside Home Assistant, like at the model provider. Home Assistant does not run external calls itself.
+- `ToolInput` has the `tool_name`, the `tool_args` (validated against `parameters`), an `id` for the call, and `external`. An external call is one that something else already handles, so the chat log records it but does not run it through the LLM API. A conversation agent sets it for tools its model provider runs, like a web search, and the built-in conversation agent sets it for the intents it handles itself. Calls that the chat log runs for your tool have `external` set to `False`.
 - `LLMContext` has the `platform` (the domain of the agent), the `context` with the user, the `language`, the `assistant` whose exposed entities apply, and the `device_id` the request came from.
 
 Return a `ToolResult`. Its `data` must be a dictionary that can be serialized to JSON. Returning a plain dictionary is deprecated and stops working in Home Assistant 2027.11.

@@ -20,7 +20,7 @@ Go through this list before you commit. The pull request template asks you to co
 All communication with devices and services goes through a Python library published on [PyPI](https://pypi.org/). The integration itself contains no protocol code.
 
 - [ ] The library has a source distribution on PyPI, not only prebuilt wheels.
-- [ ] The source of the library is public, under an OSI-approved open source license that is compatible with Apache 2.0, the license of core. CI checks that every requirement has an OSI-approved license, with `script/licenses.py`. Compatibility with Apache 2.0 is checked by [reviewers](/core/development/reviewing/).
+- [ ] The source of the library is public, under an OSI-approved open source license that is compatible with Apache 2.0, the license of core. CI checks the licenses of the requirements with `script/licenses.py`, and fails when it finds no OSI-approved license. A few packages are on its list of exceptions, so a pass is not proof for every requirement. Compatibility with Apache 2.0 is checked by [reviewers](/core/development/reviewing/).
 - [ ] The issue tracker of the library is enabled.
 - [ ] New or updated requirements are in `requirements_all.txt`. Run `python3 -m script.gen_requirements_all` to update it.
 
