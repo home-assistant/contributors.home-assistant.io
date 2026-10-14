@@ -1,6 +1,6 @@
 ---
 title: "DeviceInfo is now a dataclass"
-description: DeviceInfo and ChildDeviceInfo are no longer TypedDicts, they are dataclasses with typed fields, which are read and written as attributes.
+description: DeviceInfo and ChildDeviceInfo are no longer TypedDicts. They are dataclasses with typed fields, which are read and written as attributes.
 date: 2026-10-13
 authors:
   - epenet
@@ -10,7 +10,7 @@ areas:
 
 ## Summary of changes
 
-`DeviceInfo` and `ChildDeviceInfo` are no longer `TypedDict`s, they are dataclasses with typed fields, which are read and written as attributes:
+`DeviceInfo` and `ChildDeviceInfo` are no longer `TypedDict`s. They are dataclasses with typed fields, which are read and written as attributes:
 
 ```python
 device_info = DeviceInfo(identifiers={(DOMAIN, unique_id)}, name="My device")
@@ -71,7 +71,9 @@ new_device_info.name = "Other name"
 
 ```python
 # Old
-device_registry.async_get_or_create(config_entry_id=entry.entry_id, **device_info)
+device_registry.async_get_or_create(
+    config_entry_id=entry.entry_id, **device_info
+)
 
 # New
 device_registry.async_get_or_create(
@@ -109,7 +111,7 @@ Only the fields which are set are passed on to the device registry, so an unset 
 
 ## Serializing a device info
 
-A dataclass is serialized field by field, unset fields included: orjson, and so the Home Assistant JSON helpers, write every unset field as `0`, and `dataclasses.asdict` keeps them as `UNDEFINED`. Whenever a device info is stored, sent in event data or a websocket message, or held by a dataclass which is serialized, use `device_info.as_dict()`, which returns the fields which are set:
+A dataclass is serialized field by field, unset fields included. orjson, which the Home Assistant JSON helpers use, writes every unset field as `0`. `dataclasses.asdict` keeps them as `UNDEFINED`. Whenever a device info is stored, sent in event data or a WebSocket message, or held by a dataclass which is serialized, use `device_info.as_dict()`, which returns the fields which are set:
 
 ```python
 # Old
@@ -139,9 +141,9 @@ Arguments of `async_get_or_create` which are not device info fields, such as `co
 
 `DeviceInfo({...})` raises a `TypeError`: pass the fields as keyword arguments.
 
-### Dict behaviour
+### Dict behavior
 
-Some rarely used dict behaviour is gone: `copy`, `setdefault`, `values`, `clear`, `popitem`, `pop`, `del device_info[key]`, merging with `|` or `|=`, iterating over a device info, and `len()`. Testing a field with `in` keeps working.
+Some rarely used dict behavior is gone: `copy`, `setdefault`, `values`, `clear`, `popitem`, `pop`, `del device_info[key]`, merging with `|` or `|=`, iterating over a device info, and `len()`. Testing a field with `in` keeps working.
 
 A device info is no longer a `dict`: `isinstance(device_info, dict)` returns `False`. Use `isinstance(device_info, DeviceInfo)`, or `device_info.as_dict()` where a plain dictionary is needed. An empty `DeviceInfo()` is no longer falsy either.
 
