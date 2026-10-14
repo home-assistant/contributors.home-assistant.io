@@ -153,7 +153,7 @@ outlet = device_registry.async_get_or_create_child(
 )
 ```
 
-If the parent belongs to a subentry, pass its `config_subentry_id` as well. It is not inherited, and leaving it out raises a `DeviceInfoError`.
+If the parent belongs to a subentry, pass its `config_subentry_id` as well. It is not inherited. The registry never creates the parent for you: it raises a `DeviceInfoError` when the parent does not exist, is a child device itself, or belongs to another config entry or subentry.
 
 ### Move existing devices to child devices
 
@@ -164,7 +164,7 @@ The other way around is not supported directly. To turn a child device back into
 ### What follows the parent
 
 - Removing a parent removes its children.
-- Disabling a parent disables its children, and enabling the parent enables them again. A child of a disabled parent cannot be enabled on its own.
+- Disabling a parent disables its children, and enabling the parent enables the children it disabled again. A child of a disabled parent cannot be enabled on its own.
 - A child without an area of its own is in the area of its parent. `dr.async_get_effective_area_id(hass, device)` returns the area that applies.
 - Labels are not inherited.
 - A parent with children cannot move to another config entry or subentry.

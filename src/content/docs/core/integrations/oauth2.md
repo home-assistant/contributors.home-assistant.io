@@ -23,7 +23,7 @@ OAuth 2.0 needs a client ID and a client secret: the credentials of an applicati
 
 Both end up as an implementation, a subclass of `AbstractOAuth2Implementation`. The config flow lets the user pick one if there are several, and uses it to log in.
 
-Your library has to be built so that Home Assistant can refresh tokens for it: it asks for a valid token before each request, instead of handling the refresh itself.
+Your library has to be built so that Home Assistant can refresh tokens for it: it asks for a valid token before each request, instead of handling the refresh itself. See [OAuth 2 in your API library](/core/integrations/api-library/#oauth-2) for how to build that.
 
 ## Application credentials
 
@@ -252,7 +252,7 @@ When a token request fails, the helper raises one of these exceptions from `home
 | `OAuth2TokenRequestError` | Any other HTTP status. Base class of the two above. | `ConfigEntryNotReady` |
 | `OAuth2TokenRequestConnectionError` | No response, or a response without a usable token | `ConfigEntryNotReady` |
 
-`async_get_config_entry_implementation` works the same way: it raises `ImplementationUnavailableError` (a `ConfigEntryNotReady`) or `UnknownImplementationError` (a `ConfigEntryAuthFailed`). When `async_ensure_token_valid` raises `OAuth2TokenRequestReauthError`, it has already started the reauthentication flow.
+`async_get_config_entry_implementation` works the same way: it raises `ImplementationUnavailableError` (a `ConfigEntryNotReady`) or `UnknownImplementationError` (a `ConfigEntryAuthFailed`). For backward compatibility, the token request exceptions also inherit from `aiohttp.ClientResponseError`, and `OAuth2TokenRequestConnectionError` from `aiohttp.ClientError`. When `async_ensure_token_valid` raises `OAuth2TokenRequestReauthError`, it has already started the reauthentication flow.
 
 So let these exceptions propagate:
 

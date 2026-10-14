@@ -47,7 +47,7 @@ If a company brand uses the same images as one of its integrations, put the imag
 
 ## Brand images for custom integrations
 
-A custom integration ships its own images, in a `brand/` folder inside the integration folder: `custom_components/my_integration/brand/`. Those local images take precedence over any images in the brands repository.
+Since Home Assistant 2026.3, a custom integration ships its own images, in a `brand/` folder inside the integration folder: `custom_components/my_integration/brand/`. Before that, custom integrations added their images to the brands repository too. Local images take precedence over any images in the brands repository.
 
 If you later contribute the integration to core, remove the `brand/` folder and add the images to the brands repository instead. Custom integrations must not use Home Assistant branded images, so users do not mistake them for an official integration.
 
