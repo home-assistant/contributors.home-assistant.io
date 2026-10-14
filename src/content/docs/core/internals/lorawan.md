@@ -6,7 +6,7 @@ sidebarGroup: APIs
 order: 35
 ---
 
-LoRaWAN is a long range, low power radio protocol, used by battery powered sensors that send a reading now and then. The devices do not talk to Home Assistant directly. They talk to a network server, like ChirpStack or The Things Stack, and Home Assistant talks to that server.
+LoRaWAN is a long-range, low-power radio protocol, used by battery-powered sensors that send a reading now and then. The devices do not talk to Home Assistant directly. They talk to a network server, like ChirpStack or The Things Stack, and Home Assistant talks to that server.
 
 So LoRaWAN support comes in two kinds of integrations, connected by the shared `lorawan` integration:
 
