@@ -22,7 +22,7 @@ You set the value in its _native_ unit, the unit the device or service reports. 
 | `last_reset` | `datetime \| None` | `None` | When an accumulating sensor started a new meter cycle. Only allowed with `SensorStateClass.TOTAL`. |
 | `options` | `list[str] \| None` | `None` | The possible states of a sensor with the `enum` device class. Cannot be combined with a state class or a unit. |
 | `suggested_display_precision` | `int \| None` | `None` | How many decimals the frontend shows. The state itself is not rounded. |
-| `suggested_unit_of_measurement` | `str \| None` | `None` | The unit to show the value in, instead of the one the unit system would pick. Stored in the entity registry the first time the sensor is seen, and never updated after that. |
+| `suggested_unit_of_measurement` | `str \| None` | `None` | The unit to show the value in, instead of the one the unit system would pick. Stored in the entity registry the first time the sensor is seen, and after that only updated when the user changes the unit system. |
 
 The generic properties every entity has, like `name` or `available`, are on [the entity class](/core/entities/entity-class/).
 
@@ -33,7 +33,7 @@ A sensor can never have the `config` [entity category](/glossary/entity-category
 The base class picks the unit it shows in this order:
 
 1. A unit the user set in the entity settings.
-2. The `suggested_unit_of_measurement`, which is stored as the initial unit for sensors with a unique ID.
+2. The initial unit, stored in the entity registry for sensors with a unique ID: the `suggested_unit_of_measurement`, or else the unit the user's unit system prefers for the device class. A sensor without a unique ID uses the `suggested_unit_of_measurement` directly.
 3. The temperature unit of the user's unit system, for sensors with the `temperature` device class and a native unit of °C or °F.
 4. A translated unit: the `unit_of_measurement` key next to the name in the `entity` section of `strings.json`, looked up by `translation_key`. Use this for units that are words, like "steps". A sensor with a translated unit must not set `native_unit_of_measurement`.
 5. The `native_unit_of_measurement`.
@@ -67,7 +67,7 @@ Non-numeric device classes take no unit and no state class:
 | `SensorDeviceClass.DATE` | A date. `native_value` must be a `datetime.date`. |
 | `SensorDeviceClass.ENUM` | One of a fixed list of text states. Set `options`. |
 | `SensorDeviceClass.TIMESTAMP` | A moment in time. `native_value` must be a `datetime` with a time zone. |
-| `SensorDeviceClass.UPTIME` | When the device last booted, as a `datetime` with a time zone. Small changes between updates are ignored, so a boot time calculated from an uptime counter does not change the state on every update. |
+| `SensorDeviceClass.UPTIME` | When the device last booted, as a `datetime` with a time zone. Changes smaller than 60 seconds between updates are ignored, so a boot time calculated from an uptime counter does not change the state on every update. Set `_attr_uptime_drift_tolerance` to a number of seconds to change that tolerance (at least 5). |
 
 Numeric device classes and their units:
 
@@ -129,7 +129,7 @@ Numeric device classes and their units:
 | `WIND_DIRECTION` | ° | Wind direction. Report `None` when there is too little wind to measure a direction. |
 | `WIND_SPEED` | mm/s, in/s, ft/s, m/s, m/min, km/h, mph, kn, Beaufort | Wind speed |
 
-The allowed state classes per device class are in `DEVICE_CLASS_STATE_CLASSES` in `homeassistant/components/sensor/const.py`. Most allow only `measurement`. Device classes that count something up, like `ENERGY`, `GAS`, `WATER`, `VOLUME`, and `REACTIVE_ENERGY`, allow only `total` and `total_increasing`. `MONETARY` allows only `total`, and `WIND_DIRECTION` only `measurement_angle`.
+The allowed state classes per device class are in `DEVICE_CLASS_STATE_CLASSES` in `homeassistant/components/sensor/const.py`. Most allow only `measurement`. `AREA`, `DATA_SIZE`, `DISTANCE`, `DURATION`, and `PRECIPITATION` allow every state class, and `WEIGHT` allows `measurement`, `total`, and `total_increasing`. Device classes that count something up, like `ENERGY`, `GAS`, `WATER`, `VOLUME`, and `REACTIVE_ENERGY`, allow only `total` and `total_increasing`. `MONETARY` allows only `total`, and `WIND_DIRECTION` only `measurement_angle`.
 
 ## State classes
 

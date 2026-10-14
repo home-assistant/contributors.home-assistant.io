@@ -139,6 +139,30 @@ You do not always have to implement `turn_on` and `turn_off`. Without them, `tur
 
 The state is the value of `hvac_mode`: `off`, `heat`, `cool`, `heat_cool`, `auto`, `dry`, or `fan_only`. When `hvac_mode` is `None`, the state is `unknown`.
 
+## Restoring temperatures
+
+If your entity restores its temperatures after a restart, don't read them from the attributes of the last state that `RestoreEntity` gives you. Those are converted to the unit system of the installation and rounded for display. Inherit from `RestoreClimate` instead, and call `async_get_last_climate_data()` in `async_added_to_hass`.
+
+It returns the stored `native_current_temperature`, `native_target_temperature`, `native_target_temperature_high`, and `native_target_temperature_low`, converted to your current `native_temperature_unit`, or `None` when there is nothing to restore. A temperature that is not a valid number comes back as `None`.
+
+Pass `validate_range=True` when you send the restored targets to the device, like when the device can't report its own state. A target outside `min_temp` and `max_temp` then comes back as `None`, and you fall back to a default. A target at most half a degree outside the range, which rounding can cause, is clamped to the range instead.
+
+```python
+from homeassistant.components.climate import RestoreClimate
+
+
+class MyThermostat(RestoreClimate):
+    async def async_added_to_hass(self) -> None:
+        """Restore the target temperature."""
+        await super().async_added_to_hass()
+        if (
+            data := await self.async_get_last_climate_data(validate_range=True)
+        ) is not None and data.native_target_temperature is not None:
+            self._attr_native_target_temperature = (
+                data.native_target_temperature
+            )
+```
+
 ## Example
 
 ```python
