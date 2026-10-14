@@ -86,7 +86,7 @@ Consumers never hold a reference to an infrared entity. They work with entity ID
 | `async_get_emitters(hass)` | The entity IDs of all emitter entities. Use it to offer a choice in your config flow. |
 | `async_get_receivers(hass)` | The entity IDs of all receiver entities. |
 | `async_send_command(hass, entity_id_or_uuid, command, context=None)` | Sends a command through an emitter. Raises `HomeAssistantError` when the infrared domain is not loaded or the emitter does not exist. |
-| `async_subscribe_receiver(hass, entity_id_or_uuid, signal_callback)` | Calls `signal_callback` with an `InfraredReceivedSignal` for every signal. Returns a callback to unsubscribe. Raises `HomeAssistantError` when the receiver does not exist. |
+| `async_subscribe_receiver(hass, entity_id_or_uuid, signal_callback)` | Calls `signal_callback` with an `InfraredReceivedSignal` for every signal. Returns a callback to unsubscribe. Raises `HomeAssistantError` when the infrared domain is not loaded or the receiver does not exist. |
 
 Most consumers do not need the helpers directly, because two base classes do the work for them:
 

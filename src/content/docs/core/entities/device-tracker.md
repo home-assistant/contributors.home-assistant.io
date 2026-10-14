@@ -58,8 +58,8 @@ A `ScannerEntity` behaves differently from most entities, because it is keyed on
 
 - Its unique ID is the MAC address. You do not set one yourself.
 - You do not provide device info: `device_info` is final and always `None`. Instead, once another integration has registered a device with the same MAC address in the [device registry](/core/entities/registry/), Home Assistant creates a device for your config entry with that MAC address as connection, named after the hostname or the MAC address, and links the entity to it.
-- It is enabled by default when its MAC address belongs to a known device, or when it has no MAC address. Trackers for every other client on the network start disabled, so a router does not flood the user with entities.
-- When the source type is `router` and you set the MAC address, IP address, and hostname, Home Assistant uses them to speed up DHCP discovery of the device.
+- It is enabled by default when its MAC address belongs to a known device, or when it has no MAC address. Trackers for every other client on the network start disabled, so a router does not flood the user with entities. When a device with that MAC address shows up in the device registry later, Home Assistant enables the tracker, unless the user turned off new entities for the config entry.
+- When you set the MAC address and IP address, DHCP discovery uses them, with the hostname when you set one, to discover integrations for the device. That happens when the entity is added while the device is connected, and whenever a tracker with the `router` source type changes to `home`.
 
 ## Supported features
 

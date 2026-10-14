@@ -100,7 +100,7 @@ The `disabled_by` field of a registry entry says why an entity is disabled. A di
 | `device` | The device of the entity is disabled. |
 | `hass` | Home Assistant disabled it. |
 
-When the user enables or disables an entity of a config entry, Home Assistant reloads the config entry to apply the change. Your integration must support unloading for that to work without a restart.
+When the user enables or disables an entity of a config entry, Home Assistant reloads the config entry to apply the change. It waits until 30 seconds after the last change, so a user who toggles several entities causes one reload. Your integration must support unloading for that to work without a restart.
 
 Make sure your integration copes with entities that are never added. If you keep references to entity objects, register them in `async_added_to_hass`, which only runs for entities that are actually added. See [the entity lifecycle](/core/entities/lifecycle/).
 
