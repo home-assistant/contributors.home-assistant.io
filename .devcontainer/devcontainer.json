@@ -7,7 +7,7 @@
     "dockerfile": "Dockerfile",
     "context": ".."
   },
-  "postCreateCommand": "git config --global --add safe.directory ${containerWorkspaceFolder} && pnpm install --frozen-lockfile",
+  "postCreateCommand": "git config --global --add safe.directory \"${containerWorkspaceFolder}\" && pnpm install --frozen-lockfile",
   "features": {
     "ghcr.io/devcontainers/features/github-cli:1": {}
   },
