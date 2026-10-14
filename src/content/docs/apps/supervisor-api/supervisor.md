@@ -122,7 +122,7 @@ Returns success when the Supervisor is up. It needs no token, so you can call it
 | Key | Type | Required | Description |
 | --- | --- | --- | --- |
 | `channel` | string | No | `stable`, `beta`, or `dev` |
-| `timezone` | string | No | Time zone, like `Europe/Amsterdam`. Also sets the time zone of the host |
+| `timezone` | string | No | Time zone, like `Europe/Amsterdam`. On Home Assistant OS 16.2 or newer, also sets the time zone of the host |
 | `logging` | string | No | `debug`, `info`, `warning`, `error`, or `critical` |
 | `debug` | boolean | No | Debug mode |
 | `debug_block` | boolean | No | Wait for a debugger at startup |
@@ -136,7 +136,7 @@ Returns success when the Supervisor is up. It needs no token, so you can call it
 
 ### `POST /supervisor/update`
 
-Updates the Supervisor to the latest version. Fails when there is no update. A `version` key only works in a Supervisor development environment, where `SUPERVISOR_DEV` is set. Everywhere else, the Supervisor ignores it and installs the latest version.
+Updates the Supervisor to the latest version. Fails when there is no update. A `version` key only works in a Supervisor development environment, where `SUPERVISOR_DEV` is `1`. Everywhere else, the Supervisor ignores it and installs the latest version.
 
 ### `POST /supervisor/reload`
 
@@ -192,7 +192,7 @@ Returns one [job model](/apps/supervisor-api/models/#job), with its child jobs. 
 }
 ```
 
-Some jobs still use their older names here. Backup and restore jobs report stages like `addons` instead of `apps`, and the job that updates an app is `addon_manager_update`.
+Unless the `supervisor_websocket_v2_api` development feature flag is on, some jobs still use their older names here. Backup and restore jobs report stages like `addons` instead of `apps`, and the job that updates an app is `addon_manager_update`.
 
 ### `DELETE /jobs/<job_id>`
 

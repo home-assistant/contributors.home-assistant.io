@@ -112,7 +112,7 @@ For the system disk, the children are `system`, `addons_data`, `addons_config`, 
 
 A mount has no such fixed parts, so the Supervisor walks its folders. A `max_depth` of 0 or 1 returns the totals only, 2 adds the first level of folders, and every level below that needs one more. An `other` child holds what is not in a folder, like files at the top of the mount. When the files change during the walk and the folders add up to more than `used_bytes`, the breakdown is left out.
 
-The Supervisor measures a mount by accessing it, which mounts it when it was not mounted yet. A mount that does not exist returns a `404`. A mount that cannot be read, is no longer mounted, or does not answer within 60 seconds returns an error. The measurement keeps running after that, and a new request waits for the same measurement instead of starting another one.
+The Supervisor measures a mount by accessing it, which mounts it when it was not mounted yet. A mount that does not exist returns a `404`. A mount that cannot be read or is no longer mounted returns an error. When the measurement takes longer than 60 seconds, the request returns an error, but the measurement keeps running. While it runs, a new request for the same mount and `max_depth` waits for it instead of starting another one. A `max_depth` below 2 counts as the same depth.
 
 ### Host logs
 
@@ -444,7 +444,7 @@ Creates a VLAN on an Ethernet interface. `<id>` is the VLAN ID, from 0 to 4094. 
 
 ## Time
 
-These endpoints set the NTP servers the host uses to sync its clock. They need Home Assistant OS 18.3 or newer, and return a `404` otherwise. When they are available, `features` of `GET /host/info` lists `ntp`.
+These endpoints set the NTP servers the host uses to sync its clock. They need Home Assistant OS 18.3 or newer, and return a `404` otherwise. When they are available, `all_features` of `GET /host/info` lists `ntp`.
 
 ### `GET /time/info`
 
