@@ -23,4 +23,9 @@ When you translate a regional variant, copy the base translation for strings tha
 
 ## What happens next
 
-A maintainer adds the language to Home Assistant and to Lokalise. Languages are identified with [BCP 47](https://www.rfc-editor.org/info/bcp47) tags, like `fr`, `fr-CA`, or `zh-Hans`. Once that is done, you can join the project and start translating.
+A maintainer adds the language to Home Assistant and to Lokalise. Languages are identified with [BCP 47](https://www.rfc-editor.org/info/bcp47) tags, like `fr`, `fr-CA`, or `zh-Hans`. A tag only includes a region when that region needs its own translations, and the base language is already translated. Once that is done, you can join the project and start translating.
+
+For maintainers, adding a language takes two steps:
+
+1. Add the language tag and its native name, like "Français" or "Français (CA)", to `src/translations/translationMetadata.json` in the frontend repository.
+2. Add the language in Lokalise. Sometimes the tag in Lokalise needs to be changed to match, under the language settings, as a custom ISO code.

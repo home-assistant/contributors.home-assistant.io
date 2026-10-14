@@ -18,7 +18,7 @@ Home Assistant's interface text is split over four Lokalise projects. Each link 
 
 ## 2. Create an account and join
 
-Lokalise asks you to create a free account. After that, join the project and pick your language. You can join more projects and languages later.
+Lokalise asks you to create a free account. After that, join the project and pick your language. You can join more projects and languages later. New to the editor? Lokalise explains it in [translate and collaborate](https://docs.lokalise.com/en/collections/2909016-translate-and-collaborate).
 
 ## 3. Find something to translate
 
