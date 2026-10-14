@@ -3,6 +3,8 @@ title: Apple architecture
 description: How the Home Assistant Apple app is organized. The source folders, the shared code, the Current environment, and the rules every change follows.
 sidebarLabel: Architecture
 order: 2
+source: https://github.com/home-assistant/iOS/blob/main/Package.resolved
+lastVerified: 2026-10-14
 ---
 
 The Apple app started as a web view with a few native extras, and grew into a hybrid codebase with native onboarding, sensors, widgets, App Intents, an Apple Watch app, CarPlay, and Live Activities. One repository builds all of it, for iOS, iPadOS, watchOS, and macOS through Mac Catalyst.

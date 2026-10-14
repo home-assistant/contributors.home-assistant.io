@@ -3,6 +3,8 @@ title: Apple continuous integration
 description: The GitHub Actions workflows of the Apple project. What runs on your pull request, after a merge, and on a schedule.
 sidebarLabel: Continuous integration
 order: 7
+source: https://github.com/home-assistant/iOS/tree/main/.github/workflows
+lastVerified: 2026-10-14
 ---
 
 The Apple project uses GitHub Actions together with Fastlane for linting, testing, building, translations, and distribution. CI checks more than whether the code compiles: style, strings, and coverage are part of the review too.

@@ -3,6 +3,8 @@ title: Apple code style
 description: SwiftFormat, SwiftLint, RuboCop, and Yamllint in the Apple project, and the coding conventions reviewers look for.
 sidebarLabel: Code style
 order: 4
+source: https://github.com/home-assistant/iOS/blob/main/.github/workflows/ci.yml
+lastVerified: 2026-10-14
 ---
 
 The Apple project formats and lints its code automatically, so reviews can focus on behavior and edge cases instead of style.
