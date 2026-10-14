@@ -135,6 +135,7 @@ Not every run sends all of them:
 - When the response has no text to speak, the run skips text to speech and goes from `intent-end` to `run-end`, unless it plays the acknowledgement sound instead.
 - When no wake word is heard before the audio ends, `wake_word-end` comes without a wake word, followed by `run-end`.
 - When a stage fails, the run sends `error`, then `run-end`. No other events follow.
+- When the whole run takes longer than its `timeout`, the order flips: Home Assistant cancels the run, which sends `run-end`, and then sends `error` with the code `timeout`. So don't stop listening at `run-end`, or you miss that error.
 
 ### Error codes
 
@@ -151,6 +152,7 @@ Not every run sends all of them:
 - `intent-not-supported`: the conversation agent is not available.
 - `intent-failed`: an error during intent recognition.
 - `tts-not-supported`: the text-to-speech provider is not available, or does not support the options.
+- `timeout`: the whole run took longer than its `timeout`.
 
 ## Send audio
 
