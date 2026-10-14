@@ -145,7 +145,7 @@ If your entity restores its temperatures after a restart, don't read them from t
 
 It returns the stored `native_current_temperature`, `native_target_temperature`, `native_target_temperature_high`, and `native_target_temperature_low`, converted to your current `native_temperature_unit`, or `None` when there is nothing to restore. A temperature that is not a valid number comes back as `None`.
 
-Pass `validate_range=True` when you send the restored targets to the device, like when the device can't report its own state. A target outside `min_temp` and `max_temp` then comes back as `None`, and you fall back to a default. A target at most half a degree outside the range, which rounding can cause, is clamped to the range instead.
+Pass `validate_range=True` when you send the restored targets to the device, like when the device can't report its own state. A target outside `min_temp` and `max_temp` then comes back as `None`, and you fall back to a default. A target at most half a degree outside the range, which rounding can cause, is clamped to the range instead. That half degree is in the unit the temperature was stored in, so a value stored in °F gets about 0.28 °C of room on an entity that now uses °C.
 
 ```python
 from homeassistant.components.climate import RestoreClimate

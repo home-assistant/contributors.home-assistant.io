@@ -1,6 +1,6 @@
 ---
 title: AI task entity
-description: Build an AI task entity that lets automations ask a model to generate data or images.
+description: Build an AI task entity that lets automations ask a model to generate data or images, or to evaluate questions.
 sidebarLabel: AI task
 sidebarGroup: Voice and AI
 ---

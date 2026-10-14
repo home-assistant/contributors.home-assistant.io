@@ -84,7 +84,7 @@ The frontend reads and changes this through the `assist_satellite/get_configurat
 | `media_id_source` | Where the audio came from: `url`, `media_id`, or `tts`. |
 | `tts_token` | The token of the generated text-to-speech audio, if any. |
 
-With `ask_question`, Home Assistant calls `async_start_conversation`, then stops the next pipeline after speech-to-text and matches the transcript against the answers the caller gave. You don't need to do anything special for it.
+With `ask_question`, Home Assistant calls `async_start_conversation`, then stops the next pipeline after speech-to-text and matches the transcript against the answers the caller gave. For that, start the pipeline for the reply at speech-to-text, which is the default `start_stage` of `async_accept_pipeline_from_satellite`. A pipeline that starts at the wake word runs on past speech-to-text.
 
 Home Assistant sets the state to `responding` while an announcement plays, and back to `idle` when your method returns. If a second announcement comes in during the first, it raises `SatelliteBusyError`.
 
