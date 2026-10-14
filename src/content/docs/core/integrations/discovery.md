@@ -35,7 +35,7 @@ When a user ignores a discovered device, Home Assistant creates an ignored confi
 | A Supervisor app | None | `async_step_hassio` | `HassioServiceInfo` |
 | Another integration | None | `async_step_integration_discovery` | Defined by that integration |
 
-The service info classes live in `homeassistant.helpers.service_info`, except two: the Bluetooth one comes from `homeassistant.components.bluetooth`, and the LoRaWAN one from `homeassistant.components.lorawan`. For example:
+The service info classes live in `homeassistant.helpers.service_info`, except the Bluetooth one, which comes from `homeassistant.components.bluetooth`. For example:
 
 ```python
 from homeassistant.helpers.service_info.zeroconf import ZeroconfServiceInfo

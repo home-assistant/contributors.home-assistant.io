@@ -64,7 +64,7 @@ The rest stays with your integration:
 
 Add a `lorawan` key to your [manifest](/core/integrations/manifest/#lorawan) with the `(stack, brand_id)` pairs of your vendor. Your integration needs a [config flow](/core/integrations/config-flow/), and `lorawan` in its `dependencies`. Hassfest checks both.
 
-When a connection reports a device that matches, Home Assistant starts your config flow with the `integration_discovery` source and a `LoRaWANDiscoveryInfo`, from `homeassistant.components.lorawan`. The discovery info has no fields: the flow only needs to know that a device of your vendor showed up. Only added devices start discovery. Updates and activity of devices do not.
+When a connection reports a device that matches, Home Assistant starts your config flow with the `integration_discovery` source and a `LoRaWANDiscoveryInfo`, from `homeassistant.helpers.service_info.lorawan`. The discovery info has no fields: the flow only needs to know that a device of your vendor showed up. Only added devices start discovery. Updates and activity of devices do not.
 
 Your integration needs one config entry, for the vendor, not one per device or per server. The device manager finds the devices on every connection, so the user does not pick a server. Use the domain of your integration as the unique ID, send both the user step and the discovery step to a step that asks for confirmation, and abort with `_abort_if_unique_id_configured()` when the entry exists.
 
