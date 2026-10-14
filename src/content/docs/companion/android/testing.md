@@ -21,7 +21,7 @@ Start with unit tests. They are fast, and most code should be testable that way.
 
 ## Naming tests
 
-Name tests as sentences, following GIVEN, WHEN, THEN. You see what broke without reading the test:
+Name tests as sentences, following [GIVEN, WHEN, THEN](https://en.wikipedia.org/wiki/Given-When-Then). You see what broke without reading the test:
 
 ```kotlin
 @Test
@@ -30,12 +30,18 @@ fun `Given user authenticated when opening app then show dashboard`() {
 }
 ```
 
+- **Given** is the starting situation, the setup.
+- **When** is the action or event you test.
+- **Then** is the outcome you expect.
+
 ## What to test
 
 - **Test behavior through the public API**, not implementation details. Tests that follow the public interface survive refactors.
-- **Don't widen visibility for a test.** Test through the public entry point. When there is no other way, use `@VisibleForTesting`, for example for a constructor that takes a `CoroutineScope` or a `Clock`.
+- **Don't widen visibility for a test.** Test through the public entry point. When there is no other way, use [`@VisibleForTesting`](https://developer.android.com/reference/kotlin/androidx/annotation/VisibleForTesting), for example for a constructor that takes a `CoroutineScope` or a `Clock`. Lint flags any use of such a member outside tests, and CI fails on lint warnings.
 - **Test your code, not libraries.** If you find yourself testing a library, contribute the test to that library. When you do want to pin a library's behavior, say why in the test.
+- **Write tests as you build.** Tests are a tool while you develop, not a chore for afterwards. They let you check your code without running the whole app, and writing them early keeps the code testable.
 - **Don't test for the sake of it.** Skip trivial code. A test should help you now or the next person later.
+- **Keep tests independent.** A test must not rely on another test, or on the order they run in.
 - **One behavior per test.** Merge near-identical tests into a parameterized one with `@ParameterizedTest`.
 - **Keep a feature's tests in one class**, mirroring the source structure under `src/test/kotlin/`.
 - **Never `Thread.sleep`.** Use `runTest`, which fakes time.
@@ -49,7 +55,7 @@ fun `Given user authenticated when opening app then show dashboard`() {
 
 ### Frameworks
 
-- **JUnit Jupiter** for unit tests. JUnit 4 only where Robolectric needs it; both run on the JUnit Platform.
+- **[JUnit Jupiter](https://junit.org/)** for unit tests. JUnit 4 only where Robolectric needs it; both run on the JUnit Platform.
 - **[MockK](https://mockk.io/)** for mocks. Prefer real objects or fakes when you can.
 - **[Turbine](https://github.com/cashapp/turbine)** for every Flow test.
 - **[Robolectric](https://robolectric.org/)** for code that needs Android APIs you can't mock or fake well. Prefer it over instrumentation tests.
@@ -59,11 +65,14 @@ A test looks like this:
 ```kotlin
 @Test
 fun `Given a valid user ID when fetching details then return user`() {
+    // Given
     val expectedUser = User(id = "12345", name = "John Doe")
     every { userRepository.getUser("12345") } returns expectedUser
 
+    // When
     val result = userService.getUserDetails("12345")
 
+    // Then
     assertEquals(expectedUser, result)
 }
 ```
@@ -80,7 +89,7 @@ class MyTest {
 }
 ```
 
-Robolectric only works with JUnit 4. If your code depends on the real state of the Android system, write an [instrumentation test](/companion/android/instrumentation-testing/) instead.
+Robolectric only works with JUnit 4 (see [this Robolectric issue](https://github.com/robolectric/robolectric/issues/3477)), so the project keeps JUnit 4 for those tests. If your code depends on the real state of the Android system, write an [instrumentation test](/companion/android/instrumentation-testing/) instead.
 
 ### Flows
 

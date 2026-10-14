@@ -75,7 +75,7 @@ val actions: Flow<UiAction>       // only if the view owns a handle
 Rules:
 
 - It never references Compose or platform UI types, so its logic runs as a plain JVM unit test.
-- It outlives configuration changes. A rotation does not restart work in `viewModelScope`.
+- It outlives configuration changes. `viewModelScope` is only cancelled when the screen is gone for good, so a rotation does not restart loading or flow collection.
 - Keep it thin. A small screen can keep its logic in the ViewModel. When it grows, move cohesive logic into the [blocks](#the-blocks) below.
 
 ### State
@@ -143,7 +143,20 @@ LaunchedEffect(webView) {
 
 The flow is a buffered `SharedFlow`, consumed once, so commands are not lost while the view is briefly gone. An action that needs a result can carry a `CompletableDeferred`.
 
-Only use actions for objects that must live in the view. A media player, for example, can live in a manager and be exposed as state.
+An action is not state: a command held as state would run again on every recomposition. It is not an event either: an event is a signal the host reacts to, like navigating, while an action drives one object this screen owns.
+
+Only use actions for objects that must live in the view. A media player, for example, can live in a manager and be exposed as state. In practice, a screen has at most one such object, and usually none.
+
+### Choosing an output
+
+Ask what the output is, not where it comes from:
+
+| If the output | Use | Why |
+| --- | --- | --- |
+| Decides what is rendered, and must survive recomposition and rotation | State | Emitting the same value again is a no-op |
+| Is a side effect that must happen exactly once | Event | Replaying it would navigate or show a snackbar twice |
+| Is a command for an object the view holds | Action | The ViewModel stays free of UI types |
+| Asks the user something and waits for the answer | Prompt in a manager | One prompt at a time, the caller suspends until the user answers |
 
 ## The blocks
 
@@ -156,11 +169,17 @@ The ViewModel delegates feature logic to four kinds of blocks. Name each class a
 | Manager | The logic and in-memory state of one feature concern | Repositories, use cases, platform APIs. Never another manager |
 | Handler | Logic that coordinates one or more managers | Managers, use cases, repositories. Never another handler |
 
-The difference between a manager and a handler is one question: does it depend on a manager? If yes, it is a handler. That rule makes manager-to-manager dependencies impossible by definition.
+The difference between a manager and a handler is one question: does it depend on a manager? If yes, it is a handler. Whether it holds state, or translates one input versus driving a multi-step flow, does not matter: a handler can be any of those. That rule makes manager-to-manager dependencies impossible by definition.
+
+A handler returns its work to the ViewModel as a sealed result, or as a flow of results. It may keep state for its own feature, which the ViewModel maps into the screen state. The state of the screen always belongs to the ViewModel.
 
 A manager talks to the screen in three ways: it exposes pending state as a `StateFlow` the view renders, it returns a sealed result from a `suspend` function, or it exposes a `Flow` of results.
 
-Managers are also where prompts live: a dialog, a permission request, or a file picker that waits for the user's answer. Use `SingleSlotQueue` for those. It shows one prompt at a time, exposes the current request as state, and lets the caller `awaitResult` until the user answers.
+Managers are also where prompts live: a dialog, a permission request, or a file picker that waits for the user's answer. Use `SingleSlotQueue` for those. It shows one prompt at a time, exposes the current request as state, and lets the caller `awaitResult` until the user answers. A prompt is not a fourth output: it is pending state the view renders, with the answer coming back as a normal input.
+
+Reach for a use case when logic is needed by more than one caller, or would bloat a ViewModel or manager, but has no state of its own. Examples are `CheckLocalNetworkPermissionUseCase` and `ServerChooserItemsUseCase`.
+
+Database access also goes through a repository: the Room DAO is the data source, and the repository is what the rest of the app sees. Combining several data sources is logic, so it belongs in a use case, manager, or handler, not in a repository.
 
 ### Choosing a block
 
@@ -182,6 +201,8 @@ The view and the ViewModel are the UI layer. Handlers, managers, and use cases a
 - Handlers use managers, use cases, and repositories.
 - Managers use use cases and repositories.
 - Use cases use repositories.
+- No handler uses another handler. Coordinate handlers in the ViewModel.
+- The ViewModel only extracts a handler once coordinating managers would otherwise bloat it.
 
 The same rules as a graph, with every arrow pointing down:
 
@@ -218,7 +239,9 @@ Scope a block to how long its state must live:
 - A block that belongs to one screen is `@ViewModelScoped`. Everything in that screen session shares one instance, and it resets when the session ends.
 - A block that represents an app-wide concern is usually `@Singleton`.
 
-Shared instances matter. If the ViewModel and a handler both inject a stateful manager, they must get the same object, or their view of the state drifts apart. Provide everything through Hilt.
+Shared instances matter. If the ViewModel and a handler both inject a stateful manager, they must get the same object, or their view of the state drifts apart. An unscoped binding gives each consumer its own copy. This is where being stateful matters: a block with state needs a scope that matches how long that state lives.
+
+Provide everything through Hilt. Never create these blocks by hand.
 
 ## Testing
 

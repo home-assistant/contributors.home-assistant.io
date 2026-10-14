@@ -20,7 +20,7 @@ The project also needs the NDK and CMake, for the native wake word code. Android
 
 ## 2. Fork, clone, and branch
 
-1. Fork [home-assistant/android](https://github.com/home-assistant/android) on GitHub.
+1. Fork [home-assistant/android](https://github.com/home-assistant/android) on GitHub. New to forks? GitHub explains [how to fork a repository](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo).
 2. Clone your fork, and go into the folder it creates:
 
    ```bash
@@ -30,7 +30,7 @@ The project also needs the NDK and CMake, for the native wake word code. Android
 
    Or in Android Studio, use **File** > **New** > **Project from Version Control**. Run the commands below in the folder of the project.
 
-3. Create a branch for your change:
+3. Create a branch for your change, with a name that says what you work on:
 
    ```bash
    git checkout -b fix-sensor-crash
@@ -68,7 +68,9 @@ On Windows, use `gradlew.bat assembleDebug`. This builds the debug variants of b
 ./gradlew :app:installFullDebug
 ```
 
-The debug build has its own application ID, `io.homeassistant.companion.android.debug`, so it installs next to the app from the Play Store.
+The debug build has its own application ID, `io.homeassistant.companion.android.debug`, so it installs next to the app from the Play Store. Its icon has a red background, so you can tell the two apart.
+
+Need a signed release build? See [build a signed release yourself](/companion/android/releases/#build-a-signed-release-yourself).
 
 Once the app runs, connect it to a Home Assistant instance. Use a test instance if you can: every time you onboard, the app registers a new device on that server.
 
@@ -102,11 +104,13 @@ You don't need to build anything to try someone else's change. CI builds APKs fo
 
 1. Open the pull request on GitHub and go to the **Checks** tab.
 2. Select the **Pull Request** workflow and scroll down to **Artifacts**.
-3. Download the APKs artifact. You must be signed in to GitHub for this.
-4. Unzip it and pick the `full` or `minimal` APK.
+3. Download the **APKs** artifact. You must be signed in to GitHub for this.
+4. Unzip it. It holds the debug APKs of the phone, Wear OS, and Android Automotive apps. For the phone, pick the `full` or `minimal` APK.
 5. Install it from a file manager on your phone, or with `adb install path/to/app.apk`.
 
-The debug APK installs next to your regular app, so you can test without losing your setup.
+The artifact only shows up once the build job has finished. That job waits for the lockfile and KTLint checks, so if one of those fails, there are no APKs.
+
+The debug APK installs next to your regular app, with a red icon, so you can test without losing your setup.
 
 ## AI tools
 

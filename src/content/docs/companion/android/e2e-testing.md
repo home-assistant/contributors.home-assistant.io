@@ -19,24 +19,27 @@ It is not part of the pull request checks. It starts an emulator for every suppo
 
 ## What it does
 
-1. Builds the `fullDebug` APK, with StrictMode off.
-2. Starts Home Assistant from the configuration in `.github/e2e/homeassistant`, and checks that `mobile_app` is loaded.
-3. Starts one emulator per API level on Emulator.wtf, from API 29 to `androidSdk-target`, and installs the app.
-4. Runs the [Maestro](https://maestro.dev/) flow on all emulators in parallel.
-5. Uploads the files you need to debug, whatever the result.
+1. Builds the `fullDebug` APK, with [StrictMode](/companion/android/debugging/#strictmode) off.
+2. Installs the [Maestro](https://maestro.dev/) CLI, and checks the download against its published checksum.
+3. Starts Home Assistant from the configuration in `.github/e2e/homeassistant`, and checks that `mobile_app` is loaded.
+4. Starts one emulator per API level on Emulator.wtf, from API 29 to `androidSdk-target`, and installs the app.
+5. Runs the Maestro flow on all emulators in parallel.
+6. Uploads the files you need to debug, whatever the result.
 
-The device list starts at API 29, even though the app supports older versions. On older images, the web view renders the frontend, but its content never shows up in what Maestro can see, so every check on it fails. The instrumentation tests still cover the full range.
+The device list starts at API 29, even though the app supports older versions. On older images, the web view renders the frontend, but its content never shows up in what Maestro can see, so every check on it fails. The [instrumentation tests](/companion/android/instrumentation-testing/) on pull requests still cover the full range, down to the minimum API level of the app.
 
 The Home Assistant container runs on the GitHub runner, and the emulators on Emulator.wtf. A tunnel connects them, and inside the emulators `homeassistant.internal` resolves to the instance.
 
 ## The flow
 
-The flow is in [`.maestro/onboarding.yaml`](https://github.com/home-assistant/android/blob/main/.maestro/onboarding.yaml). It covers the most critical path of the app:
+The flows live in the `.maestro` folder at the root of the repository. Today there is one, [`.maestro/onboarding.yaml`](https://github.com/home-assistant/android/blob/main/.maestro/onboarding.yaml), and every step of the test is written there. It covers the most critical path of the app:
 
 - **Login**: the real login page, with real credentials, through the whole authorization flow.
 - **Registration**: the app registers itself with `mobile_app`, which everything else depends on.
 - **The frontend renders**: reaching the overview dashboard proves the web view works on that API level.
-- **The external bus works both ways**: the frontend only shows the **Companion app** entry in its settings after the app announced itself over the bus, and selecting it makes the frontend ask the app to open its native settings.
+- **The external bus works both ways**: the frontend only shows the **Companion app** entry in its settings after the app announced itself over the [external bus](/frontend/reference/external-bus/), and selecting it makes the frontend ask the app to open its native settings.
+
+The flow takes the instance to test against from three parameters: `HOME_ASSISTANT_URL`, `HOME_ASSISTANT_USERNAME`, and `HOME_ASSISTANT_PASSWORD`.
 
 When you change the flow:
 
