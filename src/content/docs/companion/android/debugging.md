@@ -43,7 +43,7 @@ To build without it, for example for performance testing:
 Or set `noLeakCanary=true` in `gradle.properties`, in the project or in your Gradle user home.
 
 > [!WARNING]
-> Without LeakCanary, the resolved dependencies change, and Gradle complains about the lockfile. Update the lockfiles locally as described in [dependencies](/companion/android/dependencies/#lockfiles), but don't commit those changes.
+> Without LeakCanary, the resolved dependencies change, and Gradle complains about the lockfile. Update the lockfiles locally as described in [dependencies](/companion/android/dependencies/#lockfiles).
 
 ## FailFast
 
