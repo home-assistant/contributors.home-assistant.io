@@ -152,7 +152,7 @@ In words:
 - **App to frontend**: a component sends a typed message to the repository, which wraps it in a `WebViewAction.EvaluateScript`. `FrontendScreen` runs it in the web view.
 - **Authentication**: the frontend calls `getExternalAuth` or `revokeExternalAuth`, the handler asks `ServerSessionManager`, and the callback script runs in the web view. The bridge checks the callback name before it passes the call on.
 
-The action and event flows are buffered `SharedFlow`s, so commands aren't lost while the web view is briefly unavailable.
+The action and event flows are `SharedFlow`s with a small extra buffer, so a sender doesn't have to wait while the web view is still busy with an earlier command. They don't replay, though: a command sent while nothing collects the flow is dropped.
 
 ### Two bridge versions
 

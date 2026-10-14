@@ -4,6 +4,8 @@ description: Install Android Studio, fork and clone the repository, build the ap
 sidebarLabel: Get started
 sidebarGroup: Set up
 order: 1
+source: https://github.com/home-assistant/android/blob/main/.github/workflows/pr.yml
+lastVerified: 2026-10-14
 ---
 
 Android Studio is the only tool you need. It brings the Android SDK, an emulator, and a JDK. This page takes you from nothing to the app running on an emulator.

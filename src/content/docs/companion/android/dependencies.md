@@ -4,6 +4,8 @@ description: The version catalog, dependency lockfiles, and Renovate in the Andr
 sidebarLabel: Dependencies
 sidebarGroup: Write code
 order: 4
+source: https://github.com/home-assistant/android/blob/main/.github/workflows/renovate-lockfiles.yml
+lastVerified: 2026-10-14
 ---
 
 The Android app keeps tight control over its dependencies. Every library is declared in one place, every resolved version is locked, and a bot keeps them up to date.

@@ -4,6 +4,8 @@ description: The nightly Maestro test that runs the Android app against a real H
 sidebarLabel: End-to-end tests
 sidebarGroup: Test
 order: 4
+source: https://github.com/home-assistant/android/blob/main/.github/workflows/e2e.yml
+lastVerified: 2026-10-14
 ---
 
 All other tests fake the server. The end-to-end (E2E) test doesn't: it runs the real app against a real Home Assistant, the way a user does. That catches what nothing else can, like a change in Core or the frontend that breaks onboarding, or a web view problem on one specific Android version.

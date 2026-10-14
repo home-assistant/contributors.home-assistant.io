@@ -4,6 +4,8 @@ description: The GitHub Actions workflows of the Android app. What runs on your 
 sidebarLabel: Continuous integration
 sidebarGroup: Ship
 order: 2
+source: https://github.com/home-assistant/android/tree/main/.github/workflows
+lastVerified: 2026-10-14
 ---
 
 The Android app uses GitHub Actions for everything: checking pull requests, building releases, and shipping them to the stores with [Fastlane](https://fastlane.tools/). Shared steps live as local actions in `.github/actions`.

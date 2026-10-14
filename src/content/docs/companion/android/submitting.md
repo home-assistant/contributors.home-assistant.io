@@ -22,7 +22,7 @@ Your change works on your machine. Now it needs a pull request, a review, and a 
 Create the pull request from your fork against `main`, as described in the [GitHub documentation](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork). GitHub fills in the template. Don't delete anything from it, unless the template tells you to, like a section that doesn't apply to your change. Fill out:
 
 - **Summary**: what you changed, why, and what it means for users. Link related issues.
-- **Checklist**: tests, code style, edge cases, backward compatibility, and the AI policy. Breaking changes go in the changelog for users, or in the code for developers, depending on who they affect. Also select exactly one of the options that describe how you used AI.
+- **Checklist**: tests, code style, edge cases, backward compatibility, and the AI policy. Backward-incompatible changes go in the changelog for users, or in the code for developers, depending on who they affect. Also select exactly one of the options that describe how you used AI.
 - **Screenshots**: for UI changes outside the frontend, in light and dark mode.
 - **Documentation**: if your change adds, changes, or removes something users see, open a pull request in the [user documentation](https://github.com/home-assistant/companion.home-assistant) and link it. Mark the new feature there with `<span class='beta'>BETA</span>`, until it reaches production. If it changes something developers rely on, like how to build, test, or release the app, the template also asks for a pull request that updates the developer documentation.
 

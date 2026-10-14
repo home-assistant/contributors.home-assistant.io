@@ -4,6 +4,8 @@ description: How a change to the Android app travels from a merged pull request 
 sidebarLabel: Releases
 sidebarGroup: Ship
 order: 3
+source: https://github.com/home-assistant/android/tree/main/.github/workflows
+lastVerified: 2026-10-14
 ---
 
 Every merged pull request ships to internal testers right away. Every week, the latest build goes to the open beta. When a beta is stable, a maintainer promotes it to production. This page describes that path, and how to build a signed release on your own machine.

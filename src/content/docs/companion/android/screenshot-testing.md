@@ -4,6 +4,8 @@ description: Check that Compose UI in the Android app only changes on purpose, w
 sidebarLabel: Screenshot tests
 sidebarGroup: Test
 order: 2
+source: https://github.com/home-assistant/android/blob/main/.github/workflows/pr.yml
+lastVerified: 2026-10-14
 ---
 
 Screenshot tests compare the UI against reference images in the repository. When the rendered UI no longer matches its reference, the test fails, so every UI change is a deliberate one. They test looks only, never logic.
