@@ -112,7 +112,7 @@ Starting with Home Assistant 2026.11, you can also look around inside a running 
 hass.states.get("sun.sun")
 ```
 
-The debug console is enabled from the start on development and nightly versions, like the one in this container. On beta and stable versions from 2026.11 on, add `debug_console:` to your `configuration.yaml` first, and restart Home Assistant; see the [Debug console integration](https://www.home-assistant.io/integrations/debug_console/). Code runs in the event loop of Home Assistant, so `await` asynchronous calls, and run blocking work with `await hass.async_add_executor_job(...)`.
+The debug console is enabled with `debug_console:` in `configuration.yaml`, which `script/setup` adds to the configuration of this container. Elsewhere, add it yourself and restart Home Assistant; see the [Debug console integration](https://www.home-assistant.io/integrations/debug_console/). Code runs in the event loop of Home Assistant, so `await` asynchronous calls, and run blocking work with `await hass.async_add_executor_job(...)`.
 
 ### When the container does not build
 
