@@ -1,0 +1,33 @@
+---
+// Lets readers zoom into the images of a page or post: select one to see it
+// as large as the window allows, and select it again, scroll, or press Escape
+// to go back. Images that link somewhere keep their link instead.
+---
+
+<script>
+  import mediumZoom from "medium-zoom";
+
+  const images = document.querySelectorAll<HTMLImageElement>(".prose img:not(a img)");
+  if (images.length) {
+    // The background of the site, so the zoom follows the light or dark theme.
+    mediumZoom(images, { margin: 24, background: "var(--site-bg)" });
+  }
+</script>
+
+<style is:global>
+  /* Above the sticky header. */
+  .medium-zoom-overlay {
+    z-index: 100;
+  }
+
+  .medium-zoom-image--opened {
+    z-index: 101;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .medium-zoom-overlay,
+    .medium-zoom-image {
+      transition: none !important;
+    }
+  }
+</style>

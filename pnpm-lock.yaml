@@ -196,6 +196,9 @@ importers:
       ical.js:
         specifier: ^2.2.1
         version: 2.2.1
+      medium-zoom:
+        specifier: ^1.1.0
+        version: 1.1.0
       mermaid:
         specifier: ^12.1.0
         version: 12.2.0
@@ -1984,6 +1987,9 @@ packages:
 
   mdn-data@2.27.1:
     resolution: {integrity: sha512-9Yubnt3e8A0OKwxYSXyhLymGW4sCufcLG6VdiDdUGVkPhpqLxlvP5vl1983gQjJl3tqbrM731mjaZaP68AgosQ==}
+
+  medium-zoom@1.1.0:
+    resolution: {integrity: sha512-ewyDsp7k4InCUp3jRmwHBRFGyjBimKps/AJLjRSox+2q/2H4p/PNpQf+pwONWlJiOudkBXtbdmVbFjqyybfTmQ==}
 
   mermaid@12.2.0:
     resolution: {integrity: sha512-w7nr/SFrLO7BaVTs3dQTvYSV6nYSBj0Yy9DjBhsIJtAcHqRzXSq4Pg32ujHZ/AdWsAMNEvvhbm5dt9E2tOiHzw==}
@@ -4306,6 +4312,8 @@ snapshots:
   mdn-data@2.0.28: {}
 
   mdn-data@2.27.1: {}
+
+  medium-zoom@1.1.0: {}
 
   mermaid@12.2.0:
     dependencies:

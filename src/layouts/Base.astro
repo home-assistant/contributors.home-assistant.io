@@ -9,6 +9,7 @@ import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
 import HeadingAnchors from "../components/HeadingAnchors.astro";
 import HoverCards from "../components/HoverCards.astro";
+import ImageZoom from "../components/ImageZoom.astro";
 import PlausibleAnalytics from "../components/PlausibleAnalytics.astro";
 import type { Area } from "../data/areas";
 import { SITE } from "../data/site";
@@ -118,6 +119,7 @@ const imageAlt = title === SITE.title ? SITE.title : `${shareTitle}, on ${SITE.t
     <HoverCards />
     <CodeBlockCopy />
     <HeadingAnchors />
+    <ImageZoom />
     <MermaidDiagrams />
   </body>
 </html>
