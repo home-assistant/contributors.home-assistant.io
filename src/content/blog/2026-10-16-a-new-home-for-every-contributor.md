@@ -1,7 +1,7 @@
 ---
 title: A new home for every contributor
 description: The developer docs, the design portal, and the data science portal are now one site, for everyone who helps build Home Assistant, code or no code.
-date: 2026-10-12
+date: 2026-10-16
 authors:
   - Franck Nijhof
 areas:
@@ -9,7 +9,7 @@ areas:
   - start
 ---
 
-Welcome to contributors.home-assistant.io: one place for everyone who helps build Home Assistant.
+Welcome to [contributors.home-assistant.io](/): one place for everyone who helps build Home Assistant.
 
 For years, the information you needed to contribute lived in a lot of places. The developer documentation on developers.home-assistant.io. The design guidelines on design.home-assistant.io. The data science portal on data.home-assistant.io. And a whole lot more scattered across READMEs, pull request templates, and the heads of the people who have been around for a while.
 
