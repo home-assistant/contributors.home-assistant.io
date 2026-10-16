@@ -1,33 +1,122 @@
 ---
 // Lets readers zoom into the images of a page or post: select one to see it
-// as large as the window allows, and select it again, scroll, or press Escape
-// to go back. Images that link somewhere keep their link instead.
+// as large as the window allows, and select it again or press Escape to go
+// back. Where the browser can, the image grows from its place in the page.
+// Images that link somewhere keep their link instead.
 ---
 
-<script>
-  import mediumZoom from "medium-zoom";
+<dialog class="image-zoom" aria-label="Zoomed image">
+  <img alt="" />
+</dialog>
 
+<script>
+  const NAME = "image-zoom";
+
+  const dialog = document.querySelector<HTMLDialogElement>("dialog.image-zoom");
+  const zoomed = dialog?.querySelector("img");
   const images = document.querySelectorAll<HTMLImageElement>(".prose img:not(a img)");
-  if (images.length) {
-    // The background of the site, so the zoom follows the light or dark theme.
-    mediumZoom(images, { margin: 24, background: "var(--site-bg)" });
+
+  // The image in the page the dialog shows, to animate back to.
+  let source: HTMLImageElement | undefined;
+
+  // Animated with a view transition, which moves an element with a name from
+  // where it was to where it ends up. Without support for them, or when the
+  // reader prefers less motion, the change just happens.
+  function transition(change: () => void): Promise<void> {
+    if (!("startViewTransition" in document) || matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      change();
+      return Promise.resolve();
+    }
+
+    return document.startViewTransition(change).finished;
   }
+
+  function open(image: HTMLImageElement) {
+    if (!dialog || !zoomed) {
+      return;
+    }
+
+    source = image;
+    image.style.viewTransitionName = NAME;
+    transition(() => {
+      image.style.viewTransitionName = "";
+      zoomed.src = image.currentSrc || image.src;
+      zoomed.alt = image.alt;
+      zoomed.style.viewTransitionName = NAME;
+      dialog.showModal();
+    });
+  }
+
+  async function close() {
+    if (!dialog?.open || !zoomed) {
+      return;
+    }
+
+    const image = source;
+    await transition(() => {
+      zoomed.style.viewTransitionName = "";
+      if (image) {
+        image.style.viewTransitionName = NAME;
+      }
+
+      dialog.close();
+    });
+
+    // Only one element can carry the name at a time.
+    if (image) {
+      image.style.viewTransitionName = "";
+    }
+  }
+
+  for (const image of images) {
+    // Reachable by keyboard too.
+    image.tabIndex = 0;
+    image.classList.add("image-zoom-source");
+    image.addEventListener("click", () => open(image));
+    image.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        open(image);
+      }
+    });
+  }
+
+  dialog?.addEventListener("click", close);
+  // Escape closes the dialog at once; go through close() to animate it.
+  dialog?.addEventListener("cancel", (event) => {
+    event.preventDefault();
+    close();
+  });
 </script>
 
 <style is:global>
-  /* Above the sticky header. */
-  .medium-zoom-overlay {
-    z-index: 100;
+  .image-zoom-source {
+    cursor: zoom-in;
   }
 
-  .medium-zoom-image--opened {
-    z-index: 101;
+  .image-zoom {
+    width: 100vw;
+    max-width: none;
+    height: 100dvh;
+    max-height: none;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: zoom-out;
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .medium-zoom-overlay,
-    .medium-zoom-image {
-      transition: none !important;
-    }
+  .image-zoom[open] {
+    display: grid;
+    place-items: center;
+  }
+
+  .image-zoom::backdrop {
+    background: var(--site-bg);
+  }
+
+  .image-zoom img {
+    max-width: calc(100vw - 48px);
+    max-height: calc(100dvh - 48px);
+    object-fit: contain;
   }
 </style>
