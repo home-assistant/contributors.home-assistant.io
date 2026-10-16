@@ -41,17 +41,16 @@ jupyter lab
 
 JupyterLab opens in your browser. Data Detective reads the database, and seaborn draws plots.
 
-HASS Data Detective 3.3 and later require a Python version below 3.13. On Python 3.13 or newer, pip installs version 3.2 instead. That is the version this guide was tested with.
+On Python 3.13 or newer, pip installs HASS Data Detective 3.2, because later versions need an older Python. The notebook works with 3.2.
 
 You need access to the database. With the default SQLite database, copy `home-assistant_v2.db` from your configuration folder to your computer. Make the copy while Home Assistant is stopped, or from a backup, so you do not get a half-written file.
 
 If you use MariaDB, MySQL, or PostgreSQL for the recorder, connect to it directly instead. Create a separate database user with read-only rights for this. Your notebooks only need to read.
 
-Python also needs a driver for that database. For PostgreSQL, install it in the same virtual environment:
+Python also needs a driver for that database. Install it in the same virtual environment, and start the database URL with the matching prefix:
 
-```bash
-pip install psycopg2-binary
-```
+- **MariaDB or MySQL**: `pip install pymysql`, and a URL that starts with `mysql+pymysql://`. If you copy the `db_url` of your recorder and it starts with `mysql://`, change that part.
+- **PostgreSQL**: `pip install "psycopg[binary]"`, and a URL that starts with `postgresql://`.
 
 On the PostgreSQL server, a read-only user for a recorder database called `hass` looks like this:
 
@@ -86,22 +85,11 @@ git clone https://github.com/home-assistant/home-assistant-notebooks.git
    For MariaDB, MySQL, or PostgreSQL, pass the same kind of database URL as the `db_url` of your recorder instead.
 3. Run the cells from the top: select the first code cell, and press <kbd>Shift</kbd> + <kbd>Enter</kbd> to run it and move to the next one.
 
-The notebook reads your sensor data into a table, and plots it. On a big database this takes a while. A cell that is still running shows `[*]` next to it. When it is done, the asterisk changes into a number.
-
-### Which databases work
-
-On SQLite, the default database, every cell of the notebook works with the current database schema. **Run** > **Run All Cells** runs them all in one go.
-
-The other databases are not fully covered yet:
-
-- **MariaDB and MySQL**: the **View states** cells use a query of Data Detective that is written for SQLite, so expect those to fail.
-- **PostgreSQL**: not supported. The notebook stops with an error in the cell that connects to the database.
-
-For those databases, read the database with pandas yourself, as the next section shows.
+The notebook reads your sensor data into a table, and plots it. It works with SQLite, MariaDB, MySQL, and PostgreSQL, and **Run** > **Run All Cells** runs every cell in one go. On a big database this takes a while. A cell that is still running shows `[*]` next to it. When it is done, the asterisk changes into a number.
 
 ## Read the database with pandas
 
-You do not need Data Detective to get your data into a table. [pandas](https://pandas.pydata.org/) and SQLAlchemy, which the `pip install` above already brought in, read the database directly. Paste this into a new cell of a notebook, next to your copy of `home-assistant_v2.db`:
+To start from scratch, or to see what the notebook does under the hood: [pandas](https://pandas.pydata.org/) and SQLAlchemy, which the `pip install` above already brought in, read the database directly. Paste this into a new cell of a notebook, next to your copy of `home-assistant_v2.db`:
 
 ```python
 import pandas as pd
@@ -128,7 +116,7 @@ print(df.groupby("entity_id")["state"].describe())
 
 This reads the states of all your sensors, turns the timestamps into dates, keeps only the numeric states, and prints the count, average, minimum, and maximum for each sensor. From here, `df` is a regular pandas table you can filter, group, and plot.
 
-This example was tested on SQLite only. The query itself is plain SQL, so it is a good start for MariaDB, MySQL, or PostgreSQL too: change the database URL, and check the results.
+The query is plain SQL, the same kind the notebook uses on every database, so for MariaDB, MySQL, or PostgreSQL you only change the database URL.
 
 ## Make it your own
 
