@@ -3,9 +3,14 @@
 // as large as the window allows, and select it again or press Escape to go
 // back. Where the browser can, the image grows from its place in the page.
 // Images that link somewhere keep their link instead.
+import Icon from "./Icon.astro";
 ---
 
 <dialog class="image-zoom" aria-label="Zoomed image">
+  {/* Selecting anywhere in the dialog closes it, this button included. */}
+  <button type="button" class="image-zoom-close" aria-label="Close image">
+    <Icon name="x" size={20} />
+  </button>
   <img alt="" />
 </dialog>
 
@@ -69,8 +74,11 @@
   }
 
   for (const image of images) {
-    // Reachable by keyboard too.
+    // A button to open the zoom, also for keyboards and screen readers.
     image.tabIndex = 0;
+    image.setAttribute("role", "button");
+    image.setAttribute("aria-haspopup", "dialog");
+    image.setAttribute("aria-label", image.alt ? `Zoom into image: ${image.alt}` : "Zoom into image");
     image.classList.add("image-zoom-source");
     image.addEventListener("click", () => open(image));
     image.addEventListener("keydown", (event) => {
@@ -108,6 +116,26 @@
   .image-zoom[open] {
     display: grid;
     place-items: center;
+  }
+
+  /* On top of the image, so it does not move or shrink it. */
+  .image-zoom-close {
+    position: fixed;
+    top: var(--ha-space-4);
+    inset-inline-end: var(--ha-space-4);
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: var(--ha-border-radius-md);
+    background: var(--site-surface);
+    color: var(--site-text);
+    cursor: pointer;
+  }
+
+  .image-zoom-close:hover {
+    background: var(--site-surface-hover);
   }
 
   .image-zoom::backdrop {
