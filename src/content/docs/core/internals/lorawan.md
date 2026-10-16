@@ -225,7 +225,7 @@ Decoding payloads and encoding commands stays in your library. Entity properties
 - A connection that registers after your integration has loaded.
 - Two connections with a device with the same DevEUI.
 - A disconnect and a reconnect, including a device removed while the connection was down.
-- Cleanup of subscriptions when setup fails, is canceled, or Home Assistant stops.
+- Cleanup of the Home Assistant subscriptions and the collections when setup fails, is canceled, or Home Assistant stops.
 - Cleanup of the device registry, including for a connection entry deleted while your integration was not loaded.
 
-Test the decoding in your library, not in the integration.
+Test the decoding in your library, not in the integration. Test the backend of a connection integration on its own, against a real server: authentication, the list of devices, event delivery, downlinks, and closing the transport when setup fails, is canceled, or Home Assistant stops.
