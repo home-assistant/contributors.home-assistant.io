@@ -281,11 +281,11 @@ Updates the Raspberry Pi firmware to the version that comes with the OS. Returns
 
 ### SSH keys of the host
 
-`/os/ssh/authorized_keys` manages the SSH keys of the `root` user of the host. Only Home Assistant Core can call these endpoints, not apps.
+`/os/ssh/authorized_keys` manages the SSH keys of the `root` user of the host, for the [SSH server on port 22222](/os/operating-system/debugging/). Only Home Assistant Core can call these endpoints, not apps.
 
-- `GET` returns the keys as `keys`. It needs OS Agent 1.11.0 or newer, and returns a `404` otherwise.
-- `POST` adds the key you send as `key`, like `ssh-ed25519 AAAA...`. The key may not be longer than 3000 bytes or contain control characters. Adding a key also starts the SSH server of the host.
-- `DELETE` removes all keys.
+- `GET` returns the keys as `keys`, one entry per line of the file, without blank and comment lines. It needs OS Agent 1.11.0 or newer, and returns a `404` otherwise.
+- `POST` adds the key you send as `key`, like `ssh-ed25519 AAAA...`, to the keys that are already there. The key may not be longer than 3000 bytes or contain control characters. Since OS Agent 1.10.0, the key must also be one valid line of an OpenSSH `authorized_keys` file, options included. Adding a key also starts the SSH server of the host.
+- `DELETE` removes all keys. It also stops the SSH server, which ends open sessions.
 
 ## Hardware
 
