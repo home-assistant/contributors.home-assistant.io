@@ -141,6 +141,7 @@
 /companion/mobile-app-api/setup/	authenticating-the-user	log-the-user-in
 /core/development/deprecating/	dropping-yaml-support-for-an-integration	dropping-yaml-support
 /core/development/deprecating/	patterns-of-use	patterns
+/core/development/environment/	developing-with-devcontainer	development-container
 /core/development/environment/	install-docker-desktop	install-docker-on-linux
 /core/development/environment/	install-docker-engine	install-docker-on-linux
 /core/development/environment/	manual-environment	manual-setup
@@ -223,6 +224,7 @@
 /core/entities/radio-frequency/	get-transmitters	transmitter
 /core/entities/radio-frequency/	state	states
 /core/entities/registry/	example-acceptable-sources-for-a-unique-id	unique-id
+/core/entities/registry/	integrations-setting-default-value-of-disabled_by-for-new-entity-registry-entries	enabled-and-visible-by-default
 /core/entities/registry/	unacceptable-sources-for-a-unique-id	unique-id
 /core/entities/registry/	unique-id-of-last-resort	unique-id
 /core/entities/registry/	unique-id-requirements	unique-id

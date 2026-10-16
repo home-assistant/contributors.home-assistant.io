@@ -38,3 +38,6 @@
 /docs/core/platform/backup	/core/integrations/backup/
 /docs/core/platform/media_source	/core/integrations/media-source/
 /docs/core/platform/restart_required	/core/integrations/restart-required/
+/docs/creating_component_discovery	/core/integrations/discovery/
+/docs/creating_component_events	/core/integrations/events/
+/docs/creating_component_loading	/core/integrations/file-structure/

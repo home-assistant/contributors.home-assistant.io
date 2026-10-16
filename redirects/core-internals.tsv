@@ -32,3 +32,4 @@
 /docs/voice/overview	/core/internals/assist-pipelines/
 /docs/voice/pipelines	/core/internals/assist-pipelines/
 /docs/core/llm	/core/internals/llm-api/
+/docs/external_api_server_sent_events	/core/internals/rest-api/
