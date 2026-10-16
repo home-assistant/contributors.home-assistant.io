@@ -200,8 +200,8 @@ importers:
         specifier: ^12.1.0
         version: 12.1.0
       satori:
-        specifier: ^0.52.0
-        version: 0.52.0
+        specifier: ^0.54.0
+        version: 0.54.0
       satteri-callouts:
         specifier: ^1.0.1
         version: 1.0.1(satteri@0.10.5)
@@ -2186,8 +2186,8 @@ packages:
   safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
 
-  satori@0.52.0:
-    resolution: {integrity: sha512-jXFulTSSiu8u1l2ImxGBVnei85EP/Mb/clj3mtZVV6cmTjtnSmH47dnq/E/hqdNQ6V3PeMc1xYrSa3XA1P/Veg==}
+  satori@0.54.0:
+    resolution: {integrity: sha512-u9wm3HYYstTg+Mrj9py9UhtbF5c45ifeVdPpYDtRgmHMoOC9+Vc3W4hDNvdwlb4aQituIw87FsxG+G2UMDhuwA==}
     engines: {node: '>=16'}
 
   satteri-callouts@1.0.1:
@@ -4525,7 +4525,7 @@ snapshots:
 
   safer-buffer@2.1.2: {}
 
-  satori@0.52.0:
+  satori@0.54.0:
     dependencies:
       '@shuding/opentype.js': 1.4.0-beta.0
       css-background-parser: 0.1.0
