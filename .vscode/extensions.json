@@ -1,0 +1,10 @@
+// Keep in sync with the extensions in .devcontainer/devcontainer.json.
+{
+  "recommendations": [
+    "astro-build.astro-vscode",
+    "unifiedjs.vscode-mdx",
+    "bierner.markdown-mermaid",
+    "streetsidesoftware.code-spell-checker",
+    "GitHub.vscode-pull-request-github"
+  ]
+}

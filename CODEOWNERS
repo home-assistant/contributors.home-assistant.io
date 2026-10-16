@@ -1,0 +1,10 @@
+# The teams listed here are requested for a review when the pages they own
+# change.
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+src/content/docs/companion/android/ @home-assistant/android
+src/content/docs/companion/apple/ @home-assistant/ios
+src/content/docs/companion/mobile-app-api/ @home-assistant/mobile
+src/content/docs/core/ @home-assistant/core
+src/content/docs/frontend/ @home-assistant/frontend
+src/content/docs/writing/ @home-assistant/documentation

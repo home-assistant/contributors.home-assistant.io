@@ -20,7 +20,7 @@ There are three sides to this:
 
 The `llm` integration registers two APIs. Neither has tools of its own: all their tools come from the `llm.py` platforms of integrations, described under [contribute tools](#contribute-tools).
 
-- **Assist**, with the ID `assist`, controls and reads the entities the user exposed to Assist. The `intent` integration offers the common [intents](/core/internals/intents/) to it as tools, like `HassTurnOn` and the timer intents, and entity integrations offer their own, like setting the speed of a fan. It cannot do anything administrative.
+- **Assist**, with the ID `assist` and shown to users as "Device control", controls and reads the entities the user exposed to Assist. The `intent` integration offers the common [intents](/core/internals/intents/) to it as tools, like `HassTurnOn` and the timer intents, and entity integrations offer their own, like setting the speed of a fan. It cannot do anything administrative.
 - **Home Assistant**, with the ID `homeassistant`, manages Home Assistant itself, like registries, system logs, automations, and config entries. It is not limited to exposed entities, and only administrators can use it.
 
 Registering an intent does not make it a tool. To offer your intent to models, return an `llm.IntentTool` for its handler from your `llm.py` platform. The tool uses the `description` of your intent handler, so write it for the model: that is what it reads to decide when to call it.
@@ -142,7 +142,7 @@ A tool without `integration` is reported: as an error for core integrations, and
 
 `async_call` gets `hass`, a `ToolInput`, and the `LLMContext` of the request:
 
-- `ToolInput` has the `tool_name`, the `tool_args` (validated against `parameters`), and an `id` for the call.
+- `ToolInput` has the `tool_name`, the `tool_args` (validated against `parameters`), an `id` for the call, and `external`. An external call is one that something else already handles, so the chat log records it but does not run it through the LLM API. A conversation agent sets it for tools its model provider runs, like a web search, and the built-in conversation agent sets it for the intents it handles itself. Calls that the chat log runs for your tool have `external` set to `False`.
 - `LLMContext` has the `platform` (the domain of the agent), the `context` with the user, the `language`, the `assistant` whose exposed entities apply, and the `device_id` the request came from.
 
 Return a `ToolResult`. Its `data` must be a dictionary that can be serialized to JSON. Returning a plain dictionary is deprecated and stops working in Home Assistant 2027.11.
@@ -232,7 +232,7 @@ To find out which APIs exist, an administrator can list them over the WebSocket 
   "success": true,
   "result": {
     "apis": [
-      {"id": "assist", "name": "Assist", "requires_admin": false}
+      {"id": "assist", "name": "Device control", "requires_admin": false}
     ]
   }
 }

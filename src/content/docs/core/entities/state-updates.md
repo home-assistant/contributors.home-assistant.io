@@ -117,7 +117,7 @@ async def async_turn_on(self, **kwargs: Any) -> None:
 
 Set `_attr_assumed_state = True` when the state is a guess, because the device can't report it. The frontend then shows separate on and off buttons instead of a toggle, and keeps both open and close available for a cover, so the user can always send the command they need, even when the guess is wrong.
 
-Entities like this usually restore their last state after a restart with `RestoreEntity`, because there is nothing to ask. Two examples in Core:
+Entities like this can restore their last state after a restart with `RestoreEntity`, because there is nothing to ask. Two examples in Core:
 
 - The fan of the Dyson infrared integration (`dyson_infrared/fan.py`) always assumes its state. It writes the new state right after sending each infrared command.
 - An MQTT switch (`mqtt/switch.py`) without a state topic, or with `optimistic` set by the user, is optimistic. It sets `assumed_state`, writes the state after publishing a command, and restores its last state on startup.

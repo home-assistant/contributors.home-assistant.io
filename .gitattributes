@@ -1,0 +1,5 @@
+# Line endings are LF everywhere: in the repository, and in every checkout,
+# also on Windows. Files like .node-version and the scripts break with CRLF
+# inside the Linux dev container. Git detects binary files, like images and
+# fonts, by itself and leaves them alone.
+* text=auto eol=lf

@@ -67,7 +67,7 @@ Without `@callback`, `_async_light_changed` runs in a thread, and `async_write_h
 Some APIs have no thread safe version at all:
 
 - The area, category, device, entity, floor, and label registries, including `async_get_or_create`, `async_update_entity`, `async_update_device`, and `async_remove`.
-- `hass.config_entries.async_update_entry`.
+- `hass.config_entries.async_update_entry` and `hass.config_entries.async_update_subentry`.
 - Rendering templates, like `async_render_to_info`.
 - Ignoring an issue with `issue_registry.async_ignore_issue`.
 

@@ -2,6 +2,8 @@
 title: Apple
 description: The Home Assistant app for iPhone, iPad, Mac, Apple Watch, and CarPlay. What is in the repository, and where to start.
 order: 3
+source: https://github.com/home-assistant/iOS/blob/main/CONTRIBUTING.md
+lastVerified: 2026-10-14
 ---
 
 The Apple app brings Home Assistant to iPhone, iPad, Mac, Apple Watch, and CarPlay. Like the Android app, its center is a web view with the Home Assistant frontend. Around it, a lot is native: onboarding, settings, sensors, location, notifications and Live Activities, widgets and controls, App Intents and Shortcuts, the watch app and its complications, and CarPlay.
@@ -47,6 +49,10 @@ The full list is in [architecture](/companion/apple/architecture/#the-source-fol
 - [Submit a pull request](/companion/apple/submitting/): the checklist, the template, and the review.
 - [Continuous integration](/companion/apple/ci/): what runs on your pull request, and what happens after a merge.
 - [Releases](/companion/apple/releases/): from a merged pull request to App Store Connect, and Mac releases on GitHub.
+
+## Translate
+
+The text of the app is translated on Lokalise, in its own iOS project. You don't need a Mac or Xcode for that. See [your first translation](/translate/first-contribution/).
 
 ## Who to talk to
 

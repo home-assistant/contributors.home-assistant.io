@@ -4,6 +4,8 @@ description: How a change to the Android app travels from a merged pull request 
 sidebarLabel: Releases
 sidebarGroup: Ship
 order: 3
+source: https://github.com/home-assistant/android/tree/main/.github/workflows
+lastVerified: 2026-10-14
 ---
 
 Every merged pull request ships to internal testers right away. Every week, the latest build goes to the open beta. When a beta is stable, a maintainer promotes it to production. This page describes that path, and how to build a signed release on your own machine.
@@ -12,9 +14,7 @@ Every merged pull request ships to internal testers right away. Every week, the 
 
 ### Internal testing
 
-When a pull request is merged into `main`, CI builds the release versions and publishes them to the internal testing track on the Play Store. Internal testers get every change immediately.
-
-This is also the only way to test Android Automotive in a real car: debug builds don't show up in a vehicle.
+When a pull request is merged into `main`, CI builds the release versions and publishes them to the internal testing track on the Play Store. Internal testers get every change immediately. The app does a lot, so they can't test every feature on every build.
 
 APKs of every commit on `main` are also attached to the [On Push workflow runs](https://github.com/home-assistant/android/actions/workflows/onPush.yml).
 
@@ -28,7 +28,7 @@ Google reviews every build that goes to the open beta. How long that takes varie
 
 ### Promoting to production
 
-A maintainer promotes the beta to production when it is stable.
+A maintainer promotes the beta to production when it is stable, and it reaches everyone who installs the app from [Google Play](https://play.google.com/store/apps/details?id=io.homeassistant.companion.android).
 
 Before promoting:
 
@@ -40,17 +40,17 @@ Before promoting:
 
 To promote:
 
-1. Edit the latest beta release on [GitHub](https://github.com/home-assistant/android/releases). Keep the generated list of commits, and add a **Highlights of this release** section on top that matches `ChangelogContent.kt`.
+1. Edit the latest beta release on [GitHub](https://github.com/home-assistant/android/releases). Keep the generated list of commits, and add a **Highlights of this release** section on top that matches `ChangelogContent.kt`. See [2026.6.1](https://github.com/home-assistant/android/releases/tag/2026.6.1) for an example.
 2. Clear the **pre-release** checkbox, and set it as the **latest** release.
 
-That starts `release.yml`, which uses Fastlane to promote the beta track to production for the phone, Wear OS, and Automotive apps. Google reviews the release first, which usually takes a few days.
+That starts `release.yml`, which uses Fastlane to promote the beta track to production for the phone, Wear OS, and Automotive apps. Google reviews the release first, which usually takes a few days. Nothing needs to happen during that review.
 
 ### Other stores
 
 The Play Store only covers the `full` flavor. After a release:
 
 - Send the `minimal` Automotive app to the Harman Ignite store.
-- Submit the release for review in the [Amazon developer console](https://developer.amazon.com/apps-and-games/console/apps/list.html). The APK and changelog were already uploaded when the beta was built.
+- Submit the release for review in the [Amazon developer console](https://developer.amazon.com/apps-and-games/console/apps/list.html). The APK and changelog were already uploaded when the beta was built, by the `prep_amazon` Fastlane lane in `onPush.yml`.
 - Release the `minimal` app on the Meta Quest store.
 - F-Droid builds the release on its own, a few days later. See [F-Droid](/companion/android/ci/#f-droid).
 
@@ -58,7 +58,7 @@ The Play Store only covers the `full` flavor. After a release:
 
 - Merge the documentation pull request that removes the beta labels.
 - If the release fixes security issues since the last production release, add a **Disclosed security advisories** section to the GitHub release notes, after the highlights, with a link to each advisory.
-- For a big release, ask the community team to help spread the word.
+- For a release with a major change or a great new feature, ask the community manager to help promote it, like with a blog post or on social media.
 
 ## Build a signed release yourself
 
@@ -68,12 +68,14 @@ You only need this if you publish your own build. A release build must be signed
 > Keep your keystore and its passwords safe, and never commit them.
 
 1. Create a keystore in Android Studio with **Build** > **Generate Signed App Bundle or APK**, or use an existing one. Remember the passwords and the key alias.
-2. Name it `release_keystore.keystore` and put it in each app module you build, like `app/` and `wear/`. Or set `KEYSTORE_PATH` to its location.
+2. Name it `release_keystore.keystore` and put it in each app module you build: `app/`, `wear/`, or `automotive/`. Or set `KEYSTORE_PATH` to its location.
 3. Set the signing variables:
    - `KEYSTORE_PASSWORD`
    - `KEYSTORE_ALIAS`
    - `KEYSTORE_ALIAS_PASSWORD`
    - `KEYSTORE_PATH`, if the keystore is somewhere else
+
+   The signing configuration that reads them lives in `build-logic/convention/src/main/kotlin/AndroidApplicationConventionPlugin.kt`.
 4. Build APKs or app bundles, for all apps or for one module:
 
 ```bash

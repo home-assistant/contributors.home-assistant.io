@@ -35,6 +35,15 @@ Take a lamp that turns on by its own switch:
 
 None of these parts know about each other. They meet in the state machine and on the event bus. That is why a new integration works with every dashboard, automation, and voice assistant from day one.
 
+## Kinds of integrations
+
+Integrations do different jobs, and most do one of these:
+
+- **Define a kind of device**: an entity integration like `light` decides what a light is in Home Assistant, which data it has and in what format, and which actions control it. A new one starts as a proposal in the [architecture discussions](https://github.com/home-assistant/architecture/discussions), with the data it holds, how it is controlled, and examples from several brands.
+- **Connect devices and services**: an integration like `hue` talks to Philips Hue, and makes its lights available as `light` entities. These integrations generally don't use the state of entities from other integrations. The exception is entities with a location, like those of `zone` and `device_tracker`.
+- **Provide virtual or computed data**: `input_boolean` is a switch that only exists in Home Assistant. `template` and `utility_meter` compute their entities from other data in Home Assistant.
+- **Automate**: `automation` runs the automations of users, and a more specific one, like `flux`, adjusts lights to the position of the sun.
+
 ## The lifecycle of Home Assistant itself
 
 - [From start to running](/architecture/core/startup/): how Home Assistant starts in stages, so a broken integration can't stop the house, and how it shuts down.

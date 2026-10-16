@@ -26,7 +26,9 @@ Text-to-speech entities have no supported features. Streaming input is detected 
 
 ## Options and audio formats
 
-Callers pass options as a dictionary, merged on top of `default_options`. Your engine only receives options that are in `supported_options`, with one exception: the preferred format options. Any other option is not dropped: the request fails with a `ServiceValidationError` before it reaches your engine. Assist sets these so the audio fits the device that plays it.
+Callers pass options as a dictionary, merged on top of `default_options`. An option that is not in `supported_options` is not dropped: the request fails with a `ServiceValidationError` before it reaches your engine. The same happens for a language that is not in `supported_languages`.
+
+The preferred format options are the exception. They are always accepted, and Assist sets them so the audio fits the device that plays it.
 
 | Option | Constant |
 | ------ | -------- |
@@ -42,7 +44,7 @@ If you list one of them in `supported_options`, it reaches your engine, and the 
 
 ### Generate audio
 
-Implement `async_get_tts_audio`, or `get_tts_audio` for blocking code. It receives the full message and returns a tuple of the file extension and the audio bytes, like `("mp3", data)`. Return `(None, None)` when the engine produced nothing.
+Implement `async_get_tts_audio`, or `get_tts_audio` for blocking code. It receives the full message and returns a tuple of the file extension and the audio bytes, like `("mp3", data)`. Return `(None, None)` when the engine produced nothing. Home Assistant then raises an error for the caller.
 
 ```python
 async def async_get_tts_audio(

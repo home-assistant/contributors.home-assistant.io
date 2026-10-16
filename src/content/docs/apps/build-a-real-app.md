@@ -113,7 +113,7 @@ LABEL \
     io.hass.version=${BUILD_VERSION}
 ```
 
-The full file adds more build arguments and labels: a name, description, build date, Git commit, and the Open Container Initiative labels like `org.opencontainers.image.source`. The build workflow fills those in; the Supervisor only passes `BUILD_ARCH`, `BUILD_VERSION`, and, with a `build.yaml`, `BUILD_FROM`. It also sets `io.hass.type="addon"`, the older value of that label; new images use `app`. See [labels](/apps/guides/dockerfile/#labels).
+The full file adds more build arguments and labels: a name, description, build date, Git commit, and the Open Container Initiative labels like `org.opencontainers.image.source`. The build workflow fills those in; the Supervisor only passes `BUILD_ARCH`, `BUILD_VERSION`, and, with a `build.yaml`, `BUILD_FROM` and any build arguments you list under `args:` in that file. It also sets `io.hass.type="app"`. The legacy value of that label is `addon`. See [labels](/apps/guides/dockerfile/#labels).
 
 What to take from it:
 

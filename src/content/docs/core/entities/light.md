@@ -83,7 +83,7 @@ async def async_turn_on(self, **kwargs: Any) -> None:
 
 The keyword arguments use the constants from `homeassistant.components.light`, like `ATTR_BRIGHTNESS`, `ATTR_COLOR_TEMP_KELVIN`, `ATTR_HS_COLOR`, `ATTR_RGB_COLOR`, `ATTR_WHITE`, `ATTR_EFFECT`, `ATTR_FLASH`, and `ATTR_TRANSITION`.
 
-You never receive a color mode. Instead you receive at most one color attribute, and it is always one your light supports. When an action asks for a color in a format your light does not support, Home Assistant converts it first. For example, an `hs_color` becomes an `rgb_color` for a light that only supports `ColorMode.RGB`. Brightness given as a percentage or as a step is also converted to `ATTR_BRIGHTNESS` before it reaches you. When the brightness, or `white`, ends up at 0, like after a step down from a dim light, Home Assistant calls your `turn_off` instead of `turn_on`.
+You never receive a color mode. Instead you receive at most one color attribute, and it is always one your light supports. When an action asks for a color in a format your light does not support, Home Assistant converts it first. For example, an `hs_color` becomes an `rgb_color` for a light that only supports `ColorMode.RGB`. Brightness given as a percentage or as a step is also converted to `ATTR_BRIGHTNESS` before it reaches you. For a light that supports `ColorMode.WHITE`, `ATTR_WHITE` carries the brightness for white mode: when an action sets both `white` and `brightness`, you only receive `ATTR_WHITE`, with the value of the brightness. When the brightness, or `white`, ends up at 0, like after a step down from a dim light, Home Assistant calls your `turn_off` instead of `turn_on`.
 
 ### Turn off
 

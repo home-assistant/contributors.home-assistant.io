@@ -13,6 +13,8 @@ pnpm install
 pnpm dev
 ```
 
+Or skip the setup: open the repository in a [dev container](https://containers.dev) with VS Code or a GitHub Codespace. The configuration in `.devcontainer/` installs Node.js, pnpm, and the dependencies, and forwards the port of the development server. In VS Code, **Terminal** > **Run Task** offers the common ones as tasks, like the development server and **Pull request checks**, which runs what CI runs.
+
 Search only works on a build, because Pagefind creates its index afterwards:
 
 ```shell

@@ -1,0 +1,84 @@
+// Tasks for VS Code: Terminal > Run Task. Each one runs a script from
+// package.json, see the README for what they do.
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Dev server",
+      "detail": "Starts the development server on port 4321.",
+      "type": "shell",
+      "command": "pnpm dev",
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "Build",
+      "detail": "Builds the site to dist/, with the search index.",
+      "type": "shell",
+      "command": "pnpm build",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Preview",
+      "detail": "Serves the build in dist/, with search.",
+      "type": "shell",
+      "command": "pnpm preview",
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "dedicated"
+      }
+    },
+    {
+      "label": "Check",
+      "detail": "Type-checks the site and the front matter of every page.",
+      "type": "shell",
+      "command": "pnpm check",
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "Check structure",
+      "detail": "Checks that every area has the expected shape.",
+      "type": "shell",
+      "command": "pnpm structure",
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "Check links",
+      "detail": "Checks every link and anchor in dist/. Needs a build.",
+      "type": "shell",
+      "command": "pnpm links",
+      "group": "test",
+      "problemMatcher": []
+    },
+    {
+      "label": "Pull request checks",
+      "detail": "Everything CI runs: structure, check, build, and links.",
+      "dependsOrder": "sequence",
+      "dependsOn": ["Check structure", "Check", "Build", "Check links"],
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Clean",
+      "detail": "Removes dist/ and the caches of Astro.",
+      "type": "shell",
+      "command": "pnpm clean",
+      "problemMatcher": []
+    }
+  ]
+}

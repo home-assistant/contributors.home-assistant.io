@@ -44,7 +44,7 @@ And add the name under `entity` in `strings.json`, by platform and translation k
 
 With a device called "My device", the entity is shown as "My device Phase voltage".
 
-An entity on the `binary_sensor`, `button`, `event`, `number`, `sensor`, or `update` platform with a device class needs no translation key when the name of the device class fits. It is named after the device class, like "Temperature", and that name is already translated. This does not work for sensors with the `enum` device class.
+An entity on the `binary_sensor`, `button`, `event`, `infrared`, `number`, `sensor`, or `update` platform with a device class needs no translation key when the name of the device class fits. It is named after the device class, like "Temperature", and that name is already translated. This does not work for sensors with the `enum` device class.
 
 See [Make your strings translatable](/translate/guides/developers/) for how to write strings that translators can work with.
 

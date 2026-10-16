@@ -30,7 +30,7 @@ hass.bus.async_fire(
 )
 ```
 
-If a device only fires events and has no entities, register it in the device registry yourself, so there is a device to attach the events to.
+If a device only fires events and has no entities, [register it in the device registry yourself](/core/integrations/device-registry/#register-a-device-yourself), so there is a device to attach the events to.
 
 A few rules:
 

@@ -71,7 +71,7 @@ If the user step sets the same unique ID, pass `raise_on_progress=False` to `asy
 
 ## How it is checked
 
-- Hassfest, when the rule is `done`: the integration needs a `config_flow.py`, and either a discovery key in `manifest.json` (`bluetooth`, `dhcp`, `homekit`, `mqtt`, `ssdp`, `usb`, or `zeroconf`) or a discovery step in the config flow, like `async_step_zeroconf` or `async_step_hassio`.
+- Hassfest, when the rule is `done`: the integration needs a `config_flow.py`, and either a discovery key in `manifest.json` (`bluetooth`, `dhcp`, `homekit`, `lorawan`, `mqtt`, `ssdp`, `usb`, or `zeroconf`) or a discovery step in the config flow, like `async_step_zeroconf` or `async_step_hassio`.
 - Codecov requires 100% test coverage of the changed lines in `config_flow.py`, so the discovery steps need tests.
 - Whether every way the device can be discovered is used, is checked in review.
 

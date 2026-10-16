@@ -138,6 +138,11 @@ The `entity_name` selector in the example lets people pick how the entity is nam
 const name = this._hass.formatEntityName(stateObj, this._config.name);
 ```
 
+The selector has two options of its own:
+
+- `entity_id`: a fixed entity to preview the names with, instead of the one from `context.entity`.
+- `default_name`: the value shown while the field has no configured value (`undefined`). It takes the same shapes as the value: a string, one name item, or a list of them.
+
 See the [hass object reference](/frontend/reference/hass-object/#formatentityname) for what it can do.
 
 ## A visual editor of your own

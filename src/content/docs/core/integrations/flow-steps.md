@@ -200,7 +200,7 @@ probatio.Required(CONF_PASSWORD): TextSelector(
 
 ### Options that depend on another field
 
-Some selectors narrow their options based on the value of another field in the same form. They take a `context` in their config, which maps a context key to the name of the field that provides its value. The unit of measurement selector, for example, supports `filter_device_class` and `filter_state_class`:
+Some selectors narrow their options based on the value of another field in the same form. They take a `context` in their config, which maps a context key to the name of the field that provides its value. The unit of measurement selector, for example, supports `filter_device_class` and `filter_state_class`. They point at a field that uses a device class or a state class selector. The selector config rejects a context key it does not know, and you cannot combine `filter_device_class` with `device_classes`, or `filter_state_class` with `state_classes`:
 
 ```python
 probatio.Optional(CONF_UNIT_OF_MEASUREMENT): UnitOfMeasurementSelector(

@@ -7,7 +7,7 @@ sidebarGroup: Openings and security
 
 A cover entity controls something that opens and closes over an opening: blinds, shades, curtains, awnings, garage doors, gates, and motorized windows. It can report and set a position, and a tilt for blinds with slats. Inherit from `CoverEntity` in `homeassistant.components.cover`.
 
-A device that controls the flow of water or gas is a [valve](/core/entities/valve/). A door you lock and unlock is a [lock](/core/entities/lock/).
+Only use a cover for something that covers an opening. A device that controls the flow of water or gas is a [valve](/core/entities/valve/). A door you lock and unlock is a [lock](/core/entities/lock/). For anything else, use another entity type, like a [number](/core/entities/number/), even where older integrations used a cover.
 
 For how the frontend shows a cover, see the [cover more-info view](/design/more-info/cover/).
 
@@ -25,7 +25,7 @@ Cover entities have these properties on top of the [generic entity properties](/
 | `device_class` | `CoverDeviceClass \| None` | `None` | What kind of cover it is. See [Device classes](#device-classes). |
 | `supported_speeds` | `list[str] \| None` | `None` | The speeds the cover can move at when it opens, closes, or moves to a position. `None` or an empty list means no speed selection. |
 
-When you set `supported_speeds` to a list, Home Assistant adds it as the `supported_speeds` attribute, and checks the `speed` in an action against it before it calls you. Without speeds, a `speed` in an action is dropped.
+When you set `supported_speeds` to a list, Home Assistant adds it as the `supported_speeds` attribute, and checks the `speed` in an action against it before it calls you. A speed that is not in the list raises a validation error. Without speeds, a `speed` in an action is dropped.
 
 ## Device classes
 
@@ -79,7 +79,7 @@ Implement the sync or the async variant of each method, not both.
 
 `set_cover_position` receives `ATTR_POSITION`, and `set_cover_tilt_position` receives `ATTR_TILT_POSITION`, both from 0 to 100. `open_cover`, `close_cover`, and `set_cover_position` can receive `ATTR_SPEED` when the cover has `supported_speeds`.
 
-Toggling is handled for you. `toggle` stops a moving cover when it supports `STOP`, opens a closed or closing cover, and closes an open or opening one. `toggle_tilt` opens the tilt when it is at 0, and closes it otherwise.
+Toggling is handled for you. `toggle` stops a moving cover when it supports `STOP`, opens a closed or closing cover, and closes an opening or fully open one. A cover that stopped partly open moves the other way from the last direction it reported, and closes when it never reported one. `toggle_tilt` opens the tilt when it is at 0, and closes it otherwise.
 
 ## States
 

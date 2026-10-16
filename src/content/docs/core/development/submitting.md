@@ -59,6 +59,8 @@ On your first pull request, a bot asks you to sign the Contributor License Agree
 
 Do not amend, squash, or rebase commits that you already pushed, once the pull request is open. Reviewers need to follow the history, and see what changed since they last looked. Add new commits instead, and bring in changes from `dev` with a merge. See [keeping your branch up to date](/core/development/catching-up/).
 
+CI must pass before your pull request can be reviewed and merged. Some tests are flaky: when you are sure a failure has nothing to do with your change, wait for a maintainer, instead of pushing again to run CI once more.
+
 [After you open a pull request](/core/development/review-process/) explains what happens next in core.
 
 ## New integrations

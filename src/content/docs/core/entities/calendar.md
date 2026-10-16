@@ -69,7 +69,7 @@ async def async_get_events(
 
 Required. Return the events in a time range, in order, with recurring events expanded. `start_date` is compared to the end of an event, and `end_date` to the start, both exclusive. Both are in the local Home Assistant time zone.
 
-This method powers the calendar panel, the `calendar.get_events` action, and live updates. The frontend subscribes to the events in a range over the WebSocket API, and the base class calls this method when the state changes and pushes the result. You do not implement anything for that. When events change outside a state change, like after one is created, call `self.async_update_event_listeners()` to push the new events.
+This method powers the calendar panel, the `calendar.get_events` action, and live updates. The frontend subscribes to the events in a range with the `calendar/event/subscribe` WebSocket command. Every time the entity writes its state, the base class calls this method and pushes the result to the subscribers, debounced so a burst of updates leads to one fetch. You do not implement anything for that. Creating, updating, or deleting an event does not write the state. When events change outside a state write like that, call `self.async_update_event_listeners()` to push the new events.
 
 ### Create events
 

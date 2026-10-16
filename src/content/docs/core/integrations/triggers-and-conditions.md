@@ -325,4 +325,5 @@ A condition tests the current state, so its title reads "[Device type] is [state
 
 - Keys are lowercase `snake_case`, and match the meaning of the title.
 - Do not repeat the domain: in the `update` domain, use `became_available`, not `update_became_available`.
+- Do not use placeholder keys, like `_`.
 - Put a subtype in front: `awning_opened`, `blind_is_open`.

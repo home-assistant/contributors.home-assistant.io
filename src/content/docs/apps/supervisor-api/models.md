@@ -64,7 +64,7 @@ An app in the store, installed or not, as [`GET /store/addons`](/apps/supervisor
 | `slug` | string | Slug of the repository |
 | `name` | string | Name of the repository |
 | `source` | string | Git URL, or `local` and `core` for the built-in ones |
-| `url` | string or null | Website of the repository |
+| `url` | string | Website of the repository. Same as `source` when the repository sets none |
 | `maintainer` | string | Maintainer of the repository |
 
 ## Backup
@@ -149,7 +149,6 @@ Resource usage of a container.
 | `progress` | float | Progress from 0 to 100, when the job can tell |
 | `stage` | string or null | Stage the job is in |
 | `done` | boolean or null | `true` when done, `null` if the job has not started |
-| `parent_id` | string or null | ID of the job that started this one, `null` for a top-level job |
 | `created` | string | When the job was created, in ISO 8601 |
 | `errors` | list | [Job errors](#job-error) |
 | `extra` | dictionary or null | Extra information about the job or its stage |
@@ -271,7 +270,7 @@ The same object goes into `POST /mounts` and comes back from `GET /mounts`. Some
 | `port` | integer | Both | CIFS and NFS: port, when it is not the default |
 | `share` | string | Both | CIFS: name of the share |
 | `version` | string or null | Both | CIFS: `1.0` or `2.0` to force an old protocol version |
-| `username` | string | Request | CIFS: user name |
+| `username` | string | Request | CIFS: user name. Send it together with `password`, or leave both out |
 | `password` | string | Request | CIFS: password |
 | `path` | string | Both | NFS: path on the server |
 | `uuid` | string | Both | Disk: UUID of the partition, from [`GET /host/disks`](/apps/supervisor-api/host/#get-hostdisks) |
@@ -284,9 +283,9 @@ The same object goes into `POST /mounts` and comes back from `GET /mounts`. Some
 
 | Key | Type | Description |
 | --- | --- | --- |
-| `state` | string | `active` or `inactive` |
-| `status` | string | Result of the last boot from this slot: `good` or `bad` |
-| `version` | string | OS version in this slot |
+| `state` | string | State of the slot as RAUC reports it, like `booted`, `active`, or `inactive` |
+| `status` | string or null | Result of the last boot from this slot: `good` or `bad` |
+| `version` | string or null | OS version in this slot |
 
 ## Disk
 
@@ -297,7 +296,7 @@ The same object goes into `POST /mounts` and comes back from `GET /mounts`. Some
 | `model` | string | Model |
 | `serial` | string | Serial number |
 | `size` | integer | Size in bytes |
-| `id` | string | ID of the disk |
+| `id` | string | ID of the disk: the UDisks2 drive ID, or the device path when there is none |
 | `dev_path` | string | Device path |
 
 ## Device

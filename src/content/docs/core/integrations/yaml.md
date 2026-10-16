@@ -94,9 +94,9 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     return True
 ```
 
-The platform receives the data as `discovery_info` in its `async_setup_platform`. Platforms loaded this way cannot be unloaded. The YAML configuration in platform sections of existing integrations is frozen until the integration is refactored.
+The platform receives the data as `discovery_info` in its `async_setup_platform`. The YAML configuration in platform sections of existing integrations is frozen until the integration is refactored.
 
-For entity integrations, `PLATFORM_SCHEMA` is how this works under the hood. Home Assistant collects the configuration of every key that starts with the domain (like `sensor:` and `sensor living room:`), validates each item against the `PLATFORM_SCHEMA` of its platform, and drops items for unknown platforms or with invalid configuration.
+For entity integrations, `PLATFORM_SCHEMA` is how this works under the hood. Home Assistant collects the configuration of every key that starts with the domain (like `sensor:` and `sensor living room:`), validates each item first against the schema of the entity integration (`PLATFORM_SCHEMA_BASE`, or else `PLATFORM_SCHEMA`) and then against the `PLATFORM_SCHEMA` of its platform, if it has one, and drops items for unknown platforms or with invalid configuration.
 
 ## Move from YAML to a config flow
 

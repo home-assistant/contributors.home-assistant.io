@@ -42,7 +42,7 @@ class MoonPhaseSensor(SensorEntity):
 ```
 
 - `default` is used when no state matches. Without it, the entity falls back to the icon of its domain and device class.
-- `state` maps states to icons. State keys are `snake_case`, like all translation keys. Don't repeat the default icon here: hassfest rejects a state icon that is the same as the default.
+- `state` maps states to icons. State keys are `snake_case`, like all translation keys. Don't repeat the default icon here: a state icon that is the same as the default adds nothing.
 
 ### Icons for numeric states
 
@@ -69,7 +69,7 @@ An exact match in `state` still wins over `range`.
 
 ### Icons for state attributes
 
-Some attributes get an icon in the frontend, like the preset mode of a climate entity or the fan mode of a fan. Add them under `state_attributes`, with the same `default`, `state`, and `range` keys:
+Some attributes get an icon in the frontend, like the preset mode or the fan mode of a climate entity. Add them under `state_attributes`, with the same `default`, `state`, and `range` keys:
 
 ```json
 {

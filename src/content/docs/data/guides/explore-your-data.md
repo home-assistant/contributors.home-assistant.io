@@ -43,6 +43,25 @@ You need access to the database. With the default SQLite database, copy `home-as
 
 If you use MariaDB, MySQL, or PostgreSQL for the recorder, connect to it directly instead. Create a separate database user with read-only rights for this. Your notebooks only need to read.
 
+Python also needs a driver for that database. For PostgreSQL, install it in the same virtual environment:
+
+```bash
+pip install psycopg2-binary
+```
+
+On the PostgreSQL server, a read-only user for a recorder database called `hass` looks like this:
+
+```sql
+CREATE USER datascience WITH PASSWORD 'my_secret_password';
+GRANT CONNECT ON DATABASE hass TO datascience;
+GRANT USAGE ON SCHEMA public TO datascience;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO datascience;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public
+  GRANT SELECT ON TABLES TO datascience;
+```
+
+The `ALTER DEFAULT PRIVILEGES` statement only applies to tables created by the user that runs it. Run it as the user Home Assistant connects with, and the new user can also read tables that a future schema migration creates.
+
 ## Get the notebooks
 
 On your own computer, open a terminal from the JupyterLab launcher, and clone the notebooks:

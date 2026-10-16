@@ -30,7 +30,7 @@ In a config flow, you pass a schema like this as the `data_schema` of a step. Fo
 
 ## Rules for schemas
 
-- Import probatio as `import probatio`, and do not alias it. Do not use voluptuous: Ruff blocks it.
+- Import probatio as `import probatio`. Ruff blocks the old `vol` alias, and it blocks voluptuous itself.
 - Use the `CONF_*` constants from `homeassistant.const` when one exists, and your own from `const.py` otherwise.
 - Put the required keys first, then the optional ones.
 - A default must be a valid value. Never use `default=None` for a string: use `default=""` if you need a default at all.
@@ -44,6 +44,8 @@ Next to the validators of probatio, `homeassistant.helpers.config_validation`, u
 - **Numbers**: `cv.small_float`, `cv.positive_int`
 - **Time**: `cv.time`, `cv.time_zone`
 - **Other**: `cv.template`, `cv.slug`, `cv.temperature_unit`, `cv.latitude`, `cv.longitude`, `cv.isfile`, `cv.sun_event`, `cv.url`, `cv.icon`
+
+For MQTT topics, the MQTT integration has `valid_subscribe_topic` and `valid_publish_topic` in `homeassistant/components/mqtt/util.py`.
 
 Some of the older `cv` helpers are now thin wrappers around a probatio validator. In core, a lint rule makes you use the probatio version directly:
 

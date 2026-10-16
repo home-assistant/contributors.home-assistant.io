@@ -62,6 +62,8 @@ The [device class](/glossary/device-class/) changes how the frontend shows on an
 
 The device classes are in `BinarySensorDeviceClass`, in `homeassistant/components/binary_sensor/const.py`.
 
+Avoid the `UPDATE` device class. To report that new firmware or software is available, use an [update entity](/core/entities/update/) instead.
+
 ## Methods
 
 A binary sensor has no actions, so there is nothing to implement beyond keeping `is_on` current. Fetch data in `update` or `async_update`, or push it with `async_write_ha_state`. See [updating state](/core/entities/state-updates/).

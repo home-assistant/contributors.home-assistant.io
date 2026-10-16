@@ -21,6 +21,22 @@ async def test_setup(
 
 Python 3.14 evaluates annotations lazily, so you can refer to a class that is defined further down the file without quotes.
 
+## Adding hints to untyped code
+
+Typing a module that has no hints at all is a lot of work. [MonkeyType](https://pypi.org/project/MonkeyType/) can do a first pass: it watches the calls while the tests run, and suggests hints from the types it saw. Core has a script for it. MonkeyType is not installed by default, so install it first with `uv pip install monkeytype`.
+
+1. Run the tests of your module under MonkeyType:
+
+   ```shell
+   script/monkeytype tests/components/example/test_sensor.py
+   ```
+
+2. Look at the hints it suggests, with `monkeytype stub homeassistant.components.example.sensor`.
+3. If they look reasonable, apply them with `monkeytype apply homeassistant.components.example.sensor`.
+4. Check the diff and fix what it got wrong. It only knows the types the tests happened to use.
+
+This works best on modules without any hints. Applying it to a module that already has some can fail.
+
 ## Strict checking
 
 By default, mypy accepts code that is only partly typed. A module that is fully typed can opt in to strict checking, which also fails on missing hints and `Any` creeping in.

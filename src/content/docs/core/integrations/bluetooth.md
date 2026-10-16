@@ -81,7 +81,7 @@ entry.async_on_unload(
 )
 ```
 
-Only the `raw` bytes are per packet, and they are `None` on backends that do not provide raw advertisements. The other data is merged across packets. The callback runs once per scanner that hears a packet, so it runs a lot. Unsubscribe as soon as you no longer need it.
+Only the `raw` bytes are per packet, and they are `None` on backends that do not provide raw advertisements. The other data is merged across packets. The callback runs once per scanner that hears a packet, also for advertisements that are then dropped in favor of a stronger source, so it runs a lot. Noisy Apple advertisements that Home Assistant filters out early never reach it. Unsubscribe as soon as you no longer need it.
 
 ### Wait for one advertisement
 
@@ -163,7 +163,7 @@ The Bluetooth integration remembers which devices it already started a discovery
 | `async_rediscover_address(hass, address)` | A config entry or device was removed. Clears the history and starts discovery again right away with the cached data, so the device can be set up again without a restart. |
 | `async_clear_address_from_match_history(hass, address)` | A device changed state but still advertises the same UUIDs, like after a factory reset. Clears the history, so the next advertisement can start a new discovery. |
 | `async_clear_advertisement_history(hass, address)` | The next advertisement should reach your callbacks, even if it is identical to the previous one. Useful after a GATT session, to hear the next "I am awake" advertisement. It does not affect discovery. |
-| `async_request_active_scan(hass)` | You want an active scan right now, for example in a config flow. Waits for the scan to finish. Only affects `AUTO` mode scanners. |
+| `async_request_active_scan(hass, duration=None)` | You want an active scan right now, for example in a config flow. Waits `duration` seconds (or the default of habluetooth), so you can read the new advertisements afterward. Calls at the same time share one scan window. Only affects `AUTO` mode scanners. |
 
 > [!WARNING]
 > Do not use `async_clear_address_from_match_history` for devices whose advertisements change often, like sensors that put their readings in them. Every change would start a new discovery flow.

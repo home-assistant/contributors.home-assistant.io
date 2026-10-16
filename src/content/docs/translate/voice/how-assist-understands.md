@@ -19,6 +19,8 @@ When you talk to Assist, your command goes through a few steps. Together, they a
 
 Step 2 and step 4 are where your work comes in. The sentences and responses are in the [intents repository](https://github.com/OHF-Voice/intents). They are published as the `home-assistant-intents` package, which Home Assistant includes.
 
+Integrations can plug in their own engines for some of these steps: a [conversation agent](/core/entities/conversation/), [speech to text](/core/entities/stt/), or [text to speech](/core/entities/tts/). Your sentences are used by the built-in conversation agent.
+
 You can also type to Assist. Then the speech steps are skipped, but the matching works the same.
 
 ## Intents

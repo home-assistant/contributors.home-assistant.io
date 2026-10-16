@@ -16,7 +16,7 @@ A text entity has a value that stays. If you want to send a message that is gone
 | `native_value` | `str \| None` | Required | The current text. |
 | `native_min` | `int` | `0` | The minimum number of characters, inclusive. |
 | `native_max` | `int` | `255` | The maximum number of characters, inclusive. Values above 255 are capped at 255, the longest state Home Assistant can store. |
-| `pattern` | `str \| None` | `None` | A regular expression that the value must match. |
+| `pattern` | `str \| None` | `None` | A regular expression that the value must match. It is checked with `re.match`, so it only anchors at the start: end it with `$` to match the whole value. |
 | `mode` | `TextMode` | `TextMode.TEXT` | How the frontend shows the field: `TextMode.TEXT` for plain text, or `TextMode.PASSWORD` to hide what you type. |
 
 The generic properties every entity has, like `name`, `available`, and `unique_id`, are on [the entity class](/core/entities/entity-class/).
@@ -45,7 +45,7 @@ class MyText(TextEntity):
         """Set the text value."""
 ```
 
-The action checks the value against `native_min`, `native_max`, and `pattern` before it calls your method. A value that doesn't fit raises a `ValueError`, and your method is not called.
+The action checks the value against `native_min`, `native_max`, and `pattern` before it calls your method. A value that doesn't fit raises a `ServiceValidationError`, and your method is not called.
 
 ## States
 

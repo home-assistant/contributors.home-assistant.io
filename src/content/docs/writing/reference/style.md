@@ -183,6 +183,8 @@ For example, to link to `source/_integrations/date.markdown`:
 [Date](/integrations/date/)
 ```
 
+When a page mentions an integration or a platform, link its name to its documentation page, like `[Philips Hue](/integrations/hue/)`. Readers can then jump straight to the details.
+
 For links in general:
 
 - **No bare URLs.** Do not paste `https://example.org` or `<https://example.org>` into the text. Give every link a descriptive text.

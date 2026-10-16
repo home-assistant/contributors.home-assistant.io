@@ -22,17 +22,19 @@ Your change works on your machine. Now it needs a pull request, a review, and a 
 Create the pull request from your fork against `main`, as described in the [GitHub documentation](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork). GitHub fills in the template. Don't delete anything from it, unless the template tells you to, like a section that doesn't apply to your change. Fill out:
 
 - **Summary**: what you changed, why, and what it means for users. Link related issues.
-- **Checklist**: tests, code style, edge cases, backward compatibility, and the AI policy. Also select exactly one of the options that describe how you used AI.
+- **Checklist**: tests, code style, edge cases, backward compatibility, and the AI policy. Backward-incompatible changes go in the changelog for users, or in the code for developers, depending on who they affect. Also select exactly one of the options that describe how you used AI.
 - **Screenshots**: for UI changes outside the frontend, in light and dark mode.
 - **Documentation**: if your change adds, changes, or removes something users see, open a pull request in the [user documentation](https://github.com/home-assistant/companion.home-assistant) and link it. Mark the new feature there with `<span class='beta'>BETA</span>`, until it reaches production. If it changes something developers rely on, like how to build, test, or release the app, the template also asks for a pull request that updates the developer documentation.
 
 ### The changelog
 
-If your change adds a feature or visibly changes behavior for users, add it to the in-app changelog in `app/src/main/kotlin/io/homeassistant/companion/android/changelog/ChangelogContent.kt`. Small bug fixes don't need their own entry: the standing "Bug fixes and dependency updates" entry covers them.
+If your change adds a feature, visibly changes behavior for users, or breaks something they rely on, add it to the in-app changelog in `app/src/main/kotlin/io/homeassistant/companion/android/changelog/ChangelogContent.kt`. Small bug fixes don't need their own entry: the standing "Bug fixes and dependency updates" entry covers them.
+
+`ChangelogContent.kt` holds the entries, grouped in new, improved, and fixed, each with the platforms it applies to. The text of each entry is a string in `common/src/main/res/values/strings_changelog.xml`, so it gets translated. A screenshot test renders the real changelog, so a changelog change also needs updated [screenshot references](/companion/android/screenshot-testing/).
 
 ## Draft pull requests
 
-Open a draft when you want early feedback on direction, but the work isn't done. Be careful with CI, though: each push runs the full pipeline, which takes a lot of resources. Don't open a pull request, draft or not, before there is something to look at. Push to your fork as often as you like.
+Open a draft when you want early feedback on direction, but the work isn't done. This is also useful when you work on changes to CI itself. Be careful with CI, though: each push runs the full pipeline, which takes a lot of resources. Don't open a pull request, draft or not, before there is something to look at. Push to your fork as often as you like.
 
 If this is your first contribution, a maintainer has to approve each CI run before it starts.
 
@@ -46,12 +48,12 @@ When you have addressed the feedback and CI is green, ask for another review.
 
 ## Keep your branch up to date
 
-If your branch falls behind `main` or has conflicts, you can either merge `main` into your branch or rebase on it:
+If your branch falls behind `main` or has conflicts, you can either merge `main` into your branch and [resolve the conflicts](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/addressing-merge-conflicts/resolving-a-merge-conflict-using-the-command-line), or [rebase](https://docs.github.com/en/get-started/using-git/about-git-rebase) on it:
 
 - **Not reviewed yet**: merge or rebase, your choice.
-- **Already reviewed**: merge. A rebase can break existing review comments.
+- **Already reviewed**: merge. A rebase can break existing review comments and lose that feedback.
 
-The repository uses squash and merge, so your branch history doesn't need to be tidy.
+The repository uses [squash and merge](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/about-pull-request-merges#squash-and-merge-your-commits), so your branch history doesn't need to be tidy.
 
 ## Merging
 

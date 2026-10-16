@@ -15,7 +15,7 @@ When you pass an entity to `async_add_entities`, Home Assistant goes through the
 1. It gives the entity its `hass` and `platform` attributes.
 2. It calls `async_prepare_to_add_to_hass()`.
 3. If you passed `update_before_add=True`, it calls the update method. If the update raises, adding stops here.
-4. If the entity has a unique ID, it registers the device and the entity in the [registries](/core/entities/registry/), and picks the entity ID. If the entity is disabled, or its unique ID is already taken, adding stops here.
+4. If the entity has a unique ID, it registers the device and the entity in the [registries](/core/entities/registry/), and picks the entity ID. If the entity is disabled, or its unique ID or entity ID is already taken, adding stops here.
 5. It calls `async_added_to_hass()`.
 6. It writes the first state.
 

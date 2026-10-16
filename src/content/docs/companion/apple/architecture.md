@@ -3,6 +3,8 @@ title: Apple architecture
 description: How the Home Assistant Apple app is organized. The source folders, the shared code, the Current environment, and the rules every change follows.
 sidebarLabel: Architecture
 order: 2
+source: https://github.com/home-assistant/iOS/blob/main/Package.resolved
+lastVerified: 2026-10-14
 ---
 
 The Apple app started as a web view with a few native extras, and grew into a hybrid codebase with native onboarding, sensors, widgets, App Intents, an Apple Watch app, CarPlay, and Live Activities. One repository builds all of it, for iOS, iPadOS, watchOS, and macOS through Mac Catalyst.
@@ -24,6 +26,7 @@ Libraries you will run into most:
 - [SFSafeSymbols](https://github.com/SFSafeSymbols/SFSafeSymbols): type-safe SF Symbols.
 - [KeychainAccess](https://github.com/kishikawakatsumi/KeychainAccess): keychain storage.
 - [XCGLogger](https://github.com/DaveWoodCom/XCGLogger): logging, through `Current.Log`.
+- [ObjectMapper](https://github.com/tristanhimmelman/ObjectMapper): JSON mapping in older models.
 
 ## The source folders
 

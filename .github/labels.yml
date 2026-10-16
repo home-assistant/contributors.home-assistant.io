@@ -14,6 +14,8 @@
 # - dependencies: Renovate (.github/renovate.json)
 # - stale, no-stale, help-wanted: the stale workflow
 # - auto-closed: the restrict task creation workflow
+# - awaits-parent: draft ports of developers.home-assistant.io pull requests
+#   that wait for their code change to merge
 
 - name: "feedback"
   color: "d4c5f9"
@@ -126,3 +128,7 @@
 - name: "auto-closed"
   color: "ededed"
   description: "Closed automatically by a workflow"
+
+- name: "awaits-parent"
+  color: "ededed"
+  description: "Waits for the linked upstream change to merge"

@@ -61,7 +61,7 @@ Consumers never hold a reference to the transmitter entity. They work with an en
 | Helper | Description |
 | --- | --- |
 | `async_get_transmitters(hass, frequency, modulation)` | The entity IDs of all transmitters that support the frequency and modulation. An empty list means none of them fit. Raises `HomeAssistantError` when the domain is not loaded or there are no transmitters at all. |
-| `async_send_command(hass, entity_id_or_uuid, command, context=None)` | Sends a command through a transmitter. Raises `HomeAssistantError` when the transmitter does not exist or does not support the frequency or modulation of the command. |
+| `async_send_command(hass, entity_id_or_uuid, command, context=None)` | Sends a command through a transmitter. Raises `HomeAssistantError` when the domain is not loaded, the transmitter does not exist, or it does not support the frequency or modulation of the command. |
 
 The `RadioFrequencyTransmitterConsumerEntity` base class does the bookkeeping for you. Set `_rf_transmitter_entity_id_or_uuid` and call `await self._send_command(command)`. The base class keeps your entity available only while the transmitter is, follows the transmitter when the user renames its entity ID, and passes on the context of the action. Mix it in before the entity class of your platform.
 
@@ -142,16 +142,21 @@ class MySocket(RadioFrequencyTransmitterConsumerEntity, SwitchEntity):
     _attr_name = None
     _attr_assumed_state = True
 
-    def __init__(self, entry_id: str, transmitter: str, code: int) -> None:
+    def __init__(
+        self, entry_id: str, transmitter: str, code: int, channel: int
+    ) -> None:
         """Initialize the socket."""
         self._attr_unique_id = entry_id
         self._rf_transmitter_entity_id_or_uuid = transmitter
         self._code = code
+        self._channel = channel
 
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Send the on code."""
         await self._send_command(
-            KakuCommand(id=self._code, group=False, on=True)
+            KakuCommand(
+                id=self._code, group=False, channel=self._channel, on=True
+            )
         )
         self._attr_is_on = True
         self.async_write_ha_state()
@@ -159,7 +164,9 @@ class MySocket(RadioFrequencyTransmitterConsumerEntity, SwitchEntity):
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Send the off code."""
         await self._send_command(
-            KakuCommand(id=self._code, group=False, on=False)
+            KakuCommand(
+                id=self._code, group=False, channel=self._channel, on=False
+            )
         )
         self._attr_is_on = False
         self.async_write_ha_state()

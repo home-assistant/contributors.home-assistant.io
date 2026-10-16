@@ -4,6 +4,13 @@ dist/
 
 # Dependencies
 node_modules/
+# Where pnpm keeps its store when the home folder is on another
+# filesystem, like in a dev container
+.pnpm-store/
+
+# VS Code writes this when it builds the dev container. Renovate does not
+# update it, so the container features follow their major version instead.
+.devcontainer/devcontainer-lock.json
 
 # Python bytecode, from running scripts/symbols/extract.py
 __pycache__/

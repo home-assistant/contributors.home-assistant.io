@@ -3,6 +3,8 @@ title: Apple continuous integration
 description: The GitHub Actions workflows of the Apple project. What runs on your pull request, after a merge, and on a schedule.
 sidebarLabel: Continuous integration
 order: 7
+source: https://github.com/home-assistant/iOS/tree/main/.github/workflows
+lastVerified: 2026-10-14
 ---
 
 The Apple project uses GitHub Actions together with Fastlane for linting, testing, building, translations, and distribution. CI checks more than whether the code compiles: style, strings, and coverage are part of the review too.
@@ -40,4 +42,4 @@ Two more checks look at your diff. On pull requests from a branch in the reposit
 | `update_frontend_colors.yml`, `update_brand_icons.yml`, `update_material_design_icons.yml` | Weekly, or manually | Regenerate the frontend colors, brand icons, and Material Design Icons, and open a pull request when they changed |
 | `set_version.yml` | Manually | Updates the version in `Configuration/Version.xcconfig` and opens a pull request |
 
-The end-to-end test installs Home Assistant from PyPI on the macOS runner, because those runners have no Docker. By default it tests against the development version of Core.
+The macOS runners have no Docker, so the end-to-end test installs Home Assistant with pip, in a virtual environment on the runner. By default, it installs Core from its `dev` branch. A manual run can pick the latest release or a specific version from PyPI instead.

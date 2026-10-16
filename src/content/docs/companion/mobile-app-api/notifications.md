@@ -2,6 +2,8 @@
 title: Notifications
 description: How mobile_app delivers notifications to an app, over the WebSocket connection or through a push server, and the contract a push server must follow.
 order: 5
+source: https://github.com/home-assistant/mobile-apps-fcm-push/blob/main/functions/handlers.js
+lastVerified: 2026-10-14
 ---
 
 `mobile_app` has notifications built in. Once an app enables them, Home Assistant gets a notify entity and a `notify.mobile_app_<device_name>` action for it, and users can send notifications from automations.
@@ -108,7 +110,7 @@ Be as specific as you can, and tell the user how to fix the problem when you kno
 
 ### Rate limits
 
-Push services cost money, and a broken automation can send thousands of notifications. Use a rate limit. The push service of the official apps allows 500 notifications per device per day by default.
+Push services cost money, and a broken automation can send thousands of notifications. Use a rate limit. The push service of the official apps allows 500 notifications per device per day by default, and the count resets at midnight UTC.
 
 Home Assistant doesn't limit anything itself. Your server does, and tells Home Assistant about it. Add `rateLimits` to your responses:
 

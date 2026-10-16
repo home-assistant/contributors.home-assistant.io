@@ -16,6 +16,7 @@ Everything is in the `source` folder. The parts you work with most:
 - `source/_dashboards`: dashboards and cards.
 - `source/_data/glossary.yml`: the glossary behind the term tooltips.
 - `source/_redirects`: where old URLs are sent when a page moves.
+- `source/_includes/asides/docs_sitemap.html`: the sidebar of the general documentation. It is maintained by hand, so a new page in `source/_docs` that needs a place in the sidebar gets a link there.
 
 ## Branches
 

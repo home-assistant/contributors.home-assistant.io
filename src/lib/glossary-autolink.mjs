@@ -16,7 +16,7 @@
 // does the same. Editing the text of a term restarts nothing.
 
 import { createHash } from "node:crypto";
-import { mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { parse } from "yaml";
@@ -177,8 +177,13 @@ export function glossaryAutolinkWatch() {
           return;
         }
 
+        // Only written when it changed: Astro sees the write and restarts,
+        // and a restart runs this hook again, which would loop forever.
         mkdirSync(path.dirname(DEV_STAMP), { recursive: true });
-        writeFileSync(DEV_STAMP, fingerprint(readTerms()));
+        const stamp = fingerprint(readTerms());
+        if (!existsSync(DEV_STAMP) || readFileSync(DEV_STAMP, "utf8") !== stamp) {
+          writeFileSync(DEV_STAMP, stamp);
+        }
         addWatchFile(DEV_STAMP);
       },
 

@@ -15,6 +15,8 @@ if (newHass.states[entityId] !== oldHass.states[entityId]) {
 }
 ```
 
+To see what is in a live `hass` object, open it in the developer tools of your browser, as [Run the frontend](/frontend/development/run/#look-at-the-hass-object) shows.
+
 Inside the frontend itself, leaf components use [contexts](/frontend/architecture/hass-and-contexts/) instead of `hass`.
 
 ## Properties

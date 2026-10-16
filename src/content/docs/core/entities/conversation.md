@@ -47,7 +47,7 @@ These are the calls you use most:
 - `chat_log.async_add_assistant_content(content)`: the non streaming variant. It also runs tool calls and yields their results.
 - `chat_log.async_add_assistant_content_without_tools(content)`: adds a plain response. Use it for agents without tools.
 
-When the model is done, `async_get_result_from_chat_log(user_input, chat_log)` builds the `ConversationResult` from the last assistant message. It also sets `continue_conversation` when the last message ends with a question mark, so a voice satellite keeps listening for the answer.
+When the model is done, `async_get_result_from_chat_log(user_input, chat_log)` builds the `ConversationResult` from the last assistant message. It also sets `continue_conversation` when the last message ends with a question mark (the Greek and Chinese question marks count too), so a voice satellite keeps listening for the answer.
 
 The full typed API is in [`chat_log.py`](https://github.com/home-assistant/core/blob/dev/homeassistant/components/conversation/chat_log.py).
 

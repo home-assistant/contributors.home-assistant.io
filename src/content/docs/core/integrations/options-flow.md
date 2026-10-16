@@ -85,4 +85,4 @@ async def async_update_options(
     entry.runtime_data.show_guests = entry.options[CONF_SHOW_GUESTS]
 ```
 
-Do not combine the two: an `OptionsFlowWithReload` raises an error when the entry has an update listener. An update listener is also called on every other update of the entry, so if you have one, it is in charge of reloading. Home Assistant logs a warning when a reconfigure or reauthentication flow reloads an entry that has an update listener, and that warning is planned to become an error in Home Assistant 2026.12.
+Do not combine the two: an `OptionsFlowWithReload` raises an error when the entry has an update listener. An update listener is also called on every other update of the entry, so if you have one, it is in charge of reloading. Home Assistant logs a warning when a reconfigure or reauthentication flow, or a discovery that updates the entry, reloads an entry that has an update listener. That warning is planned to become an error in Home Assistant 2026.12. A subentry reconfigure flow that reloads an entry with an update listener already raises an error.

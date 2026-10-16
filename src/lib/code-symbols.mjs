@@ -474,8 +474,13 @@ export function codeSymbolsWatch() {
           addWatchFile(file);
         }
 
+        // Only written when it changed: Astro sees the write and restarts,
+        // and a restart runs this hook again, which would loop forever.
         mkdirSync(path.dirname(DEV_STAMP), { recursive: true });
-        writeFileSync(DEV_STAMP, elementsStamp());
+        const stamp = elementsStamp();
+        if (!existsSync(DEV_STAMP) || readFileSync(DEV_STAMP, "utf8") !== stamp) {
+          writeFileSync(DEV_STAMP, stamp);
+        }
         addWatchFile(DEV_STAMP);
       },
 

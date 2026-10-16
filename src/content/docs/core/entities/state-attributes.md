@@ -50,6 +50,19 @@ Before adding an attribute, ask whether it should be an entity of its own. Attri
 
 Attribute names are lowercase `snake_case`. Values must be JSON serializable.
 
+### Attributes don't come and go
+
+Someone who uses an attribute in an automation or a template needs to tell "this entity doesn't have it" apart from "it has no value right now". These rules apply to every state attribute, not only the extra ones:
+
+- An attribute that is expected is always in the dictionary. When it has no value right now, its value is `None`.
+- An attribute that is not expected is not in the dictionary at all.
+
+An unavailable entity is the exception: it leaves out the state attributes of its domain and its extra state attributes, as described above.
+
+An attribute is expected when the entity supports it, for example when it belongs to a feature in `supported_features` that the entity supports. Whether the device has a value for it right now doesn't matter: that is what `None` is for. The light base class works this way. A light that supports effects always has the `effect` attribute, and it is `None` while the light is off. A light without effect support has no `effect` attribute.
+
+This was decided in the [architecture discussion on entity attributes](https://github.com/home-assistant/architecture/discussions/680).
+
 ## Keep attributes out of the history
 
 The recorder stores every state change, including its attributes. It leaves out only a few, like `attribution` and `supported_features`, and it drops all attributes of a state, with a warning in the log, when together they are larger than 16 KiB. Attributes that never change, or that are not useful later, only fill the database. Exclude them with a class attribute:

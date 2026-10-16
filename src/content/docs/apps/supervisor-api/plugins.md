@@ -29,13 +29,13 @@ Each plugin has these. Replace `<plugin>` with `audio`, `cli`, `dns`, `multicast
 
 `GET /<plugin>/stats` returns a [stats model](/apps/supervisor-api/models/#stats). Add the `one_shot` query parameter to get a single quick sample.
 
-`POST /<plugin>/update` installs a new version. Fails while the Supervisor is still starting up or restoring a backup.
+`POST /<plugin>/update` installs a new version. Fails while the Supervisor is still starting up or restoring a backup. The audio, DNS, and multicast plugins also refuse a version that is already installed.
 
 | Key | Type | Required | Description |
 | --- | --- | --- | --- |
 | `version` | string | No | Version to install. Default is the latest version |
 
-The audio, DNS, and multicast plugins also have `POST /<plugin>/restart` and [log endpoints](/apps/supervisor-api/#log-endpoints) under `/<plugin>/logs`.
+The audio, DNS, and multicast plugins also have `POST /<plugin>/restart`, which fails while the Supervisor is still starting up or restoring a backup, and [log endpoints](/apps/supervisor-api/#log-endpoints) under `/<plugin>/logs`.
 
 ## Audio
 
@@ -125,7 +125,7 @@ A change restarts the DNS server.
 
 | Key | Type | Required | Description |
 | --- | --- | --- | --- |
-| `servers` | list | No | Up to 8 DNS servers, written as `dns://` with an IP address, like `dns://1.1.1.1` |
+| `servers` | list | No | Up to 8 DNS servers, written as `dns://` with an IPv4 address, like `dns://1.1.1.1`. IPv6 addresses are not accepted |
 | `fallback` | boolean | No | Use a public DNS server when the others fail |
 
 ## Multicast
