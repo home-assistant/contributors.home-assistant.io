@@ -131,7 +131,25 @@ Which keys apply depends on the selector:
 - `options`: the options of a select selector
 - `unit_of_measurement`: the units of a number selector
 - `choices`: the choices of a choose selector
-- `fields`: the fields of an object selector, each with a `name` and an optional `description`
+- `fields`: the fields of an object selector, each with a `name`, an optional `description`, and an optional `overview_label`
+
+An object selector shows the items you added as a list, with the values of their fields. The `overview_label` of a field sets the text for its value in that list. It must contain the `{value}` placeholder and no other placeholders. The frontend fills in the formatted value of the field, so your code passes nothing. Without an `overview_label`, the list shows only the value.
+
+```json
+{
+  "selector": {
+    "sensor_offsets": {
+      "fields": {
+        "uncompensated": {
+          "name": "Uncompensated value",
+          "description": "The value before the offset is applied.",
+          "overview_label": "Uncompensated value: {value}"
+        }
+      }
+    }
+  }
+}
+```
 
 ## Entities
 
