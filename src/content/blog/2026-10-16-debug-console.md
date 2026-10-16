@@ -13,6 +13,8 @@ Debugging Home Assistant often means adding a log line, restarting, and trying a
 
 It is a Python console in the Tools panel, much like the console in the developer tools of your web browser. You run code inside Home Assistant itself, with `hass` available, and look at what comes back.
 
+![The debug console in the Tools panel, with an expanded area registry and code completion](./images/2026-10-debug-console/debug-console.webp)
+
 ## Enable it
 
 The debug console is off until you enable it in YAML, on every version:
