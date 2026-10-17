@@ -81,6 +81,33 @@ What the integration is about. Integrations in core with a config flow must set 
 
 The difference between a `hub` and a `device` or `service` is what one config entry represents: a hub gives access to many devices or services, the others provide exactly one.
 
+### categories
+
+The categories people find the integration by, on the integrations page of the website, in the app, and in the Marketplace. Each entry is a category, like `energy`, or a category with a subcategory, like `energy.meters_monitoring`. The first entry is the primary category: the one that says best what the integration is for.
+
+Here are the categories of the Shelly integration:
+
+```json title="manifest.json"
+{
+  "categories": [
+    "plugs_switches",
+    "lighting.bulbs_lamps",
+    "energy.meters_monitoring"
+  ]
+}
+```
+
+Hassfest checks that:
+
+- There are one to three entries, without duplicates.
+- Every entry is a known category or subcategory.
+- A category is not listed next to one of its own subcategories, like `energy` with `energy.meters_monitoring`.
+- Entity, system, and virtual integrations don't have the key.
+
+The last three checks need the list of categories from core, so hassfest only runs them when it validates inside a core checkout. The hassfest GitHub action for custom integrations does.
+
+See [integration categories](/core/integrations/categories/) for every category, and for how to choose the right ones.
+
 ### config_flow
 
 Set `"config_flow": true` when the integration has a `config_flow.py`, so users can add it from the UI. See [config flow](/core/integrations/config-flow/).
