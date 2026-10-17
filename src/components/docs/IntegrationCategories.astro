@@ -18,8 +18,8 @@ function iconPath(icon: string): string | undefined {
 
 {
   categories ? (
-    <div class="integration-categories" data-pagefind-ignore>
-      <nav class="jump" aria-label="Jump to a category">
+    <div class="integration-categories">
+      <nav class="jump" aria-label="Jump to a category" data-pagefind-ignore>
         {categories.map((category) => (
           <a href={`#${category.slug}`}>
             <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -30,12 +30,14 @@ function iconPath(icon: string): string | undefined {
         ))}
       </nav>
 
-      <label class="filter">
+      <label class="filter" data-pagefind-ignore>
         <span class="sr-only">Filter categories</span>
         <input type="search" placeholder="Find a category, like thermostat or pool" data-category-filter />
       </label>
 
-      <p class="empty" hidden>
+      <span class="sr-only" role="status" data-copy-status></span>
+
+      <p class="empty" hidden data-pagefind-ignore>
         No category matches. Try a broader word, or browse the list.
       </p>
 
@@ -68,7 +70,7 @@ function iconPath(icon: string): string | undefined {
                 </td>
                 <td>
                   <code>{category.slug}</code>
-                  <button type="button" class="copy" data-copy={category.slug} aria-label={`Copy ${category.slug}`}>
+                  <button type="button" class="copy" data-pagefind-ignore data-copy={category.slug} aria-label={`Copy ${category.slug}`}>
                     Copy
                   </button>
                 </td>
@@ -88,6 +90,7 @@ function iconPath(icon: string): string | undefined {
                     <button
                       type="button"
                       class="copy"
+                      data-pagefind-ignore
                       data-copy={`${category.slug}.${subcategory.slug}`}
                       aria-label={`Copy ${category.slug}.${subcategory.slug}`}
                     >
@@ -109,12 +112,13 @@ function iconPath(icon: string): string | undefined {
 }
 
 <script>
+  const FEEDBACK_MS = 2000;
   const input = document.querySelector<HTMLInputElement>("[data-category-filter]");
   const sections = [...document.querySelectorAll<HTMLElement>(".integration-categories .category")];
   const empty = document.querySelector<HTMLElement>(".integration-categories .empty");
+  const status = document.querySelector<HTMLElement>("[data-copy-status]");
 
-  input?.addEventListener("input", () => {
-    const query = input.value.trim().toLowerCase();
+  function filter(query: string) {
     let shown = 0;
     for (const section of sections) {
       const match = !query || (section.dataset.search ?? "").includes(query);
@@ -124,7 +128,20 @@ function iconPath(icon: string): string | undefined {
     if (empty) {
       empty.hidden = shown > 0;
     }
-  });
+  }
+
+  input?.addEventListener("input", () => filter(input.value.trim().toLowerCase()));
+
+  // A jump link to a category the filter hides would go nowhere. Clear the
+  // filter first, so the browser can follow the link.
+  document.querySelectorAll(".integration-categories .jump a").forEach((link) =>
+    link.addEventListener("click", () => {
+      if (input?.value) {
+        input.value = "";
+        filter("");
+      }
+    }),
+  );
 
   document.addEventListener("click", async (event) => {
     const button = (event.target as Element | null)?.closest?.<HTMLButtonElement>(".integration-categories [data-copy]");
@@ -132,8 +149,10 @@ function iconPath(icon: string): string | undefined {
       return;
     }
 
+    const value = button.dataset.copy ?? "";
+    let message = `Copied ${value}`;
     try {
-      await navigator.clipboard.writeText(button.dataset.copy ?? "");
+      await navigator.clipboard.writeText(value);
       button.textContent = "Copied";
     } catch {
       // The clipboard only works on HTTPS and localhost. Select the value, so
@@ -142,9 +161,19 @@ function iconPath(icon: string): string | undefined {
       if (code) {
         window.getSelection()?.selectAllChildren(code);
       }
-      button.textContent = "Select";
+      message = `Copy failed. ${value} is selected, copy it with your keyboard.`;
+      button.textContent = "Copy failed";
     }
-    window.setTimeout(() => (button.textContent = "Copy"), 2000);
+
+    if (status) {
+      status.textContent = message;
+    }
+    window.setTimeout(() => {
+      button.textContent = "Copy";
+      if (status) {
+        status.textContent = "";
+      }
+    }, FEEDBACK_MS);
   });
 </script>
 
