@@ -1,7 +1,9 @@
 ---
 // Every integration category with its subcategories, descriptions, and
 // icons, read from core at build time (see src/lib/integration-categories.ts).
-// Each category has an anchor, like #climate, so other pages can link to it.
+// One card per category: what it covers, and the exact values to use in the
+// manifest, the category on its own and narrowed down to each subcategory.
+// Each card has an anchor, like #climate, so other pages can link to it.
 import * as mdi from "@mdi/js";
 import { CATEGORIES_SOURCE, getIntegrationCategories } from "../../lib/integration-categories";
 
@@ -16,31 +18,86 @@ function iconPath(icon: string): string | undefined {
 
 {
   categories ? (
-    <div class="categories">
+    <div class="integration-categories" data-pagefind-ignore>
+      <nav class="jump" aria-label="Jump to a category">
+        {categories.map((category) => (
+          <a href={`#${category.slug}`}>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d={iconPath(category.icon)} />
+            </svg>
+            {category.name}
+          </a>
+        ))}
+      </nav>
+
+      <label class="filter">
+        <span class="sr-only">Filter categories</span>
+        <input type="search" placeholder="Find a category, like thermostat or pool" data-category-filter />
+      </label>
+
+      <p class="empty" hidden>
+        No category matches. Try a broader word, or browse the list.
+      </p>
+
       {categories.map((category) => (
-        <section class="category" id={category.slug}>
+        <section
+          class="category"
+          id={category.slug}
+          data-search={[category.name, category.description, ...category.subcategories.map((s) => s.name)]
+            .join(" ")
+            .toLowerCase()}
+        >
           <h3>
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d={iconPath(category.icon)} />
             </svg>
             {category.name}
           </h3>
-          <p class="slug">
-            <code>{category.slug}</code>
-          </p>
           <p>{category.description}</p>
-          {category.subcategories.length > 0 && (
-            <ul>
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Use it for</th>
+                <th scope="col">Value in the manifest</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  {category.subcategories.length > 0 ? `${category.name}, in general` : category.name}
+                </td>
+                <td>
+                  <code>{category.slug}</code>
+                  <button type="button" class="copy" data-copy={category.slug} aria-label={`Copy ${category.slug}`}>
+                    Copy
+                  </button>
+                </td>
+              </tr>
               {category.subcategories.map((subcategory) => (
-                <li>
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d={iconPath(subcategory.icon)} />
-                  </svg>
-                  {subcategory.name} <code>{`${category.slug}.${subcategory.slug}`}</code>
-                </li>
+                <tr>
+                  <td>
+                    <span class="subcategory">
+                      <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d={iconPath(subcategory.icon)} />
+                      </svg>
+                      {subcategory.name}
+                    </span>
+                  </td>
+                  <td>
+                    <code>{`${category.slug}.${subcategory.slug}`}</code>
+                    <button
+                      type="button"
+                      class="copy"
+                      data-copy={`${category.slug}.${subcategory.slug}`}
+                      aria-label={`Copy ${category.slug}.${subcategory.slug}`}
+                    >
+                      Copy
+                    </button>
+                  </td>
+                </tr>
               ))}
-            </ul>
-          )}
+            </tbody>
+          </table>
         </section>
       ))}
     </div>
@@ -51,52 +108,151 @@ function iconPath(icon: string): string | undefined {
   )
 }
 
+<script>
+  const input = document.querySelector<HTMLInputElement>("[data-category-filter]");
+  const sections = [...document.querySelectorAll<HTMLElement>(".integration-categories .category")];
+  const empty = document.querySelector<HTMLElement>(".integration-categories .empty");
+
+  input?.addEventListener("input", () => {
+    const query = input.value.trim().toLowerCase();
+    let shown = 0;
+    for (const section of sections) {
+      const match = !query || (section.dataset.search ?? "").includes(query);
+      section.hidden = !match;
+      shown += match ? 1 : 0;
+    }
+    if (empty) {
+      empty.hidden = shown > 0;
+    }
+  });
+
+  document.addEventListener("click", async (event) => {
+    const button = (event.target as Element | null)?.closest?.<HTMLButtonElement>(".integration-categories [data-copy]");
+    if (!button) {
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(button.dataset.copy ?? "");
+      button.textContent = "Copied";
+    } catch {
+      // The clipboard only works on HTTPS and localhost. Select the value, so
+      // it can still be copied by hand.
+      const code = button.previousElementSibling;
+      if (code) {
+        window.getSelection()?.selectAllChildren(code);
+      }
+      button.textContent = "Select";
+    }
+    window.setTimeout(() => (button.textContent = "Copy"), 2000);
+  });
+</script>
+
 <style>
-  .categories {
-    display: grid;
-    gap: var(--ha-space-6);
-  }
-
-  .category {
-    scroll-margin-top: calc(var(--site-header-height) + var(--ha-space-4));
-  }
-
-  h3 {
+  .jump {
     display: flex;
-    align-items: center;
+    flex-wrap: wrap;
     gap: var(--ha-space-2);
-    margin: 0;
+    margin-bottom: var(--ha-space-4);
   }
 
-  svg {
-    flex: none;
-    width: 24px;
-    height: 24px;
+  .jump a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ha-space-1);
+    padding: var(--ha-space-1) var(--ha-space-3);
+    border: 1px solid var(--site-border);
+    border-radius: var(--ha-border-radius-pill);
+    color: var(--site-text);
+    font-size: 14px;
+    text-decoration: none;
+  }
+
+  .jump a:hover {
+    background: var(--site-surface-hover);
+  }
+
+  .jump svg {
+    width: 16px;
+    height: 16px;
     fill: var(--site-accent);
   }
 
-  .slug {
-    margin: var(--ha-space-1) 0 0;
+  .filter input {
+    width: 100%;
+    margin-bottom: var(--ha-space-6);
+    padding: var(--ha-space-3) var(--ha-space-4);
+    border: 1px solid var(--site-border);
+    border-radius: var(--ha-border-radius-pill);
+    background: var(--site-surface);
+    color: var(--site-text);
+    font: inherit;
   }
 
-  ul {
-    display: grid;
-    gap: var(--ha-space-2);
-    margin: var(--ha-space-3) 0 0;
-    padding: 0;
-    list-style: none;
+  .category {
+    margin-bottom: var(--ha-space-6);
+    padding: var(--ha-space-5);
+    border: 1px solid var(--site-border);
+    border-radius: var(--site-radius-card);
+    scroll-margin-top: calc(var(--site-header-height) + var(--ha-space-4));
   }
 
-  li {
+  .category h3 {
     display: flex;
-    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ha-space-2);
+    margin: 0 0 var(--ha-space-2);
+  }
+
+  .category h3 svg {
+    width: 28px;
+    height: 28px;
+    fill: var(--site-accent);
+  }
+
+  .category p {
+    margin: 0 0 var(--ha-space-4);
+  }
+
+  table {
+    width: 100%;
+    margin: 0;
+  }
+
+  th,
+  td {
+    vertical-align: middle;
+  }
+
+  .subcategory {
+    display: inline-flex;
     align-items: center;
     gap: var(--ha-space-2);
   }
 
-  li svg {
+  .subcategory svg {
+    flex: none;
     width: 20px;
     height: 20px;
     fill: var(--site-text-muted);
+  }
+
+  td code {
+    margin-right: var(--ha-space-2);
+  }
+
+  .copy {
+    padding: 2px var(--ha-space-2);
+    border: 1px solid var(--site-border);
+    border-radius: var(--ha-border-radius-md);
+    background: var(--site-surface);
+    color: var(--site-text-muted);
+    font: inherit;
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  .copy:hover {
+    background: var(--site-surface-hover);
   }
 </style>

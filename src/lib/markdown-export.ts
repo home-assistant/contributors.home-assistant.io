@@ -568,7 +568,7 @@ async function glossaryIndex(): Promise<string> {
   return terms.map((term) => `- [${term.data.title}](${termHref(term)}): ${term.data.description}`).join("\n");
 }
 
-// The integration categories, as a nested list with their slugs.
+// The integration categories, each with the values to use in the manifest.
 async function integrationCategories(): Promise<string> {
   const categories = await getIntegrationCategories();
   if (!categories) {
@@ -578,9 +578,10 @@ async function integrationCategories(): Promise<string> {
   return categories
     .map((category) =>
       [
-        `- ${category.name} (\`${category.slug}\`): ${category.description}`,
+        `- ${category.name}: ${category.description}`,
+        `  - ${category.subcategories.length > 0 ? `${category.name}, in general` : category.name}: \`${category.slug}\``,
         ...category.subcategories.map(
-          (subcategory) => `  - ${subcategory.name} (\`${category.slug}.${subcategory.slug}\`)`,
+          (subcategory) => `  - ${subcategory.name}: \`${category.slug}.${subcategory.slug}\``,
         ),
       ].join("\n"),
     )

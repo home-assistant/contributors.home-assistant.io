@@ -104,6 +104,8 @@ Hassfest checks that:
 - A category is not listed next to one of its own subcategories, like `energy` with `energy.meters_monitoring`.
 - Entity, system, and virtual integrations don't have the key.
 
+The last three checks need the list of categories from core, so hassfest only runs them when it validates inside a core checkout. The hassfest GitHub action for custom integrations does.
+
 See [integration categories](/core/integrations/categories/) for every category, and for how to choose the right ones.
 
 ### config_flow

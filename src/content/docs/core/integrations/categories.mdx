@@ -7,7 +7,7 @@ order: 4
 
 import IntegrationCategories from "../../../../components/docs/IntegrationCategories.astro";
 
-Integration categories are how people find integrations: on the integrations page of the website, in the Home Assistant app, and in the Marketplace. Every integration lists one to three of them in the `categories` key of its [manifest](/core/integrations/manifest/#categories).
+Integration categories are how people find integrations: on the integrations page of the website, in the Home Assistant app, and in the Marketplace. An integration can list one to three of them in the `categories` key of its [manifest](/core/integrations/manifest/#categories). The key is optional for now.
 
 ## How to choose
 
@@ -28,6 +28,8 @@ Entity and system integrations, like `light` or `recorder`, are not something pe
 
 ## All categories
 
-Each category has a slug, the value you use in the manifest. Use the slug of a subcategory to be more specific.
+Every category below lists the values you can put in `categories`. Some categories have subcategories, to narrow it down: use the category on its own when your integration covers more of it, and the subcategory when one fits. A smart thermostat is `climate.thermostats_heating`. A brand that makes thermostats, air conditioners, and fans is `climate`.
+
+Find a category by what your integration is for, like "thermostat" or "pool", or jump to one.
 
 <IntegrationCategories />
