@@ -63,7 +63,7 @@ Consumers never hold a reference to the transmitter entity. They work with an en
 | `async_get_transmitters(hass, frequency, modulation)` | The entity IDs of all transmitters that support the frequency and modulation. An empty list means none of them fit. Raises `HomeAssistantError` when the domain is not loaded or there are no transmitters at all. |
 | `async_send_command(hass, entity_id_or_uuid, command, context=None)` | Sends a command through a transmitter. Raises `HomeAssistantError` when the domain is not loaded, the transmitter does not exist, or it does not support the frequency or modulation of the command. |
 
-The `RadioFrequencyTransmitterConsumerEntity` base class does the bookkeeping for you. Set `_rf_transmitter_entity_id_or_uuid` and call `await self._send_command(command)`. The base class keeps your entity available only while the transmitter is, follows the transmitter when the user renames its entity ID, and passes on the context of the action. Mix it in before the entity class of your platform.
+The `RadioFrequencyTransmitterConsumerEntity` base class does the bookkeeping for you. Set `_rf_transmitter_entity_id` to the entity ID of the transmitter and call `await self._send_command(command)`. The base class keeps your entity available only while the transmitter is available, and passes on the context of the action. Mix it in before the entity class of your platform.
 
 For config flows and the frontend, there is also a `radio_frequency/list` WebSocket command (admin only). It lists every transmitter with its device, config entry, frequency ranges, and supported modulations.
 
@@ -147,7 +147,7 @@ class MySocket(RadioFrequencyTransmitterConsumerEntity, SwitchEntity):
     ) -> None:
         """Initialize the socket."""
         self._attr_unique_id = entry_id
-        self._rf_transmitter_entity_id_or_uuid = transmitter
+        self._rf_transmitter_entity_id = transmitter
         self._code = code
         self._channel = channel
 
