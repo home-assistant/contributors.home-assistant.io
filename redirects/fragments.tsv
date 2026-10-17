@@ -129,6 +129,8 @@
 /companion/mobile-app-api/sending-data/	get-zones	get_zones
 /companion/mobile-app-api/sending-data/	implementing-encryption	enable_encryption
 /companion/mobile-app-api/sending-data/	process-conversation	conversation_process
+/companion/mobile-app-api/sending-data/	register-a-push-subscription	register_push_subscription
+/companion/mobile-app-api/sending-data/	remove-a-push-subscription	remove_push_subscription
 /companion/mobile-app-api/sending-data/	render-templates	render_template
 /companion/mobile-app-api/sending-data/	request	the-request
 /companion/mobile-app-api/sending-data/	response	the-response
