@@ -1,7 +1,7 @@
 ---
 title: "A Python console inside Home Assistant"
 description: "The new debug console runs Python in your running Home Assistant, with hass at hand. How to enable it, and what it can do."
-date: 2026-10-16
+date: 2026-10-17
 authors:
   - Franck Nijhof
 areas:
