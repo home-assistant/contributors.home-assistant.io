@@ -1,0 +1,102 @@
+---
+// Every integration category with its subcategories, descriptions, and
+// icons, read from core at build time (see src/lib/integration-categories.ts).
+// Each category has an anchor, like #climate, so other pages can link to it.
+import * as mdi from "@mdi/js";
+import { CATEGORIES_SOURCE, getIntegrationCategories } from "../../lib/integration-categories";
+
+const categories = await getIntegrationCategories();
+
+// "mdi:heat-pump" is mdiHeatPump in @mdi/js.
+function iconPath(icon: string): string | undefined {
+  const name = "mdi" + icon.replace(/^mdi:/, "").split("-").map((part) => part[0].toUpperCase() + part.slice(1)).join("");
+  return (mdi as Record<string, string>)[name];
+}
+---
+
+{
+  categories ? (
+    <div class="categories">
+      {categories.map((category) => (
+        <section class="category" id={category.slug}>
+          <h3>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d={iconPath(category.icon)} />
+            </svg>
+            {category.name}
+          </h3>
+          <p class="slug">
+            <code>{category.slug}</code>
+          </p>
+          <p>{category.description}</p>
+          {category.subcategories.length > 0 && (
+            <ul>
+              {category.subcategories.map((subcategory) => (
+                <li>
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d={iconPath(subcategory.icon)} />
+                  </svg>
+                  {subcategory.name} <code>{`${category.slug}.${subcategory.slug}`}</code>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      ))}
+    </div>
+  ) : (
+    <p>
+      The categories couldn't be loaded when this page was built. Find them in <a href={CATEGORIES_SOURCE}>core</a>.
+    </p>
+  )
+}
+
+<style>
+  .categories {
+    display: grid;
+    gap: var(--ha-space-6);
+  }
+
+  .category {
+    scroll-margin-top: calc(var(--site-header-height) + var(--ha-space-4));
+  }
+
+  h3 {
+    display: flex;
+    align-items: center;
+    gap: var(--ha-space-2);
+    margin: 0;
+  }
+
+  svg {
+    flex: none;
+    width: 24px;
+    height: 24px;
+    fill: var(--site-accent);
+  }
+
+  .slug {
+    margin: var(--ha-space-1) 0 0;
+  }
+
+  ul {
+    display: grid;
+    gap: var(--ha-space-2);
+    margin: var(--ha-space-3) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--ha-space-2);
+  }
+
+  li svg {
+    width: 20px;
+    height: 20px;
+    fill: var(--site-text-muted);
+  }
+</style>

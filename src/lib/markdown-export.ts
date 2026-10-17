@@ -20,6 +20,7 @@ import { type Palette, paletteSwatches, type Scale, tokenScale } from "./design-
 import { type DocsEntry, groupOverview, hrefOf, isIndex, pathOf } from "./docs";
 import { getUpcomingEvents } from "./events";
 import { getTerms, relatedTerms, termHref } from "./glossary";
+import { CATEGORIES_SOURCE, getIntegrationCategories } from "./integration-categories";
 import { createResolver, sourcePathUrl } from "./source-paths.mjs";
 
 export const SITE_URL = import.meta.env.SITE.replace(/\/$/, "");
@@ -399,6 +400,8 @@ async function renderComponent(
       return glossaryIndex();
     case "EventList":
       return eventList();
+    case "IntegrationCategories":
+      return integrationCategories();
     case "Fragment":
       return children;
     // A script that sends old links of design.home-assistant.io to their
@@ -563,6 +566,25 @@ function tokenList(values: { token: string; value: string }[]): string {
 async function glossaryIndex(): Promise<string> {
   const terms = await getTerms();
   return terms.map((term) => `- [${term.data.title}](${termHref(term)}): ${term.data.description}`).join("\n");
+}
+
+// The integration categories, as a nested list with their slugs.
+async function integrationCategories(): Promise<string> {
+  const categories = await getIntegrationCategories();
+  if (!categories) {
+    return `The categories couldn't be loaded when this page was built. Find them in [core](${CATEGORIES_SOURCE}).`;
+  }
+
+  return categories
+    .map((category) =>
+      [
+        `- ${category.name} (\`${category.slug}\`): ${category.description}`,
+        ...category.subcategories.map(
+          (subcategory) => `  - ${subcategory.name} (\`${category.slug}.${subcategory.slug}\`)`,
+        ),
+      ].join("\n"),
+    )
+    .join("\n");
 }
 
 // The upcoming events, as the page shows them before its script runs: in

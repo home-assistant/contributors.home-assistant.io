@@ -1,0 +1,33 @@
+---
+title: Integration categories
+description: The categories people browse integrations by, and how to pick the right ones for your integration.
+sidebarGroup: Reference
+order: 4
+---
+
+import IntegrationCategories from "../../../../components/docs/IntegrationCategories.astro";
+
+Integration categories are how people find integrations: on the integrations page of the website, in the Home Assistant app, and in the Marketplace. Every integration lists one to three of them in the `categories` key of its [manifest](/core/integrations/manifest/#categories).
+
+## How to choose
+
+Ask yourself one question: what is this, and where would someone look for it? A category describes the product or service, not the entities Home Assistant creates for it.
+
+1. Pick the primary category: the one that says what your integration is for. A thermostat brand is Climate, even when it also creates sensors and switches.
+2. Use a subcategory when one clearly fits, like `climate.thermostats_heating`. Otherwise, use the category on its own.
+3. Add a second or third category only when your integration really is that too, in a way people would browse for. Shelly makes smart plugs and switches, but also bulbs and energy meters, so it lists all three.
+
+Most integrations need one category. Some guidance for the cases that come up often:
+
+- A hub or bridge that brings in many kinds of devices, like Zigbee or a multi-purpose vendor bridge, goes in Hubs & protocols. A bridge for one kind of product goes in that product's category: Philips Hue is Lighting.
+- Generic building blocks, like MQTT, RESTful, or Modbus, go in DIY & makers.
+- Helpers go in Helpers first. Add a real-world category only when the helper is clearly about one, like the utility meter, which is also Energy.
+- A weather station measures the weather, it doesn't forecast it. Use Weather & alerts on its own, and keep Forecasts for services that actually forecast.
+
+Entity and system integrations, like `light` or `recorder`, are not something people browse for and have no categories. Neither do virtual integrations: they show the categories of the integration they point to.
+
+## All categories
+
+Each category has a slug, the value you use in the manifest. Use the slug of a subcategory to be more specific.
+
+<IntegrationCategories />

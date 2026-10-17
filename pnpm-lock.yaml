@@ -187,6 +187,9 @@ importers:
       '@fontsource/figtree':
         specifier: ^5.3.0
         version: 5.3.0
+      '@mdi/js':
+        specifier: ^7.4.47
+        version: 7.4.47
       '@resvg/resvg-js':
         specifier: ^2.6.2
         version: 2.6.2
@@ -836,6 +839,9 @@ packages:
 
   '@jridgewell/sourcemap-codec@1.6.0':
     resolution: {integrity: sha512-T7jf+5zgsZHwNJ4lvQ7/aezbyk0nNX+zJVWpmHA7VYsEx7a7qr5Rg5IbtJFqkgze5Y2sruq1RUY8Q837Od7iFw==}
+
+  '@mdi/js@7.4.47':
+    resolution: {integrity: sha512-KPnNOtm5i2pMabqZxpUz7iQf+mfrYZyKCZ8QNz85czgEt7cuHcGorWfdzUMWYA0SD+a6Hn4FmJ+YhzzzjkTZrQ==}
 
   '@mermaid-js/parser@2.0.1':
     resolution: {integrity: sha512-j37dj/h6p6pots1L7pLPPNuABEEu9WP4OYg9pW1g+nYG331j0+3canE9OagtYdytYvdSAMG+2fKU5cxep6LgjA==}
@@ -3121,6 +3127,8 @@ snapshots:
     optional: true
 
   '@jridgewell/sourcemap-codec@1.6.0': {}
+
+  '@mdi/js@7.4.47': {}
 
   '@mermaid-js/parser@2.0.1':
     dependencies:
