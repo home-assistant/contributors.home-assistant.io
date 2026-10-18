@@ -17,7 +17,9 @@ Only relevant if your custom integration patches in its own auth provider.
 > [!NOTE]
 > Custom auth providers are not supported.
 
-To ask for a second factor, extend `MfaLoginFlow`:
+To ask for an enabled second factor, extend `MfaLoginFlow`. After validating the first factor, return `await self.async_finish(flow_result)` instead of calling `self.async_create_entry(data=flow_result)` directly, which bypasses the MFA check. If you override `async_finish`, return `await super().async_finish(flow_result)` so the MFA check still runs.
+
+For example, change your login flow's base class:
 
 ```python
 from homeassistant.auth.providers import MfaLoginFlow
