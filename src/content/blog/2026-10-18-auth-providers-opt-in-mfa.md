@@ -27,4 +27,4 @@ class MyLoginFlow(MfaLoginFlow[MyAuthProvider]):
     ...
 ```
 
-If your provider overrides `support_mfa`, remove the property and keep extending `LoginFlow`.
+If your provider overrides `support_mfa`, remove the property. If it returned `True`, extend `MfaLoginFlow` as shown above, or your provider stops asking for a second factor. If it returned `False`, keep extending `LoginFlow`.
