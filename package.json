@@ -7,8 +7,8 @@
     "node": ">=22.12.0"
   },
   "scripts": {
-    "dev": "pnpm referrers && pnpm redirects && astro dev",
-    "build": "pnpm referrers && pnpm redirects && astro build && pagefind --site dist",
+    "dev": "pnpm redirects && astro dev",
+    "build": "pnpm redirects && astro build && pagefind --site dist",
     "preview": "astro preview",
     "check": "astro check",
     "check:demos": "node scripts/check-demos.mjs",
@@ -17,7 +17,6 @@
     "structure": "node scripts/check-structure.mjs",
     "clean": "node -e \"for (const dir of ['dist', '.astro', 'node_modules/.astro']) require('node:fs').rmSync(dir, { recursive: true, force: true })\"",
     "tokens": "node scripts/sync-tokens.mjs",
-    "referrers": "node scripts/fetch-allowed-referrers.mjs",
     "redirects": "node scripts/generate-redirects.mjs",
     "fragments": "node scripts/generate-fragments.mjs",
     "bashio": "node scripts/generate-bashio.mjs",

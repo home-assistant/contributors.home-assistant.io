@@ -2,63 +2,31 @@
 // Privacy-first, self-hosted analytics. The collected data is public, see
 // PLAUSIBLE.dashboard.
 //
-// Visitors arriving from their own Home Assistant instance would otherwise
-// send that private URL as the referrer. Anything not on the shared allow
-// list is replaced before Plausible records it. The list is downloaded once
-// per build by scripts/fetch-allowed-referrers.mjs and inlined here.
+// The shared loader of the Open Home Foundation loads the Plausible script
+// of this site, and replaces every referrer that is not on the shared allow
+// list, so the private URL of a visitor's own Home Assistant is never
+// recorded. See the "Analytics (Plausible)" section of
+// https://github.com/OpenHomeFoundation/openhomefoundation.org.
 //
-// Same approach as works-with.home-assistant.io.
-import allowedReferrers from "../data/allowed-referrers.json";
+// The loader is async. The queue below lets pages send events right away,
+// like the 404 page and PageFeedback.astro. The loader keeps it, and
+// Plausible sends what is queued once it loaded.
 import { PLAUSIBLE } from "../data/site";
+
+const src = `${PLAUSIBLE.loader}?site=${encodeURIComponent(PLAUSIBLE.site)}`;
 ---
 
 {
-  PLAUSIBLE.script && (
+  PLAUSIBLE.site && (
     <>
-      <script is:inline async src={PLAUSIBLE.script} />
-      <script is:inline define:vars={{ allowedReferrers }}>
+      <script is:inline>
         window.plausible =
           window.plausible ||
           function () {
-            (plausible.q = plausible.q || []).push(arguments);
+            (window.plausible.q = window.plausible.q || []).push(arguments);
           };
-        plausible.init =
-          plausible.init ||
-          function (options) {
-            plausible.o = options || {};
-          };
-
-        plausible.init({
-          transformRequest: function (payload) {
-            var referrer = payload.r;
-            if (!referrer) return payload;
-
-            var host = "";
-            try {
-              host = new URL(referrer).hostname.replace(/\.$/, "");
-            } catch (error) {
-              // Unparseable referrer: falls through and gets replaced.
-            }
-
-            for (var i = 0; i < allowedReferrers.length; i++) {
-              var domain = allowedReferrers[i];
-              if (
-                host === domain ||
-                (host.length > domain.length &&
-                  host.slice(-(domain.length + 1)) === "." + domain)
-              ) {
-                return payload;
-              }
-            }
-
-            // One aggregate bucket, so we see how much gets filtered without
-            // learning anything about individual visitors. .invalid is
-            // reserved by RFC 2606 and never collides with a real domain.
-            payload.r = "https://unlisted.invalid/";
-            return payload;
-          },
-        });
       </script>
+      <script is:inline async src={src} />
     </>
   )
 }

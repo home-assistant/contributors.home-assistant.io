@@ -17,10 +17,12 @@ export function historyUrl(filePath: string): string {
 
 // Privacy-first, self-hosted analytics by the Open Home Foundation.
 export const PLAUSIBLE = {
-  // The site specific script from plausible.openhomefoundation.org. Leave it
-  // empty to load no analytics at all, for example before the site is
-  // registered there.
-  script: "",
+  // The domain this site has in the Plausible site registry of
+  // openhomefoundation.org (list/plausible-sites.json). The shared loader
+  // looks up the script of the site there. Leave it empty to load no
+  // analytics at all.
+  site: "contributors.home-assistant.io",
+  loader: "https://www.openhomefoundation.org/plausible.js",
   dashboard: "https://plausible.openhomefoundation.org/contributors.home-assistant.io",
   about:
     "https://www.openhomefoundation.org/blog/making-our-web-analytics-open-source-with-plausible/",
