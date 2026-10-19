@@ -1,7 +1,7 @@
 ---
 title: "Auth providers now opt in to multi-factor authentication"
 description: As of Home Assistant Core 2026.11, a login flow asks for a second factor only when it extends MfaLoginFlow. The support_mfa property is removed.
-date: 2026-10-18
+date: 2026-10-19
 authors:
   - Josef Zweck
 areas:
@@ -16,6 +16,8 @@ Only relevant if your custom integration patches in its own auth provider.
 
 > [!NOTE]
 > Custom auth providers are not supported.
+
+If you change nothing, your provider silently stops asking for a second factor, even if it never overrode `support_mfa`.
 
 To ask for an enabled second factor, extend `MfaLoginFlow`. After validating the first factor, return `await self.async_finish(flow_result)` instead of calling `self.async_create_entry(data=flow_result)` directly, which bypasses the MFA check. If you override `async_finish`, return `await super().async_finish(flow_result)` so the MFA check still runs.
 
