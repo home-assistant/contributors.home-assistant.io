@@ -107,6 +107,11 @@ const imageAlt = title === SITE.title ? SITE.title : `${shareTitle}, on ${SITE.t
       } catch {}
     </script>
 
+    <script is:inline>
+      window.plausible = window.plausible || function () {
+        (window.plausible.q = window.plausible.q || []).push(arguments);
+      };
+    </script>
     <script is:inline async src="https://www.openhomefoundation.org/plausible.js?site=contributors.home-assistant.io"></script>
   </head>
   <body>
