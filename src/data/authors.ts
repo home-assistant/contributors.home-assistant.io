@@ -42,6 +42,7 @@ export const AUTHORS: Record<string, string> = {
   "Shay Levy": "thecode",
   "Simone Chemelli": "chemelli74",
   "Stefan Agner": "agners",
+  "Tomer": "tomer-w",
   "Wendelin Peleska": "wendevlin",
   "Will Moss": "wmoss",
   "Zack Barett": "zsarnett",

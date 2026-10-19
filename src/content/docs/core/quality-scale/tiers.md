@@ -49,6 +49,7 @@ See the [Silver rules](/core/quality-scale/rules/#silver).
 Gold is the best user experience an integration can offer. On top of Silver, a Gold integration:
 
 - Is discovered automatically, where the device supports that.
+- Lets you update the firmware or software of devices from Home Assistant, where the device supports that.
 - Creates devices, and adds and removes them as they come and go.
 - Can be reconfigured from the UI.
 - Has translated entity names, icons, and error messages.
@@ -67,6 +68,8 @@ Platinum is the top of the scale: technical excellence on top of the best user e
 - Is fully typed, and checked with strict type checking.
 - Uses an async library, so it does not need threads for its I/O.
 - Shares the web session of Home Assistant, instead of opening its own.
+- Handles data efficiently, keeping network and CPU usage low.
+- Has clear code comments, so the code is easy to maintain.
 
 See the [Platinum rules](/core/quality-scale/rules/#platinum).
 

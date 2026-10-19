@@ -34,6 +34,7 @@ ir.async_create_issue(
 | `severity` | | How bad it is. See below. |
 | `translation_key` | | The key of the title and description in `strings.json` |
 | `translation_placeholders` | `None` | Values for the placeholders in the text |
+| `config_entry_id` | `None` | The config entry the issue belongs to. The issue is hidden while that entry is disabled, and deleted when the entry is removed. |
 | `breaks_in_ha_version` | `None` | The version in which something breaks, like `"2027.4.0"` |
 | `learn_more_url` | `None` | Where users find more information |
 | `is_persistent` | `False` | Whether the issue survives a restart. See [persistence](#persistence). |

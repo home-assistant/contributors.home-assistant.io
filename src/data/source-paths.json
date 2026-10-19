@@ -61,6 +61,12 @@
       "type": "file"
     },
     {
+      "path": ".github/workflows/renovate-lockfiles.yml",
+      "repository": "home-assistant/android",
+      "branch": "main",
+      "type": "file"
+    },
+    {
       "path": "app/",
       "repository": "home-assistant/android",
       "branch": "main",
@@ -73,13 +79,31 @@
       "type": "file"
     },
     {
+      "path": "app/src/main/kotlin/io/homeassistant/companion/android/util/IgnoreViolationRules.kt",
+      "repository": "home-assistant/android",
+      "branch": "main",
+      "type": "file"
+    },
+    {
       "path": "automotive/",
       "repository": "home-assistant/android",
       "branch": "main",
       "type": "folder"
     },
     {
+      "path": "build-logic/convention/src/main/kotlin/AndroidApplicationConventionPlugin.kt",
+      "repository": "home-assistant/android",
+      "branch": "main",
+      "type": "file"
+    },
+    {
       "path": "build-logic/convention/src/main/kotlin/AndroidCommonConventionPlugin.kt",
+      "repository": "home-assistant/android",
+      "branch": "main",
+      "type": "file"
+    },
+    {
+      "path": "common/src/main/res/values/strings_changelog.xml",
       "repository": "home-assistant/android",
       "branch": "main",
       "type": "file"
@@ -277,6 +301,12 @@
       "type": "file"
     },
     {
+      "path": "homeassistant/components/mqtt/util.py",
+      "repository": "home-assistant/core",
+      "branch": "dev",
+      "type": "file"
+    },
+    {
       "path": "homeassistant/components/number/const.py",
       "repository": "home-assistant/core",
       "branch": "dev",
@@ -386,12 +416,6 @@
     },
     {
       "path": "homeassistant/util/",
-      "repository": "home-assistant/core",
-      "branch": "dev",
-      "type": "folder"
-    },
-    {
-      "path": "pylint/plugins/",
       "repository": "home-assistant/core",
       "branch": "dev",
       "type": "folder"
@@ -1507,6 +1531,12 @@
       "type": "file"
     },
     {
+      "path": "src/translations/translationMetadata.json",
+      "repository": "home-assistant/frontend",
+      "branch": "dev",
+      "type": "file"
+    },
+    {
       "path": "src/types.ts",
       "repository": "home-assistant/frontend",
       "branch": "dev",
@@ -1544,6 +1574,12 @@
     },
     {
       "path": "source/_data/glossary.yml",
+      "repository": "home-assistant/home-assistant.io",
+      "branch": "current",
+      "type": "file"
+    },
+    {
+      "path": "source/_includes/asides/docs_sitemap.html",
       "repository": "home-assistant/home-assistant.io",
       "branch": "current",
       "type": "file"
@@ -1987,5 +2023,16 @@
       "type": "file"
     }
   ],
-  "missing": []
+  "missing": [
+    {
+      "path": "pylint/plugins/",
+      "repositories": [
+        "home-assistant/core"
+      ],
+      "pages": [
+        "src/content/docs/core/development/checks.md:70",
+        "src/content/docs/core/quality-scale/quality-scale-file.md:70"
+      ]
+    }
+  ]
 }

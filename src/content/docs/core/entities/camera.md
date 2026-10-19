@@ -47,7 +47,7 @@ The frontend can ask for a `width` and a `height`. Scaling is best effort:
 - Keep the aspect ratio. When it does not match, the returned image can be wider or taller than asked.
 - If you cannot scale and return a JPEG, Home Assistant scales it for you.
 
-If the camera has a stream and no separate snapshot endpoint, set `use_stream_for_stills` to `True`, and Home Assistant grabs stills from the stream.
+If the camera has a stream and no separate snapshot endpoint, set `use_stream_for_stills` to `True`, and Home Assistant grabs stills from the stream. Another common way is to pass the stream source to `async_get_image` of the FFmpeg integration (`homeassistant.components.ffmpeg`), which grabs a frame from it.
 
 ## Streams
 

@@ -26,9 +26,9 @@ Lock entities have these properties on top of the [generic entity properties](/c
 
 ## Codes
 
-When `code_format` is set, Home Assistant checks the code in a lock, unlock, or open action against it before it calls your method, and raises a validation error when it does not match. Your methods receive the code as `ATTR_CODE` in `kwargs`.
+When `code_format` is set, Home Assistant checks the code in a lock, unlock, or open action against it before it calls your method, and raises a validation error when it does not match. That check also runs for an action without a code: an empty code must match `code_format` too, so a pattern like `^\d{4}$` makes a code required for every action. Your methods receive the code as `ATTR_CODE` in `kwargs`, and only when there is one, so read it with `kwargs.get(ATTR_CODE)` when it is optional.
 
-Users can store a default code in the entity settings. When an action comes without a code, Home Assistant uses that default code. You do not have to do anything for it: it reads the setting from the [entity registry options](/core/entities/registry/) and adds the code for you.
+Users can store a default code in the entity settings. When an action comes without a code, Home Assistant uses that default code. A default code that does not match `code_format` is ignored. You do not have to do anything for it: it reads the setting from the [entity registry options](/core/entities/registry/) and adds the code for you.
 
 ## Supported features
 

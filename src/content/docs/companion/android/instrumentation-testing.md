@@ -6,7 +6,7 @@ sidebarGroup: Test
 order: 3
 ---
 
-Unit tests run on your JVM. Users run the app on Android, which has its own runtime and supports only part of the Java APIs on older versions. Instrumentation tests close that gap: they run on an emulator, on the same runtime users have.
+Unit tests run on your JVM. Users run the app on Android, which has [its own runtime](https://source.android.com/docs/core/runtime) and supports only part of the [Java language features and APIs](https://developer.android.com/studio/write/java8-support) on older versions. Instrumentation tests close that gap: they run on an emulator, on the same runtime users have.
 
 Write unit tests first. Reach for an instrumentation test when the behavior depends on the real Android system.
 
@@ -16,10 +16,10 @@ Some bugs only show at runtime on a specific Android version. The [Jackson](http
 
 ## What they cover
 
-- **Screens**, with Espresso and Compose UI tests, checking how a screen behaves when the user interacts with it.
-- **Code without UI**, like foreground services, where you check the data and the interaction with the system.
+- **Screens**, with [Espresso](https://developer.android.com/training/testing/espresso) and Compose UI tests, checking how a screen behaves when the user interacts with it.
+- **Code without UI**, like [foreground services](https://developer.android.com/develop/background-work/services/fgs), where you check the data and the interaction with the system.
 
-Most of these tests should not depend on a Home Assistant server. Replace the server with fakes, or mocks with [MockK](https://mockk.io/). Testing against a real server is what the [end-to-end tests](/companion/android/e2e-testing/) are for.
+Most of these tests should not depend on a Home Assistant server. Replace the server with fakes, or with mocks from [MockK](https://mockk.io/). Fakes are the better choice: they give you more control over the behavior. Testing against a real server is what the [end-to-end tests](/companion/android/e2e-testing/) are for.
 
 ## Where they run
 

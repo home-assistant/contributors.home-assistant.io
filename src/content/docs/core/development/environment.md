@@ -106,6 +106,14 @@ The container comes with debug configurations. Press <kbd>F5</kbd> to start Home
 
 To debug an instance that runs elsewhere, like your production system, use the [debugpy integration](https://www.home-assistant.io/integrations/debugpy/).
 
+Starting with Home Assistant 2026.11, you can also look around inside a running Home Assistant without a debugger, with the debug console under **Settings** > **Tools** > **Debug console**. It runs Python code with `hass` available, shows results as objects you can expand, and completes code while you type. For example, to look at the state of the sun:
+
+```python
+hass.states.get("sun.sun")
+```
+
+The debug console is enabled with `debug_console:` in `configuration.yaml`, which `script/setup` adds to the configuration of this container. Elsewhere, add it yourself and restart Home Assistant; see the [Debug console integration](https://www.home-assistant.io/integrations/debug_console/). Code runs in the event loop of Home Assistant, so `await` asynchronous calls, and run blocking work with `await hass.async_add_executor_job(...)`.
+
 ### When the container does not build
 
 A container that fails to build is often based on an outdated fork.
@@ -148,8 +156,8 @@ sudo dnf install autoconf openssl-devel libxml2-devel libxslt-devel \
 On Arch or Manjaro:
 
 ```shell
-sudo pacman -Sy base-devel autoconf libxml2 libxslt libjpeg-turbo libffi systemd zlib \
-  pkgconf ffmpeg gcc cmake
+sudo pacman -Sy base-devel autoconf libxml2 libxslt libjpeg-turbo \
+  libffi systemd zlib pkgconf ffmpeg gcc cmake
 ```
 
 On macOS, install [Homebrew](https://brew.sh/) and use it to install the dependencies:

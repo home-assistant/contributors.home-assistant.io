@@ -16,7 +16,7 @@ The `zeroconf` integration, part of the default configuration, publishes the rec
 | Service type | `_home-assistant._tcp.local.` |
 | Instance name | `<location_name>._home-assistant._tcp.local.`. Dots in the location name are replaced with spaces, and the name is cut to fit the 63 byte limit of a DNS label. If the name is taken, Zeroconf adds a suffix. |
 | Host | `<uuid>.local.`, where `<uuid>` is the instance ID. |
-| Port | The port of the HTTP server: 8123 by default, or 80 on Home Assistant OS installations. |
+| Port | The port of the HTTP server: 8123 by default, or 80 when Home Assistant runs with the Supervisor, like on Home Assistant OS. The `SETUP_PORT` environment variable overrides that default. |
 
 ## TXT properties
 

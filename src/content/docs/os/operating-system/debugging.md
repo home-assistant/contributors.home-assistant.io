@@ -34,7 +34,7 @@ Changed the hostname, or no mDNS on your network? Use the IP address of the devi
 
 ### Turn it off again
 
-Import a `CONFIG` drive *without* an `authorized_keys` file. The import removes all keys and stops the SSH server. Keys added through the API can be removed with a `DELETE` on the same endpoint.
+Import a `CONFIG` drive *without* an `authorized_keys` file. The import removes all keys and stops the SSH server. Through the API, a `DELETE` on `/os/ssh/authorized_keys` removes all of root's authorized keys.
 
 ## The local console
 
@@ -55,7 +55,7 @@ The consoles are set in `cmdline.txt` on the boot partition. The defaults per bo
 | ODROID-C2, ODROID-C4, ODROID-N2, Khadas VIM3 | `ttyAML0`, 115200 baud |
 | Generic aarch64, virtual machines | `ttyS0` |
 
-Most early boot messages only go to the console listed first, or the one the device tree names. To see them on a screen instead, move `console=tty0` to the end of the line, or remove the serial console. On boards not in this table, add the serial console yourself, see the [board pages](/os/operating-system/boards/).
+The kernel writes its messages to every console in `cmdline.txt`, but the systemd startup messages only go to the one listed last. On every board with a screen, that is `console=tty0`, so they show on the screen. Home Assistant Yellow has no HDMI port, so it lists its serial console last. To see the startup messages on the serial console of another board, move its `console=` entry to the end of the line. On boards not in this table, add the serial console yourself, see the [board pages](/os/operating-system/boards/).
 
 ## Rescue shell
 

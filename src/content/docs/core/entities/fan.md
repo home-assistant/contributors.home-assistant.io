@@ -34,6 +34,8 @@ Home Assistant always talks about fan speed as a percentage. If your device has 
 - `ranged_value_to_percentage` and `percentage_to_ranged_value` for a numeric range, like speeds 1 to 6
 - `ordered_list_item_to_percentage` and `percentage_to_ordered_list_item` for a list of named speeds, like `low`, `medium`, and `high`
 
+Off is not part of the range or the list: a percentage of 0 is off.
+
 ### Preset modes
 
 A preset is a mode where the fan controls its own speed, or does something else on its own. Common examples are `auto`, `smart`, `eco`, and `breeze`. When no preset is active, `preset_mode` must be `None`.
@@ -73,6 +75,7 @@ A few details:
 - `turn_on` can receive a percentage, a preset, both, or neither. When it gets neither, turn the fan on at the speed the device picks.
 - A percentage of 0 means off. The default `async_set_percentage` calls `async_turn_off` for it, and then still passes the 0 on to `set_percentage`. When you override `async_set_percentage`, handle 0 yourself. Decreasing the speed below the lowest step also ends up there as 0.
 - Home Assistant checks a preset against `preset_modes` before it calls `set_preset_mode` or `turn_on`, and raises a validation error when it is not in the list.
+- `toggle` is handled for you: it calls `turn_on` or `turn_off` based on `is_on`.
 - `increase_speed` and `decrease_speed` are handled for you. They step by `percentage_step`, or by the step in the action, and call `set_percentage`. You only override `async_increase_speed` and `async_decrease_speed` when the device has its own commands for them.
 
 ## States

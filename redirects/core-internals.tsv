@@ -23,6 +23,7 @@
 /docs/api_lib_auth	/core/integrations/api-library/
 /docs/api_lib_data_models	/core/integrations/api-library/
 /docs/modbus/introduction	/core/internals/modbus/
+/docs/lorawan	/core/internals/lorawan/
 /docs/intent_index	/core/internals/intents/
 /docs/intent_handling	/core/internals/intents/
 /docs/intent_firing	/core/internals/intents/
@@ -31,3 +32,4 @@
 /docs/voice/overview	/core/internals/assist-pipelines/
 /docs/voice/pipelines	/core/internals/assist-pipelines/
 /docs/core/llm	/core/internals/llm-api/
+/docs/external_api_server_sent_events	/core/internals/rest-api/

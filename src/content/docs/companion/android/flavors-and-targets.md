@@ -16,15 +16,17 @@ The `:app` and `:automotive` modules come in two flavors. The `:wear` module has
 | --- | --- | --- |
 | Google Play Services | Yes | No |
 | Application ID | `io.homeassistant.companion.android` | `io.homeassistant.companion.android.minimal` |
-| Location tracking for presence detection | Yes | No |
+| Location tracking for [presence detection](https://www.home-assistant.io/getting-started/presence-detection/) | Yes | No |
 | Push notifications | Through Firebase, and over the WebSocket | Over the WebSocket only, see [local push](https://companion.home-assistant.io/docs/notifications/notification-local) |
 | Wear OS app | Yes | No |
 | Crash reporting | Yes | No |
-| Distributed through | Google Play | F-Droid, the APK on GitHub, Meta Quest, and the store for car makers |
+| Distributed through | Google Play | F-Droid, the APK on GitHub, Meta Quest, and Android Automotive builds for car makers |
 
 Debug builds add `.debug` to the application ID, so they install next to the release app.
 
-Keep as much code as possible in the `main` source set, so users of both flavors get the feature. Only code that needs Google Play Services goes in the `full` source set, with a `minimal` counterpart. If an open source alternative to a Play Services feature becomes viable, it can move to `minimal` too.
+The `minimal` flavor exists for people who prefer, or need, an app without Google Play Services, like owners of devices that don't have them.
+
+Keep as much code as possible in the `main` source set, so users of both flavors get the feature. When there is a choice, the project prefers open source solutions. Only code that needs Google Play Services goes in the `full` source set, with a `minimal` counterpart. If an open source alternative to a Play Services feature becomes viable, it can move to `minimal` too.
 
 ## Targets
 
@@ -43,8 +45,6 @@ The main app, used by most people. Android Auto is part of it: the phone project
 ### Android Automotive
 
 The app that runs on the car itself. It compiles the sources of `:app` with its own manifest. The automotive APIs only exist from API 29, so its minimum SDK is higher.
-
-Debug builds don't show up in a real car. The only way to test in a real vehicle is through the internal testing track of the Play Store, which gets every merged pull request.
 
 ### Wear OS
 

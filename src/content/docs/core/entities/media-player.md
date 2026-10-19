@@ -23,9 +23,9 @@ These properties are specific to media player entities. The generic properties e
 | `volume_step` | `float` | `0.1` | How much the volume changes with `volume_up` and `volume_down`, from `0` to `1`. Also settable on the entity description. |
 | `is_volume_muted` | `bool \| None` | `None` | Whether the volume is muted. |
 | `source` | `str \| None` | `None` | The selected input source. |
-| `source_list` | `list[str] \| None` | `None` | The input sources the user can pick from. |
+| `source_list` | `list[str] \| None` | `None` | The input sources the user can pick from, as human-readable names. Only shown when the player has `SELECT_SOURCE`. |
 | `sound_mode` | `str \| None` | `None` | The selected sound mode. |
-| `sound_mode_list` | `list[str] \| None` | `None` | The sound modes the user can pick from. |
+| `sound_mode_list` | `list[str] \| None` | `None` | The sound modes the user can pick from. Only shown when the player has `SELECT_SOUND_MODE`. |
 | `shuffle` | `bool \| None` | `None` | Whether shuffle is on. |
 | `repeat` | `RepeatMode \| str \| None` | `None` | The repeat mode: `RepeatMode.OFF`, `RepeatMode.ALL`, or `RepeatMode.ONE`. |
 | `group_members` | `list[str] \| None` | `None` | The entity IDs of the players grouped with this one for synchronous playback. If your platform has a group leader, put it first. |
@@ -108,6 +108,8 @@ The `media_player.play_media` action calls `play_media` with the media type, the
 - `announce`: `True` for an announcement, like a doorbell sound or a text-to-speech message. Pause what is playing, play the announcement, and resume. The action editor only offers it for players with `MEDIA_ANNOUNCE`.
 - `extra`: a dictionary with extra options from the action call. Always present, and empty by default.
 
+An action call can have `enqueue` or `announce`, never both.
+
 `media_type` is usually a `MediaType` value. If your integration handles media that does not fit any of them, it is fine to use your integration domain as the type.
 
 ## Browsing media
@@ -181,7 +183,7 @@ Return a `MediaPlayerState` from `state`.
 > [!NOTE]
 > `MediaPlayerState.STANDBY` is deprecated. Use `off` or `idle` instead.
 
-Many players cannot be controlled while they are in standby. If Home Assistant can still turn the device on another way, like Wake-on-LAN or a power command over a different connection, show it as `off`. If there is no way to turn it on from Home Assistant, mark the entity [unavailable](/glossary/unavailable/).
+Many players cannot be controlled while they are in standby. If Home Assistant can still turn the device on another way, like Wake-on-LAN or a power command over a different connection, show it as `off`. If there is no way to turn it on from Home Assistant, mark the entity [unavailable](/glossary/unavailable/). The [entity unavailable rule](/core/quality-scale/entity-unavailable/) of the quality scale has the details.
 
 ## Example
 

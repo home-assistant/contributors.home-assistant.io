@@ -9,7 +9,7 @@ import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
 import HeadingAnchors from "../components/HeadingAnchors.astro";
 import HoverCards from "../components/HoverCards.astro";
-import PlausibleAnalytics from "../components/PlausibleAnalytics.astro";
+import ImageZoom from "../components/ImageZoom.astro";
 import type { Area } from "../data/areas";
 import { SITE } from "../data/site";
 import { OG_HEIGHT, OG_WIDTH, ogImagePath } from "../lib/og";
@@ -107,7 +107,12 @@ const imageAlt = title === SITE.title ? SITE.title : `${shareTitle}, on ${SITE.t
       } catch {}
     </script>
 
-    <PlausibleAnalytics />
+    <script is:inline>
+      window.plausible = window.plausible || function () {
+        (window.plausible.q = window.plausible.q || []).push(arguments);
+      };
+    </script>
+    <script is:inline async src="https://www.openhomefoundation.org/plausible.js?site=contributors.home-assistant.io"></script>
   </head>
   <body>
     {/* Every page marks where its reading content starts, with id="main-content". */}
@@ -118,6 +123,7 @@ const imageAlt = title === SITE.title ? SITE.title : `${shareTitle}, on ${SITE.t
     <HoverCards />
     <CodeBlockCopy />
     <HeadingAnchors />
+    <ImageZoom />
     <MermaidDiagrams />
   </body>
 </html>

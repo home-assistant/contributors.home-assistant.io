@@ -67,6 +67,21 @@ async def async_process_audio_stream(
 
 Read the stream as it comes in and send it on to your engine right away. Waiting for the whole stream first adds the length of the command to every response.
 
+### Partial results
+
+When your engine returns a transcript while the user is still speaking, implement `async_process_audio_stream_with_progress` instead. It is an async generator with the same arguments. Yield zero or more `PartialSpeechResult` objects, followed by exactly one `SpeechResult` at the end.
+
+```python
+async def async_process_audio_stream_with_progress(
+    self, metadata: SpeechMetadata, stream: AsyncIterable[bytes]
+) -> AsyncGenerator[PartialSpeechResult | SpeechResult]:
+    """Yield partial transcripts, then the final result."""
+```
+
+A `PartialSpeechResult` has the full `text` of a speaker so far, not only the new words, and an optional `speaker_id`. Each partial replaces the previous one with the same `speaker_id`. Without this method, the base class calls `async_process_audio_stream` and yields only its final result.
+
+Partial results are new: the Assist pipeline doesn't use them yet, it only waits for the final result.
+
 ## States
 
 The state is the timestamp of the last time the entity processed audio, or `unknown` before the first one. Home Assistant sets and restores it; the `state` property is final.

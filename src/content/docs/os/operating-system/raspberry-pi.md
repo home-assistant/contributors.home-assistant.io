@@ -44,7 +44,7 @@ Some things to know:
 
 - Remove every bootable SD card. The firmware tries the SD card first.
 - Booting is slower, because the firmware looks at the SD card before USB.
-- Not every USB to SATA adapter works. `cmdline.txt` already contains `usb-storage.quirks` for adapters known to need them. If yours misbehaves, find its USB ID and add a quirk for it.
+- Not every USB to SATA adapter works. On Raspberry Pi 4, `cmdline.txt` already contains `usb-storage.quirks` for adapters known to need them. The Raspberry Pi 5 image has none. If yours misbehaves, find its USB ID and add a quirk for it.
 - Without an SD card, add `dtparam=sd_poll_once=on` to `config.txt`, to stop the kernel from polling the empty slot.
 
 Raspberry Pi 3 Model B can boot from USB after `program_usb_boot_mode=1` is set once in `config.txt`. That change is permanent: it is written to one-time programmable memory.

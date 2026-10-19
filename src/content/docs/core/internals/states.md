@@ -55,6 +55,8 @@ Remember that the state can also be `unavailable` or `unknown`. The constants `S
 - **Nothing changed**: the state machine updates `last_reported` and fires a `state_reported` event instead. Listening to `state_reported` requires an `event_filter`, because it fires a lot.
 - **`force_update=True`**: a `state_changed` event is fired even if nothing changed, and `last_changed` moves too.
 
+A state longer than 255 characters is not stored. The state machine logs an error and stores `unknown` instead.
+
 `hass.states.async_remove(entity_id)` removes a state and fires a `state_changed` event with `new_state` set to `None`. Listeners must expect that, and the same goes for `old_state` being `None` when an entity is new.
 
 Like everything starting with `async_`, these must run in the event loop. From another thread, use `hass.states.set` and `hass.states.remove`.

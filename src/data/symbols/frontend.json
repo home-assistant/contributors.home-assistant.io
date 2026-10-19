@@ -1,6 +1,6 @@
 {
   "repository": "home-assistant/frontend",
-  "commit": "edb7a42a7e7d6da540f97cd788deaa93ecc11f5c",
+  "commit": "5cfaf7ed40e4df459fa65dc5722101eef631f40e",
   "symbols": [
     {
       "id": "src/common/decorators/consume-context-entry.ts:consumeEntityStates",
@@ -105,7 +105,7 @@
       "kind": "method",
       "module": "src/components/input/wa-input-mixin.ts",
       "path": "src/components/input/wa-input-mixin.ts",
-      "line": 206,
+      "line": 207,
       "signature": "WaInputMixin.reportValidity(): boolean",
       "doc": null,
       "bare": true
@@ -596,7 +596,7 @@
       "kind": "function",
       "module": "src/data/todo.ts",
       "path": "src/data/todo.ts",
-      "line": 77,
+      "line": 76,
       "signature": "subscribeItems(\n  hass: HomeAssistant,\n  entity_id: string,\n  callback: (update: TodoItems) => void\n)",
       "doc": null,
       "bare": true
@@ -955,7 +955,7 @@
       "kind": "function",
       "module": "src/panels/lovelace/common/validate-condition.ts",
       "path": "src/panels/lovelace/common/validate-condition.ts",
-      "line": 332,
+      "line": 495,
       "signature": "checkConditionsMet(\n  conditions: (Condition | LegacyCondition)[],\n  hass: HomeAssistant,\n  context: ConditionContext\n): boolean",
       "doc": "Return the result of applying conditions",
       "bare": true

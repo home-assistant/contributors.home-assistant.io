@@ -86,7 +86,7 @@ entry.async_create_background_task(
 ```
 
 - `entry.async_create_task(hass, coro)` and `hass.async_create_task(coro)` create a task that Home Assistant waits for during startup.
-- `entry.async_create_background_task(hass, coro, name)` and `hass.async_create_background_task(coro, name)` create a task for something that runs a long time, like a listener on a socket. It does not hold up startup, and it is cancelled on shutdown.
+- `entry.async_create_background_task(hass, coro, name)` and `hass.async_create_background_task(coro, name)` create a task for something that runs a long time, like a listener on a socket. It does not hold up startup, and it is cancelled on shutdown. The config entry version is also cancelled when the entry is unloaded.
 
 ## Call async code from a thread
 
@@ -104,7 +104,7 @@ def say_hello(hass: HomeAssistant, target: str) -> str:
 ```
 
 > [!WARNING]
-> Never do this from inside the event loop: it deadlocks. And be careful when the coroutine itself uses the executor, because that can deadlock too when the pool is busy.
+> Never do this from inside the event loop: it deadlocks. And be careful when the coroutine itself uses the executor, because that can deadlock too.
 
 ## Make your code async
 

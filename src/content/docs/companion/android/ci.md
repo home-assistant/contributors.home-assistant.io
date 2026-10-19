@@ -4,11 +4,13 @@ description: The GitHub Actions workflows of the Android app. What runs on your 
 sidebarLabel: Continuous integration
 sidebarGroup: Ship
 order: 2
+source: https://github.com/home-assistant/android/tree/main/.github/workflows
+lastVerified: 2026-10-14
 ---
 
 The Android app uses GitHub Actions for everything: checking pull requests, building releases, and shipping them to the stores with [Fastlane](https://fastlane.tools/). Shared steps live as local actions in `.github/actions`.
 
-The app uses calendar versioning, like Home Assistant Core: `YYYY.MM.patch`.
+The app uses [calendar versioning](https://calver.org/), like Home Assistant Core: `YYYY.MM.patch`.
 
 ## The workflows
 
@@ -39,7 +41,7 @@ The app uses calendar versioning, like Home Assistant Core: `YYYY.MM.patch`.
 
 Debug builds on CI use the mock Firebase file in `.github/mock-google-services.json`.
 
-When you push several commits quickly, only the latest one is built. Earlier runs are cancelled.
+When a check fails, fix it and push a new commit: that starts the workflow again. When you push several commits quickly, only the latest one is built. Earlier runs are cancelled.
 
 If you are a new contributor, a maintainer has to approve each CI run on your pull request first. Running CI costs a lot of resources, so don't open a pull request, not even a draft, before your work is ready for someone to look at. Pushing to your fork as often as you like is fine.
 
@@ -49,15 +51,23 @@ The instrumentation tests of `:app` run on [Emulator.wtf](https://emulator.wtf),
 
 That takes two workflows. `pr.yml` builds the test APKs and the device list. Then `pr-emulator-wtf.yml`, triggered when `pr.yml` completes, runs them and reports back on the pull request. The split is what makes this work for forks: a workflow started by a fork has no access to secrets, so it can't reach Emulator.wtf. The second workflow runs in the context of the main repository, and only runs the APKs the first one built, never code from the fork.
 
-The instrumentation tests of `:wear`, `:automotive`, `:common`, and `:microwakeword` run on the regular emulator on GitHub Actions, on fewer API levels.
+The instrumentation tests of `:wear`, `:automotive`, `:common`, and `:microwakeword` run on the regular Android emulator on GitHub Actions. Emulator.wtf only offers phone, tablet, and monitor devices, so this is the only option for Wear OS and Automotive. Only one emulator fits on a runner, so every API level and device profile is its own job, and each job is much slower than the whole Emulator.wtf run. That is why these targets cover only a few API levels.
 
 ## After a merge
 
-Every push to `main` goes through `onPush.yml`. It downloads the latest translations from Lokalise, builds the release versions of all apps, attaches the APKs to the workflow run, and publishes to the internal testing track of the Play Store.
+Every push to `main` goes through `onPush.yml`. It downloads the latest translations from Lokalise, generates release notes from the merged pull requests, builds the release versions of all apps, attaches the APKs to the workflow run, and publishes to the internal testing track of the Play Store. The signing keys and other files needed for publishing come from repository secrets, and are only added during the run.
+
+All store deployments go through [Fastlane](https://fastlane.tools/). Its configuration, including the lanes the workflows call, lives in the `fastlane` folder.
 
 Run with the `beta` flag, which `weekly.yml` does every Sunday, it also creates a GitHub pre-release with the APKs, prepares the Amazon listing, and promotes the build to the beta track.
 
 So every merged pull request reaches internal testers. See [releases](/companion/android/releases/) for the rest of the way to production.
+
+## Changing a workflow
+
+- Put steps that more than one workflow needs in a local action in `.github/actions`, instead of copying them.
+- Choose triggers carefully. Every run costs resources, so a workflow should only run when its result matters.
+- Never put secrets in a workflow file. Pass them in from the repository secrets at run time, like the existing workflows do.
 
 ## F-Droid
 

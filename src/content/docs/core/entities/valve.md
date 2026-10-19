@@ -17,14 +17,14 @@ Valve entities have these properties on top of the [generic entity properties](/
 
 | Name | Type | Default | Description |
 | ---- | ---- | ------- | ----------- |
-| `reports_position` | `bool` | Required | Whether the valve reports a position. It decides whether the state comes from `current_valve_position` or from `is_closed`. Can also be set on the entity description. |
+| `reports_position` | `bool` | Required | Whether the valve reports a position. It decides whether the state comes from `current_valve_position` or from `is_closed`. Can also be set on the entity description, where it defaults to `False`. |
 | `current_valve_position` | `int \| None` | `None` | The position, from 0 (closed) to 100 (fully open). Used when `reports_position` is `True`. |
 | `is_closed` | `bool \| None` | `None` | Whether the valve is closed. Used when `reports_position` is `False`. |
 | `is_opening` | `bool \| None` | `None` | Whether the valve is opening. |
 | `is_closing` | `bool \| None` | `None` | Whether the valve is closing. |
 | `device_class` | `ValveDeviceClass \| None` | `None` | What the valve controls. See [Device classes](#device-classes). |
 
-If you forget to set `reports_position`, writing the state raises an error.
+If you forget to set `reports_position`, and the entity has no entity description, writing the state raises an error.
 
 ## Device classes
 
@@ -57,7 +57,7 @@ Implement the sync or the async variant of each method, not both.
 | `set_valve_position(position: int)` | `async_set_valve_position` | `SET_POSITION` |
 | `stop_valve()` | `async_stop_valve` | `STOP` |
 
-A valve with `SET_POSITION` does not need `open_valve` and `close_valve`: the open and close actions then call `set_valve_position` with 100 and 0. Toggling is handled for you. It stops a moving valve when it supports `STOP`, opens a closed valve, and otherwise moves the other way from the last direction.
+A valve with `SET_POSITION` does not need `open_valve` and `close_valve`: the open and close actions then call `set_valve_position` with 100 and 0. Still set `OPEN` and `CLOSE`, the actions are only available with those flags. Toggling is handled for you. It stops a moving valve when it supports `STOP`, opens a closed valve, and otherwise moves the other way from the last direction.
 
 ## States
 

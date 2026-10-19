@@ -51,6 +51,8 @@ Implement the sync or the async variant of each method, not both.
 
 The state is `on` or `off`, from `is_on`. When `is_on` is `None`, the state is `unknown`.
 
+`available_tones` is a capability attribute. It is only there when the siren supports `TONES`, and it is left out of the recorder history.
+
 ## Example
 
 ```python

@@ -10,17 +10,18 @@ The app follows Google's [recommended app architecture](https://developer.androi
 
 ## A web view with native features
 
-Home Assistant has always been a strong progressive web app, and the Android app builds on that. Its main screen is a [WebView](https://developer.android.com/reference/android/webkit/WebView) that shows the Home Assistant frontend. The app and the frontend talk to each other through a JavaScript bridge: the frontend asks the app for an access token, and they exchange messages over the external bus. See [the frontend screen](/companion/android/frontend-screen/) for how that works.
+Home Assistant has always been a strong progressive web app, and the Android app builds on that. Its main screen is a [WebView](https://developer.android.com/reference/android/webkit/WebView) that shows the Home Assistant frontend. The app and the frontend talk to each other through a JavaScript bridge: the frontend asks the app for an access token through [external authentication](/frontend/reference/external-auth/), and they exchange messages over [the external bus](/frontend/reference/external-bus/). See [the frontend screen](/companion/android/frontend-screen/) for how that works.
 
 Everything else is native: onboarding, settings, sensors, notifications, widgets, tiles, Assist, and the car and watch apps.
 
 ## Principles
 
 - **Kotlin only.** The whole codebase is Kotlin, and it stays that way.
-- **Compose for all new UI.** No new XML layouts, data binding, or view binding. New widgets use Jetpack Glance. See [Compose and the design system](/companion/android/compose/).
+- **Compose for all new UI.** No new XML layouts, data binding, or view binding. New widgets use Jetpack Glance. New screens use the `HATheme` theme. The older `HomeAssistantAppTheme` is Material 2 and deprecated. See [Compose and the design system](/companion/android/compose/).
 - **Coroutines and Flow for all concurrency.**
 - **Hilt for dependency injection.** Never create injected classes by hand.
 - **Keep code flavor agnostic.** Put code in the `main` source set so both [flavors](/companion/android/flavors-and-targets/) get it. Only code that needs Google Play Services goes in `full`.
+- **Keep up with Android.** The target SDK follows the latest Android releases, and new Android versions get tested as they come out.
 - **Gate features on the server version** when they need something from Home Assistant that older versions don't have, for example `server.version?.isAtLeast(2025, 6, 0)`.
 
 ## Modules
@@ -44,8 +45,8 @@ Inside a module, code is packaged by feature: `sensors/`, `notifications/`, `set
 | WebSocket API | [OkHttp](https://square.github.io/okhttp/) |
 | REST API | [Retrofit](https://square.github.io/retrofit/) |
 | Serialization | Kotlinx.serialization |
-| Database | [Room](https://developer.android.com/training/data-storage/room) |
-| Settings | SharedPreferences, behind a `LocalStorage` abstraction |
+| Database | [Room](https://developer.android.com/training/data-storage/room), for user data |
+| App settings | SharedPreferences, behind a `LocalStorage` abstraction |
 | Logging | [Timber](https://github.com/JakeWharton/timber) |
 
 ## Talking to Home Assistant

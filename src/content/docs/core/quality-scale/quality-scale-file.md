@@ -58,10 +58,10 @@ On top of that, hassfest verifies some rules in the code when they are marked `d
 | [config-flow](/core/quality-scale/config-flow/) | `config_flow: true` in the manifest, and a `config_flow.py` |
 | [discovery](/core/quality-scale/discovery/) | A discovery key in the manifest, or a discovery step in the config flow |
 | [reconfiguration-flow](/core/quality-scale/reconfiguration-flow/) | An `async_step_reconfigure` in the config flow |
-| [runtime-data](/core/quality-scale/runtime-data/) | `async_setup_entry` assigns `entry.runtime_data` |
+| [runtime-data](/core/quality-scale/runtime-data/) | `async_setup_entry` assigns `entry.runtime_data`. When `strict-typing` is also `done`, the entry functions also use a typed config entry, like `MyConfigEntry` |
 | [strict-typing](/core/quality-scale/strict-typing/) | The integration is in `.strict-typing`, and its requirements are typed |
-| [test-before-setup](/core/quality-scale/test-before-setup/) | Setup raises `ConfigEntryNotReady`, `ConfigEntryAuthFailed`, or `ConfigEntryError`, or awaits a helper that does |
-| [unique-config-entry](/core/quality-scale/unique-config-entry/) | The config flow aborts on a duplicate entry |
+| [test-before-setup](/core/quality-scale/test-before-setup/) | A module of the integration raises `ConfigEntryNotReady`, `ConfigEntryAuthFailed`, or `ConfigEntryError`, or `async_setup_entry` awaits `async_config_entry_first_refresh` or `async_ensure_token_valid`, which raise them for you |
+| [unique-config-entry](/core/quality-scale/unique-config-entry/) | `single_config_entry: true` in the manifest, or a config flow that calls `_async_abort_entries_match`, or both `async_set_unique_id` and `_abort_if_unique_id_configured` |
 
 When such a check fails, the error names the rule in brackets, like `[runtime-data]`, and links to its documentation.
 

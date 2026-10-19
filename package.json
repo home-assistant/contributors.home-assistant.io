@@ -2,13 +2,13 @@
   "name": "contributors.home-assistant.io",
   "private": true,
   "type": "module",
-  "packageManager": "pnpm@12.11.2",
+  "packageManager": "pnpm@12.14.0",
   "engines": {
     "node": ">=22.12.0"
   },
   "scripts": {
-    "dev": "pnpm referrers && pnpm redirects && astro dev",
-    "build": "pnpm referrers && pnpm redirects && astro build && pagefind --site dist",
+    "dev": "pnpm redirects && astro dev",
+    "build": "pnpm redirects && astro build && pagefind --site dist",
     "preview": "astro preview",
     "check": "astro check",
     "check:demos": "node scripts/check-demos.mjs",
@@ -17,7 +17,6 @@
     "structure": "node scripts/check-structure.mjs",
     "clean": "node -e \"for (const dir of ['dist', '.astro', 'node_modules/.astro']) require('node:fs').rmSync(dir, { recursive: true, force: true })\"",
     "tokens": "node scripts/sync-tokens.mjs",
-    "referrers": "node scripts/fetch-allowed-referrers.mjs",
     "redirects": "node scripts/generate-redirects.mjs",
     "fragments": "node scripts/generate-fragments.mjs",
     "bashio": "node scripts/generate-bashio.mjs",
@@ -34,11 +33,12 @@
     "@fontsource-variable/figtree": "^5.3.0",
     "@fontsource-variable/roboto-mono": "^5.3.0",
     "@fontsource/figtree": "^5.3.0",
+    "@mdi/js": "^7.4.47",
     "@resvg/resvg-js": "^2.6.2",
     "astro": "^7.3.8",
     "ical.js": "^2.2.1",
     "mermaid": "^12.1.0",
-    "satori": "^0.49.0",
+    "satori": "^0.62.0",
     "satteri-callouts": "^1.0.1",
     "sharp": "^0.35.5",
     "shiki": "^4.5.0"

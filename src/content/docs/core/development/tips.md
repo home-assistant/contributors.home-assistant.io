@@ -9,7 +9,7 @@ A collection of things that are good to know, but do not need a page of their ow
 
 ## Split big work into a series of pull requests
 
-Modernizing an old integration can be tempting to do in one go. Don't. Split the work into independent changes, and submit them one after another.
+Modernizing an old integration can be tempting to do in one go. Don't. Split the work into independent changes, and submit them one after another. Do not mix cleanups and new features in one pull request, and do not solve several issues in one either. Pull requests that dump a lot of code at once are not a priority for review, and may be closed.
 
 To keep working while the first one is in review, branch the next one off the first:
 
@@ -30,6 +30,10 @@ You can run a changed core integration on your own Home Assistant, by loading it
 4. Restart Home Assistant.
 
 A custom integration takes the place of the built-in one with the same domain, except in safe mode and recovery mode, which skip custom integrations. Remove it when you are done, or you are stuck on that version forever.
+
+## Try a new version of a library
+
+To test a change to a library inside Home Assistant before it is released, see [try your library in Home Assistant](/core/integrations/api-library/#try-your-library-in-home-assistant).
 
 ## Your new config flow does not show up
 

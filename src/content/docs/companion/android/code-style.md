@@ -61,11 +61,12 @@ Android Lint is strict: warnings are errors, and the build fails on any issue th
 Fix issues instead of suppressing them whenever you can. When you can't:
 
 - For one place, use `@Suppress("rule-id")` on the smallest construct possible.
-- To change a rule for the whole project, open a dedicated pull request that explains why. For KTLint, change `.editorconfig` and add a comment above the rule with the reason. If the change touches code, use two commits: one for the rule, one for the code it changes.
+- For Android Lint, an issue can also go in the module's `lint-baseline.xml`, as described in [baselines](#baselines).
+- To change a rule for the whole project, open a dedicated pull request that explains why. For Android Lint, change the `lint` block in `AndroidCommonConventionPlugin.kt`. For KTLint, change `.editorconfig` and add a comment above the rule with the reason, with a link to a GitHub issue if it needs more explanation. If the change touches code, use two commits: one for the rule, one for the code it changes.
 
 ## Baselines
 
-Every module has baseline files with issues that existed before a tool was enabled:
+Modules have baseline files with issues that existed before a tool was enabled:
 
 - `lint-baseline.xml` for Android Lint.
 - `detekt-baseline-*.xml` for Detekt. Android modules have one per variant, like `detekt-baseline-release.xml`; JVM modules have `detekt-baseline-main.xml`.
@@ -83,13 +84,15 @@ When an update of the Android Gradle Plugin or Detekt changes the rules, regener
   --continue
 ```
 
+Then go through the new entries. Fix what you can in the same pull request, and open an issue for what has to wait.
+
 ## Custom lint rules
 
 The `:lint` module has the project's own lint rules. They check things like a missing `@Serializable` annotation for Kotlinx.serialization, mutable properties on Room entities, and the use of `evaluateJavascript`. If you keep seeing the same mistake in reviews, propose a rule.
 
 ## SARIF reports in CI
 
-The linters write SARIF reports, which GitHub shows as annotations on your pull request. Every module writes its own report, and GitHub only accepts one per run, so CI merges them with `.github/scripts/merge_sarif.py`. You don't need this locally.
+The linters write SARIF reports, which GitHub shows as annotations on your pull request. Every module writes its own report, and GitHub only accepts one per run, so CI merges them with `.github/scripts/merge_sarif.py`. You don't need this locally, but you can run it after the linters: `python3 .github/scripts/merge_sarif.py` writes `merged_results.sarif` in the folder you run it from.
 
 ## Conventions
 
@@ -122,6 +125,8 @@ Constants follow the [Kotlin naming conventions](https://kotlinlang.org/docs/cod
 4. When a file has too many constants, or they are shared across modules, move them to a `*Constants.kt` file and group them in an `object`.
 
 If a test needs a private constant, mark it `@VisibleForTesting` instead of making it public.
+
+These rules are fairly new, so you will find constants in the code that don't follow them yet. Feel free to fix them when you come across them.
 
 ### TODOs need an issue
 

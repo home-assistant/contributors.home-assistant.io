@@ -53,3 +53,5 @@ A fresh image comes with the Supervisor and its plugins already on the data part
 Users can move the data partition to another disk, like a USB SSD next to an SD card. The Supervisor and the OS Agent prepare the target disk, with a partition labeled `hassos-data-external`, and reboot.
 
 During the next boot, `haos-data.service` copies the data partition to the new disk with `e2image`, and changes the label of the old partition to `hassos-data-old`. The new partition is then the only one with the `hassos-data` label, so it is the one that gets mounted. If the copy fails, the new partition is labeled `hassos-data-fail` and the system keeps using the old one.
+
+On the first boot of a fresh installation, `haos-data-disk-detach.service` looks for `hassos-data` partitions on other disks, like a data disk left over from an earlier installation. It renames them to `hassos-data-dis`, so the new installation does not mount them. Home Assistant Yellow is the exception: a data partition on its first NVMe disk is kept, and wins over the one on the eMMC.

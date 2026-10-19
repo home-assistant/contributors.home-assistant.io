@@ -25,11 +25,13 @@ Hardkernel's [WiFi Module 3](https://www.hardkernel.com/shop/wifi-module-3/) and
 
 The image works on eMMC the same way as on an SD card: flash it to the eMMC module.
 
-The serial console is on the serial header, `ttyAML0` at 115200 baud, next to the HDMI console. Some startup messages only appear on the console listed first in `cmdline.txt`. To see them on HDMI, change the order:
+The serial console is on the serial header, `ttyAML0` at 115200 baud, next to the HDMI console. The kernel sends its messages to both, but the systemd startup messages only go to the console listed last in `cmdline.txt`. By default, that is HDMI:
 
 ```text
 console=ttyAML0,115200n8 console=tty0
 ```
+
+To see the startup messages on the serial console instead, swap the two.
 
 On the ODROID-N2, GPIO pin 11 works as a power button, active low. For the GPIO headers, see the ODROID wiki for the [C2](https://wiki.odroid.com/odroid-c2/hardware/expansion_connectors), [C4](https://wiki.odroid.com/odroid-c4/hardware/expansion_connectors), and [N2](https://wiki.odroid.com/odroid-n2/hardware/expansion_connectors).
 
@@ -46,7 +48,7 @@ To boot from eMMC through the SPI flash, you need Petitboot version 20230328 or 
 
 Then flash Home Assistant OS to the eMMC. NVMe drives can't be booted from, but work as a [data disk](/os/operating-system/partitions/#data-disk).
 
-The serial console is on the CON1 header, at 1500000 baud. systemd's startup messages only show on the serial console. To see them on HDMI, add `console=tty0` to `cmdline.txt`.
+The serial console is on the CON1 header, at 1500000 baud. `cmdline.txt` contains `console=tty0`, so the systemd startup messages show on HDMI, not on the serial console.
 
 ## ODROID-M1S
 
@@ -64,4 +66,4 @@ The device then starts in UMS mode at the next boot, without an SD card. Downloa
 
 NVMe drives can't be booted from, but work as a data disk. The 14 pin expansion header is partly supported by the mainline kernel, including the UPS and internal USB.
 
-The serial console is at 1500000 baud. Like on the M1, add `console=tty0` to `cmdline.txt` to see the systemd startup messages on HDMI.
+The serial console is at 1500000 baud. Like on the M1, the systemd startup messages show on HDMI.

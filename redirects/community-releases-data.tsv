@@ -12,3 +12,4 @@ data.home-assistant.io/docs/quick-start-core	/data/guides/explore-your-data/
 data.home-assistant.io/docs/quick-start-non-hassio	/data/guides/explore-your-data/
 data.home-assistant.io/docs/tutorials	/data/guides/explore-your-data/
 data.home-assistant.io/docs/en/*	/data/
+/docs/releasing	/releases/how-it-works/

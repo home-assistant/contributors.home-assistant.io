@@ -64,8 +64,9 @@ Moved or renamed pages:
 - [ ] `pnpm check`, `pnpm build`, and `pnpm links` pass locally.
 - [ ] Moved or renamed pages have a redirect in [`redirects/`][redirects].
 - [ ] New claims about how something works list their sources above.
-- [ ] I understand the changes I am submitting and can explain them in my own words.
-- [ ] Any generated content has been carefully reviewed for correctness and compliance with project standards.
+- [ ] I have read the [Open Home Foundation AI Policy][ai-policy].
 
+
+[ai-policy]: https://contributors.home-assistant.io/start/ai-policy/
 [authoring]: https://github.com/home-assistant/contributors.home-assistant.io/blob/main/.github/copilot-instructions.md
 [redirects]: https://github.com/home-assistant/contributors.home-assistant.io/tree/main/redirects

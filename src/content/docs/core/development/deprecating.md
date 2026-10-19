@@ -194,6 +194,8 @@ The issue is not persistent: it is created again on every start, as long as the 
 }
 ```
 
+The code above uses a second key, `deprecated_entity_used`, when the entity is still in use. Add it next to `deprecated_entity`, with the same title, and an `{items}` placeholder in the description: that is where the list of automations and scripts goes. Its description tells the user to update those, along with any dashboards and templates, then disable the deprecated entity and restart.
+
 ### Removing an integration
 
 When an integration stops working for good, for example because the vendor shut down its API, remove it. Strip it down to a stub that raises an `ERROR` issue, and keep a minimal `config_flow.py`, so existing entries still load and the user sees what happened. The established translation key is `integration_removed`:

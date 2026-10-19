@@ -26,7 +26,7 @@ Alarm control panel entities have these properties on top of the [generic entity
 
 ## Codes
 
-Your methods receive the code as the `code` argument, or `None` when there is none. Users can store a default code in the entity settings. When an action comes without a code, Home Assistant uses that default code. It reads the setting from the [entity registry options](/core/entities/registry/) for you.
+Your methods receive the code as the `code` argument, or `None` when there is none. Users can store a default code in the entity settings. When a disarm or arm action comes without a code, Home Assistant uses that default code. The trigger action does not: `alarm_trigger` gets only the code from the action. It reads the setting from the [entity registry options](/core/entities/registry/) for you.
 
 When `code_arm_required` is `True` and an arm action has no code and there is no default code, Home Assistant raises a validation error before it calls you. Set `code_arm_required` to `False` when the panel arms without a code.
 

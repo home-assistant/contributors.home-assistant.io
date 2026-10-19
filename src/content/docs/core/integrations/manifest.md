@@ -81,6 +81,33 @@ What the integration is about. Integrations in core with a config flow must set 
 
 The difference between a `hub` and a `device` or `service` is what one config entry represents: a hub gives access to many devices or services, the others provide exactly one.
 
+### categories
+
+The categories people find the integration by, on the integrations page of the website, in the app, and in the Marketplace. Each entry is a category, like `energy`, or a category with a subcategory, like `energy.meters_monitoring`. The first entry is the primary category: the one that says best what the integration is for.
+
+Here are the categories of the Shelly integration:
+
+```json title="manifest.json"
+{
+  "categories": [
+    "plugs_switches",
+    "lighting.bulbs_lamps",
+    "energy.meters_monitoring"
+  ]
+}
+```
+
+Hassfest checks that:
+
+- There are one to three entries, without duplicates.
+- Every entry is a known category or subcategory.
+- A category is not listed next to one of its own subcategories, like `energy` with `energy.meters_monitoring`.
+- Entity, system, and virtual integrations don't have the key.
+
+The last three checks need the list of categories from core, so hassfest only runs them when it validates inside a core checkout. The hassfest GitHub action for custom integrations does.
+
+See [integration categories](/core/integrations/categories/) for every category, and for how to choose the right ones.
+
 ### config_flow
 
 Set `"config_flow": true` when the integration has a `config_flow.py`, so users can add it from the UI. See [config flow](/core/integrations/config-flow/).
@@ -103,6 +130,8 @@ While you work on a library, you can test your integration against a version tha
 uv pip install -e ../my-library
 hass --skip-pip-packages my-library
 ```
+
+To keep Home Assistant from installing or replacing any package at all, start it with `hass --skip-pip` instead.
 
 In the development container, the folder next to your checkout does not exist: see [try your library in Home Assistant](/core/integrations/api-library/#try-your-library-in-home-assistant).
 
@@ -241,6 +270,20 @@ Model names of HomeKit devices. A device matches when its full model name, or th
 }
 ```
 
+### lorawan
+
+A list of LoRaWAN matchers. Each matcher is a pair of a stack, like `"chirpstack"` or `"tts"`, and the brand ID the network server uses for your vendor, as a string or an integer. Your integration needs `config_flow` set to `true`, and `lorawan` in its `dependencies`.
+
+```json
+{
+  "config_flow": true,
+  "dependencies": ["lorawan"],
+  "lorawan": [["chirpstack", 744], ["tts", "sensecap"]]
+}
+```
+
+A device that matches one of the pairs starts the `integration_discovery` step of your config flow. The matcher only selects your integration: your library decides which models it supports. See [LoRaWAN devices](/core/internals/lorawan/).
+
 ### mqtt
 
 A list of MQTT topics to subscribe to for discovery. Add `mqtt` to `dependencies` (or `after_dependencies`) as well.
@@ -250,6 +293,8 @@ A list of MQTT topics to subscribe to for discovery. Add `mqtt` to `dependencies
   "mqtt": ["tasmota/discovery/#"]
 }
 ```
+
+Before your integration subscribes to topics itself, wait for the MQTT client with `await mqtt.async_wait_for_mqtt_client(hass)`. It waits while MQTT is being set up, and returns `True` once the client is available, or `False` when MQTT is not set up or does not become available in time.
 
 ### dhcp
 

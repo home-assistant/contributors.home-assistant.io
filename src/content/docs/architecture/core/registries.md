@@ -39,6 +39,10 @@ When the entity writes its state, the user's value wins when it is set. The inte
 
 Entities without a unique ID still work, but users can't change anything about them in the UI.
 
+The registries follow the hierarchy of config entry, device, and entity. Disable a config entry, and its devices and entities are disabled too. Disable a device, and its entities follow. Remove a device or a config entry, and the entities that belong to it are removed from the registry.
+
+An enabled entity in the registry that no integration provides right now, like when its integration failed to set up, still shows up in the state machine: as `unavailable`, with the attribute `restored: true`.
+
 ## Storage
 
 Home Assistant stores its own data in JSON files in `.storage`, in the configuration folder: the registries, config entries, users, dashboards, and more. Integrations can do the same with `Store`, which versions the data, migrates it when the version changes, combines writes close together into one, and by default refuses to read data with a newer major version than it knows, like after a downgrade.

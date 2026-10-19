@@ -81,7 +81,7 @@ Returns the apps in the store.
 
 ### `GET /store/addons/<app>`
 
-Returns the details of an app in the store. The `/store/addons/<app>/<version>` path returns the same.
+Returns the details of an app in the store. The `/store/addons/<app>/<version>` path returns the same: it ignores the version.
 
 All keys of the [store app model](/apps/supervisor-api/models/#store-app), plus:
 
@@ -99,7 +99,7 @@ All keys of the [store app model](/apps/supervisor-api/models/#store-app), plus:
 | `host_pid` | boolean | Uses the host PID namespace |
 | `ingress` | boolean | Uses ingress |
 | `long_description` | string or null | The content of `README.md` |
-| `rating` | integer | Security rating, from 1 to 8 |
+| `rating` | integer | Security rating, from 1 to 8. Higher is safer |
 | `signed` | boolean | Always `false` |
 
 ### `GET /store/addons/<app>/availability`
@@ -108,7 +108,7 @@ Checks if the latest version of the app can be installed on this system. Returns
 
 ### `POST /store/addons/<app>/install`
 
-Installs an app. Also available as `POST /store/addons/<app>/install/<version>`, which installs the same version.
+Installs the latest version of an app. `POST /store/addons/<app>/install/<version>` does the same: it ignores the version.
 
 | Key | Type | Required | Description |
 | --- | --- | --- | --- |
@@ -124,11 +124,11 @@ With `background: true`, the response is:
 
 ### `POST /store/addons/<app>/update`
 
-Updates an installed app to the latest version. Also available as `POST /store/addons/<app>/update/<version>`. An app cannot update itself. Fails while the Supervisor is still starting up or restoring a backup.
+Updates an installed app to the latest version. `POST /store/addons/<app>/update/<version>` does the same: it ignores the version. An app cannot update itself. Fails while the Supervisor is still starting up or restoring a backup.
 
 | Key | Type | Required | Description |
 | --- | --- | --- | --- |
-| `backup` | boolean | No | Make a backup of the app before the update |
+| `backup` | boolean | No | Make a backup of the app before the update. Default `false` |
 | `background` | boolean | No | Return a `job_id` right away instead of waiting for the update to finish. Default `false` |
 
 ### `GET /store/addons/<app>/icon`

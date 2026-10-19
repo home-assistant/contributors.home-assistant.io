@@ -5,7 +5,7 @@ sidebarGroup: APIs
 order: 30
 ---
 
-Home Assistant serves a REST API under `/api/`, on the same port as the frontend: 8123 by default, or 80 on Home Assistant OS installations. It accepts and returns JSON. The `api` integration provides it, and it is loaded whenever the frontend is.
+Home Assistant serves a REST API under `/api/`, on the same port as the frontend: 8123 by default, or 80 when Home Assistant runs with the Supervisor, like on Home Assistant OS. The `SETUP_PORT` environment variable overrides that default. It accepts and returns JSON. The `api` integration provides it, and it is loaded whenever the frontend is.
 
 The REST API is good for simple, one-off requests from scripts and other systems. For anything that needs to stay connected or follow changes, use the [WebSocket API](/core/internals/websocket-api/). The frontend uses that one, and it has many more commands.
 
@@ -227,7 +227,12 @@ The response is a list with one list of states per entity.
 
 ### GET /api/logbook/&lt;timestamp&gt;
 
-Returns logbook entries, starting from the optional timestamp. Query parameters: `entity` for one or more entity IDs, separated by commas, and `end_time`.
+Returns logbook entries, starting from the optional timestamp. Without a timestamp, it starts at the beginning of the current day, in local time. Query parameters:
+
+- `entity`: one or more entity IDs, separated by commas.
+- `end_time`: the end of the period, URL encoded.
+- `period`: the number of days to return when there is no `end_time`. Defaults to 1.
+- `context_id`: only the entries of one context. Cannot be combined with `entity`.
 
 ## Other integrations
 

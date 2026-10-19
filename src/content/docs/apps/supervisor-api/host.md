@@ -32,7 +32,7 @@ Some endpoints only exist on Home Assistant OS, or need a recent version of it. 
 | `agent_version` | string or null | Version of the OS Agent |
 | `apparmor_version` | string or null | Version of AppArmor |
 | `chassis` | string or null | Chassis type, like `embedded` or `vm` |
-| `virtualization` | string | Virtualization type, empty when there is none |
+| `virtualization` | string or null | Virtualization type, empty when there is none |
 | `cpe` | string or null | CPE name of the operating system |
 | `deployment` | string or null | Deployment type, like `production` or `development` |
 | `disk_free` | float | Free disk space in GiB |
@@ -44,13 +44,13 @@ Some endpoints only exist on Home Assistant OS, or need a recent version of it. 
 | `hostname` | string or null | Host name |
 | `llmnr_hostname` | string or null | Host name for LLMNR |
 | `kernel` | string or null | Kernel version |
-| `operating_system` | string | Name of the operating system |
+| `operating_system` | string or null | Name of the operating system |
 | `timezone` | string or null | Time zone of the host |
-| `dt_utc` | string or null | Current time in UTC, in ISO 8601 |
+| `dt_utc` | string | Current time in UTC, in ISO 8601 |
 | `dt_synchronized` | boolean or null | `true` if the clock is synchronized |
 | `use_ntp` | boolean or null | `true` if the host uses NTP |
 | `startup_time` | float or null | Seconds the last boot took |
-| `boot_timestamp` | integer or null | Timestamp of the last boot, as systemd reports it |
+| `boot_timestamp` | integer or null | Timestamp of the last boot in microseconds, as systemd reports it |
 | `broadcast_llmnr` | boolean or null | `true` if the host announces itself over LLMNR |
 | `broadcast_mdns` | boolean or null | `true` if the host announces itself over mDNS |
 
@@ -94,23 +94,29 @@ Each partition has `device`, `uuid`, `label`, `filesystem`, `size`, `read_only`,
 
 ### `GET /host/disks/<disk>/usage`
 
-Returns how the space on a disk is used. Use `default` as `<disk>` for the system disk, or the name of a mount.
+Returns how the space on a disk is used, in bytes. Use `default` as `<disk>` for the system disk, or the name of a mount. `default` always means the system disk, so a mount named `default` cannot be measured here.
 
 | Query parameter | Description |
 | --- | --- |
-| `max_depth` | How many levels of folders to break down. For the system disk, the default is 1 |
+| `max_depth` | How many levels of folders to break down. The default is 1 for the system disk, and 0 for a mount |
 
 | Key | Type | Description |
 | --- | --- | --- |
 | `id` | string | ID of the entry |
 | `label` | string | Name of the entry |
-| `total_bytes` | integer | Size of the disk |
+| `total_bytes` | integer | Size of the disk. Only on the top entry |
 | `used_bytes` | integer | Used space |
-| `children` | list | The same structure for each part, like `addons_data`, `addons_config`, `media`, `share`, `backup`, `ssl`, `homeassistant`, and `system` |
+| `children` | list | The same structure for each part. Left out when there is no breakdown |
+
+For the system disk, the children are `system`, `addons_data`, `addons_config`, `media`, `share`, `backup`, `ssl`, and `homeassistant`, and `max_depth` sets how far the breakdown goes inside them.
+
+A mount has no such fixed parts, so the Supervisor walks its folders. A `max_depth` of 0 or 1 returns the totals only, 2 adds the first level of folders, and every level below that needs one more. An `other` child holds what is not in a folder, like files at the top of the mount. When the files change during the walk and the folders add up to more than `used_bytes`, the breakdown is left out.
+
+The Supervisor measures a mount by accessing it, which mounts it when it was not mounted yet. A mount that does not exist returns a `404`. A mount that cannot be read or is no longer mounted returns an error. When the measurement takes longer than 60 seconds, the request returns an error, but the measurement keeps running. While it runs, a new request for the same mount and `max_depth` waits for it instead of starting another one. A `max_depth` below 2 counts as the same depth.
 
 ### Host logs
 
-`GET /host/logs` returns the logs of the host, and works like the other [log endpoints](/apps/supervisor-api/#log-endpoints). By default it shows the most important services. These endpoints narrow it down:
+`GET /host/logs` returns the logs of the host, and works like the other [log endpoints](/apps/supervisor-api/#log-endpoints). By default it shows the most important services, and every line comes with its timestamp and process, as with `verbose`. These endpoints narrow it down:
 
 | Path | Returns |
 | --- | --- |
@@ -137,7 +143,7 @@ Returns the boots in the journal, by offset. `0` is the current boot.
 
 ### `GET /host/logs/identifiers`
 
-Returns the syslog identifiers in the journal, as `identifiers`.
+Returns the syslog identifiers in the journal, as `identifiers`. Useful ones are `NetworkManager` for network problems, `bluetoothd` for Bluetooth, and `audit` when you work on an AppArmor profile.
 
 ## Home Assistant OS
 
@@ -161,7 +167,9 @@ These only work on Home Assistant OS.
 | `POST` | `/os/boards/green` | Change the settings of Home Assistant Green |
 | `GET` | `/os/boards/raspberrypi/firmware` | Raspberry Pi firmware state |
 | `POST` | `/os/boards/raspberrypi/firmware/update` | Update the Raspberry Pi firmware |
-| `GET`, `POST`, `DELETE` | `/os/ssh/authorized_keys` | SSH keys for the host. Only Home Assistant Core can call these |
+| `GET` | `/os/ssh/authorized_keys` | List the SSH keys of the host |
+| `POST` | `/os/ssh/authorized_keys` | Add an SSH key to the host |
+| `DELETE` | `/os/ssh/authorized_keys` | Remove all SSH keys of the host |
 
 ### `GET /os/info`
 
@@ -174,7 +182,7 @@ These only work on Home Assistant OS.
 | `board` | string | Board name, like `generic-x86-64` or `yellow` |
 | `boot` | string | Active boot slot |
 | `data_disk` | string | ID of the data disk |
-| `boot_slots` | dictionary | Per boot slot (`A` and `B`) a [boot slot model](/apps/supervisor-api/models/#boot-slot) |
+| `boot_slots` | dictionary | Per boot slot (`A` and `B`) a [boot slot model](/apps/supervisor-api/models/#boot-slot). Use these names for `POST /os/boot-slot` |
 
 ### `POST /os/update`
 
@@ -199,7 +207,7 @@ Needs Home Assistant OS 15.0 or newer.
 
 ### `POST /os/config/swap`
 
-Takes the same keys. `swap_size` is a number with an optional unit: `B`, `K`, `M`, or `G`, optionally followed by `B` or `iB`. A change creates a reboot required issue.
+Takes the same keys. `swap_size` is a number with an optional unit: `B`, `K`, `M`, or `G`, optionally followed by `B` or `iB`. A size below 40 kB turns swap off. A change creates a reboot required issue.
 
 ### `POST /os/boot-slot`
 
@@ -218,7 +226,7 @@ Switches to the other boot slot and reboots into it.
 
 ### `POST /os/datadisk/move`
 
-Moves the data partition to another disk. This takes a reboot.
+Moves the data partition to another disk, and reboots the system.
 
 | Key | Type | Required | Description |
 | --- | --- | --- | --- |
@@ -226,11 +234,13 @@ Moves the data partition to another disk. This takes a reboot.
 
 ### `POST /os/datadisk/wipe`
 
-Wipes the data disk and reboots. Everything on it is gone. Only apps with the `admin` role can call this.
+Wipes the data disk and reboots. Only apps with the `admin` role can call this.
+
+The wipe formats the data partition and the overlay partition. That removes Home Assistant, all apps, backups, and media on the data disk, and host settings like the network connections. The OS and its boot slots stay. After the reboot, the system downloads Home Assistant again and starts with onboarding, like a new installation. You may have to set up the network again to reach it.
 
 ### `GET /os/boards/<board>`
 
-Returns success with empty data when `<board>` is the board in use, and an error otherwise.
+Returns success with empty data when `<board>` is the board in use, and an error otherwise. `<board>` is the `board` value of `GET /os/info`.
 
 ### `GET /os/boards/yellow`
 
@@ -254,20 +264,28 @@ Returns success with empty data when `<board>` is the board in use, and an error
 
 ### `GET /os/boards/raspberrypi/firmware`
 
-Returns the state of the Raspberry Pi bootloader firmware. Returns a `404` when the board has no firmware to manage, or the OS Agent is too old.
+Returns the state of the Raspberry Pi bootloader firmware, and of the VL805 USB controller firmware where the board has one. Returns a `404` when the board has no firmware to manage, or the OS Agent is older than 1.9.0.
 
 | Key | Type | Description |
 | --- | --- | --- |
-| `current_version` | string | Installed firmware version |
-| `latest_version` | string | Latest firmware version |
+| `current_version` | string or null | Installed firmware version |
+| `latest_version` | string or null | Latest firmware version that comes with the OS |
 | `update_available` | boolean | `true` if an update is available |
 | `update_blocked` | boolean | `true` if the boot device does not allow updates |
 | `update_pending` | boolean | `true` if an update waits for a reboot |
-| `blocked_reason` | string | Why the update is blocked |
+| `blocked_reason` | string or null | Why the update is blocked, `null` when it is not. For now always `unsupported_boot_device`, whatever the cause |
 
 ### `POST /os/boards/raspberrypi/firmware/update`
 
-Updates the Raspberry Pi firmware.
+Updates the Raspberry Pi firmware to the version that comes with the OS. Returns an error when `update_blocked` is `true`. The new firmware runs after a reboot, so a successful update creates a reboot required issue.
+
+### SSH keys of the host
+
+`/os/ssh/authorized_keys` manages the SSH keys of the `root` user of the host, for the [SSH server on port 22222](/os/operating-system/debugging/). Only Home Assistant Core can call these endpoints, not apps.
+
+- `GET` returns the keys as `keys`, one entry per line of the file, without blank and comment lines. It needs OS Agent 1.11.0 or newer, and returns a `404` otherwise.
+- `POST` adds the key you send as `key`, like `ssh-ed25519 AAAA...`, to the keys that are already there. The key may not be longer than 3000 bytes or contain control characters. Since OS Agent 1.10.0, the key must also be one valid line of an OpenSSH `authorized_keys` file, options included. Adding a key also starts the SSH server of the host.
+- `DELETE` removes all keys. It also stops the SSH server, which ends open sessions.
 
 ## Hardware
 
@@ -422,13 +440,15 @@ Scans for Wi-Fi networks. Only works on a wireless interface.
 
 ### `POST /network/interface/<interface>/vlan/<id>`
 
-Creates a VLAN on an Ethernet interface. `<id>` is the VLAN ID, from 0 to 4094. Takes the `ipv4`, `ipv6`, `mdns`, and `llmnr` keys of the update endpoint. Without `ipv4` or `ipv6`, the VLAN uses `auto`.
+Creates a VLAN on an Ethernet interface. `<id>` is the VLAN ID, from 0 to 4094. Takes the `ipv4`, `ipv6`, `mdns`, and `llmnr` keys of the update endpoint. Here, `method` defaults to `auto` instead of `static`.
 
 ## Time
 
-Needs Home Assistant OS 18.3 or newer.
+These endpoints set the NTP servers the host uses to sync its clock. They need Home Assistant OS 18.3 or newer, and return a `404` otherwise. When they are available, `all_features` of `GET /host/info` lists `ntp`.
 
 ### `GET /time/info`
+
+Returns the servers the Supervisor configured, as `config`. The host can also get servers from other places, like DHCP, so the servers in use can differ.
 
 ```json
 {
@@ -445,6 +465,8 @@ Needs Home Assistant OS 18.3 or newer.
 | --- | --- | --- | --- |
 | `servers` | list | No | NTP servers to use |
 | `fallback_servers` | list | No | NTP servers to use when the others are not reachable |
+
+A key you leave out keeps its value. An empty list clears the configured servers. Each server is a host name or IP address. After a change, the time sync service of the host restarts.
 
 ## Mounts
 
@@ -548,7 +570,7 @@ A change needs a reboot to take effect, and creates a reboot required issue.
 
 ### `POST /docker/registries`
 
-Adds credentials for a container registry. The Supervisor uses them to pull images.
+Adds credentials for a container registry. The Supervisor uses them to pull images. For Docker Hub, use `docker.io` as the host name.
 
 ```json
 {
@@ -565,7 +587,7 @@ Removes the credentials of a registry.
 
 ### `POST /docker/migrate-storage-driver`
 
-Switches the Docker storage driver on the next reboot. Needs Home Assistant OS 17.0 or newer.
+Switches the Docker storage driver on the next reboot, and creates a reboot required issue. Needs Home Assistant OS 17.0 or newer, and returns a `404` otherwise.
 
 | Key | Type | Required | Description |
 | --- | --- | --- | --- |
@@ -573,4 +595,4 @@ Switches the Docker storage driver on the next reboot. Needs Home Assistant OS 1
 
 ### `POST /docker/reset-storage`
 
-Throws away all images and containers on the next reboot. They are downloaded again after. Needs Home Assistant OS 18.3 or newer.
+Throws away all images and containers on the next reboot, and creates a reboot required issue. After the reboot, the system downloads the images of the Supervisor, Home Assistant Core, the plugins, and the apps again, so it needs internet access. Needs Home Assistant OS 18.3 or newer, and returns a `404` otherwise.

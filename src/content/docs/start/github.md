@@ -98,7 +98,7 @@ GitHub saves your change as a commit in your fork, and shows you what you change
 4. Fill out the template in the description. Leave its headings and checkboxes in place, and check the boxes that apply. The template is there to help the reviewer, not to test you.
 5. Select **Create pull request**.
 
-That's it. Your proposal is now public, and the right people are notified by themselves. You don't need to ask anyone for a review.
+That's it. Your proposal is now public, and the right people are notified automatically. You don't need to ask anyone for a review.
 
 ### 6. Let the bots do their thing
 

@@ -45,7 +45,7 @@ Before you open a pull request, run `pnpm check`, `pnpm build`, `pnpm links`, an
 
 | Script | What it does |
 | --- | --- |
-| `pnpm dev` | Fetches the referrer list, writes the redirects, and starts the development server. |
+| `pnpm dev` | Writes the redirects and starts the development server. |
 | `pnpm build` | The same, then builds the site to `dist/` and the search index. |
 | `pnpm preview` | Serves `dist/`. |
 | `pnpm check` | Type-checks the site and the front matter of every page. CI runs it. |
@@ -61,7 +61,6 @@ Before you open a pull request, run `pnpm check`, `pnpm build`, `pnpm links`, an
 | `pnpm components` | Bundles the frontend components for the live demos. Slow. |
 | `pnpm check:demos` | Type-checks `demo-runtime/` against a frontend checkout. |
 | `pnpm check:component-docs` | Compares the "In code" sections of the component pages with the frontend source. |
-| `pnpm referrers` | Fetches the allowed referrers of the analytics. The build runs it. |
 | `pnpm avatars` | Downloads missing GitHub avatars of blog authors. |
 
 Most generators read a checkout next to this repository, like `../core` or `../frontend`, at `origin/dev` or the default branch. Run `git fetch` in it first.

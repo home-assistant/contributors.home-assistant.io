@@ -67,7 +67,7 @@ For a numeric entity, `range` picks the icon of the highest range value that is 
 }
 ```
 
-A state of 60 shows `mdi:water-percent`, and anything from 90 up shows `mdi:water`. The default is used when the state is below the lowest range, unavailable, or not a number. When an entity has both `state` and `range` icons, the `state` icons win.
+A state of 60 shows `mdi:water-percent`, and anything from 90 up shows `mdi:water`. The default is used when the state is below the lowest range, unavailable, or not a number. Range keys can be whole or decimal numbers, like `"0.5"`, and must be in ascending order. When an entity has both `state` and `range` icons, the `state` icons win.
 
 ## How it is checked
 

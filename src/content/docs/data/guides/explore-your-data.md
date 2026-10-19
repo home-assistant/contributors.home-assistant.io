@@ -2,6 +2,8 @@
 title: Explore your own data
 description: Set up JupyterLab, connect it to the database of your Home Assistant, and run your first report. About fifteen minutes.
 order: 2
+source: https://github.com/home-assistant/home-assistant-notebooks/blob/master/GETTING_STARTED.ipynb
+lastVerified: 2026-10-16
 ---
 
 Home Assistant records everything that happens in your home in a database: every state change, every event, and statistics over time. That data is yours, and you can learn a lot from it. When does the heating run? Which lights are on the longest? How does your energy use change with the seasons?
@@ -37,11 +39,31 @@ pip install jupyterlab HASS-data-detective seaborn
 jupyter lab
 ```
 
-JupyterLab opens in your browser. Data Detective reads the database, and seaborn draws the plots in the notebooks.
+JupyterLab opens in your browser. Data Detective reads the database, and seaborn draws plots.
+
+On Python 3.13 or newer, pip installs HASS Data Detective 3.2, because later versions need an older Python. The notebook works with 3.2.
 
 You need access to the database. With the default SQLite database, copy `home-assistant_v2.db` from your configuration folder to your computer. Make the copy while Home Assistant is stopped, or from a backup, so you do not get a half-written file.
 
 If you use MariaDB, MySQL, or PostgreSQL for the recorder, connect to it directly instead. Create a separate database user with read-only rights for this. Your notebooks only need to read.
+
+Python also needs a driver for that database. Install it in the same virtual environment, and start the database URL with the matching prefix:
+
+- **MariaDB or MySQL**: `pip install pymysql`, and a URL that starts with `mysql+pymysql://`. If you copy the `db_url` of your recorder and it starts with `mysql://`, change that part.
+- **PostgreSQL**: `pip install "psycopg[binary]"`, and a URL that starts with `postgresql://`.
+
+On the PostgreSQL server, a read-only user for a recorder database called `hass` looks like this:
+
+```sql
+CREATE USER datascience WITH PASSWORD 'my_secret_password';
+GRANT CONNECT ON DATABASE hass TO datascience;
+GRANT USAGE ON SCHEMA public TO datascience;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO datascience;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public
+  GRANT SELECT ON TABLES TO datascience;
+```
+
+The `ALTER DEFAULT PRIVILEGES` statement only applies to tables created by the user that runs it. Run it as the user Home Assistant connects with, and the new user can also read tables that a future schema migration creates.
 
 ## Get the notebooks
 
@@ -61,14 +83,40 @@ git clone https://github.com/home-assistant/home-assistant-notebooks.git
    ```
 
    For MariaDB, MySQL, or PostgreSQL, pass the same kind of database URL as the `db_url` of your recorder instead.
-3. Run the cells one at a time, from the top: select the first code cell, and press <kbd>Shift</kbd> + <kbd>Enter</kbd> to run it and move to the next one.
+3. Run the cells from the top: select the first code cell, and press <kbd>Shift</kbd> + <kbd>Enter</kbd> to run it and move to the next one.
 
-Not every cell works on every database, which is why you run them one at a time. **Run** > **Run All Cells** stops at the first cell that fails.
+The notebook reads your sensor data into a table, and plots it. It works with SQLite, MariaDB, MySQL, and PostgreSQL, and **Run** > **Run All Cells** runs every cell in one go. On a big database this takes a while. A cell that is still running shows `[*]` next to it. When it is done, the asterisk changes into a number.
 
-- The **Popular entities** cell uses `from_unixtime()`, a MariaDB and MySQL function. On the default SQLite database, it fails with `no such function: from_unixtime`. Skip it and the table after it, and continue at **View states**.
-- **View states** and the plots after it use a query of Data Detective that is written for SQLite. With MariaDB, MySQL, or PostgreSQL, those cells fail instead.
+## Read the database with pandas
 
-The cells that work read your data and show what it looks like: your sensor data in a table, and plotted over time. On a big database this takes a while. A cell that is still running shows `[*]` next to it. When it is done, the asterisk changes into a number.
+To start from scratch, or to see what the notebook does under the hood: [pandas](https://pandas.pydata.org/) and SQLAlchemy, which the `pip install` above already brought in, read the database directly. Paste this into a new cell of a notebook, next to your copy of `home-assistant_v2.db`:
+
+```python
+import pandas as pd
+import sqlalchemy
+
+engine = sqlalchemy.create_engine("sqlite:///home-assistant_v2.db")
+
+query = sqlalchemy.text("""
+    SELECT states_meta.entity_id, states.state, states.last_updated_ts
+    FROM states
+    JOIN states_meta ON states.metadata_id = states_meta.metadata_id
+    WHERE states_meta.entity_id LIKE 'sensor.%'
+""")
+
+df = pd.read_sql(query, engine)
+df["last_updated"] = pd.to_datetime(
+    df["last_updated_ts"], unit="s", utc=True
+)
+df["state"] = pd.to_numeric(df["state"], errors="coerce")
+df = df.dropna(subset=["state"])
+
+print(df.groupby("entity_id")["state"].describe())
+```
+
+This reads the states of all your sensors, turns the timestamps into dates, keeps only the numeric states, and prints the count, average, minimum, and maximum for each sensor. From here, `df` is a regular pandas table you can filter, group, and plot.
+
+The query is plain SQL, the same kind the notebook uses on every database, so for MariaDB, MySQL, or PostgreSQL you only change the database URL.
 
 ## Make it your own
 

@@ -26,7 +26,7 @@ Anyone can apply, if you:
 - Have made at least two pull requests to the intents repository.
 - Help review pull requests for the language.
 
-To apply, start a topic in the [intents discussions](https://github.com/OHF-Voice/intents/discussions), or ask in the **#language-leaders** channel on the Home Assistant [Discord server](https://www.home-assistant.io/join-chat).
+To apply, start a topic in the [intents discussions](https://github.com/OHF-Voice/intents/discussions), or ask in **#developers** on the Home Assistant [Discord server](https://www.home-assistant.io/join-chat).
 
 Some languages have no leader yet. If yours is one of them, that is your chance: contribute, review what others open, and apply.
 

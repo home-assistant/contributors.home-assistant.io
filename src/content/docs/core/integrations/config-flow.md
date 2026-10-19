@@ -122,6 +122,8 @@ await self.async_set_unique_id(serial_number)
 self._abort_if_unique_id_configured(updates={CONF_HOST: host})
 ```
 
+The reload only happens when the entry is loaded or waiting to retry its setup. Pass `reload_on_update=False` to update the entry without a reload. Even without changes, a discovery reloads an entry that is waiting to retry its setup: the device is evidently online again.
+
 ### What makes a good unique ID
 
 It must be a string, stable, and not something the user can change.
@@ -192,6 +194,16 @@ async def async_step_discovery_confirm(
 If your integration is discoverable and needs no authentication, you might not need to write a flow at all. `python3 -m script.scaffold integration` generates this flow when you answer that your device is discoverable and needs no authentication. For an existing integration, run `python3 -m script.scaffold config_flow_discovery`. The flow checks whether any devices can be found before it finishes, supports every discovery method in the manifest, and allows a single config entry that takes care of all devices.
 
 The generated `config_flow.py` has no flow class. It calls `config_entry_flow.register_discovery_flow()` with your domain, a title, and a function that returns whether any device can be found. Home Assistant only calls that function when a user adds the integration by hand and no discovered device is waiting to be set up.
+
+#### Scanning in the flow and in setup
+
+Many discovery protocols wait for a timeout to collect every device that answers. Your function only has to know whether there is at least one, and then `async_setup_entry` has to find all of them. That looks like scanning twice. The integrations in core that use this helper accept that, and keep the cost low:
+
+- Nothing the function finds reaches setup. The helper creates the entry with empty `data`, and skips the function when the flow started from discovery. Setup also runs on every start of Home Assistant. So setup always does its own discovery, and only the first setup by hand scans twice.
+- Return as soon as one device answers, instead of waiting for the full timeout. Govee lights local polls until the first device shows up, within a timeout. Deako asks for a single address. Fjäråskupan does not scan at all: it checks the Bluetooth devices Home Assistant has already seen.
+- In setup, keep discovering, and add entities for devices that show up later. Gree, Refoss, and Zerproc scan again on an interval with `async_track_time_interval()`. Govee lights local and Escea keep a listener running. A device that answers late still gets added.
+
+Escea is the one exception that shares work between the two. Its function starts a discovery service and stores it in `hass.data`, and `async_setup_entry` picks up the running service instead of starting a second one. When the function finds nothing, it stops the service again. This only makes sense when your library has a discovery service that runs for as long as the entry is loaded.
 
 ## The flow title
 

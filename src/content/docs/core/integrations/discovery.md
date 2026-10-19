@@ -31,6 +31,7 @@ When a user ignores a discovered device, Home Assistant creates an ignored confi
 | USB | `usb` | `async_step_usb` | `UsbServiceInfo` |
 | MQTT | `mqtt` | `async_step_mqtt` | `MqttServiceInfo` |
 | Bluetooth | `bluetooth` | `async_step_bluetooth` | `BluetoothServiceInfoBleak` |
+| LoRaWAN | `lorawan` | `async_step_integration_discovery` | `LoRaWANDiscoveryInfo` |
 | A Supervisor app | None | `async_step_hassio` | `HassioServiceInfo` |
 | Another integration | None | `async_step_integration_discovery` | Defined by that integration |
 
