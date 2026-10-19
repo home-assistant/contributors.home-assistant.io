@@ -42,10 +42,14 @@ const imageAlt = title === SITE.title ? SITE.title : `${shareTitle}, on ${SITE.t
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    {/* The Home Assistant mark. The PNG is for browsers without SVG icons. */}
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    {/*
+      The Home Assistant mark, the same files as on home-assistant.io. The ICO
+      and PNG are for browsers and home screens without SVG icons.
+    */}
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" sizes="any" />
+    <link rel="icon" href="/favicon-192x192.png" type="image/png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="/favicon-192x192.png" sizes="192x192" />
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
