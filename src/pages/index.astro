@@ -1,7 +1,5 @@
 ---
-import shapeTwo from "../assets/shapes/shape_two.svg?raw";
-import waveOne from "../assets/shapes/wave_one.svg?raw";
-import waveTwo from "../assets/shapes/wave_two.svg?raw";
+import pattern from "../assets/shapes/pattern.svg?raw";
 import EventList from "../components/EventList.astro";
 import Icon from "../components/Icon.astro";
 import Logo from "../components/Logo.astro";
@@ -32,13 +30,13 @@ const showEvents = !calendar.loaded || calendar.events.length > 0;
 <Base title={SITE.title} description={SITE.description} image={ogImagePath("index")}>
   <main id="main-content" tabindex="-1">
     <section class="hero">
-      <div class="hero-inner">
-        <div class="container hero-grid">
+      <div class="container hero-grid">
+        <div class="hero-text">
+          <p class="lockup"><Logo /></p>
           <h1>
             <span class="line">Help build</span>
             <span class="line">the open home</span>
           </h1>
-          <p class="lockup"><Logo variant="white" stacked /></p>
 
           <p class="intro">
             Code, design, documentation, translations, or community.
@@ -46,15 +44,14 @@ const showEvents = !calendar.loaded || calendar.events.length > 0;
           </p>
 
           <div class="actions">
-            <a class="button button-light" href="/start/first-contribution/">Make your first contribution</a>
-            <a class="button button-ghost" href="#areas">Browse all areas</a>
+            <a class="button button-mint" href="/start/first-contribution/">
+              <span class="button-icon"><Icon name="chevron-right" size={18} /></span>
+              Make your first contribution
+            </a>
+            <a class="button button-quiet" href="#areas">Browse all areas</a>
           </div>
         </div>
-      </div>
-
-      <div class="wave" aria-hidden="true">
-        <div class="container"><span class="shapes" set:html={shapeTwo} /></div>
-        <span class="wave-shape" set:html={waveOne} />
+        <span class="pattern" aria-hidden="true" set:html={pattern} />
       </div>
     </section>
 
@@ -72,7 +69,7 @@ const showEvents = !calendar.loaded || calendar.events.length > 0;
                 {section.areas.map((area) => (
                   <li>
                     <a href={area.href}>
-                      <span class="area-icon"><Icon name={area.icon} size={26} /></span>
+                      <span class="area-icon"><Icon name={area.icon} size={24} /></span>
                       <span class="area-title">{area.action}</span>
                       <span class="area-text">{area.description}</span>
                     </a>
@@ -85,8 +82,8 @@ const showEvents = !calendar.loaded || calendar.events.length > 0;
       </div>
     </section>
 
-    <section class="steps-band">
-      <div class="container">
+    <section class="container steps-section">
+      <div class="steps-panel">
         <h2>New here? Four steps.</h2>
         <ol class="steps">
           <li>
@@ -116,7 +113,6 @@ const showEvents = !calendar.loaded || calendar.events.length > 0;
         </ol>
       </div>
     </section>
-    <div class="wave-shape steps-wave" aria-hidden="true" set:html={waveTwo} />
 
     {
       latestPosts.length > 0 && (
@@ -169,126 +165,130 @@ const showEvents = !calendar.loaded || calendar.events.length > 0;
     padding: 0 var(--site-gutter);
   }
 
-  /* Hero, in the style of creators.home-assistant.io */
-
-  .hero {
-    color: #ffffff;
-  }
-
-  .hero-inner {
-    padding: clamp(56px, 9vw, 120px) 0 clamp(32px, 4vw, 48px);
-    overflow: hidden;
-    isolation: isolate;
-    background: linear-gradient(90deg, #0898c7 0%, #006ba8 100%);
-  }
-
   /*
-   * Headline on the left; the lockup and the intro share the right column,
-   * so they always line up. The lockup sits on the headline's baseline.
+   * Hero, in the style of the community page on home-assistant.io: a soft
+   * gradient from light blue to aqua, navy text, and a pattern of circles
+   * and sparkles on the right. At night, the same gradient in deep teal.
    */
+  .hero {
+    --hero-bg: linear-gradient(105deg, #f2fbff 0%, #cdeffc 38%, #8ee6dd 72%, #4fc5e6 100%);
+    --hero-pattern-opacity: 1;
+
+    overflow: hidden;
+    padding: clamp(48px, 7vw, 96px) 0;
+    background: var(--hero-bg);
+    color: var(--site-text);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .hero {
+      --hero-bg: linear-gradient(105deg, #03161c 0%, #072f3d 42%, #0a4750 74%, #0b5a70 100%);
+      --hero-pattern-opacity: 0.4;
+    }
+  }
+
+  :root[data-theme="dark"] .hero {
+    --hero-bg: linear-gradient(105deg, #03161c 0%, #072f3d 42%, #0a4750 74%, #0b5a70 100%);
+    --hero-pattern-opacity: 0.4;
+  }
+
+  /* Text on the left, the pattern on the right. */
   .hero-grid {
     display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    column-gap: clamp(48px, 7vw, 120px);
-    align-items: end;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: clamp(32px, 6vw, 96px);
   }
 
   @media (max-width: 900px) {
     .hero-grid {
       grid-template-columns: minmax(0, 1fr);
-      row-gap: var(--ha-space-6);
     }
+
+    .pattern {
+      display: none;
+    }
+  }
+
+  .pattern {
+    width: clamp(260px, 30vw, 420px);
+    opacity: var(--hero-pattern-opacity);
+  }
+
+  .pattern :global(svg) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* The lockup in a white pill, like the announcement on the community page. */
+  .lockup {
+    display: inline-flex;
+    margin: 0 0 var(--ha-space-6);
+    padding: var(--ha-space-2) var(--ha-space-4);
+    border-radius: var(--ha-border-radius-pill);
+    background: var(--site-surface);
+    font-size: 15px;
   }
 
   h1 {
     margin: 0;
     display: flex;
     flex-direction: column;
-    font-size: clamp(48px, 8.5vw, 112px);
-    font-weight: 700;
-    line-height: 0.98;
-    letter-spacing: -0.035em;
+    font-size: clamp(44px, 7vw, 88px);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.025em;
   }
 
-  /* Like "Creator Network" on creators.home-assistant.io. */
-  .lockup {
-    margin: 0 0 0.12em;
-    font-size: clamp(30px, 4vw, 60px);
-  }
-
-  /*
-   * Intro and buttons sit under the headline in the left column. That keeps
-   * the bottom right free for the shapes on the wave.
-   */
   .intro {
-    grid-column: 1;
     max-width: 620px;
-    margin: clamp(32px, 4vw, 56px) 0 0;
+    margin: var(--ha-space-6) 0 0;
+    color: var(--site-text-muted);
     font-size: clamp(20px, 2vw, 24px);
-    line-height: 1.4;
+    line-height: 1.35;
   }
 
   .actions {
-    grid-column: 1;
     display: flex;
     flex-wrap: wrap;
     gap: var(--ha-space-3);
     margin-top: var(--ha-space-8);
   }
 
-  .button-light {
+  /* Mint, with the icon in a white circle, like "Find a meetup near you". */
+  .button-mint {
+    padding-left: var(--ha-space-2);
+    background: var(--brand-mint);
+    color: var(--brand-navy);
+  }
+
+  .button-mint:hover {
+    color: var(--brand-navy);
+    box-shadow: 0 4px 16px rgb(0 35 50 / 0.2);
+  }
+
+  .button-icon {
+    display: flex;
+    padding: var(--ha-space-2);
+    border-radius: 50%;
     background: #ffffff;
-    color: var(--brand-navy);
   }
 
-  .button-light:hover {
-    color: var(--brand-navy);
-    box-shadow: 0 6px 20px rgb(0 35 50 / 0.3);
+  .button-quiet {
+    background: var(--site-surface);
+    color: var(--site-text);
   }
 
-  /* The wave is a little wider than the page to hide its edges; clip it. */
-  .hero,
-  .steps-wave {
-    overflow-x: clip;
-  }
-
-  .wave {
-    position: relative;
-    height: clamp(48px, 9vw, 150px);
-  }
-
-  /* A little wider than the page, so no seam shows at the edges. */
-  .wave-shape :global(svg) {
-    display: block;
-    width: calc(100% + 8px);
-    max-width: none;
-    height: auto;
-    margin: -1px 0 0 -4px;
-  }
-
-  .wave .container {
-    position: relative;
-    height: 0;
-  }
-
-  .shapes {
-    position: absolute;
-    z-index: 1;
-    right: var(--site-gutter);
-    top: clamp(-96px, -5vw, -24px);
-    width: clamp(140px, 22vw, 360px);
-  }
-
-  .shapes :global(svg) {
-    display: block;
-    width: 100%;
-    height: auto;
+  .button-quiet:hover {
+    color: var(--site-text);
+    background: var(--site-surface-hover);
   }
 
   /* The area index: type and rules, no boxes. */
 
   .index {
-    padding-top: var(--ha-space-8);
+    padding-top: var(--ha-space-16);
   }
 
   h2 {
@@ -317,46 +317,39 @@ const showEvents = !calendar.loaded || calendar.events.length > 0;
   }
 
   /*
-   * Each group is marked with one of the half circles from the brand shapes
-   * (see creators.home-assistant.io), in its own color and direction.
+   * Each group is marked with a sparkle from the hero pattern, in the tile
+   * color of its group. The area icons take the same colors.
    */
+  .group {
+    --tile: var(--site-tile-everyone);
+    --tile-bg: var(--site-tile-everyone-bg);
+  }
+
+  .group--build {
+    --tile: var(--site-tile-build);
+    --tile-bg: var(--site-tile-build-bg);
+  }
+
+  .group--shape {
+    --tile: var(--site-tile-shape);
+    --tile-bg: var(--site-tile-shape-bg);
+  }
+
+  .group--run {
+    --tile: var(--site-tile-run);
+    --tile-bg: var(--site-tile-run-bg);
+  }
+
   .mark {
     flex: 0 0 auto;
-    width: 14px;
-    height: 28px;
-    border-radius: 0 28px 28px 0;
-    background: #00aef8;
-  }
-
-  /* Where it all begins: the whole circle. */
-  .group--start .mark {
     width: 20px;
     height: 20px;
-    margin: 4px;
-    border-radius: 50%;
-  }
-
-  .group--build .mark {
-    border-radius: 28px 0 0 28px;
-    background: #1e3764;
-  }
-
-  .group--shape .mark {
-    width: 28px;
-    height: 14px;
-    border-radius: 28px 28px 0 0;
-    background: var(--brand-mint);
-  }
-
-  .group--run .mark {
-    width: 28px;
-    height: 14px;
-    border-radius: 0 0 28px 28px;
-    background: #007fa8;
+    background: var(--tile);
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M10 0A10 10 0 0 0 20 10A10 10 0 0 0 10 20A10 10 0 0 0 0 10A10 10 0 0 0 10 0Z'/%3E%3C/svg%3E")
+      center / contain no-repeat;
   }
 
   .group--understand .mark {
-    border-radius: 0 28px 28px 0;
     background: var(--site-text-muted);
   }
 
@@ -404,7 +397,7 @@ const showEvents = !calendar.loaded || calendar.events.length > 0;
   /* Icon in its own column, next to the title; the text lines up under it. */
   .group a {
     display: grid;
-    grid-template-columns: 26px minmax(0, 1fr);
+    grid-template-columns: 48px minmax(0, 1fr);
     column-gap: var(--ha-space-4);
     row-gap: var(--ha-space-1);
     padding: var(--ha-space-5) 0;
@@ -414,8 +407,14 @@ const showEvents = !calendar.loaded || calendar.events.length > 0;
 
   .area-icon {
     display: flex;
+    align-items: center;
+    justify-content: center;
     align-self: center;
-    color: var(--site-text-muted);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--tile-bg);
+    color: var(--tile);
   }
 
   .area-text {
@@ -435,7 +434,8 @@ const showEvents = !calendar.loaded || calendar.events.length > 0;
   }
 
   .group a:hover .area-icon {
-    color: var(--site-link);
+    background: var(--tile);
+    color: var(--tile-bg);
   }
 
   .group a:hover .area-title {
@@ -452,18 +452,19 @@ const showEvents = !calendar.loaded || calendar.events.length > 0;
     list-style: none;
   }
 
-  /* Steps, a real sequence: numbered like the big list on creators. */
-
-  /* Solid navy, so the band flows into the wave below it without a seam. */
-  .steps-band {
+  /*
+   * Steps, a real sequence, in a light blue panel like "Community Meetups"
+   * on the community page.
+   */
+  .steps-section {
     margin-top: var(--ha-space-20);
-    padding: var(--ha-space-16) 0 var(--ha-space-8);
-    background: var(--brand-navy);
-    color: #ffffff;
   }
 
-  .steps-wave {
-    margin-top: -1px;
+  .steps-panel {
+    padding: clamp(32px, 5vw, 64px);
+    border-radius: var(--site-radius-card);
+    background: var(--site-accent-quiet);
+    color: var(--site-text);
   }
 
   .steps {
@@ -480,15 +481,15 @@ const showEvents = !calendar.loaded || calendar.events.length > 0;
     flex-direction: column;
     gap: var(--ha-space-2);
     padding-top: var(--ha-space-4);
-    border-top: 2px solid rgb(255 255 255 / 0.12);
+    border-top: 1px solid color-mix(in srgb, currentColor 20%, transparent);
   }
 
   .steps li::before {
     content: counter(step);
-    font-size: 64px;
-    font-weight: 700;
+    font-size: 56px;
+    font-weight: 600;
     line-height: 1;
-    color: var(--brand-mint);
+    color: var(--site-link);
   }
 
   /* The whole step is the link, so it is an easy target on a phone. */
@@ -503,14 +504,14 @@ const showEvents = !calendar.loaded || calendar.events.length > 0;
   /* Underlined, so the steps read as links and not as decoration. */
   .step-link .step-title {
     text-decoration: underline;
-    text-decoration-color: rgb(22 243 190 / 0.5);
+    text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
     text-decoration-thickness: 2px;
     text-underline-offset: 6px;
   }
 
   .step-link:hover .step-title,
   .step-link:focus-visible .step-title {
-    text-decoration-color: var(--brand-mint);
+    text-decoration-color: var(--site-link);
   }
 
   .step-title {
@@ -520,7 +521,7 @@ const showEvents = !calendar.loaded || calendar.events.length > 0;
   }
 
   .step-text {
-    color: #b1c3cf;
+    color: var(--site-text-muted);
     line-height: 1.5;
   }
 

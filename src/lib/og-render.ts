@@ -17,7 +17,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import satori, { type Font } from "satori";
 import sharp from "sharp";
-import shapeTwo from "../assets/shapes/shape_two.svg?raw";
+import pattern from "../assets/shapes/pattern.svg?raw";
 import { ICONS } from "./icons";
 import { type Card, type CardAuthor, type CardLabel, OG_HEIGHT, OG_WIDTH } from "./og";
 
@@ -26,6 +26,7 @@ const ROOT = process.cwd();
 const COLORS = {
   navy: "#002332",
   mist: "#f5f6fa",
+  slate: "#4f606e",
   blue: "#18bcf2",
   // Muted text on navy, 9.8:1.
   muted: "#b8c9d4",
@@ -83,12 +84,13 @@ function imageDataUri(publicPath: string): string | undefined {
 }
 
 const LOGO = svgDataUri(readFileSync(path.join(ROOT, "public/images/home-assistant-logo-white.svg"), "utf8"));
+const LOGO_ON_LIGHT = svgDataUri(readFileSync(path.join(ROOT, "public/images/home-assistant-logo.svg"), "utf8"));
 // The wordmark is 1705 by 241.
 const LOGO_RATIO = 1705 / 241;
 
-const SHAPES = svgDataUri(shapeTwo);
-// The half circles of the homepage are 316 by 210.
-const SHAPES_RATIO = 316 / 210;
+const PATTERN = svgDataUri(pattern);
+// The pattern of the homepage hero is 384 by 320.
+const PATTERN_RATIO = 384 / 320;
 
 function iconDataUri(name: string, color: string): string {
   const paths = ICONS[name as keyof typeof ICONS];
@@ -129,24 +131,33 @@ function titleSize(title: string): number {
   return 54;
 }
 
-function lockup(size: number): Node {
+function lockup(size: number, onLight = false): Node {
   return h(
     "div",
     { style: { display: "flex", alignItems: "center" } },
-    h("img", { src: LOGO, width: Math.round(size * 1.4 * LOGO_RATIO), height: Math.round(size * 1.4) }),
+    h("img", {
+      src: onLight ? LOGO_ON_LIGHT : LOGO,
+      width: Math.round(size * 1.4 * LOGO_RATIO),
+      height: Math.round(size * 1.4),
+    }),
     h("div", {
-      style: { width: 2, height: size * 1.1, margin: `0 ${size * 0.6}px`, backgroundColor: COLORS.mist },
+      style: {
+        width: 2,
+        height: size * 1.1,
+        margin: `0 ${size * 0.6}px`,
+        backgroundColor: onLight ? COLORS.navy : COLORS.mist,
+      },
     }),
     h("div", { style: { fontSize: size, fontWeight: 600, letterSpacing: -0.3 } }, "Contributors"),
   );
 }
 
-// The half circles of the homepage, in a corner, cut off by the edge.
+// The circles and sparkles of the homepage hero.
 function shapes(width: number, style: Record<string, unknown>): Node {
   return h("img", {
-    src: SHAPES,
+    src: PATTERN,
     width,
-    height: Math.round(width / SHAPES_RATIO),
+    height: Math.round(width / PATTERN_RATIO),
     style: { position: "absolute", ...style },
   });
 }
@@ -235,7 +246,7 @@ function pageCard(card: Extract<Card, { kind: "page" }>): Node {
       },
     },
     // Quiet enough to stay behind the text: the text column ends before it.
-    shapes(330, { right: -110, top: -70, opacity: 0.55 }),
+    shapes(330, { right: -90, top: -70, opacity: 0.2 }),
     lockup(30),
     h(
       "div",
@@ -311,26 +322,35 @@ function brandCard(card: Extract<Card, { kind: "brand" }>): Node {
         // Satori sizes boxes without their padding unless told otherwise.
         boxSizing: "border-box",
         padding: "64px 72px",
-        // The gradient of the homepage hero, a little deeper on the left so
-        // white text keeps its contrast.
-        backgroundImage: "linear-gradient(90deg, #0083b0 0%, #00609a 100%)",
-        color: "#ffffff",
+        // The gradient of the homepage hero, with navy text.
+        backgroundImage: "linear-gradient(105deg, #f2fbff 0%, #cdeffc 38%, #8ee6dd 72%, #4fc5e6 100%)",
+        color: COLORS.navy,
         fontFamily: "Figtree",
       },
     },
-    shapes(380, { right: 40, bottom: -64 }),
-    lockup(34),
+    shapes(400, { right: 56, top: 115 }),
+    lockup(34, true),
     h(
       "div",
       { style: { display: "flex", flexDirection: "column", flexGrow: 1, justifyContent: "flex-end", maxWidth: 660 } },
       h(
         "div",
-        { style: { display: "block", fontSize: 84, fontWeight: 700, lineHeight: 1.0, letterSpacing: -2.5, lineClamp: 3 } },
+        { style: { display: "block", fontSize: 84, fontWeight: 600, lineHeight: 1.0, letterSpacing: -2, lineClamp: 3 } },
         card.title,
       ),
       h(
         "div",
-        { style: { display: "block", marginTop: 28, fontSize: 30, fontWeight: 500, lineHeight: 1.35, lineClamp: 3 } },
+        {
+          style: {
+            display: "block",
+            marginTop: 28,
+            fontSize: 30,
+            fontWeight: 500,
+            lineHeight: 1.35,
+            color: COLORS.slate,
+            lineClamp: 3,
+          },
+        },
         card.description,
       ),
     ),

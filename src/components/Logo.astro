@@ -1,17 +1,15 @@
 ---
-// The Home Assistant wordmark with "Contributors" as the program name, the
-// same lockup creators.home-assistant.io uses for "Creator Network".
+// The Home Assistant wordmark with "Contributors" as the program name, set
+// apart by a thin rule.
 interface Props {
   // "auto" follows the color scheme, "white" is for dark or blue backgrounds.
   variant?: "auto" | "white";
-  // Stacked puts "Contributors" large under the wordmark, for the hero.
-  stacked?: boolean;
 }
 
-const { variant = "auto", stacked = false } = Astro.props;
+const { variant = "auto" } = Astro.props;
 ---
 
-<span class:list={["lockup", `lockup--${variant}`, { stacked }]}>
+<span class:list={["lockup", `lockup--${variant}`]}>
   {
     variant === "white" ? (
       <img class="wordmark" src="/images/home-assistant-logo-white.svg" alt="Home Assistant" width="1705" height="241" />
@@ -54,31 +52,6 @@ const { variant = "auto", stacked = false } = Astro.props;
     border-left: 1.5px solid currentColor;
     font-weight: 650;
     letter-spacing: -0.01em;
-  }
-
-  /* Stacked: "Contributors" large under the wordmark, for the hero. */
-  .stacked {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.3em;
-    white-space: normal;
-  }
-
-  .stacked .wordmark {
-    display: block;
-    height: auto;
-    width: 7.75em;
-    margin: 0;
-  }
-
-  .stacked .program {
-    padding-left: 0;
-    border-left: 0;
-    font-size: 1.2em;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    line-height: 1.1;
   }
 
   .on-dark {

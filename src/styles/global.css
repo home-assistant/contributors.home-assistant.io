@@ -3,7 +3,7 @@
  *
  * The frontend tokens give us spacing, radii, and the status palettes. The
  * look itself follows the Home Assistant web brand, as used on
- * works-with.home-assistant.io and creators.home-assistant.io: Figtree, navy
+ * home-assistant.io and works-with.home-assistant.io: Figtree, navy
  * text on a cool light grey, white cards, and Home Assistant blue.
  *
  * Components use the --site-* aliases below, not raw values, so there is one
