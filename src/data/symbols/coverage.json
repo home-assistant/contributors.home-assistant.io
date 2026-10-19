@@ -1,16 +1,16 @@
 {
   "commits": {
-    "core": "f705dca431263de0d1b967ca58e43a70d936a72a",
-    "frontend": "edb7a42a7e7d6da540f97cd788deaa93ecc11f5c"
+    "core": "6883a0c95d6dccb18e551aab794b18648a793cc5",
+    "frontend": "5cfaf7ed40e4df459fa65dc5722101eef631f40e"
   },
   "totals": {
-    "symbols": 1625,
-    "resolved": 1538
+    "symbols": 1680,
+    "resolved": 1579
   },
   "areas": {
     "apps": {
       "index": "core",
-      "symbols": 3,
+      "symbols": 4,
       "resolved": 1
     },
     "architecture": {
@@ -20,17 +20,17 @@
     },
     "companion": {
       "index": null,
-      "symbols": 96,
+      "symbols": 122,
       "resolved": 0
     },
     "core": {
       "index": "core",
-      "symbols": 1383,
-      "resolved": 1343
+      "symbols": 1437,
+      "resolved": 1384
     },
     "data": {
       "index": null,
-      "symbols": 5,
+      "symbols": 4,
       "resolved": 0
     },
     "design": {
@@ -82,23 +82,34 @@
       ]
     },
     {
+      "text": "hass.data",
+      "index": "core",
+      "count": 5,
+      "pages": [
+        "src/content/docs/core/integrations/config-entries.md",
+        "src/content/docs/core/integrations/config-flow.md",
+        "src/content/docs/core/integrations/tutorial.md",
+        "src/content/docs/core/internals/hass.md",
+        "src/content/docs/core/quality-scale/runtime-data.md"
+      ]
+    },
+    {
+      "text": "MockConfigEntry",
+      "index": "core",
+      "count": 5,
+      "pages": [
+        "src/content/docs/core/development/tests.md",
+        "src/content/docs/core/development/typing.md",
+        "src/content/docs/core/quality-scale/config-flow-test-coverage.md"
+      ]
+    },
+    {
       "text": "BluetoothServiceInfoBleak",
       "index": "core",
       "count": 4,
       "pages": [
         "src/content/docs/core/integrations/bluetooth.md",
         "src/content/docs/core/integrations/discovery.md"
-      ]
-    },
-    {
-      "text": "hass.data",
-      "index": "core",
-      "count": 4,
-      "pages": [
-        "src/content/docs/core/integrations/config-entries.md",
-        "src/content/docs/core/integrations/tutorial.md",
-        "src/content/docs/core/internals/hass.md",
-        "src/content/docs/core/quality-scale/runtime-data.md"
       ]
     },
     {
@@ -179,6 +190,14 @@
       "pages": [
         "src/content/docs/architecture/core/startup.md",
         "src/content/docs/core/internals/hass.md"
+      ]
+    },
+    {
+      "text": "LoRaWANEntity",
+      "index": "core",
+      "count": 2,
+      "pages": [
+        "src/content/docs/core/internals/lorawan.md"
       ]
     },
     {
@@ -328,6 +347,30 @@
       ]
     },
     {
+      "text": "DeviceCollection",
+      "index": "core",
+      "count": 1,
+      "pages": [
+        "src/content/docs/core/internals/lorawan.md"
+      ]
+    },
+    {
+      "text": "DeviceDescriptor",
+      "index": "core",
+      "count": 1,
+      "pages": [
+        "src/content/docs/core/internals/lorawan.md"
+      ]
+    },
+    {
+      "text": "DeviceManager",
+      "index": "core",
+      "count": 1,
+      "pages": [
+        "src/content/docs/core/internals/lorawan.md"
+      ]
+    },
+    {
       "text": "dock()",
       "index": "core",
       "count": 1,
@@ -456,6 +499,22 @@
       ]
     },
     {
+      "text": "ModbusTlsParams",
+      "index": "core",
+      "count": 1,
+      "pages": [
+        "src/content/docs/core/internals/modbus.md"
+      ]
+    },
+    {
+      "text": "ModbusUdpParams",
+      "index": "core",
+      "count": 1,
+      "pages": [
+        "src/content/docs/core/internals/modbus.md"
+      ]
+    },
+    {
       "text": "ModbusUnit",
       "index": "core",
       "count": 1,
@@ -485,6 +544,14 @@
       "count": 1,
       "pages": [
         "src/content/docs/design/components/list.mdx"
+      ]
+    },
+    {
+      "text": "NetworkManager",
+      "index": "core",
+      "count": 1,
+      "pages": [
+        "src/content/docs/apps/supervisor-api/host.md"
       ]
     },
     {
