@@ -1,57 +1,88 @@
 ---
-// The Home Assistant wordmark with "Contributors" as the program name, set
-// apart by a thin rule.
+// The Home Assistant Contributors logo. It comes in two layouts, each as one
+// SVG for light and one for dark backgrounds, in public/images/:
+//
+// - Inline: the wordmark with "Contributors" next to it.
+// - Stacked: "Contributors" under the wordmark.
+//
+// The logo scales with the font size of its parent: the house is about
+// 1.4em tall in both layouts.
 interface Props {
   // "auto" follows the color scheme, "white" is for dark or blue backgrounds.
   variant?: "auto" | "white";
+  // "responsive" is inline, and stacked on narrow screens where the inline
+  // logo does not fit.
+  layout?: "inline" | "stacked" | "responsive";
 }
 
-const { variant = "auto" } = Astro.props;
+const { variant = "auto", layout = "inline" } = Astro.props;
+
+const SIZES = {
+  inline: { width: 2924, height: 240 },
+  stacked: { width: 1768, height: 438 },
+};
+
+// Keep in sync with the media query in the styles below.
+const NARROW = "(max-width: 440px)";
+
+const tones = variant === "white" ? ["dark"] : ["light", "dark"];
+const src = (shape: "inline" | "stacked", tone: string) => `/images/contributors-logo-${shape}-on-${tone}.svg`;
+const alt = "Home Assistant Contributors";
 ---
 
-<span class:list={["lockup", `lockup--${variant}`]}>
+<span class:list={["lockup", `lockup--${layout}`]}>
   {
-    variant === "white" ? (
-      <img class="wordmark" src="/images/home-assistant-logo-white.svg" alt="Home Assistant" width="1705" height="241" />
-    ) : (
-      <>
-        <img class="wordmark on-light" src="/images/home-assistant-logo.svg" alt="Home Assistant" width="1705" height="241" />
-        <img class="wordmark on-dark" src="/images/home-assistant-logo-white.svg" alt="Home Assistant" width="1705" height="241" />
-      </>
-    )
+    tones.map((tone) => {
+      const toneClass = variant === "white" ? undefined : `on-${tone}`;
+
+      if (layout === "responsive") {
+        // A picture, so the browser only downloads the layout it shows.
+        return (
+          <picture class:list={["logo", toneClass]}>
+            <source media={NARROW} srcset={src("stacked", tone)} {...SIZES.stacked} />
+            <img src={src("inline", tone)} alt={alt} {...SIZES.inline} />
+          </picture>
+        );
+      }
+
+      return (
+        <span class:list={["logo", toneClass]}>
+          <img src={src(layout, tone)} alt={alt} {...SIZES[layout]} />
+        </span>
+      );
+    })
   }
-  <span class="program">Contributors</span>
 </span>
 
 <style>
-  /*
-   * The inline lockup is laid out as text on purpose. An inline image sits
-   * with the bottom of its margin box on the text baseline, so a negative
-   * bottom margin equal to the space under the wordmark's letters puts those
-   * letters exactly on the baseline of "Contributors", at any size.
-   *
-   * The letters end at 80.9% of the image height (measured from the SVG),
-   * so 19.1% of 1.4em, about 0.267em, sits below the baseline.
-   */
   .lockup {
-    display: inline-block;
+    display: inline-flex;
     line-height: 1;
-    white-space: nowrap;
   }
 
-  .wordmark {
-    display: inline;
-    height: 1.4em;
+  .logo {
+    display: block;
+  }
+
+  /*
+   * The house is 234 of 240 units tall in the inline SVG, and 234 of 438 in
+   * the stacked one, so these heights draw it at the same size.
+   */
+  img {
+    display: block;
     width: auto;
-    margin: 0 0.6em -0.267em 0;
-    vertical-align: baseline;
+    height: 1.4em;
   }
 
-  .program {
-    padding-left: 0.6em;
-    border-left: 1.5px solid currentColor;
-    font-weight: 650;
-    letter-spacing: -0.01em;
+  .lockup--stacked img {
+    height: 2.555em;
+  }
+
+  /* Same width as NARROW in the frontmatter. */
+  @media (max-width: 440px) {
+    .lockup--responsive img {
+      height: 2.555em;
+    }
   }
 
   .on-dark {
@@ -64,7 +95,7 @@ const { variant = "auto" } = Astro.props;
     }
 
     :root:not([data-theme="light"]) .on-dark {
-      display: inline;
+      display: block;
     }
   }
 
@@ -73,6 +104,6 @@ const { variant = "auto" } = Astro.props;
   }
 
   :root[data-theme="dark"] .on-dark {
-    display: inline;
+    display: block;
   }
 </style>

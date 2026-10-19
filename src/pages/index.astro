@@ -37,6 +37,7 @@ const showEvents = !calendar.loaded || calendar.events.length > 0;
             <span class="line">Help build</span>
             <span class="line">the open home</span>
           </h1>
+          <p class="lockup"><Logo variant="white" layout="stacked" /></p>
 
           <p class="intro">
             Code, design, documentation, translations, or community.
@@ -241,6 +242,16 @@ const showEvents = !calendar.loaded || calendar.events.length > 0;
     letter-spacing: -0.025em;
   }
 
+  /* The stacked logo, at the size of the headline's lines. */
+  .lockup {
+    margin: 0 0 0.12em;
+    font-size: clamp(24px, 3.2vw, 48px);
+  }
+
+  /*
+   * Intro and buttons sit under the headline in the left column. That keeps
+   * the bottom right free for the shapes on the wave.
+   */
   .intro {
     max-width: 620px;
     margin: var(--ha-space-6) 0 0;
