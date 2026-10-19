@@ -5,9 +5,9 @@
 // A vote goes to Plausible as a custom event, the same events
 // home-assistant.io sends, and is remembered per page in this browser so
 // the question does not come back after you answered it. Without analytics
-// (PLAUSIBLE.site empty) the vote is only remembered. The votes only show
-// on the Plausible dashboard once the goals "Page helpful" and "Page not
-// helpful" are added there, by hand.
+// the vote is only remembered. The votes only show on the Plausible
+// dashboard once the goals "Page helpful" and "Page not helpful" are added
+// there, by hand.
 //
 // The feedback link opens the "Page feedback" issue form
 // (.github/ISSUE_TEMPLATE/feedback.yml) with the page URL filled in. The
@@ -117,8 +117,8 @@ viewUrl.searchParams.set("q", `is:issue is:open "${pageUrl}" in:body`);
           return;
         }
 
-        // Plausible queues the event until its script loaded, see
-        // PlausibleAnalytics.astro. Without analytics there is no function.
+        // Without analytics, like when the script is blocked, there is no
+        // function.
         const plausible = (window as unknown as { plausible?: (event: string) => void }).plausible;
         if (typeof plausible === "function") {
           plausible(EVENTS[vote]);
