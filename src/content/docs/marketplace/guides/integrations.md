@@ -38,7 +38,7 @@ Only list `requirements` that are not already requirements of Home Assistant its
 
 ## Categories
 
-Add `categories` to your manifest: one to three [integration categories](/glossary/integration-category/) that say what your integration is for. They are how people find integrations by what they do, and the catalog includes them in the data the Marketplace uses. A custom integration doesn't need them, but without them, it can't be found that way.
+Add `categories` to your manifest: one to three [integration categories](/glossary/integration-category/) that say what your integration is for. A custom integration doesn't need them, but the catalog includes them in the data it publishes for the Marketplace.
 
 ```json title="manifest.json"
 {

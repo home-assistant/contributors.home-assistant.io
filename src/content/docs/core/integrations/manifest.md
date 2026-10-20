@@ -105,7 +105,7 @@ Hassfest checks that:
 - Entity, system, and virtual integrations don't have the key.
 - Every other integration in core has the key. For a custom integration, it is optional.
 
-Most of these checks need the list of categories from core, so hassfest only runs them when it validates inside a core checkout. The hassfest GitHub action for custom integrations does. For a custom integration, an unknown category is a warning instead of an error, so a category that changes in core never breaks your repository.
+Most of these checks need the list of categories from core, so hassfest only runs them when it validates inside a core checkout. The hassfest GitHub action for custom integrations does. For a custom integration, an unknown category is a warning in hassfest instead of an error, so a category that changes in core doesn't fail hassfest in your repository. The [HACS action](/marketplace/reference/validation/) does fail on an unknown category.
 
 See [integration categories](/core/integrations/categories/) for every category, and for how to choose the right ones.
 
