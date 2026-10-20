@@ -212,28 +212,17 @@ const showEvents = !calendar.loaded || calendar.events.length > 0;
    * The glow in Figma is a shader, which CSS cannot draw. The background is
    * that shader, exported from the Figma app, so it stays exactly as
    * designed. Export it from the app: Figma's API draws this shader
-   * differently. It covers the hero at any width, centered.
+   * differently. It covers the hero at any width, centered. The colors for
+   * day and night are --site-hero-* in src/styles/global.css.
    */
   .hero {
-    --hero-bg: var(--hero-image) center / cover no-repeat, #2fe1d6;
-    --hero-tree-opacity: 1;
-
     overflow: hidden;
     padding: clamp(48px, 7vw, 96px) 0;
-    background: var(--hero-bg);
+    background:
+      var(--site-hero-night),
+      var(--hero-image) center / cover no-repeat,
+      var(--site-hero-glow);
     color: var(--site-text);
-  }
-
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) .hero {
-      --hero-bg: linear-gradient(105deg, #03161c 0%, #072f3d 42%, #0a4750 74%, #0b5a70 100%);
-      --hero-tree-opacity: 0.4;
-    }
-  }
-
-  :root[data-theme="dark"] .hero {
-    --hero-bg: linear-gradient(105deg, #03161c 0%, #072f3d 42%, #0a4750 74%, #0b5a70 100%);
-    --hero-tree-opacity: 0.4;
   }
 
   .hero-inner {
@@ -256,7 +245,7 @@ const showEvents = !calendar.loaded || calendar.events.length > 0;
     top: -75px;
     left: calc(var(--site-gutter) + 696px);
     width: 610px;
-    opacity: var(--hero-tree-opacity);
+    opacity: var(--site-hero-art-opacity);
     mix-blend-mode: hard-light;
   }
 

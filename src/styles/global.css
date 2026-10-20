@@ -81,6 +81,15 @@
   --site-tile-run: #036730;
   --site-tile-run-bg: #d8f5dc;
 
+  /*
+   * The homepage hero. By day, its background is an image exported from
+   * Figma, with the glow color under it while it loads. At night, a teal
+   * gradient covers the image, and the tree illustration is quieter.
+   */
+  --site-hero-glow: #2fe1d6;
+  --site-hero-night: none;
+  --site-hero-art-opacity: 1;
+
   --site-radius-card: var(--ha-border-radius-3xl);
   --site-radius-tile: var(--ha-border-radius-xl);
   --site-content-width: 70ch;
@@ -120,6 +129,9 @@
     --site-tile-shape-bg: #3b1f0c;
     --site-tile-run: #93da98;
     --site-tile-run-bg: #0d3019;
+    --site-hero-glow: #072f3d;
+    --site-hero-night: linear-gradient(105deg, #03161c 0%, #072f3d 42%, #0a4750 74%, #0b5a70 100%);
+    --site-hero-art-opacity: 0.4;
 
     color-scheme: dark;
   }
@@ -146,6 +158,9 @@
   --site-tile-shape-bg: #3b1f0c;
   --site-tile-run: #93da98;
   --site-tile-run-bg: #0d3019;
+  --site-hero-glow: #072f3d;
+  --site-hero-night: linear-gradient(105deg, #03161c 0%, #072f3d 42%, #0a4750 74%, #0b5a70 100%);
+  --site-hero-art-opacity: 0.4;
 
   color-scheme: dark;
 }
