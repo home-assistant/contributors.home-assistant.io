@@ -103,8 +103,9 @@ Hassfest checks that:
 - Every entry is a known category or subcategory.
 - A category is not listed next to one of its own subcategories, like `energy` with `energy.meters_monitoring`.
 - Entity, system, and virtual integrations don't have the key.
+- Every other integration in core has the key. For a custom integration, it is optional.
 
-The last three checks need the list of categories from core, so hassfest only runs them when it validates inside a core checkout. The hassfest GitHub action for custom integrations does.
+Most of these checks need the list of categories from core, so hassfest only runs them when it validates inside a core checkout. The hassfest GitHub action for custom integrations does. For a custom integration, an unknown category is a warning instead of an error, so a category that changes in core never breaks your repository.
 
 See [integration categories](/core/integrations/categories/) for every category, and for how to choose the right ones.
 

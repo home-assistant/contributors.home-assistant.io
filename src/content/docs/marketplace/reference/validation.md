@@ -56,6 +56,7 @@ This runs on every push and pull request, every night, and when you start it by 
 | `hacsjson` | `hacs.json` exists. |
 | `images` | The README has images. |
 | `information` | The repository has an information file, like a README. |
+| `integration_categories` | The `categories` in the manifest of an integration are valid: known [integration categories](/core/integrations/categories/), one to three, without duplicates. A manifest without `categories` only gets a warning. |
 | `issues` | Issues are turned on. |
 | `topics` | The repository has topics. |
 
