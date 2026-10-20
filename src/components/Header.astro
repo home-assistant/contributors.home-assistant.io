@@ -89,7 +89,12 @@ const { area, wide = false } = Astro.props;
     max-width: none;
   }
 
+  /*
+   * A flex box, so the link is as tall as the logo: as a text block, it
+   * adds line height under it, and the logo sits above the middle.
+   */
   .home {
+    display: flex;
     color: var(--site-text);
     font-size: 17px;
     text-decoration: none;

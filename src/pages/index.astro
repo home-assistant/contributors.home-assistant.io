@@ -1,8 +1,8 @@
 ---
-import pattern from "../assets/shapes/pattern.svg?raw";
+import heroBackground from "../assets/hero-background.webp";
+import tree from "../assets/shapes/hero-tree.svg?raw";
 import EventList from "../components/EventList.astro";
 import Icon from "../components/Icon.astro";
-import Logo from "../components/Logo.astro";
 import PostCard from "../components/PostCard.astro";
 import { AREA_GROUPS, groupLinks, type AreaGroup } from "../data/areas";
 import { SITE } from "../data/site";
@@ -11,11 +11,45 @@ import { getPosts } from "../lib/blog";
 import { CALENDAR, getUpcomingEvents } from "../lib/events";
 import { ogImagePath } from "../lib/og";
 
+// The group marks: the same little tree for every group, with the branch of
+// that group highlighted, from "Contributors homepage hero" in Figma (nodes
+// 23:1442 and 23:1454). Each branch is a dot and its stem.
+const TREE = {
+  trunk: [
+    "M107.519 71.238C127.191 71.238 143.138 55.291 143.138 35.619C143.138 15.947 127.191 0 107.519 0C87.848 0 71.9 15.947 71.9 35.619C71.9 55.291 87.848 71.238 107.519 71.238Z",
+    "M119.389 35.614H95.645V294.708H119.389V35.614Z",
+  ],
+  upper: [
+    "M35.619 135.248C55.291 135.248 71.238 119.301 71.238 99.629C71.238 79.957 55.291 64.01 35.619 64.01C15.947 64.01 0 79.957 0 99.629C0 119.301 15.947 135.248 35.619 135.248Z",
+    "M95.645 294.476L119.389 294.432L119.345 194.587C119.316 178.577 110.583 157.799 99.03 146.251L30.344 77.565L13.555 94.354L82.241 163.04C89.215 170.015 95.581 185.07 95.601 194.631L95.645 294.476Z",
+  ],
+  lower: [
+    "M35.619 225.706C55.291 225.706 71.238 209.758 71.238 190.087C71.238 170.415 55.291 154.468 35.619 154.468C15.947 154.468 0 170.415 0 190.087C0 209.758 15.947 225.706 35.619 225.706Z",
+    "M95.645 294.904L119.389 294.86L119.345 285.044C119.316 269.035 110.583 248.257 99.03 236.708L30.344 168.022L13.555 184.812L82.241 253.497C89.215 260.472 95.581 275.527 95.601 285.088L95.645 294.904Z",
+  ],
+  right: [
+    "M179.415 170.867C199.087 170.867 215.034 154.92 215.034 135.248C215.034 115.576 199.087 99.629 179.415 99.629C159.743 99.629 143.796 115.576 143.796 135.248C143.796 154.92 159.743 170.867 179.415 170.867Z",
+    "M119.389 294.556L95.645 294.513L95.689 230.211C95.718 214.201 104.451 193.423 116.004 181.875L184.69 113.189L201.479 129.978L132.794 198.664C125.819 205.639 119.453 220.694 119.433 230.255L119.389 294.556Z",
+  ],
+};
+type Branch = keyof typeof TREE;
+const BRANCHES = Object.keys(TREE) as Branch[];
+
+// Start is the trunk everything grows from. Understand shows the whole tree.
+const HIGHLIGHT: Record<AreaGroup, Branch[]> = {
+  start: ["trunk"],
+  build: ["lower"],
+  shape: ["right"],
+  run: ["upper"],
+  understand: BRANCHES,
+};
+
 const sections = (Object.entries(AREA_GROUPS) as [AreaGroup, string][]).map(
   ([groupId, label]) => ({
     id: groupId,
     label,
     areas: groupLinks(groupId),
+    lit: HIGHLIGHT[groupId],
   }),
 );
 
@@ -29,15 +63,13 @@ const showEvents = !calendar.loaded || calendar.events.length > 0;
 
 <Base title={SITE.title} description={SITE.description} image={ogImagePath("index")}>
   <main id="main-content" tabindex="-1">
-    <section class="hero">
-      <div class="container hero-grid">
+    <section class="hero" style={`--hero-image: url("${heroBackground.src}")`}>
+      <div class="container hero-inner">
         <div class="hero-text">
-          <p class="lockup"><Logo /></p>
           <h1>
             <span class="line">Help build</span>
             <span class="line">the open home</span>
           </h1>
-          <p class="lockup"><Logo variant="white" layout="stacked" /></p>
 
           <p class="intro">
             Code, design, documentation, translations, or community.
@@ -52,7 +84,7 @@ const showEvents = !calendar.loaded || calendar.events.length > 0;
             <a class="button button-quiet" href="#areas">Browse all areas</a>
           </div>
         </div>
-        <span class="pattern" aria-hidden="true" set:html={pattern} />
+        <span class="tree" aria-hidden="true" set:html={tree} />
       </div>
     </section>
 
@@ -63,7 +95,12 @@ const showEvents = !calendar.loaded || calendar.events.length > 0;
           sections.map((section) => (
             <div class:list={["group", `group--${section.id}`]}>
               <h3>
-                <span class="mark" aria-hidden="true" />
+                <svg class="mark" viewBox="0 0 215.034 294.904" aria-hidden="true">
+                  <g class="mark-rest">
+                    {BRANCHES.filter((b) => !section.lit.includes(b)).flatMap((b) => TREE[b]).map((d) => <path d={d} />)}
+                  </g>
+                  {section.lit.flatMap((b) => TREE[b]).map((d) => <path d={d} />)}
+                </svg>
                 {section.label}
               </h3>
               <ul>
@@ -167,13 +204,19 @@ const showEvents = !calendar.loaded || calendar.events.length > 0;
   }
 
   /*
-   * Hero, in the style of the community page on home-assistant.io: a soft
-   * gradient from light blue to aqua, navy text, and a pattern of circles
-   * and sparkles on the right. At night, the same gradient in deep teal.
+   * Hero, from "Contributors homepage hero" in Figma (node 22:995): a cyan
+   * glow that fades to light blue at the edges, navy text, and the branches
+   * of the Home Assistant tree on the right, running off the edges. At
+   * night, the same in deep teal.
+   *
+   * The glow in Figma is a shader, which CSS cannot draw. The background is
+   * that shader, exported from the Figma app, so it stays exactly as
+   * designed. Export it from the app: Figma's API draws this shader
+   * differently. It covers the hero at any width, centered.
    */
   .hero {
-    --hero-bg: linear-gradient(105deg, #f2fbff 0%, #cdeffc 38%, #8ee6dd 72%, #4fc5e6 100%);
-    --hero-pattern-opacity: 1;
+    --hero-bg: var(--hero-image) center / cover no-repeat, #2fe1d6;
+    --hero-tree-opacity: 1;
 
     overflow: hidden;
     padding: clamp(48px, 7vw, 96px) 0;
@@ -184,52 +227,43 @@ const showEvents = !calendar.loaded || calendar.events.length > 0;
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) .hero {
       --hero-bg: linear-gradient(105deg, #03161c 0%, #072f3d 42%, #0a4750 74%, #0b5a70 100%);
-      --hero-pattern-opacity: 0.4;
+      --hero-tree-opacity: 0.4;
     }
   }
 
   :root[data-theme="dark"] .hero {
     --hero-bg: linear-gradient(105deg, #03161c 0%, #072f3d 42%, #0a4750 74%, #0b5a70 100%);
-    --hero-pattern-opacity: 0.4;
+    --hero-tree-opacity: 0.4;
   }
 
-  /* Text on the left, the pattern on the right. */
-  .hero-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-    column-gap: clamp(32px, 6vw, 96px);
+  .hero-inner {
+    position: relative;
   }
 
-  @media (max-width: 900px) {
-    .hero-grid {
-      grid-template-columns: minmax(0, 1fr);
-    }
-
-    .pattern {
-      display: none;
-    }
+  /* Above the tree, which reaches under the end of the headline. */
+  .hero-text {
+    position: relative;
+    z-index: 1;
   }
 
-  .pattern {
-    width: clamp(260px, 30vw, 420px);
-    opacity: var(--hero-pattern-opacity);
+  /*
+   * Where Figma has it: 696px from the start of the text, and 75px above
+   * it, blended in hard light. The hero cuts off what runs past its edges.
+   * On a phone, it starts past the edge of the screen.
+   */
+  .tree {
+    position: absolute;
+    top: -75px;
+    left: calc(var(--site-gutter) + 696px);
+    width: 610px;
+    opacity: var(--hero-tree-opacity);
+    mix-blend-mode: hard-light;
   }
 
-  .pattern :global(svg) {
+  .tree :global(svg) {
     display: block;
     width: 100%;
     height: auto;
-  }
-
-  /* The lockup in a white pill, like the announcement on the community page. */
-  .lockup {
-    display: inline-flex;
-    margin: 0 0 var(--ha-space-6);
-    padding: var(--ha-space-2) var(--ha-space-4);
-    border-radius: var(--ha-border-radius-pill);
-    background: var(--site-surface);
-    font-size: 15px;
   }
 
   h1 {
@@ -242,16 +276,6 @@ const showEvents = !calendar.loaded || calendar.events.length > 0;
     letter-spacing: -0.025em;
   }
 
-  /* The stacked logo, at the size of the headline's lines. */
-  .lockup {
-    margin: 0 0 0.12em;
-    font-size: clamp(24px, 3.2vw, 48px);
-  }
-
-  /*
-   * Intro and buttons sit under the headline in the left column. That keeps
-   * the bottom right free for the shapes on the wave.
-   */
   .intro {
     max-width: 620px;
     margin: var(--ha-space-6) 0 0;
@@ -328,8 +352,8 @@ const showEvents = !calendar.loaded || calendar.events.length > 0;
   }
 
   /*
-   * Each group is marked with a sparkle from the hero pattern, in the tile
-   * color of its group. The area icons take the same colors.
+   * Each group is marked with the same little tree, with its own branch
+   * highlighted in the tile color of the group, like the area icons.
    */
   .group {
     --tile: var(--site-tile-everyone);
@@ -351,17 +375,21 @@ const showEvents = !calendar.loaded || calendar.events.length > 0;
     --tile-bg: var(--site-tile-run-bg);
   }
 
+  /* The highlighted branch in the group's color, the rest of the tree quiet. */
   .mark {
     flex: 0 0 auto;
-    width: 20px;
-    height: 20px;
-    background: var(--tile);
-    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M10 0A10 10 0 0 0 20 10A10 10 0 0 0 10 20A10 10 0 0 0 0 10A10 10 0 0 0 10 0Z'/%3E%3C/svg%3E")
-      center / contain no-repeat;
+    width: auto;
+    height: 24px;
+    fill: var(--tile);
   }
 
   .group--understand .mark {
-    background: var(--site-text-muted);
+    fill: var(--site-text-muted);
+  }
+
+  .mark-rest {
+    fill: var(--site-text);
+    opacity: 0.4;
   }
 
   /*
@@ -464,8 +492,8 @@ const showEvents = !calendar.loaded || calendar.events.length > 0;
   }
 
   /*
-   * Steps, a real sequence, in a light blue panel like "Community Meetups"
-   * on the community page.
+   * Steps, a real sequence, in a rounded navy panel with mint numbers, in
+   * the colors of the navy band the homepage had before.
    */
   .steps-section {
     margin-top: var(--ha-space-20);
@@ -474,8 +502,8 @@ const showEvents = !calendar.loaded || calendar.events.length > 0;
   .steps-panel {
     padding: clamp(32px, 5vw, 64px);
     border-radius: var(--site-radius-card);
-    background: var(--site-accent-quiet);
-    color: var(--site-text);
+    background: var(--brand-navy);
+    color: #ffffff;
   }
 
   .steps {
@@ -492,7 +520,7 @@ const showEvents = !calendar.loaded || calendar.events.length > 0;
     flex-direction: column;
     gap: var(--ha-space-2);
     padding-top: var(--ha-space-4);
-    border-top: 1px solid color-mix(in srgb, currentColor 20%, transparent);
+    border-top: 2px solid rgb(255 255 255 / 0.12);
   }
 
   .steps li::before {
@@ -500,7 +528,7 @@ const showEvents = !calendar.loaded || calendar.events.length > 0;
     font-size: 56px;
     font-weight: 600;
     line-height: 1;
-    color: var(--site-link);
+    color: var(--brand-mint);
   }
 
   /* The whole step is the link, so it is an easy target on a phone. */
@@ -515,14 +543,14 @@ const showEvents = !calendar.loaded || calendar.events.length > 0;
   /* Underlined, so the steps read as links and not as decoration. */
   .step-link .step-title {
     text-decoration: underline;
-    text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
+    text-decoration-color: rgb(22 243 190 / 0.5);
     text-decoration-thickness: 2px;
     text-underline-offset: 6px;
   }
 
   .step-link:hover .step-title,
   .step-link:focus-visible .step-title {
-    text-decoration-color: var(--site-link);
+    text-decoration-color: var(--brand-mint);
   }
 
   .step-title {
@@ -532,7 +560,7 @@ const showEvents = !calendar.loaded || calendar.events.length > 0;
   }
 
   .step-text {
-    color: var(--site-text-muted);
+    color: #b1c3cf;
     line-height: 1.5;
   }
 
