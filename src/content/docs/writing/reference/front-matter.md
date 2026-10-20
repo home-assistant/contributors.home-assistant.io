@@ -61,6 +61,7 @@ These keys describe what the integration is and does. They power the filters on 
   - Use a category, like `lighting`, or a subcategory, like `lighting.lighting_systems`.
   - Do not list duplicates or a category together with one of its own subcategories.
   - See [Integration categories](/core/integrations/categories/) for the identifiers and how to choose them.
+  - A page without `ha_categories` does not appear in the integration overview. Entity and system pages leave this key out on purpose.
   - The old `ha_category` key is no longer accepted.
 - `ha_integration_type`: the type of the integration. It must match `integration_type` in the manifest: `device`, `entity`, `hardware`, `helper`, `hub`, `service`, `system`, or `virtual`. If the manifest does not set one, the type is `hub`.
 - `ha_iot_class`: how the integration talks to the device or service. Use `Local Polling`, `Local Push`, `Cloud Polling`, `Cloud Push`, `Assumed State`, or `Calculated`, matching `iot_class` in the manifest. Integrations where it depends on the setup use `Configurable`. The [IoT class blog post](https://www.home-assistant.io/blog/2016/02/12/classifying-the-internet-of-things/) explains each class.
@@ -68,7 +69,7 @@ These keys describe what the integration is and does. They power the filters on 
 - `ha_config_flow`: set to `true` if the integration is set up from the UI. This adds the setup button to the sidebar of the page. Leave the key out otherwise.
 - `ha_quality_scale`: the tier of the integration on the quality scale: `bronze`, `silver`, `gold`, or `platinum`. Integrations that are internal to Home Assistant use `internal`, and older integrations that have not been scored yet use `legacy`. For a new integration, use `bronze`. This key is updated by documentation syncs from the core codebase, so you normally do not edit it by hand.
 
-### Protocol categories
+### Protocols and connectors
 
 Pick the category by what the integration is for. Hubs and radio protocols that bring in many kinds of devices use `hubs_protocols`. Generic connectors for serial ports, Modbus, or web APIs use `diy_makers`. An integration for a specific product uses that product's category, regardless of the protocol it uses. See [how to choose integration categories](/core/integrations/categories/#how-to-choose).
 
@@ -121,7 +122,7 @@ A *brand* page groups several integrations or products from the same manufacture
 
 - `ha_brand`: set to `true` if the page represents a brand rather than an actual integration. The page then takes its logo from the brand images instead of the integration images. Leave the key out on regular integration pages.
 
-A virtual integration with `ha_supporting_domain` inherits the categories of its supporting integration when it does not set `ha_categories` itself.
+A virtual integration with `ha_supporting_domain` inherits the categories of its supporting integration when it does not set `ha_categories` itself. Brand pages without a supporting integration, such as Matter, Zigbee, and Z-Wave brands, do not inherit categories and need their own `ha_categories`.
 
 ## Maintainer only
 
