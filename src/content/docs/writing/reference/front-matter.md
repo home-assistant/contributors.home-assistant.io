@@ -17,9 +17,8 @@ A typical page for an integration that is set up from the UI:
 title: Awesome Lights
 description: Control your Awesome Lights from Home Assistant.
 ha_release: 2026.11
-ha_category:
-  - Light
-  - Sensor
+ha_categories:
+  - lighting.lighting_systems
 ha_iot_class: Local Push
 ha_config_flow: true
 ha_codeowners:
@@ -58,10 +57,11 @@ These keys belong on every integration page.
 
 These keys describe what the integration is and does. They power the filters on the integration overview.
 
-- `ha_category`: the categories the integration is listed under on the integration overview. Use a single value or a list. A page without a category does not show up in the overview at all.
-  - Most categories match an entity platform the integration provides, like `Light`, `Switch`, `Sensor`, `Binary sensor`, `Climate`, or `Media player`.
-  - Other categories describe the purpose of the integration, like `Hub`, `Energy`, `DIY`, or `Weather`.
-  - For communication protocols, see [Protocol categories](#protocol-categories) below.
+- `ha_categories`: a list of one to three category identifiers. For an integration with its own Core implementation, use the same identifiers as its manifest's `categories`. Categories describe the product or service, not the entity platforms it provides. The first entry is the primary category.
+  - Use a category, like `lighting`, or a subcategory, like `lighting.lighting_systems`.
+  - Do not list duplicates or a category together with one of its own subcategories.
+  - See [Integration categories](/core/integrations/categories/) for the identifiers and how to choose them.
+  - The old `ha_category` key is no longer accepted.
 - `ha_integration_type`: the type of the integration. It must match `integration_type` in the manifest: `device`, `entity`, `hardware`, `helper`, `hub`, `service`, `system`, or `virtual`. If the manifest does not set one, the type is `hub`.
 - `ha_iot_class`: how the integration talks to the device or service. Use `Local Polling`, `Local Push`, `Cloud Polling`, `Cloud Push`, `Assumed State`, or `Calculated`, matching `iot_class` in the manifest. Integrations where it depends on the setup use `Configurable`. The [IoT class blog post](https://www.home-assistant.io/blog/2016/02/12/classifying-the-internet-of-things/) explains each class.
 - `ha_platforms`: the entity platforms the integration implements, like `light` and `sensor`. Also list `diagnostics` when the integration supports downloading diagnostics.
@@ -70,23 +70,7 @@ These keys describe what the integration is and does. They power the filters on 
 
 ### Protocol categories
 
-Some communication protocols have two categories:
-
-- The plain protocol name, like `Serial`, is for integrations that *provide* the connection, so other integrations can use it.
-- The `-controlled` variant, like `Serial-controlled`, is for integrations that *talk to a specific device* over that connection. They might control the device, read from it, or both.
-
-Pick the category by the role the integration plays, not by what the hardware happens to support.
-
-- `Infrared`: provides an infrared transmitter or receiver that other integrations can use. Examples: ESPHome, Broadlink, MQTT Infrared.
-- `Infrared-controlled`: talks to a specific device through an `Infrared` provider. Example: LG Infrared.
-- `Radio frequency`: provides a radio frequency transmitter or receiver, like sub-GHz, that other integrations can use. Examples: ESPHome, Broadlink.
-- `Radio frequency-controlled`: talks to a specific device through a `Radio frequency` provider. Example: KlikAanKlikUit.
-- `Modbus`: provides a Modbus connection, RTU or TCP, that other integrations can use. Example: Modbus.
-- `Modbus-controlled`: controls or reads a specific device over its Modbus interface, directly or through a gateway. Example: Nibe Heat Pump.
-- `Serial`: provides a serial port, like UART, RS-232, or RS-485, that other integrations can use, for example by sharing it over the network. Example: ESPHome.
-- `Serial-controlled`: controls or reads a specific device over its serial interface, directly or through a serial proxy or serial-to-IP adapter. Example: Denon RS-232.
-
-Do not use these categories when the protocol is only how Home Assistant reaches a gateway for another technology. A Zigbee coordinator plugged in over USB serial does not get `Serial`.
+Pick the category by what the integration is for. Hubs and radio protocols that bring in many kinds of devices use `hubs_protocols`. Generic connectors for serial ports, Modbus, or web APIs use `diy_makers`. An integration for a specific product uses that product's category, regardless of the protocol it uses. See [how to choose integration categories](/core/integrations/categories/#how-to-choose).
 
 ## Discovery
 
@@ -137,7 +121,7 @@ A *brand* page groups several integrations or products from the same manufacture
 
 - `ha_brand`: set to `true` if the page represents a brand rather than an actual integration. The page then takes its logo from the brand images instead of the integration images. Leave the key out on regular integration pages.
 
-A virtual integration or brand only gets a provider category, like `Infrared`, `Radio frequency`, `Modbus`, or `Serial`, when the brand itself sells devices that provide that capability. Do not copy those categories from the supporting integration.
+A virtual integration with `ha_supporting_domain` inherits the categories of its supporting integration when it does not set `ha_categories` itself.
 
 ## Maintainer only
 
