@@ -56,4 +56,4 @@ The `in_zones` state attribute is a list of zone entity IDs sorted by size, with
 
 ### Introduction of the `tracking_type` capability attribute
 
-A new capability attribute `tracking_type` is present in the state of device tracker entities. The state attribute is set to `connection` by `BaseScannerEntity` and `ScannerEntity` and to `location` by `TrackerEntity`. Integrations should not override this behavior.
+A new capability attribute `tracking_type` is present in the state of device tracker entities. The state attribute is set to `connection` by `BaseScannerEntity` and `ScannerEntity` and to `position` by `TrackerEntity`. Integrations should not override this behavior.

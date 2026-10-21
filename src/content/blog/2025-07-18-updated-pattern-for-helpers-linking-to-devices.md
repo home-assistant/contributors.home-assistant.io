@@ -22,9 +22,9 @@ The architecture proposal [home-assistant/architecture#1226](https://github.com/
 
 In the helper entity's constructor, set `self.device_entry` to the source device
 ```py
-class HelperEntity(Entity)
+class HelperEntity(Entity):
 
-    def __init__(hass: HomeAssistant, source_entity_id: str, ...) -> None:
+    def __init__(self, hass: HomeAssistant, source_entity_id: str, ...) -> None:
         self.device_entry = async_entity_id_to_device(
             hass,
             source_entity_id,
