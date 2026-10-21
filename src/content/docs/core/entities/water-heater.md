@@ -17,7 +17,7 @@ Water heater entities have these properties on top of the [generic entity proper
 
 | Name | Type | Default | Description |
 | ---- | ---- | ------- | ----------- |
-| `native_temperature_unit` | `str` | Required | The unit the device reports temperatures in: `UnitOfTemperature.CELSIUS` or `UnitOfTemperature.FAHRENHEIT`. |
+| `native_temperature_unit` | `str` | Required | The unit the device reports temperatures in: `UnitOfTemperature.CELSIUS`, `UnitOfTemperature.FAHRENHEIT`, or `UnitOfTemperature.KELVIN`. |
 | `current_operation` | `str \| None` | `None` | The current operation mode. It is the state of the entity. |
 | `operation_list` | `list[str] \| None` | `None` | The operation modes the device supports. |
 | `native_current_temperature` | `float \| None` | `None` | The measured water temperature, in `native_temperature_unit`. |
@@ -30,7 +30,7 @@ Water heater entities have these properties on top of the [generic entity proper
 | `precision` | `float` | Tenths for Celsius, whole numbers otherwise | The precision temperatures are shown with. Without a value, it follows the unit system of the installation. |
 | `is_away_mode_on` | `bool \| None` | `None` | Whether away mode is on. Requires `AWAY_MODE`. |
 
-Like the climate entity, a water heater reports temperatures in the unit of the device, and Home Assistant converts them to the unit system of the installation. It adds a `temperature_unit` state attribute with the unit of the converted values. Temperatures passed to `set_temperature` are converted to `native_temperature_unit` before your method is called.
+Like the climate entity, a water heater reports temperatures in the unit of the device, and Home Assistant converts them to the unit system of the installation. It adds a `temperature_unit` state attribute with the unit of the converted values. You cannot override that attribute. Temperatures passed to `set_temperature` are converted to `native_temperature_unit` before your method is called.
 
 > [!WARNING]
 > The old names without `native_`, like `current_temperature`, `target_temperature`, and `temperature_unit` (and their `_attr_` attributes), are deprecated and stop working in Home Assistant 2027.11. Use the `native_` names in new code.
