@@ -71,6 +71,8 @@ new_device_info = copy.copy(device_info)
 new_device_info.name = "Other name"
 ```
 
+To register a device in the device registry yourself, pass the device info as it is to the new `async_get_or_create_device`, instead of unpacking it into `async_get_or_create`:
+
 ```python
 # Old
 device_registry.async_get_or_create(
@@ -78,14 +80,16 @@ device_registry.async_get_or_create(
 )
 
 # New
-device_registry.async_get_or_create(
-    config_entry_id=entry.entry_id, **device_info.as_dict()
+device_registry.async_get_or_create_device(
+    config_entry_id=entry.entry_id, device_info=device_info
 )
 ```
 
+`async_get_or_create` keeps working with the fields as keyword arguments, and builds a `DeviceInfo` for you.
+
 ## Unset fields
 
-A field which has not been set reads as `UNDEFINED`, not as `None`, and `None` is a value like any other. Note that `UNDEFINED` is truthy, so test it explicitly:
+A field which has not been set reads as `UNDEFINED`, not as `None`, and `None` is a value like any other. For example, `via_device_id=None` removes the link to a via device. Note that `UNDEFINED` is truthy, so test it explicitly:
 
 ```python
 from homeassistant.helpers.typing import UNDEFINED
@@ -137,7 +141,7 @@ device_info = DeviceInfo(**device_payload)
 device_info["config_entry_id"] = entry.entry_id
 ```
 
-Arguments of `async_get_or_create` which are not device info fields, such as `config_entry_id`, are passed to the method directly.
+Arguments which are not device info fields, such as `config_entry_id`, `config_subentry_id`, and `disabled_by`, are passed to `async_get_or_create_device` next to the device info.
 
 ### Building from a mapping
 
@@ -170,3 +174,13 @@ self._attr_device_info = ChildDeviceInfo(
     parent_device_id=parent.id,
 )
 ```
+
+To register a child device in the device registry yourself, pass the child device info to the new `async_get_or_create_child_device`, in the same way:
+
+```python
+device_registry.async_get_or_create_child_device(
+    config_entry_id=entry.entry_id, device_info=child_device_info
+)
+```
+
+`async_get_or_create_child` keeps working with the fields as keyword arguments.

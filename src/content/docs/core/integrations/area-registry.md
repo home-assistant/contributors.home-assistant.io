@@ -7,7 +7,7 @@ order: 3
 
 The area registry keeps track of [areas](/glossary/area/): the physical locations in a home, like the kitchen or the garage. Users put devices and entities in areas, and areas on [floors](/glossary/floor/).
 
-Areas belong to the user. Your integration does not create or change them. What it can do is suggest an area for a new device, with `suggested_area` in the `DeviceInfo` or in `async_get_or_create` of the [device registry](/core/integrations/device-registry/). Use it when the device or service knows which room it is in, like a room name set in its own app.
+Areas belong to the user. Your integration does not create or change them. What it can do is suggest an area for a new device, with `suggested_area` in the `DeviceInfo` you give an entity or pass to the [device registry](/core/integrations/device-registry/). Use it when the device or service knows which room it is in, like a room name set in its own app.
 
 ## Area properties
 

@@ -76,26 +76,28 @@ The registry looks for an existing device of the same config entry, by identifie
 
 ## Register a device yourself
 
-A device without entities, like a hub, is registered directly. Do this in `async_setup_entry`:
+A device without entities, like a hub, is registered directly. Do this in `async_setup_entry`, with the same `DeviceInfo` an entity would use:
 
 ```python
 from homeassistant.helpers import device_registry as dr
 
 device_registry = dr.async_get(hass)
 
-hub = device_registry.async_get_or_create(
+hub = device_registry.async_get_or_create_device(
     config_entry_id=entry.entry_id,
-    connections={(dr.CONNECTION_NETWORK_MAC, dr.format_mac(info.mac))},
-    identifiers={(DOMAIN, info.bridge_id)},
-    manufacturer="Signify",
-    model=info.model_name,
-    model_id=info.model_id,
-    name=info.name,
-    sw_version=info.sw_version,
+    device_info=dr.DeviceInfo(
+        connections={(dr.CONNECTION_NETWORK_MAC, dr.format_mac(info.mac))},
+        identifiers={(DOMAIN, info.bridge_id)},
+        manufacturer="Signify",
+        model=info.model_name,
+        model_id=info.model_id,
+        name=info.name,
+        sw_version=info.sw_version,
+    ),
 )
 ```
 
-It returns the `DeviceEntry`, with its `id`.
+It returns the `DeviceEntry`, with its `id`. Besides `config_entry_id` and `device_info`, it takes `config_subentry_id`, and `disabled_by` to create the device disabled.
 
 ## Link devices to a hub
 
@@ -145,15 +147,17 @@ self._attr_device_info = ChildDeviceInfo(
 Or directly:
 
 ```python
-outlet = device_registry.async_get_or_create_child(
+outlet = device_registry.async_get_or_create_child_device(
     config_entry_id=entry.entry_id,
-    parent_device_id=parent.id,
-    identifiers={(DOMAIN, f"{strip_id}_outlet_1")},
-    name="Outlet 1",
+    device_info=ChildDeviceInfo(
+        identifiers={(DOMAIN, f"{strip_id}_outlet_1")},
+        name="Outlet 1",
+        parent_device_id=parent.id,
+    ),
 )
 ```
 
-Besides the required `config_entry_id`, `parent_device_id`, and `identifiers`, `async_get_or_create_child` takes `config_subentry_id`, `name`, `suggested_area`, `disabled_by`, `translation_key`, and `translation_placeholders`. There is deliberately no `via_device_id`, `connections`, `manufacturer`, `model`, or firmware argument: a child device doesn't have those.
+Besides the required `identifiers` and `parent_device_id`, `ChildDeviceInfo` takes `name`, `suggested_area`, `translation_key`, and `translation_placeholders`. There is deliberately no `via_device_id`, `connections`, `manufacturer`, `model`, or firmware field: a child device doesn't have those. Next to the child device info, `async_get_or_create_child_device` takes `config_entry_id`, `config_subentry_id`, and `disabled_by`.
 
 If the parent belongs to a subentry, pass its `config_subentry_id` as well. It is not inherited. The registry never creates the parent for you: it raises a `DeviceInfoError` when the parent does not exist, is a child device itself, or belongs to another config entry or subentry.
 
@@ -161,7 +165,7 @@ If the parent belongs to a subentry, pass its `config_subentry_id` as well. It i
 
 If the identifiers of a child device match an existing device of the same config entry, that device becomes a child device, and keeps its ID. Automations that use the device keep working. That makes it easy to move an integration that already split products into separate devices.
 
-The other way around is not supported directly. `async_update_child_device` can't change the parent, and `async_get_or_create` with the identifiers of an existing child device raises an error instead of turning it into a normal device. To turn a child device back into a normal device, remove it with `async_remove_device`, then register it again with `async_get_or_create`, with the same identifiers. The order matters: the identifiers are only free once the child device is removed.
+The other way around is not supported directly. `async_update_child_device` can't change the parent, and `async_get_or_create_device` with the identifiers of an existing child device raises an error instead of turning it into a normal device. To turn a child device back into a normal device, remove it with `async_remove_device`, then register it again with `async_get_or_create_device`, with the same identifiers. The order matters: the identifiers are only free once the child device is removed.
 
 ### What follows the parent
 
