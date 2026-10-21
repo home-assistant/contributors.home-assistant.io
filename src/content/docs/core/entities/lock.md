@@ -16,11 +16,11 @@ Lock entities have these properties on top of the [generic entity properties](/c
 | Name | Type | Default | Description |
 | ---- | ---- | ------- | ----------- |
 | `is_locked` | `bool \| None` | `None` | Whether the lock is locked. |
-| `is_locking` | `bool \| None` | `None` | Whether the lock is locking. |
-| `is_unlocking` | `bool \| None` | `None` | Whether the lock is unlocking. |
-| `is_open` | `bool \| None` | `None` | Whether the lock is open. |
-| `is_opening` | `bool \| None` | `None` | Whether the lock is opening. |
-| `is_jammed` | `bool \| None` | `None` | Whether the lock is jammed, because locking did not complete. |
+| `is_locking` | `bool \| None` | `None` | Whether the lock is in the process of being locked. |
+| `is_unlocking` | `bool \| None` | `None` | Whether the lock is in the process of being unlocked. |
+| `is_open` | `bool \| None` | `None` | Whether the lock is unlocked and has released its latch. Only relevant for locks that support `OPEN`. |
+| `is_opening` | `bool \| None` | `None` | Whether the lock is in the process of releasing its latch. |
+| `is_jammed` | `bool \| None` | `None` | Whether the lock tried to move, to lock, unlock, or open, but got stuck before it finished. |
 | `code_format` | `str \| None` | `None` | A regular expression the code must match, like `^\d{4}$`. `None` means the lock needs no code. |
 | `changed_by` | `str \| None` | `None` | Who or what changed the lock last, like a user name or a keypad. |
 
@@ -52,17 +52,19 @@ Implement the sync or the async variant of each method, not both.
 
 The state is a `LockState`, picked from the first property that is `True`, in this order:
 
-| Value | From |
-| ----- | ---- |
-| `LockState.JAMMED` | `is_jammed` |
-| `LockState.OPENING` | `is_opening` |
-| `LockState.LOCKING` | `is_locking` |
-| `LockState.OPEN` | `is_open` |
-| `LockState.UNLOCKING` | `is_unlocking` |
-| `LockState.LOCKED` | `is_locked` is `True` |
-| `LockState.UNLOCKED` | `is_locked` is `False` |
+| Value | From | Description |
+| ----- | ---- | ----------- |
+| `LockState.JAMMED` | `is_jammed` | The lock tried to move but got stuck before it finished. |
+| `LockState.OPENING` | `is_opening` | The lock is releasing its latch. |
+| `LockState.LOCKING` | `is_locking` | The lock is being locked. |
+| `LockState.OPEN` | `is_open` | The lock is not secured and has released its latch. |
+| `LockState.UNLOCKING` | `is_unlocking` | The lock is being unlocked. |
+| `LockState.LOCKED` | `is_locked` is `True` | The lock is locked. |
+| `LockState.UNLOCKED` | `is_locked` is `False` | The lock is not locked. |
 
 When none of them apply and `is_locked` is `None`, the state is `unknown`.
+
+`OPEN` needs both: the lock is not secured, *and* its latch is released. A released latch while the lock is still secured is not the open state.
 
 ## Example
 
