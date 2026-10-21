@@ -29,7 +29,7 @@ Integrations that don't set `has_entity_name` use the legacy behavior, where `na
 
 ## Translated names
 
-Don't hard code an English name. Set a `translation_key` instead, and put the name in the `entity` section of your integration's `strings.json`:
+Don't hard code an English name. Set a `translation_key` instead, and put the name in the `entity` section of your integration's `strings.json`. Translated names only work for entities that set `has_entity_name` to `True`:
 
 ```json
 {
