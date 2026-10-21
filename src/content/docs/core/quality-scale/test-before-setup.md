@@ -51,7 +51,7 @@ Do not log the error yourself before raising: Home Assistant already reports the
 
 ### Devices that are often offline
 
-Some devices are offline on purpose, like a solar inverter at night or a TV in standby. For those, you can finish the setup without reaching the device. Refresh the coordinator with `await coordinator.async_refresh()`, which does not raise, and the entities stay unavailable until the device answers. Until then, `coordinator.data` is still `None`, so code that reads it while setting up the platforms has to handle that. Fetch anything you could not get during setup, like device information, once the device is back. Errors that are not temporary, like wrong credentials or a closed account, must still be reported during setup when they are detected.
+Some devices are offline on purpose, like a solar inverter at night or a TV in standby. Raising `ConfigEntryNotReady` and letting Home Assistant retry is usually still the simplest approach. But you can also finish the setup without reaching the device. Refresh the coordinator with `await coordinator.async_refresh()`, which does not raise, and the entities stay unavailable until the device answers. A `ConfigEntryAuthFailed` raised by the update method still starts the reauthentication flow. Until then, `coordinator.data` is still `None`, so code that reads it while setting up the platforms has to handle that. Fetch anything you could not get during setup, like device information, once the device is back. Errors that are not temporary, like wrong credentials or a closed account, must still be reported during setup when they are detected.
 
 ## How it is checked
 
