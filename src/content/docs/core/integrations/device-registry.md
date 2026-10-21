@@ -37,10 +37,10 @@ Devices belong to the config entry that registered them. A physical device that 
 | `configuration_url` | Where the device or service can be configured. Use `homeassistant://<path>` to link to a page inside Home Assistant. |
 | `entry_type` | `None`, or `DeviceEntryType.SERVICE` for a service |
 | `via_device_id` | The device Home Assistant reaches this device through, like a hub |
-| `parent_device_id` | For a child device: its parent |
+| `parent_device_id` | For a child device: its parent. Only child devices (`ChildDeviceEntry`) have this attribute. The WebSocket API reports it as `null` for other devices. |
 | `area_id` | The area the device is in |
 | `labels` | The labels of the device |
-| `disabled_by` | Who disabled the device, or `None` |
+| `disabled_by` | Who disabled the device, as a `DeviceEntryDisabler`, or `None` |
 | `created_at`, `modified_at` | When the device was created and last changed. Managed by the registry. |
 
 ## Register a device through an entity
@@ -153,13 +153,15 @@ outlet = device_registry.async_get_or_create_child(
 )
 ```
 
+Besides the required `config_entry_id`, `parent_device_id`, and `identifiers`, `async_get_or_create_child` takes `config_subentry_id`, `name`, `suggested_area`, `disabled_by`, `translation_key`, and `translation_placeholders`. There is deliberately no `via_device_id`, `connections`, `manufacturer`, `model`, or firmware argument: a child device doesn't have those.
+
 If the parent belongs to a subentry, pass its `config_subentry_id` as well. It is not inherited. The registry never creates the parent for you: it raises a `DeviceInfoError` when the parent does not exist, is a child device itself, or belongs to another config entry or subentry.
 
 ### Move existing devices to child devices
 
 If the identifiers of a child device match an existing device of the same config entry, that device becomes a child device, and keeps its ID. Automations that use the device keep working. That makes it easy to move an integration that already split products into separate devices.
 
-The other way around is not supported directly. To turn a child device back into a normal device, remove it with `async_remove_device`, then register it again with `async_get_or_create`, with the same identifiers.
+The other way around is not supported directly. `async_update_child_device` can't change the parent, and `async_get_or_create` with the identifiers of an existing child device raises an error instead of turning it into a normal device. To turn a child device back into a normal device, remove it with `async_remove_device`, then register it again with `async_get_or_create`, with the same identifiers. The order matters: the identifiers are only free once the child device is removed.
 
 ### What follows the parent
 
@@ -168,7 +170,7 @@ The other way around is not supported directly. To turn a child device back into
 - A child without an area of its own is in the area of its parent. `dr.async_get_effective_area_id(hass, device)` returns the area that applies.
 - Labels are not inherited.
 - A parent with children cannot move to another config entry or subentry.
-- An action that targets a parent device also targets the entities of its children. An action that targets a child only targets the entities of that child.
+- An action that targets a parent device also targets the entities of its children. An action that targets a child only targets the entities of that child. That way, automations that target a device keep working when an integration moves entities of that device to child devices.
 
 ## Look up devices
 
@@ -192,9 +194,9 @@ device = device_registry.async_get_device_by_connection(
 devices = dr.async_entries_for_config_entry(device_registry, entry.entry_id)
 ```
 
-These return normal devices, not child devices. For child devices, use `async_get_child_device_by_identifier(identifier, config_entry_id)`, or `dr.async_entries_for_parent_device(device_registry, parent_device_id)` for all children of a device. To get every device with an identifier or connection across config entries, use `device_registry.async_get_devices()`.
+`async_get` returns normal devices and child devices. Pass `include_child_devices=False` to only get a normal device, or `include_main_devices=False` to only get a child device. The other lookups return normal devices, not child devices. For child devices, use `async_get_child_device_by_identifier(identifier, config_entry_id)`, or `dr.async_entries_for_parent_device(device_registry, parent_device_id)` for all children of a device. To get every device with an identifier or connection across config entries, use `device_registry.async_get_devices()`.
 
-To get a device together with the config entry of your integration that owns it, for example in an action, use `dr.async_get_device_and_config_entry_for_domain(hass, device_id, domain=DOMAIN)`. It returns `(None, None)` when the device is unknown, and `(device, None)` when no config entry of your domain owns it.
+To get a device together with the config entry of your integration that owns it, for example in an action, use `dr.async_get_device_and_config_entry_for_domain(hass, device_id, domain=DOMAIN)`. It returns `(None, None)` when the device is unknown, and `(device, None)` when no config entry of your domain owns it. It takes the same `include_child_devices` and `include_main_devices` arguments as `async_get`.
 
 ## Update devices
 
