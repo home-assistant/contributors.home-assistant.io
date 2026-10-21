@@ -18,7 +18,7 @@ Lock entities have these properties on top of the [generic entity properties](/c
 | `is_locked` | `bool \| None` | `None` | Whether the lock is locked. |
 | `is_locking` | `bool \| None` | `None` | Whether the lock is in the process of being locked. |
 | `is_unlocking` | `bool \| None` | `None` | Whether the lock is in the process of being unlocked. |
-| `is_open` | `bool \| None` | `None` | Whether the lock is unlocked and has released its latch. Only relevant for locks that support `OPEN`. |
+| `is_open` | `bool \| None` | `None` | Whether the lock is unlocked and has released its latch. |
 | `is_opening` | `bool \| None` | `None` | Whether the lock is in the process of releasing its latch. |
 | `is_jammed` | `bool \| None` | `None` | Whether the lock tried to move, to lock, unlock, or open, but got stuck before it finished. |
 | `code_format` | `str \| None` | `None` | A regular expression the code must match, like `^\d{4}$`. `None` means the lock needs no code. |
