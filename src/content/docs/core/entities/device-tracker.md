@@ -82,7 +82,7 @@ The base classes set the state. Do not set `state` yourself.
 
 A scanner is associated with the home zone by default. Users can pick another zone in the entity settings, like the office for a beacon there. When that zone is removed, Home Assistant raises a [repair](/glossary/repair/) issue.
 
-The `in_zones` state attribute lists the zones the device is in, smallest first. A scanner lists its associated zone and the zones that contain it.
+The `in_zones` state attribute lists the zones the device is in, smallest first. When the zones are worked out from coordinates, zones of the same size are sorted by the distance to their center, closest first. A scanner lists its associated zone and the zones that contain it. When the scanner is not connected, `in_zones` is an empty list.
 
 ## Example
 
