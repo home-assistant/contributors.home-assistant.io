@@ -92,7 +92,7 @@ A typical pattern: check for the problem in `async_setup_entry`, and create or d
 
 ## Issues that belong to a config entry
 
-When an issue is about one config entry, like an outdated firmware on a device or an expired API key, set `config_entry_id` to the ID of that entry. The issue then belongs to the entry: it is hidden while the entry is disabled, and deleted when the entry is removed. You do not need to delete it yourself in `async_remove_entry`.
+When an issue is about one config entry, like outdated firmware on a device or an expired API key, set `config_entry_id` to the ID of that entry. The issue then belongs to the entry: it is hidden while the entry is disabled, and deleted when the entry is removed. You do not need to delete it yourself in `async_remove_entry`.
 
 ```python
 ir.async_create_issue(
