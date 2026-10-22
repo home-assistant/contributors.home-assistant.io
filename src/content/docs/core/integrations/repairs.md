@@ -34,7 +34,7 @@ ir.async_create_issue(
 | `severity` | | How bad it is. See below. |
 | `translation_key` | | The key of the title and description in `strings.json` |
 | `translation_placeholders` | `None` | Values for the placeholders in the text |
-| `config_entry_id` | `None` | The config entry the issue belongs to. The issue is hidden while that entry is disabled, and deleted when the entry is removed. |
+| `config_entry_id` | `None` | The config entry the issue belongs to. The issue is hidden while that entry is disabled, and deleted when the entry is removed. See [issues that belong to a config entry](#issues-that-belong-to-a-config-entry). |
 | `breaks_in_ha_version` | `None` | The version in which something breaks, like `"2027.4.0"` |
 | `learn_more_url` | `None` | Where users find more information |
 | `is_persistent` | `False` | Whether the issue survives a restart. See [persistence](#persistence). |
@@ -89,6 +89,32 @@ ir.async_delete_issue(hass, DOMAIN, "firmware_too_old")
 ```
 
 A typical pattern: check for the problem in `async_setup_entry`, and create or delete the issue based on the result.
+
+## Issues that belong to a config entry
+
+When an issue is about one config entry, like outdated firmware on a device or an expired API key, set `config_entry_id` to the ID of that entry. The issue then belongs to the entry: it is hidden while the entry is disabled, and deleted when the entry is removed. You do not need to delete it yourself in `async_remove_entry`.
+
+```python
+ir.async_create_issue(
+    hass,
+    DOMAIN,
+    f"firmware_too_old_{entry.entry_id}",
+    config_entry_id=entry.entry_id,
+    is_fixable=False,
+    severity=ir.IssueSeverity.WARNING,
+    translation_key="firmware_too_old",
+    translation_placeholders={"version": device.firmware_version},
+)
+```
+
+A few things to keep in mind:
+
+- Issues are still identified by their domain and `issue_id`, so the `issue_id` must stay unique within your domain. When several config entries can raise the same kind of issue, put the entry ID in the `issue_id`.
+- The config entry must exist. Passing an unknown ID raises `HomeAssistantError`.
+- Creating an issue that already exists replaces its `config_entry_id`, also when you leave `config_entry_id` out.
+- Issues that belong to a config entry that no longer exists are deleted when Home Assistant starts.
+
+Leave `config_entry_id` out for issues that are not about a single config entry, like YAML configuration that is no longer supported.
 
 ## Fix an issue with a repair flow
 
@@ -167,7 +193,7 @@ If the migration of a config entry failed and the user can fix the cause, call `
 
 ## Persistence
 
-An issue stays until the integration that created it deletes it, or the user fixes it. What happens after a restart depends on `is_persistent`:
+An issue stays until the integration that created it deletes it, the user fixes it, or the [config entry it belongs to](#issues-that-belong-to-a-config-entry) is removed. What happens after a restart depends on `is_persistent`:
 
 - **Not persistent** (the default): the issue is not shown after a restart, until your integration creates it again. Use this for problems you can check for, like an old firmware. Your integration checks again on the next start anyway.
 - **Persistent**: the issue is shown again after a restart. Use this for problems you can only see when they happen, like a failed update.

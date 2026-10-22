@@ -131,6 +131,8 @@ async def async_remove_entry(
     """Handle removal of an entry."""
 ```
 
+You do not need `async_remove_entry` to clean up the devices and entities of the entry, or the [repair issues that belong to it](/core/integrations/repairs/#issues-that-belong-to-a-config-entry). Home Assistant removes them for you.
+
 ## Change a config entry
 
 Never change the attributes of a `ConfigEntry` directly. Call `async_update_entry` instead. It saves the change, and tells everything that listens:

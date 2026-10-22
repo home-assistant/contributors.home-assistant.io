@@ -71,6 +71,8 @@ new_device_info = copy.copy(device_info)
 new_device_info.name = "Other name"
 ```
 
+To register a device in the device registry yourself, pass the device fields as keyword arguments to `async_get_or_create`, as before. When you already hold a `DeviceInfo`, for example one built by a helper or shared with your entities, pass it as it is to the new `async_get_or_create_from_info`, instead of unpacking it:
+
 ```python
 # Old
 device_registry.async_get_or_create(
@@ -78,14 +80,14 @@ device_registry.async_get_or_create(
 )
 
 # New
-device_registry.async_get_or_create(
-    config_entry_id=entry.entry_id, **device_info.as_dict()
+device_registry.async_get_or_create_from_info(
+    config_entry_id=entry.entry_id, device_info=device_info
 )
 ```
 
 ## Unset fields
 
-A field which has not been set reads as `UNDEFINED`, not as `None`, and `None` is a value like any other. Note that `UNDEFINED` is truthy, so test it explicitly:
+A field which has not been set reads as `UNDEFINED`, not as `None`, and `None` is a value like any other. For example, `via_device_id=None` removes the link to a via device. Note that `UNDEFINED` is truthy, so test it explicitly:
 
 ```python
 from homeassistant.helpers.typing import UNDEFINED
@@ -168,5 +170,13 @@ self._attr_device_info = ChildDeviceInfo(
     identifiers={(DOMAIN, unique_id)},
     name="Outlet 1",
     parent_device_id=parent.id,
+)
+```
+
+To register a child device in the device registry yourself, pass the fields as keyword arguments to `async_get_or_create_child`, as before. When you already hold a `ChildDeviceInfo`, pass it to the new `async_get_or_create_child_from_info`:
+
+```python
+device_registry.async_get_or_create_child_from_info(
+    config_entry_id=entry.entry_id, device_info=child_device_info
 )
 ```
