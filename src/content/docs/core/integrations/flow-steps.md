@@ -314,6 +314,7 @@ async def async_step_user(
 
     if not self._pair_task.done():
         return self.async_show_progress(
+            step_id="user",
             progress_action="pairing",
             progress_task=self._pair_task,
         )
