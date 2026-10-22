@@ -112,7 +112,7 @@ Home Assistant writes the state under the new ID when the hook returns, unless y
 
 Work that has to await can run in a task. Registry updates don't wait for that task, so after each `await`, check that the entity is still added and that `self.entity_id` didn't change again.
 
-If the hook raises, Home Assistant logs the exception and the change completes anyway: the state is written under the new ID. That is different from `async_prepare_to_add_to_hass`, where raising aborts adding.
+If the hook raises, Home Assistant logs the exception and the change completes anyway: the state is written under the new ID.
 
 Take care that whatever you subscribe again is still cleaned up when the entity is removed. `self.async_on_remove(self._unsub_signal)` registers the unsubscribe function of the *first* subscription. After the entity ID changed, removing the entity calls that stale function again, and the new subscription leaks. Instead, register a callback once that calls the current unsubscribe function:
 
