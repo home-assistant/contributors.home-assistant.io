@@ -1,7 +1,7 @@
 ---
 title: "Introducing child devices"
 description: Child devices give integrations a first-class way to model the parts of one physical product, like the outlets of a power strip, instead of splitting it into several devices linked with via_device.
-date: 2026-10-21
+date: 2026-10-22
 authors:
   - Erik Montnémery
 areas:
@@ -33,13 +33,11 @@ Child devices are a single level: a child device can't be the parent of another 
 
 ## Creating a child device
 
-A device is adopted as a child device in one of two ways, mirroring the two ways any device is registered.
+A device is adopted as a child device in one of two ways, mirroring the two ways any device is registered: from an entity, or directly on the device registry. Either way, the child points at its parent with `parent_device_id`. That is the parent's Home Assistant device ID (`DeviceEntry.id`), not its identifiers, so the parent device must already be registered and its ID known.
 
 ### From an entity's `device_info`
 
-For devices that are created implicitly by their entities, return a `ChildDeviceInfo` from the entity's `device_info` with a `parent_device_id` pointing at the parent device. `ChildDeviceInfo` is a lighter counterpart to `DeviceInfo`, carrying only the fields that make sense for a child: `identifiers`, `name`, `parent_device_id`, `suggested_area`, `translation_key`, and `translation_placeholders`. Like `DeviceInfo`, it is a dataclass, see [DeviceInfo is now a dataclass](/blog/2026/10/13/device-info-class/).
-
-`identifiers` and `parent_device_id` are required. The `parent_device_id` is the parent's Home Assistant device ID (`DeviceEntry.id`), not its identifiers, so the parent device must already be registered and its ID known:
+For devices that are created implicitly by their entities, return a `ChildDeviceInfo` from the entity's `device_info`, with a `parent_device_id` pointing at the parent device. `ChildDeviceInfo` is a lighter counterpart to `DeviceInfo`, carrying only the fields that make sense for a child: `identifiers`, `name`, `parent_device_id`, `suggested_area`, `translation_key`, and `translation_placeholders`. `identifiers` and `parent_device_id` are required. Like `DeviceInfo`, it is a dataclass, see [DeviceInfo is now a dataclass](/blog/2026/10/13/device-info-class/).
 
 ```python
 from homeassistant.helpers.device_registry import ChildDeviceInfo
@@ -60,7 +58,7 @@ An entity's `device_info` may return either a `DeviceInfo` or a `ChildDeviceInfo
 
 ### Manually with `async_get_or_create_child`
 
-For devices that aren't represented by an entity, register the child directly on the device registry with the new `async_get_or_create_child` method:
+For devices that aren't represented by an entity, register the child directly on the device registry with the `async_get_or_create_child` method:
 
 ```python
 def async_get_or_create_child(
@@ -79,7 +77,7 @@ def async_get_or_create_child(
     """Get child device. Create if it doesn't exist."""
 ```
 
-`config_entry_id`, `identifiers`, and `parent_device_id` are required. There is deliberately no `via_device`, `connections`, `manufacturer`, `model`, or firmware parameter, because a child device does not carry those.
+`config_entry_id`, `identifiers`, and `parent_device_id` are required. There is deliberately no `via_device_id`, `connections`, `manufacturer`, `model`, or firmware parameter, because a child device does not carry those.
 
 ```python
 from homeassistant.helpers import device_registry as dr
@@ -103,13 +101,15 @@ outlet = device_registry.async_get_or_create_child(
 )
 ```
 
+When you already hold a `ChildDeviceInfo`, for example one shared with your entities, pass it as it is to `async_get_or_create_child_from_info`, instead of unpacking it.
+
 The parent must already exist (the registry never creates it for you), must be registered by the same config entry, and must belong to the same config subentry. If the parent belongs to a config subentry, pass its `config_subentry_id` explicitly. It is not inherited, and omitting it defaults to no subentry and raises `DeviceInfoError`. The parent must itself be a main device, because a child can't be the parent of another child.
 
 ## Converting an existing device to a child
 
 Migrating an integration that already splits products into several devices should preserve the existing device IDs, so that device-based automations keep working. This happens automatically: if the `identifiers` passed to `async_get_or_create_child` (or the `identifiers` of a child's `device_info`) match an existing device of the same config entry, that device is **converted to a child device in place, keeping its ID**. Registering the outlet above with the same identifiers the outlet's standalone device used before turns it into a child of the power strip without changing its ID.
 
-The conversion is rejected with `DeviceInfoError` if the same config entry already registered the device as a main device since the entry was set up. Home Assistant only forgets that registration when the config entry unloads. So when the entry is next set up after the migration, register the part only as a child device, from `async_get_or_create_child` or from the `ChildDeviceInfo` of its entities. Don't register it as a main device first, for example through a `DeviceInfo` left on one of its entities.
+The conversion is rejected with `DeviceInfoError` if the same config entry already registered the device as a main device since the entry was set up. Home Assistant only forgets that registration when the config entry unloads. So when the entry is next set up after the migration, register the part only as a child device, from the `ChildDeviceInfo` of its entities or with `async_get_or_create_child`. Don't register it as a main device first, for example through a `DeviceInfo` left on one of its entities.
 
 When migrating, this is also a good moment to drop any parent-name prefix that used to be baked into the sub-device's name. For example, rename _"Power strip Outlet 3"_ to just _"Outlet 3"_, since the frontend can compose the parent name into the display name when needed.
 
