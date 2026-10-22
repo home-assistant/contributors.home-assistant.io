@@ -71,7 +71,7 @@ new_device_info = copy.copy(device_info)
 new_device_info.name = "Other name"
 ```
 
-To register a device in the device registry yourself, pass the device info as it is to the new `async_get_or_create_device`, instead of unpacking it into `async_get_or_create`:
+To register a device in the device registry yourself, pass the device info as it is to `async_get_or_create_device`, instead of unpacking it into `async_get_or_create`:
 
 ```python
 # Old
@@ -175,7 +175,7 @@ self._attr_device_info = ChildDeviceInfo(
 )
 ```
 
-To register a child device in the device registry yourself, pass the child device info to the new `async_get_or_create_child_device`, in the same way:
+To register a child device in the device registry yourself, pass the child device info to `async_get_or_create_child_device`, in the same way:
 
 ```python
 device_registry.async_get_or_create_child_device(
