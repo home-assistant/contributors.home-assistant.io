@@ -1,7 +1,7 @@
 ---
 title: "Two-way audio for camera entities"
 description: "Camera entities can now declare two-way audio support, so people can talk through their cameras and doorbells."
-date: 2026-10-20
+date: 2026-10-24
 authors:
   - Robert Resch
 areas:
