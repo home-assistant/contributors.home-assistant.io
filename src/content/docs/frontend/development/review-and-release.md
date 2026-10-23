@@ -1,7 +1,7 @@
 ---
 title: Review and release
 description: What happens to a frontend pull request after you open it, and how a merged change reaches the people using Home Assistant.
-order: 7
+order: 8
 ---
 
 Opening a pull request is the start of a conversation, not the end of your work. This page explains what reviewers look at, which checks run, and how your change ends up in a release.

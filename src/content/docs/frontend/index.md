@@ -29,6 +29,7 @@ Home Assistant serves each browser the build it can run. Keep both in mind when 
 
 - [Your first frontend contribution](/frontend/first-contribution/): set up the environment, pick an issue, and open a pull request.
 - [Custom cards and more](/frontend/custom-ui/): build your own card for your dashboard. No development environment needed: a JavaScript file in your Home Assistant is enough to start.
+- [Open a pull request](/frontend/development/pull-requests/): what your pull request needs before it gets reviewed.
 - [Review and release](/frontend/development/review-and-release/): what happens to your pull request, and how it reaches users.
 
 ## Guides and reference

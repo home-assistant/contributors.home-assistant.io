@@ -71,7 +71,7 @@ A pre-commit hook already formats the files you commit, so most style issues fix
 
 ## 6. Open a pull request
 
-Push your branch to your fork and open a pull request against the `dev` branch. Fill in the pull request template completely: describe the change from the point of view of the people using it, check exactly one **Type of change**, and add before and after screenshots for anything visual. A check fails the pull request when the template is missing or incomplete.
+Push your branch to your fork and open a pull request against the `dev` branch. Fill in the pull request template completely: describe the change from the point of view of the people using it, check exactly one **Type of change**, and add before and after screenshots for anything visual. A check fails the pull request when the template is missing or incomplete. [Open a pull request](/frontend/development/pull-requests/) has the details.
 
 Then expect questions. Reviewers may ask you to change things, and that is normal. [Review and release](/frontend/development/review-and-release/) explains what happens next.
 

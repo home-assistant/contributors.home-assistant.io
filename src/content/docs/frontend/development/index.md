@@ -17,7 +17,8 @@ The frontend is written in TypeScript with [Lit](https://lit.dev/), and bundled 
 - [The gallery and the demo](/frontend/development/gallery-and-demo/): work on components and dashboards without a Home Assistant at all.
 - [Coding guidelines](/frontend/development/guidelines/): how frontend code is written, and what reviewers look for.
 - [Linting and tests](/frontend/development/testing/): the checks to run before you open a pull request.
-- [Builds and pull requests](/frontend/development/builds/): make a production build, and try out someone else's pull request on a real Home Assistant.
+- [Builds](/frontend/development/builds/): make a production build, and try out someone else's pull request on a real Home Assistant.
+- [Open a pull request](/frontend/development/pull-requests/): what your pull request needs before it gets reviewed.
 - [Review and release](/frontend/development/review-and-release/): what happens to your pull request, and how it reaches users.
 
 All commands and ports in one place: [Commands](/frontend/reference/commands/).

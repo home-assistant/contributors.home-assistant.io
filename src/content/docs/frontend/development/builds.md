@@ -1,6 +1,6 @@
 ---
-title: Builds and pull requests
-description: Make a production build of the frontend, and try out a frontend pull request on a real Home Assistant without a development setup.
+title: Builds
+description: Make a production build of the frontend, or run the build of a pull request on a real Home Assistant without a development setup.
 order: 6
 ---
 
