@@ -1,6 +1,6 @@
 ---
 title: Open a pull request
-description: What a frontend pull request needs before maintainers review it. A clear title, the template filled in, the Copilot review handled, and only when it's ready.
+description: How to open a frontend pull request that is ready for maintainers to review.
 order: 7
 ---
 
