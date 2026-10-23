@@ -1,7 +1,7 @@
 ---
 title: Config entry functions now return None
 description: async_setup_entry, async_unload_entry, and async_migrate_entry return None in core now. What changes, and what it means for custom integrations.
-date: 2026-10-21
+date: 2026-10-23
 authors:
   - G Johansson
 areas:
