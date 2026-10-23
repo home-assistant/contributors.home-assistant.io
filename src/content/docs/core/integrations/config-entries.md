@@ -202,15 +202,12 @@ Give `ConfigEntryNotReady` and `ConfigEntryError` a translated message, so you c
 
 ## Return values in custom integrations
 
-Core integrations must return `None` from `async_setup_entry`, `async_unload_entry`, and `async_migrate_entry`. The Pylint type hint checker requires `-> None`, and when a core integration returns `True` or `False` anyway, Home Assistant reports it as an error and the setup, unload, or migration fails.
-
-Custom integrations used to return `True` or `False` from these functions, and they still can. Home Assistant keeps supporting it, without a deprecation:
+Custom integrations may still return a boolean from `async_setup_entry`, `async_unload_entry`, and `async_migrate_entry`, as they did before, and that is not deprecated. This is what it does:
 
 - `True` means success, like `None`.
-- `False` becomes a `ConfigEntryError` with a generic message, like "Failed to set up the config entry." The entry goes to `SETUP_ERROR`, `FAILED_UNLOAD`, or `MIGRATION_ERROR`, as before, and the user sees that message.
-- Any other value is logged as an error, and counts as a failure.
+- `False` becomes a `ConfigEntryError` with a generic message, like "Failed to set up the config entry." The entry goes to `SETUP_ERROR`, `FAILED_UNLOAD`, or `MIGRATION_ERROR`, and the user sees that message.
 
-If you maintain a custom integration, switching to `None` and exceptions is worth it: raise your own `ConfigEntryError` with a translated message, and users see what actually went wrong instead of the generic message. The background is in the [architecture discussion](https://github.com/home-assistant/architecture/discussions/1463).
+Switching to `None` and exceptions is still worth it: raise your own `ConfigEntryError` with a translated message, and users see what actually went wrong. The background is in the [architecture discussion](https://github.com/home-assistant/architecture/discussions/1463).
 
 ## Follow state changes
 
