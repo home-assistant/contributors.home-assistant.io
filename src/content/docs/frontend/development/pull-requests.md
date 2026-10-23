@@ -24,10 +24,11 @@ The title tells maintainers what changes, in a few words. It also ends up in the
 
 ## Fill in the template
 
-Use the [pull request template](https://github.com/home-assistant/frontend/blob/dev/.github/PULL_REQUEST_TEMPLATE.md). Go through every section, and don't remove any. A check fails the pull request when the template is missing or incomplete, as [Review and release](/frontend/development/review-and-release/#before-review) explains.
+Use the [pull request template](https://github.com/home-assistant/frontend/blob/dev/.github/PULL_REQUEST_TEMPLATE.md). Go through every section, and only remove the ones the template tells you to remove when they don't apply. A check fails the pull request when the template is missing or incomplete, as [Review and release](/frontend/development/review-and-release/#before-review) explains.
 
+- **Breaking change**: if your change breaks something for existing users, tell them what breaks, how to make it work again, and why. Write it for users, not for maintainers. Remove the section if nothing breaks.
 - **Proposed change**: describe what changes and why, so a reviewer gets the overview. A few sentences are enough. Don't describe every line of code: the diff already shows that. If you use AI tools, don't let them write long descriptions for you. Write it in your own words.
-- **Screenshots**: add before and after screenshots, or a short video, for anything visible.
+- **Screenshots**: add before and after screenshots, or a short video, for anything visible. Remove the section if nothing visible changes.
 - **Type of change**: check exactly one box. If you need two, split the pull request.
 - **Additional information**: link the issue it fixes, and any related backend or documentation pull request.
 - **Checklist**: check the boxes that are true. Only you can say that you understand the code and tested it.
