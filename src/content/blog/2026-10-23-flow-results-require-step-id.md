@@ -1,7 +1,7 @@
 ---
 title: Always pass a step_id to flow results
 description: Leaving out step_id in async_show_form, async_show_menu, async_show_progress, or async_external_step is deprecated, and stops working in 2027.5.0.
-date: 2026-10-22
+date: 2026-10-23
 authors:
   - G Johansson
 areas:
