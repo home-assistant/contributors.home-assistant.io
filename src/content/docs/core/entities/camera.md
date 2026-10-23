@@ -76,7 +76,7 @@ An integration can also offer WebRTC for cameras of other integrations, based on
 
 ### Two-way audio
 
-When the camera has a speaker, people can talk through it while they watch the live stream. To offer this, set `camera_entity_capabilities` to a `CameraEntityCapabilities` with `two_way_audio`, imported from `homeassistant.components.camera`.
+When the camera has a speaker, people can talk through it while they watch the live stream. To offer this, set `camera_entity_capabilities` to a `CameraEntityCapabilities` with `two_way_audio` as `True`, imported from `homeassistant.components.camera`.
 
 Only declare it when the camera can receive audio over the stream Home Assistant uses.
 

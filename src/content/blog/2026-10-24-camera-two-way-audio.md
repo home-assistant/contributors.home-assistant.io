@@ -14,7 +14,7 @@ Two-way audio starts as a preview feature in Home Assistant Labs. Users turn it 
 
 ## What your integration needs
 
-Set the new `camera_entity_capabilities` property to a `CameraEntityCapabilities` with `two_way_audio`. It defaults to `CameraEntityCapabilities()`, where `two_way_audio` is `False`.
+Set the new `camera_entity_capabilities` property to a `CameraEntityCapabilities` instance with `two_way_audio` as `True`. This property defaults to `CameraEntityCapabilities()`, where `two_way_audio` is `False`.
 
 Only declare two-way audio when the camera can actually receive audio over the stream Home Assistant uses. For example, the Reolink integration declares it only when the camera supports two-way audio and Home Assistant streams from it over RTSP ([home-assistant/core#184716](https://github.com/home-assistant/core/pull/184716)).
 
