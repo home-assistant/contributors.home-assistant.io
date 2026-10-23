@@ -100,7 +100,8 @@ Consumers never hold a reference to a radio frequency entity. They work with an 
 Most consumers do not need the helpers directly, because two base classes do the bookkeeping for them:
 
 - `RadioFrequencyTransmitterConsumerEntity`: set `_rf_transmitter_entity_id` to the entity ID of the transmitter and call `await self._send_command(command)`. The base class keeps your entity available only while the transmitter is available, and passes on the context of the action.
-- `RadioFrequencyReceiverConsumerEntity`: set `_rf_receiver_entity_id` and implement the `_handle_signal(signal)` callback. The entity is only available while the receiver is. The base class subscribes while the receiver is available, and unsubscribes when it becomes unavailable or the entity is removed.
+- `RadioFrequencyReceiverConsumerEntity`: set `_rf_receiver_entity_id` to the entity ID of the receiver and implement the `_handle_signal(signal)` callback. The base class keeps your entity available only while the receiver is available, and subscribes to the receiver while your entity is available.
+- Both base classes, for an entity that sends and receives: set both entity IDs. The base classes keep your entity available only while the transmitter and the receiver are both available, so it also stops receiving while the transmitter is unavailable.
 
 Mix them in before the entity class of your platform, like `class MySocket(RadioFrequencyTransmitterConsumerEntity, SwitchEntity)`. When you override `_async_rf_availability_changed(available)` to react to availability, call `super()`, so the base classes still update the availability and the subscription.
 
@@ -110,7 +111,7 @@ For config flows and the frontend, there is also a `radio_frequency/list` WebSoc
 
 | Method | Description |
 | --- | --- |
-| `async_send_command(command)` | Required. Send the command over the air. There is no sync variant. |
+| `async_send_command(command)` | Required for transmitters. Send the command over the air. There is no sync variant. Receivers do not implement it. |
 | `supported_frequency_ranges` | Required property. Return the `(min_hz, max_hz)` ranges. |
 
 `supports_frequency` and `supports_modulation` are final: the base class implements them from the frequency ranges and the modulation.
