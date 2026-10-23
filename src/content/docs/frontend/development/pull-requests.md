@@ -34,7 +34,9 @@ Use the [pull request template](https://github.com/home-assistant/frontend/blob/
 
 ## Handle the Copilot review
 
-After you open the pull request, GitHub Copilot does a first review, and leaves comments.
+After you open the pull request, GitHub Copilot does a first review, and leaves comments. The review starts with a summary, like this one for a pull request where it found nothing to fix:
+
+![A Copilot review on a pull request, with the heading Approval recommended, a sentence that sums up the change, and the line No open issues](./copilot-review.png)
 
 - If a comment makes sense, fix it and push.
 - If it doesn't, reply to the comment and explain why. That way, maintainers see you looked at it, and why you left it.
