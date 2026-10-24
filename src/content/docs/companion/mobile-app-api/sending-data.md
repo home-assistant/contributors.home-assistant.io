@@ -317,6 +317,47 @@ Reports that the device scanned an NFC tag or QR code. Home Assistant fires a ta
 }
 ```
 
+### `register_push_subscription`
+
+Asks Home Assistant for a silent push whenever one of the listed entities changes state, so the app can refresh something like a widget. The push goes to the `push_url` of the registration. See [push subscriptions](/companion/mobile-app-api/notifications/#push-subscriptions).
+
+```json
+{
+  "type": "register_push_subscription",
+  "data": {
+    "subscription_id": "lock-widget",
+    "push_token": "my-secure-token",
+    "entity_ids": [
+      "lock.front_door",
+      "cover.garage_door"
+    ],
+    "target": "lock-widget"
+  }
+}
+```
+
+| Key | Required | Type | Description |
+| --- | --- | --- | --- |
+| `subscription_id` | Yes | string | An ID the app picks for this subscription |
+| `push_token` | Yes | string | The token the push is sent to |
+| `entity_ids` | Yes | list | The entities to watch. 1 to 50 entity IDs. Duplicates are ignored |
+| `target` | No | string | A value Home Assistant passes back in the push, so the app knows what to refresh |
+
+Sending the same `subscription_id` again replaces that subscription, for example after the push token changed. A device can have 50 subscriptions. Registering one more removes the oldest.
+
+### `remove_push_subscription`
+
+Removes a push subscription. Home Assistant stops sending pushes for it.
+
+```json
+{
+  "type": "remove_push_subscription",
+  "data": {
+    "subscription_id": "lock-widget"
+  }
+}
+```
+
 ### `live_activity_token` and `live_activity_dismissed`
 
 Used by the iOS app for Live Activities. See [notifications](/companion/mobile-app-api/notifications/#live-activities).
