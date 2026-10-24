@@ -22,7 +22,7 @@ Use `IssueSeverity.WARNING` as long as the old behavior still works. Use `IssueS
 
 ## User facing deprecations
 
-Every deprecation that needs the user to do something gets a [repair issue](/glossary/repair/). When an integration can be set up more than once, include the config entry in the `issue_id`, or the issues of different entries overwrite each other. After the deprecation period, open a follow up pull request that removes the old behavior and the issue.
+Every deprecation that needs the user to do something gets a [repair issue](/glossary/repair/). When an integration can be set up more than once, include the config entry in the `issue_id`, or the issues of different entries overwrite each other. Set the [`config_entry_id`](/core/integrations/repairs/#issues-that-belong-to-a-config-entry) of the issue too, so it is deleted together with the entry. After the deprecation period, open a follow up pull request that removes the old behavior and the issue.
 
 Every issue you create under your own domain needs an `issues.<translation_key>` entry in the `strings.json` of the integration. Issues created under `HOMEASSISTANT_DOMAIN`, like `deprecated_yaml`, use text that already exists in core.
 

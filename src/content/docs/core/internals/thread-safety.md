@@ -70,6 +70,7 @@ Some APIs have no thread safe version at all:
 - `hass.config_entries.async_update_entry` and `hass.config_entries.async_update_subentry`.
 - Rendering templates, like `async_render_to_info`.
 - Ignoring an issue with `issue_registry.async_ignore_issue`.
+- Refreshing a set of issues with `issue_registry.async_begin_issues_refresh`, and keeping an issue with `issue_registry.async_keep_issue`. See [refresh from another thread](/core/integrations/repairs/#refresh-from-another-thread).
 
 For those, schedule a function on the event loop that makes the call. `hass.add_job` does that from any thread:
 

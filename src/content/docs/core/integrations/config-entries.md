@@ -122,6 +122,8 @@ entry.async_on_unload(
 
 To clean up after an entity, implement `async_will_remove_from_hass` on the [entity](/core/entities/).
 
+Do not delete your repair issues when the entry unloads. A reload unloads the entry too, and an issue that is deleted and created again is no longer ignored. Set their [`config_entry_id`](/core/integrations/repairs/#issues-that-belong-to-a-config-entry) instead: they are hidden while the entry is disabled, and deleted when it is removed.
+
 ## Remove a config entry
 
 If something needs to happen when a user deletes the config entry, like removing a webhook at the service, implement `async_remove_entry`. The entry is already gone from `hass.config_entries` when it runs.
