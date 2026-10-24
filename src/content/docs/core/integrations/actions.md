@@ -112,6 +112,10 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 
 This calls the `set_sleep_timer` method of every targeted entity with `sleep_time` as keyword argument. Instead of a method name, `func` can be an async function that receives the entity and the `ServiceCall`. The schema can be a dictionary, which is turned into an entity action schema for you. To only allow entities with certain features, pass `required_features`.
 
+Entity actions support the `exclude` block of a target for you. When a user targets a floor and excludes an area, the entities of that area are not called, also when the target is `entity_id: all`. The `exclude` block is not passed on to your method.
+
+If an action resolves its target itself instead, use `service.async_extract_entities` or `target.async_extract_referenced_entity_ids`, which remove the exclusions. Do not read `entity_id`, `device_id`, or `area_id` from `call.data` and resolve them yourself: the entity action schema accepts `exclude`, so your action would act on exactly the entities the user left out. When you require at least one target in your own schema, use `probatio.AtLeastOne(*cv.TARGET_ID_KEYS)`, so a target with only an exclude block doesn't pass.
+
 ## Admin-only actions
 
 Actions that can change configuration, or have other security implications, should only be available to administrators. Register them with `async_register_admin_service` from `homeassistant.helpers.service`, instead of `hass.services.async_register`. It takes `hass` first, then the same arguments, and checks that the user of the call is an admin before your handler runs.
