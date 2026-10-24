@@ -23,7 +23,7 @@ Cover entities have these properties on top of the [generic entity properties](/
 | `current_cover_position` | `int \| None` | `None` | The position, from 0 (closed) to 100 (fully open). |
 | `current_cover_tilt_position` | `int \| None` | `None` | The tilt, from 0 (closed or no tilt) to 100 (open or maximum tilt). |
 | `device_class` | `CoverDeviceClass \| None` | `None` | What kind of cover it is. See [Device classes](#device-classes). |
-| `supported_speeds` | `list[str] \| None` | `None` | The speeds the cover can move at when it opens, closes, or moves to a position. `None` or an empty list means no speed selection. |
+| `supported_speeds` | `list[str] \| None` | `None` | The speeds the cover can move at when it opens, closes, or moves to a position. `None` or an empty list means no speed selection. Use the standard speeds `CoverSpeed.DEFAULT`, `CoverSpeed.FAST`, and `CoverSpeed.SILENT` from `homeassistant.components.cover` where they fit your device. |
 
 When you set `supported_speeds` to a list, Home Assistant adds it as the `supported_speeds` attribute, and checks the `speed` in an action against it before it calls you. A speed that is not in the list is dropped, and the cover moves at its default speed. Without speeds, a `speed` in an action is dropped.
 
