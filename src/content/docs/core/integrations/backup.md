@@ -127,30 +127,26 @@ entry.async_on_unload(entry.async_on_state_change(_notify_backup_listeners))
 
 ### Rename an agent
 
-The ID of an agent is `<domain>.<unique_id>`. If it changes, for example because a config entry migration changes the unique ID, users lose their backup settings for the agent. Call `async_rename_agent` in the migration to move them to the new ID:
+The ID of an agent is `<domain>.<unique_id>`, built from the `unique_id` of the agent. It doesn't have to match anything on the config entry. If a new version of your integration sets `unique_id` differently, users lose their backup settings for the agent. Call `async_rename_agent` once to move them to the new ID, for example in a config entry migration:
 
 ```python
 from homeassistant.components.backup import async_get_manager
 
 
-async def async_migrate_entry(hass: HomeAssistant, entry: ExampleConfigEntry) -> bool:
+async def async_migrate_entry(hass: HomeAssistant, entry: ExampleConfigEntry) -> None:
     """Migrate old entry."""
     if entry.version == 1 and entry.minor_version == 1:
-        new_unique_id = entry.unique_id.upper()
-        if new_unique_id != entry.unique_id:
-            async_get_manager(hass).async_rename_agent(
-                f"{DOMAIN}.{entry.unique_id}", f"{DOMAIN}.{new_unique_id}"
-            )
-        hass.config_entries.async_update_entry(
-            entry, unique_id=new_unique_id, minor_version=2
+        # The agent used the config entry ID, now it uses the account ID
+        async_get_manager(hass).async_rename_agent(
+            f"{DOMAIN}.{entry.entry_id}", f"{DOMAIN}.{entry.data[CONF_ACCOUNT_ID]}"
         )
-    return True
+        hass.config_entries.async_update_entry(entry, minor_version=2)
 ```
 
 - It moves the settings of the agent, whether automatic backups use it, and the failed uploads to it. The backups the agent stores are not touched.
 - Add `backup` to `after_dependencies` in `manifest.json`, so the backup integration is set up before your migration runs.
 - Only call it when the ID changes.
-- It raises `ValueError` when the old ID has settings and the new ID already exists. This usually means two config entries point at the same place, which the user has to fix. Let the migration fail.
+- It raises `ValueError` when the old ID has settings and the new ID already exists. This usually means another agent already uses the new ID, which the user has to fix. Let the migration fail.
 
 ## Prepare for a backup
 

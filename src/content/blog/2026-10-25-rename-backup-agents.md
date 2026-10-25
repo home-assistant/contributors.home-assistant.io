@@ -10,13 +10,13 @@ areas:
 
 As of Home Assistant Core 2026.11, an integration can rename a backup agent with `async_rename_agent`.
 
-Use it when the ID of an agent changes, for example when a config entry migration changes the unique ID. Users then keep their backup settings for the agent, and don't have to set it up again.
+Use it when your integration changes how it builds the `unique_id` of an agent, which changes the ID of the agent. Users then keep their backup settings for the agent, and don't have to set it up again.
 
 ```python
 from homeassistant.components.backup import async_get_manager
 
 async_get_manager(hass).async_rename_agent(
-    f"{DOMAIN}.{old_unique_id}", f"{DOMAIN}.{new_unique_id}"
+    f"{DOMAIN}.{old_agent_unique_id}", f"{DOMAIN}.{new_agent_unique_id}"
 )
 ```
 
