@@ -1,7 +1,7 @@
 ---
 title: "Backup agents can now be renamed"
 description: As of Home Assistant Core 2026.11, an integration can move the backup settings of an agent to a new agent ID with async_rename_agent.
-date: 2026-10-25
+date: 2026-10-26
 authors:
   - Josef Zweck
 areas:
