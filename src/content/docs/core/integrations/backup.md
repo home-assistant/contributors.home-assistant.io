@@ -146,7 +146,8 @@ async def async_migrate_entry(hass: HomeAssistant, entry: ExampleConfigEntry) ->
 - It moves the settings of the agent, whether automatic backups use it, and the failed uploads to it. The backups the agent stores are not touched.
 - Add `backup` to `after_dependencies` in `manifest.json`, so the backup integration is set up before your migration runs.
 - Only call it when the ID changes.
-- It raises `ValueError` when the old ID has settings and the new ID already exists. This usually means another agent already uses the new ID, which the user has to fix. Let the migration fail.
+- Settings left behind for the new ID, for example by a removed config entry, are replaced.
+- It raises `ValueError` when the old ID has settings and an agent with the new ID is loaded. Two agents then use the same ID, which the user has to fix. Let the migration fail.
 
 ## Prepare for a backup
 
