@@ -125,6 +125,33 @@ entry.async_on_unload(entry.async_on_state_change(_notify_backup_listeners))
 
 `DATA_BACKUP_AGENT_LISTENERS` is a key you define yourself, in `const.py`.
 
+### Rename an agent
+
+The ID of an agent is `<domain>.<unique_id>`. If it changes, for example because a config entry migration changes the unique ID, users lose their backup settings for the agent. Call `async_rename_agent` in the migration to move them to the new ID:
+
+```python
+from homeassistant.components.backup import async_get_manager
+
+
+async def async_migrate_entry(hass: HomeAssistant, entry: ExampleConfigEntry) -> bool:
+    """Migrate old entry."""
+    if entry.version == 1 and entry.minor_version == 1:
+        new_unique_id = entry.unique_id.upper()
+        if new_unique_id != entry.unique_id:
+            async_get_manager(hass).async_rename_agent(
+                f"{DOMAIN}.{entry.unique_id}", f"{DOMAIN}.{new_unique_id}"
+            )
+        hass.config_entries.async_update_entry(
+            entry, unique_id=new_unique_id, minor_version=2
+        )
+    return True
+```
+
+- It moves the settings of the agent, whether automatic backups use it, and the failed uploads to it. The backups the agent stores are not touched.
+- Add `backup` to `after_dependencies` in `manifest.json`, so the backup integration is set up before your migration runs.
+- Only call it when the ID changes.
+- It raises `ValueError` when the old ID has settings and the new ID already exists. This usually means two config entries point at the same place, which the user has to fix. Let the migration fail.
+
 ## Prepare for a backup
 
 Some integrations need to pause or write their data before a backup, so it can be restored properly. Add these two functions to `backup.py`, or run `python3 -m script.scaffold backup`:
