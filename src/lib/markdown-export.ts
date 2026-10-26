@@ -21,6 +21,7 @@ import { type DocsEntry, groupOverview, hrefOf, isIndex, pathOf } from "./docs";
 import { getUpcomingEvents } from "./events";
 import { getTerms, relatedTerms, termHref } from "./glossary";
 import { CATEGORIES_SOURCE, getIntegrationCategories } from "./integration-categories";
+import { CONNECTIVITY_SOURCE, getIntegrationConnectivity } from "./integration-connectivity";
 import { createResolver, sourcePathUrl } from "./source-paths.mjs";
 
 export const SITE_URL = import.meta.env.SITE.replace(/\/$/, "");
@@ -402,6 +403,8 @@ async function renderComponent(
       return eventList();
     case "IntegrationCategories":
       return integrationCategories();
+    case "IntegrationConnectivity":
+      return integrationConnectivity();
     case "Fragment":
       return children;
     // A script that sends old links of design.home-assistant.io to their
@@ -586,6 +589,16 @@ async function integrationCategories(): Promise<string> {
       ].join("\n"),
     )
     .join("\n");
+}
+
+// The connectivity values, each with the value to use in the manifest.
+async function integrationConnectivity(): Promise<string> {
+  const connectivity = await getIntegrationConnectivity();
+  if (!connectivity) {
+    return `The connectivity values couldn't be loaded when this page was built. Find them in [core](${CONNECTIVITY_SOURCE}).`;
+  }
+
+  return connectivity.map((value) => `- ${value.name}: ${value.description} \`${value.slug}\``).join("\n");
 }
 
 // The upcoming events, as the page shows them before its script runs: in

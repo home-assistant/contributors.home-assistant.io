@@ -1,0 +1,79 @@
+---
+// Every connectivity value with its name, description, and icon, read from
+// core at build time (see src/lib/integration-connectivity.ts). One row per
+// value, with the exact value to use in the manifest under its name, so the
+// table fits a phone. Each row has an anchor, like #zigbee, so other pages
+// can link to it.
+import { CONNECTIVITY_SOURCE, getIntegrationConnectivity } from "../../lib/integration-connectivity";
+import { iconPath } from "../../lib/mdi-icon";
+
+const connectivity = await getIntegrationConnectivity();
+---
+
+{
+  connectivity ? (
+    <table class="integration-connectivity">
+      <thead>
+        <tr>
+          <th scope="col">Value in the manifest</th>
+          <th scope="col">Use it for</th>
+        </tr>
+      </thead>
+      <tbody>
+        {connectivity.map((value) => (
+          <tr id={value.slug}>
+            <td>
+              <span class="name">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d={iconPath(value.icon)} />
+                </svg>
+                {value.name}
+              </span>
+              <code>{value.slug}</code>
+            </td>
+            <td>{value.description}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  ) : (
+    <p>
+      The connectivity values couldn't be loaded when this page was built. Find them in{" "}
+      <a href={CONNECTIVITY_SOURCE}>core</a>.
+    </p>
+  )
+}
+
+<style>
+  table {
+    width: 100%;
+  }
+
+  td {
+    vertical-align: middle;
+  }
+
+  tr {
+    scroll-margin-top: calc(var(--site-header-height) + var(--ha-space-4));
+  }
+
+  .name {
+    display: flex;
+    align-items: center;
+    gap: var(--ha-space-2);
+    white-space: nowrap;
+  }
+
+  .name svg {
+    flex: none;
+    width: 20px;
+    height: 20px;
+    fill: var(--site-accent);
+  }
+
+  code {
+    display: inline-block;
+    margin-top: var(--ha-space-1);
+    margin-left: calc(20px + var(--ha-space-2));
+  }
+</style>

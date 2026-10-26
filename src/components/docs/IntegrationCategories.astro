@@ -4,16 +4,10 @@
 // One card per category: what it covers, and the exact values to use in the
 // manifest, the category on its own and narrowed down to each subcategory.
 // Each card has an anchor, like #climate, so other pages can link to it.
-import * as mdi from "@mdi/js";
 import { CATEGORIES_SOURCE, getIntegrationCategories } from "../../lib/integration-categories";
+import { iconPath } from "../../lib/mdi-icon";
 
 const categories = await getIntegrationCategories();
-
-// "mdi:heat-pump" is mdiHeatPump in @mdi/js.
-function iconPath(icon: string): string | undefined {
-  const name = "mdi" + icon.replace(/^mdi:/, "").split("-").map((part) => part[0].toUpperCase() + part.slice(1)).join("");
-  return (mdi as Record<string, string>)[name];
-}
 ---
 
 {

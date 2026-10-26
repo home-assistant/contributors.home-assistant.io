@@ -109,6 +109,28 @@ Most of these checks need the list of categories from core, so hassfest only run
 
 See [integration categories](/core/integrations/categories/) for every category, and for how to choose the right ones.
 
+### connectivity
+
+The protocols Home Assistant uses to reach the devices or service of the integration, like `zigbee`, `network`, or `cloud`. List everything the integration can use, not what one particular setup uses.
+
+ZHA reaches Zigbee devices through a Zigbee radio, so its connectivity is:
+
+```json title="manifest.json"
+{
+  "connectivity": ["zigbee"]
+}
+```
+
+Hassfest checks that:
+
+- There is at least one entry, without duplicates.
+- Every entry is a known value.
+- Entity, system, and virtual integrations don't have the key.
+
+The key is optional for now, both in core and for a custom integration. The check for known values, and the one for entity and system integrations, need the list of values from core, so hassfest only runs them when it validates inside a core checkout. For a custom integration, an unknown value is a warning in hassfest instead of an error, so a value that changes in core doesn't fail hassfest in your repository.
+
+See [integration connectivity](/core/integrations/connectivity/) for every value, and for how to choose the right ones.
+
 ### config_flow
 
 Set `"config_flow": true` when the integration has a `config_flow.py`, so users can add it from the UI. See [config flow](/core/integrations/config-flow/).

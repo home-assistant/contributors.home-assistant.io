@@ -48,6 +48,18 @@ Add `categories` to your manifest: one to three [integration categories](/glossa
 
 Pick them the same way as an integration in core does. [Integration categories](/core/integrations/categories/) has every category, and how to choose. The HACS action checks them: a missing key is a warning, an unknown category fails the check.
 
+## Connectivity
+
+Add `connectivity` to your manifest: the protocols Home Assistant uses to reach the devices or service of your integration, like `zigbee` or `cloud`. It is optional. Home Assistant reads it from the manifest of a custom integration the same way as from one in core.
+
+```json title="manifest.json"
+{
+  "connectivity": ["network", "cloud"]
+}
+```
+
+[Integration connectivity](/core/integrations/connectivity/) has every value, and how to choose. Hassfest checks them. An unknown value is only a warning for a custom integration. The HACS action doesn't check `connectivity`, and the catalog doesn't publish it.
+
 ## Pick a domain that is yours
 
 The `domain` is the folder name, and what Home Assistant knows your integration by. Pick one that no integration in core uses.

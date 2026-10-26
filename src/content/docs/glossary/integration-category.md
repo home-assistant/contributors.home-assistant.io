@@ -13,6 +13,7 @@ term:
     - "manifest"
     - "custom-integration"
     - "entity-category"
+    - "integration-connectivity"
   autolink:
     - "integration category"
     - "integration categories"

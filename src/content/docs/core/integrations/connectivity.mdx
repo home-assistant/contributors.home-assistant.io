@@ -1,0 +1,30 @@
+---
+title: Integration connectivity
+description: The protocols Home Assistant uses to reach the devices or service of an integration, and how to pick the right ones.
+sidebarGroup: Reference
+order: 5
+---
+
+import IntegrationConnectivity from "../../../../components/docs/IntegrationConnectivity.astro";
+
+Connectivity says how Home Assistant reaches the devices or service of an integration: over Zigbee, through an MQTT broker, on the local network, or through the cloud. An integration lists the values in the `connectivity` key of its [manifest](/core/integrations/manifest/#connectivity). For now, the key is optional, both in core and for a custom integration.
+
+## How to choose
+
+Connectivity describes one layer: the protocol Home Assistant uses to reach the device or service.
+
+- Pick the protocol to the device, even when Home Assistant goes through a radio, a bridge, or a server to get there. ZHA is `zigbee`, Z-Wave JS is `zwave`, and Matter is `matter`.
+- List everything the integration can use, not what one particular setup uses. An integration that talks to a device on the local network, or to the manufacturer's cloud, lists `network` and `cloud`.
+- Never list a transport, like Thread, Wi-Fi, or Ethernet. A Matter device on Thread is `matter`.
+- Use `network` when no other value names the protocol. An ESPHome device is on the network too, but it uses the ESPHome native API, so it is `esphome`.
+- Use `host` for the machine Home Assistant runs on, like its CPU, disks, and files.
+
+An integration without the key hasn't filled it in yet. It doesn't mean the integration reaches nothing.
+
+Entity and system integrations, like `light` or `recorder`, don't reach devices or services themselves, and have no connectivity. Neither do virtual integrations: they get the connectivity of the integration they point to.
+
+## All values
+
+Every value you can put in `connectivity`.
+
+<IntegrationConnectivity />
