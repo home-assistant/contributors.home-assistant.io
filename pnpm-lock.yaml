@@ -205,6 +205,9 @@ importers:
       satori:
         specifier: ^0.63.0
         version: 0.63.2
+      satteri:
+        specifier: ^0.10.5
+        version: 0.10.5
       satteri-callouts:
         specifier: ^1.0.1
         version: 1.0.1(satteri@0.10.5)
@@ -218,6 +221,9 @@ importers:
       '@astrojs/check':
         specifier: ^0.9.10
         version: 0.9.12(@emnapi/runtime@1.11.3)(prettier@3.9.9)(typescript@6.0.3)
+      '@types/hast':
+        specifier: ^3.0.5
+        version: 3.0.5
       esbuild:
         specifier: ^0.28.2
         version: 0.28.2
