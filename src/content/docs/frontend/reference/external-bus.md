@@ -159,7 +159,7 @@ Payload:
 | Key | Meaning |
 | --- | --- |
 | `setup_qr_code` | The QR code payload of the commissioning window, starting with `MT:`. Always sent. |
-| `setup_pin_code` | The setup passcode of the commissioning window. |
+| `setup_pin_code` | The setup passcode of the commissioning window. Always sent. |
 | `discriminator` | The discriminator the device advertises while the window is open, when the Matter server reported it. |
 | `vendor_id` | The vendor ID of the device, when the Matter server reported it. |
 | `product_id` | The product ID of the device, when the Matter server reported it. |
