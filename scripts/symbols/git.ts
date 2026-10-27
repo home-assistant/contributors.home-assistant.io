@@ -3,14 +3,14 @@
 
 import { execFileSync } from "node:child_process";
 
-export function readFiles(checkout, commit, files) {
+export function readFiles(checkout: string, commit: string, files: string[]) {
   const output = execFileSync("git", ["cat-file", "--batch"], {
     cwd: checkout,
     input: files.map((file) => `${commit}:${file}`).join("\n"),
     maxBuffer: 1024 * 1024 * 1024,
   });
 
-  const sources = new Map();
+  const sources = new Map<string, string>();
   let offset = 0;
   for (const file of files) {
     const headerEnd = output.indexOf(10, offset);

@@ -39,6 +39,31 @@
 // - Code of another project, like `ClientSession` of aiohttp: it stays plain.
 
 import { createResolver, INDEXES } from "../../src/lib/code-symbols.mjs";
+import type { Mention } from "./mentions.ts";
+import type { CodeSymbol, Hook, SymbolIndex } from "./types.ts";
+
+export type IndexName = keyof typeof INDEXES;
+
+export const isIndexName = (name: string | undefined): name is IndexName => name !== undefined && Object.hasOwn(INDEXES, name);
+
+interface AreaCoverage {
+  index: string | null;
+  symbols: number;
+  resolved: number;
+}
+
+interface Unresolved {
+  text: string;
+  index: string;
+  count: number;
+  pages: string[];
+}
+
+export interface Coverage {
+  totals: { symbols: number; resolved: number };
+  areas: Record<string, AreaCoverage>;
+  unresolved: Unresolved[];
+}
 
 const BUILT_INS = new Set([
   // Python
@@ -99,7 +124,7 @@ const NOT_SYMBOLS = new Set([
 
 const CAMEL_CASE = /^[A-Z][a-z0-9]+(?:[A-Z][a-z0-9]*)+$/;
 
-export function looksLikeSymbol(text) {
+export function looksLikeSymbol(text: string) {
   const span = text.trim();
 
   if (/^(from|import) homeassistant(\.\w+)*\b/.test(span)) {
@@ -118,7 +143,7 @@ export function looksLikeSymbol(text) {
 
   const parts = name.split(".");
   const [first] = parts;
-  const last = parts.at(-1);
+  const last = parts.at(-1) ?? name;
 
   if (BUILT_INS.has(last) || EXAMPLE_NAME.test(first) || INTENT_NAME.test(name)) {
     return false;
@@ -140,18 +165,19 @@ export function looksLikeSymbol(text) {
 
 // The coverage of `mentions` (from docsMentions()) with `indexes`, the
 // parsed index files by name.
-export function measureCoverage(mentions, indexes) {
-  const resolvers = Object.fromEntries(
-    Object.entries(indexes)
-      .filter(([, index]) => index)
-      .map(([name, index]) => [name, createResolver(index.symbols, INDEXES[name].aliases, index.hooks ?? [])]),
-  );
+export function measureCoverage(mentions: Mention[], indexes: Partial<Record<IndexName, SymbolIndex>>): Coverage {
+  const resolvers = new Map<string, (text: string, pageDomain: string | undefined, pageUrl: string) => CodeSymbol | Hook | undefined>();
+  for (const [name, index] of Object.entries(indexes)) {
+    if (index && isIndexName(name)) {
+      resolvers.set(name, createResolver(index.symbols, INDEXES[name].aliases, index.hooks ?? []));
+    }
+  }
 
-  const areas = {};
-  const unresolved = new Map();
+  const areas: Record<string, AreaCoverage> = {};
+  const unresolved = new Map<string, Unresolved>();
 
   for (const mention of mentions) {
-    const resolve = resolvers[mention.index];
+    const resolve = mention.index ? resolvers.get(mention.index) : undefined;
     const resolved = Boolean(resolve?.(mention.text, mention.domain, mention.url));
     if (!resolved && !looksLikeSymbol(mention.text)) {
       continue;
@@ -192,10 +218,10 @@ export function measureCoverage(mentions, indexes) {
   };
 }
 
-const percent = (part, whole) => (whole ? `${Math.round((part / whole) * 100)}%` : "-");
+const percent = (part: number, whole: number) => (whole ? `${Math.round((part / whole) * 100)}%` : "-");
 
 // The coverage as Markdown, for the report and the pull request.
-export function coverageReport(coverage, previous) {
+export function coverageReport(coverage: Coverage, previous: Partial<Coverage> | undefined) {
   const lines = [
     "## Coverage",
     "",

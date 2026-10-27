@@ -2,14 +2,14 @@
 // much of the docs they cover. See "Code symbols" in README.md, and
 // src/lib/code-symbols.mjs for the rules of what links.
 //
-// - src/data/symbols/core.json, from a core checkout: scripts/symbols/core.mjs
+// - src/data/symbols/core.json, from a core checkout: scripts/symbols/core.ts
 //   (and extract.py, which needs the Python version core needs). With the
 //   integration hooks of scripts/symbols/hooks.json.
 // - src/data/symbols/frontend.json, from a frontend checkout:
-//   scripts/symbols/frontend.mjs, with the TypeScript compiler.
+//   scripts/symbols/frontend.ts, with the TypeScript compiler.
 // - src/data/symbols/coverage.json: per area, how many inline code spans
 //   look like a symbol and how many link, and the ones that don't
-//   (scripts/symbols/coverage.mjs).
+//   (scripts/symbols/coverage.ts).
 //
 // Each index keeps only what the docs mention, so it stays small enough to
 // review. The report compares with the files it replaces: mentions that
@@ -29,17 +29,24 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { parseArgs } from "node:util";
 import { INDEXES, createResolver, readIndex } from "../src/lib/code-symbols.mjs";
-import { generateCore } from "./symbols/core.mjs";
-import { coverageReport, measureCoverage } from "./symbols/coverage.mjs";
-import { generateFrontend } from "./symbols/frontend.mjs";
-import { ROOT, docsMentions } from "./symbols/mentions.mjs";
+import { generateCore } from "./symbols/core.ts";
+import { type Coverage, type IndexName, coverageReport, isIndexName, measureCoverage } from "./symbols/coverage.ts";
+import { generateFrontend } from "./symbols/frontend.ts";
+import { ROOT, docsMentions } from "./symbols/mentions.ts";
+import type { GenerateOptions, Generated, SymbolIndex } from "./symbols/types.ts";
 
 const COVERAGE_FILE = path.join(ROOT, "src/data/symbols/coverage.json");
 
-const GENERATORS = {
+interface Generator {
+  generate: (options: GenerateOptions) => Generated;
+  checkout: string;
+}
+
+const GENERATORS: Record<IndexName, Generator> = {
   core: { generate: generateCore, checkout: "../core" },
   frontend: { generate: generateFrontend, checkout: "../frontend" },
 };
+const NAMES = Object.keys(GENERATORS).filter(isIndexName);
 
 const { values: options, positionals } = parseArgs({
   allowPositionals: true,
@@ -49,13 +56,13 @@ const { values: options, positionals } = parseArgs({
   },
 });
 
-const unknown = positionals.filter((name) => !GENERATORS[name]);
+const unknown = positionals.filter((name) => !isIndexName(name));
 if (unknown.length) {
-  console.error(`Unknown index: ${unknown.join(", ")}. Use ${Object.keys(GENERATORS).join(" or ")}.`);
+  console.error(`Unknown index: ${unknown.join(", ")}. Use ${NAMES.join(" or ")}.`);
   process.exit(1);
 }
 
-const selected = positionals.length ? positionals : Object.keys(GENERATORS);
+const selected = positionals.length ? positionals.filter(isIndexName) : NAMES;
 if (options.from && selected.length !== 1) {
   console.error("--from is the checkout of one repository: name the index too, like `pnpm symbols core --from ../core`.");
   process.exit(1);
@@ -63,10 +70,10 @@ if (options.from && selected.length !== 1) {
 
 const mentions = docsMentions();
 const report = ["# Code symbols"];
-const indexes = {};
+const indexes: Partial<Record<IndexName, SymbolIndex>> = {};
 
-for (const name of Object.keys(GENERATORS)) {
-  const previous = readIndex(name);
+for (const name of NAMES) {
+  const previous: SymbolIndex | undefined = readIndex(name);
 
   if (!selected.includes(name)) {
     indexes[name] = previous;
@@ -105,11 +112,11 @@ for (const name of Object.keys(GENERATORS)) {
     );
     for (const mention of gone) {
       const before = resolvePrevious(mention.text, mention.domain, mention.url);
-      report.push(`- \`${mention.file}:${mention.line}\`: \`${mention.text}\` (was \`${before.id}\`)`);
+      report.push(`- \`${mention.file}:${mention.line}\`: \`${mention.text}\` (was \`${before?.id}\`)`);
     }
   }
 
-  const all = (entries) => [...entries.symbols, ...(entries.hooks ?? [])];
+  const all = (entries: SymbolIndex) => [...entries.symbols, ...(entries.hooks ?? [])];
   const ids = new Set(all(index).map((symbol) => symbol.id));
   const previousIds = new Set(all(previous).map((symbol) => symbol.id));
   const added = [...ids].filter((id) => !previousIds.has(id));
@@ -122,7 +129,7 @@ for (const name of Object.keys(GENERATORS)) {
 
 // The coverage, with what the docs mention today and the indexes as they
 // are now.
-const previousCoverage = existsSync(COVERAGE_FILE) ? JSON.parse(readFileSync(COVERAGE_FILE, "utf8")) : undefined;
+const previousCoverage: Coverage | undefined = existsSync(COVERAGE_FILE) ? JSON.parse(readFileSync(COVERAGE_FILE, "utf8")) : undefined;
 const coverage = measureCoverage(mentions, indexes);
 writeFileSync(
   COVERAGE_FILE,

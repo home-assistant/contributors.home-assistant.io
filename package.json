@@ -4,26 +4,26 @@
   "type": "module",
   "packageManager": "pnpm@12.15.0",
   "engines": {
-    "node": ">=22.12.0"
+    "node": ">=22.23.4"
   },
   "scripts": {
     "dev": "pnpm redirects && astro dev",
     "build": "pnpm redirects && astro build && pagefind --site dist",
     "preview": "astro preview",
     "check": "astro check",
-    "check:demos": "node scripts/check-demos.mjs",
-    "check:component-docs": "node scripts/check-component-docs.mjs",
-    "links": "node scripts/check-links.mjs",
-    "structure": "node scripts/check-structure.mjs",
+    "check:demos": "node scripts/check-demos.ts",
+    "check:component-docs": "node scripts/check-component-docs.ts",
+    "links": "node scripts/check-links.ts",
+    "structure": "node scripts/check-structure.ts",
     "clean": "node -e \"for (const dir of ['dist', '.astro', 'node_modules/.astro']) require('node:fs').rmSync(dir, { recursive: true, force: true })\"",
-    "tokens": "node scripts/sync-tokens.mjs",
-    "redirects": "node scripts/generate-redirects.mjs",
-    "fragments": "node scripts/generate-fragments.mjs",
-    "bashio": "node scripts/generate-bashio.mjs",
-    "symbols": "node scripts/generate-symbols.mjs",
-    "source-paths": "node scripts/generate-source-paths.mjs",
-    "components": "node scripts/build-components.mjs",
-    "avatars": "node scripts/fetch-author-avatars.mjs"
+    "tokens": "node scripts/sync-tokens.ts",
+    "redirects": "node scripts/generate-redirects.ts",
+    "fragments": "node scripts/generate-fragments.ts",
+    "bashio": "node scripts/generate-bashio.ts",
+    "symbols": "node scripts/generate-symbols.ts",
+    "source-paths": "node scripts/generate-source-paths.ts",
+    "components": "node scripts/build-components.ts",
+    "avatars": "node scripts/fetch-author-avatars.ts"
   },
   "dependencies": {
     "@astrojs/markdown-satteri": "^0.4.3",

@@ -27,7 +27,50 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { parseArgs } from "node:util";
 import { INDEX_FILE, REPOSITORIES, candidatesFor, isPathMention, readIndex } from "../src/lib/source-paths.mjs";
-import { docsMentions } from "./symbols/mentions.mjs";
+import { docsMentions } from "./symbols/mentions.ts";
+
+type RepositoryId = keyof typeof REPOSITORIES;
+
+interface TreeEntry {
+  path: string;
+  type: "file" | "folder";
+}
+
+interface PathEntry {
+  path: string;
+  repository: string;
+  branch: string;
+  type: TreeEntry["type"] | undefined;
+}
+
+interface PagesEntry {
+  path: string;
+  repositories: string[];
+  pages: string[];
+}
+
+// src/data/source-paths.json.
+interface SourcePathsIndex {
+  paths?: PathEntry[];
+}
+
+// A tree from the GitHub API.
+interface GitHubTree {
+  truncated: boolean;
+  tree: { path: string; type: string }[];
+}
+
+interface RepositoryTree {
+  types: Map<string, TreeEntry["type"]>;
+  roots: Set<string>;
+}
+
+const isRepository = (id: string): id is RepositoryId => Object.hasOwn(REPOSITORIES, id);
+
+function repositoriesFor(docsPath: string, text: string) {
+  const ids: string[] = candidatesFor(docsPath, text);
+  return ids.filter(isRepository);
+}
 
 const { values: options } = parseArgs({
   options: {
@@ -35,31 +78,32 @@ const { values: options } = parseArgs({
   },
 });
 
-const checkouts = {};
+const checkouts = new Map<string, string>();
 for (const option of options.from) {
   const [id, checkout] = option.split("=");
-  if (!REPOSITORIES[id] || !checkout) {
+  if (!isRepository(id) || !checkout) {
     console.error(`--from takes a repository and a checkout, like core=../core. Repositories: ${Object.keys(REPOSITORIES).join(", ")}.`);
     process.exit(1);
   }
-  checkouts[id] = path.resolve(checkout);
+  checkouts.set(id, path.resolve(checkout));
 }
 
 // Every file and folder on the default branch of a repository, folders
 // without their trailing slash.
-function readTree(id) {
+function readTree(id: RepositoryId): TreeEntry[] {
   const { repository, branch } = REPOSITORIES[id];
 
-  if (checkouts[id]) {
+  const checkout = checkouts.get(id);
+  if (checkout) {
     const output = execFileSync("git", ["ls-tree", "-r", "-t", "--format=%(objecttype) %(path)", `origin/${branch}`], {
-      cwd: checkouts[id],
+      cwd: checkout,
       maxBuffer: 1024 * 1024 * 1024,
     });
     return output
       .toString()
       .split("\n")
       .filter(Boolean)
-      .map((line) => {
+      .map((line): TreeEntry => {
         const [type, ...name] = line.split(" ");
         return { path: name.join(" "), type: type === "tree" ? "folder" : "file" };
       });
@@ -68,14 +112,14 @@ function readTree(id) {
   const output = execFileSync("gh", ["api", `repos/${repository}/git/trees/${branch}?recursive=1`], {
     maxBuffer: 1024 * 1024 * 1024,
   });
-  const tree = JSON.parse(output.toString());
+  const tree: GitHubTree = JSON.parse(output.toString());
   if (tree.truncated) {
     throw new Error(`GitHub truncated the tree of ${repository}. Read it from a checkout: --from ${id}=../${id}.`);
   }
 
   // Submodules, like buildroot in the operating system, are commits in the
   // tree. On GitHub they are a folder you can open.
-  return tree.tree.map((entry) => ({ path: entry.path, type: entry.type === "blob" ? "file" : "folder" }));
+  return tree.tree.map((entry): TreeEntry => ({ path: entry.path, type: entry.type === "blob" ? "file" : "folder" }));
 }
 
 const mentions = docsMentions()
@@ -85,38 +129,40 @@ const mentions = docsMentions()
     path: mention.text.trim(),
     docsPath: mention.file.replace(/^src\/content\/docs\//, ""),
   }))
-  .map((mention) => ({ ...mention, candidates: candidatesFor(mention.docsPath, mention.path) }));
+  .map((mention) => ({ ...mention, candidates: repositoriesFor(mention.docsPath, mention.path) }));
+
+type PathMention = (typeof mentions)[number];
 
 const needed = new Set(mentions.flatMap((mention) => mention.candidates));
-const trees = {};
+const trees = new Map<RepositoryId, RepositoryTree>();
 for (const id of [...needed].sort()) {
   const entries = readTree(id);
-  trees[id] = {
+  trees.set(id, {
     types: new Map(entries.map((entry) => [entry.path, entry.type])),
     roots: new Set(entries.filter((entry) => entry.type === "folder" && !entry.path.includes("/")).map((entry) => entry.path)),
-  };
+  });
 }
 
-const previous = readIndex();
+const previous: SourcePathsIndex | undefined = readIndex();
 const previouslyLinked = new Set((previous?.paths ?? []).map((entry) => `${entry.repository}\n${entry.path}`));
 
 // The type of a path in a repository, or undefined when it is not there.
 // A trailing slash only matches a folder.
-function typeIn(id, mentionPath) {
-  const type = trees[id].types.get(mentionPath.replace(/\/$/, ""));
+function typeIn(id: RepositoryId, mentionPath: string) {
+  const type = trees.get(id)?.types.get(mentionPath.replace(/\/$/, ""));
   if (mentionPath.endsWith("/") && type !== "folder") {
     return undefined;
   }
   return type;
 }
 
-const found = new Map();
-const missing = new Map();
-const ambiguous = new Map();
+const found = new Map<string, PathEntry>();
+const missing = new Map<string, PagesEntry>();
+const ambiguous = new Map<string, PagesEntry>();
 let linked = 0;
 let notRepository = 0;
 
-const pageOf = (mention) => `${mention.file}:${mention.line}`;
+const pageOf = (mention: PathMention) => `${mention.file}:${mention.line}`;
 
 for (const mention of mentions) {
   const hits = mention.candidates.filter((id) => typeIn(id, mention.path));
@@ -146,7 +192,7 @@ for (const mention of mentions) {
   const owners = mention.candidates.filter(
     (id) =>
       previouslyLinked.has(`${REPOSITORIES[id].repository}\n${mention.path}`) ||
-      (mention.path.replace(/\/$/, "").includes("/") && trees[id].roots.has(firstFolder)),
+      (mention.path.replace(/\/$/, "").includes("/") && trees.get(id)?.roots.has(firstFolder)),
   );
 
   if (owners.length === 0) {
@@ -160,7 +206,7 @@ for (const mention of mentions) {
   missing.set(key, entry);
 }
 
-const byPath = (a, b) => a.repository?.localeCompare(b.repository) || a.path.localeCompare(b.path);
+const byPath = (a: PathEntry, b: PathEntry) => a.repository.localeCompare(b.repository) || a.path.localeCompare(b.path);
 const index = {
   paths: [...found.values()].sort(byPath),
   missing: [...missing.values()].sort((a, b) => a.path.localeCompare(b.path)),
@@ -169,7 +215,7 @@ const index = {
 mkdirSync(path.dirname(INDEX_FILE), { recursive: true });
 writeFileSync(INDEX_FILE, `${JSON.stringify(index, null, 2)}\n`);
 
-const countPages = (entries) => [...entries.values()].reduce((sum, entry) => sum + entry.pages.length, 0);
+const countPages = (entries: Map<string, PagesEntry>) => [...entries.values()].reduce((sum, entry) => sum + entry.pages.length, 0);
 
 const report = [
   "# Source paths",

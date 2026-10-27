@@ -1,7 +1,7 @@
 // Generates src/data/symbols/core.json: the code symbols and modules of Home
 // Assistant core that the docs mention, for the cards on inline code (see
 // src/lib/code-symbols.mjs and src/components/HoverCards.astro). Run it with
-// `pnpm symbols` (scripts/generate-symbols.mjs).
+// `pnpm symbols` (scripts/generate-symbols.ts).
 //
 // It reads core from a commit of a core checkout, with Git:
 //
@@ -45,8 +45,31 @@ import {
   moduleMention,
 } from "../../src/lib/code-symbols.mjs";
 
-import { formatCall } from "./format.mjs";
-import { readFiles } from "./git.mjs";
+import { formatCall } from "./format.ts";
+import { readFiles } from "./git.ts";
+import type { Mention } from "./mentions.ts";
+import type { CodeSymbol, GenerateOptions, Generated, Hook, HooksFile, SymbolIndex } from "./types.ts";
+
+// A symbol as scripts/symbols/extract.py reads it.
+type Extracted = Omit<CodeSymbol, "id" | "bare" | "pageBare"> & { bases?: string[] };
+
+// What scripts/symbols/extract.py prints.
+interface Extraction {
+  symbols: Extracted[];
+  attributes: string[];
+}
+
+type Candidate = Extracted & Pick<CodeSymbol, "id" | "bare" | "pageBare">;
+
+interface SourceFile {
+  path: string;
+  classesOnly?: boolean;
+  privateMethods?: boolean;
+  extended?: boolean;
+  moduleOnly?: boolean;
+}
+
+type Git = (...args: string[]) => string;
 
 const EXTRACTOR = fileURLToPath(new URL("extract.py", import.meta.url));
 const HOOKS_FILE = fileURLToPath(new URL("hooks.json", import.meta.url));
@@ -64,8 +87,8 @@ const SHARED_API_IMPORTERS = 3;
 
 // Splits a parameter list at its top-level commas: the comma in
 // `dict[str, Any]` belongs to the parameter.
-function splitParameters(text) {
-  const parts = [];
+function splitParameters(text: string) {
+  const parts: string[] = [];
   let depth = 0;
   let current = "";
   for (const character of text) {
@@ -88,7 +111,7 @@ function splitParameters(text) {
 }
 
 // A `def` written on one line, formatted the way extract.py does.
-function formatDef(text) {
+function formatDef(text: string) {
   const oneLine = text.replace(/\s+/g, " ").replace(/\( /g, "(").replace(/,? \)/g, ")");
   const open = oneLine.indexOf("(");
   const close = oneLine.lastIndexOf(")");
@@ -97,15 +120,15 @@ function formatDef(text) {
 
 // Code without whitespace and trailing commas, to find a quote in a file
 // whatever its line breaks.
-const squeeze = (code) => code.replace(/\s+/g, "").replace(/,\)/g, ")");
+const squeeze = (code: string) => code.replace(/\s+/g, "").replace(/,\)/g, ")");
 
 // The integration hooks from hooks.json, with their signatures formatted,
 // and the quotes that are no longer in the file they were quoted from.
-function readHooks(git, commit) {
-  const { hooks } = JSON.parse(readFileSync(HOOKS_FILE, "utf8"));
-  const missing = [];
-  const files = new Map();
-  const read = (quote) => {
+function readHooks(git: Git, commit: string) {
+  const { hooks }: HooksFile = JSON.parse(readFileSync(HOOKS_FILE, "utf8"));
+  const missing: string[] = [];
+  const files = new Map<string, string>();
+  const read = (quote: string) => {
     if (!files.has(quote)) {
       try {
         files.set(
@@ -116,10 +139,10 @@ function readHooks(git, commit) {
         files.set(quote, "");
       }
     }
-    return files.get(quote);
+    return files.get(quote) ?? "";
   };
 
-  const resolved = Object.entries(hooks).map(([name, hook]) => {
+  const resolved = Object.entries(hooks).map(([name, hook]): Hook => {
     for (const { quote, signature } of hook.signatures) {
       if (!read(quote).includes(squeeze(signature))) {
         missing.push(`\`${name}\`: the signature is no longer in \`${quote.replace(/^core:/, "")}\``);
@@ -142,7 +165,7 @@ function readHooks(git, commit) {
 const { aliases } = INDEXES.core;
 
 // homeassistant/helpers/entity.py is the module homeassistant.helpers.entity.
-const moduleOf = (file) => file.replace(/\.py$/, "").replace(/\/__init__$/, "").replaceAll("/", ".");
+const moduleOf = (file: string) => file.replace(/\.py$/, "").replace(/\/__init__$/, "").replaceAll("/", ".");
 
 function python() {
   try {
@@ -152,8 +175,8 @@ function python() {
   }
 }
 
-export function generateCore({ checkout, ref, mentions }) {
-  const git = (...args) => execFileSync("git", args, { cwd: checkout, encoding: "utf8", maxBuffer: 256 * 1024 * 1024 });
+export function generateCore({ checkout, ref, mentions }: GenerateOptions): Generated {
+  const git: Git = (...args) => execFileSync("git", args, { cwd: checkout, encoding: "utf8", maxBuffer: 256 * 1024 * 1024 });
 
   const commit = git("rev-parse", `${ref}^{commit}`).trim();
   const tree = git("ls-tree", "-r", "--name-only", commit, "homeassistant", "tests").split("\n").filter(Boolean);
@@ -162,8 +185,8 @@ export function generateCore({ checkout, ref, mentions }) {
   // The files to read, in order: a class has to be read before an alias of
   // it, like `Platform = EntityPlatforms` in const.py.
   function sourceFiles() {
-    const files = [];
-    const add = (file, classesOnly = false) => {
+    const files: SourceFile[] = [];
+    const add = (file: string, classesOnly = false) => {
       if (inTree.has(file)) {
         files.push({ path: file, classesOnly, privateMethods: PRIVATE_METHODS.test(file) });
       }
@@ -210,7 +233,7 @@ export function generateCore({ checkout, ref, mentions }) {
   // Every module of core, by its dotted path. A package is its __init__.py.
   const modules = new Map(tree.filter((file) => /^homeassistant\/.+\.py$/.test(file)).map((file) => [moduleOf(file), file]));
 
-  function extract(files) {
+  function extract(files: SourceFile[]): Extraction {
     const sources = readFiles(checkout, commit, files.map((file) => file.path));
     const input = {
       files: files.map((file) => ({
@@ -244,7 +267,7 @@ export function generateCore({ checkout, ref, mentions }) {
   // ambiguous.
   // Returns how many other integrations import from each of them.
   function sharedComponents() {
-    const importers = new Map();
+    const importers = new Map<string, Set<string>>();
     const output = git("grep", "-o", "-E", "homeassistant\\.components\\.[a-z0-9_]+", commit, "--", "homeassistant/components");
 
     for (const line of output.split("\n")) {
@@ -260,10 +283,10 @@ export function generateCore({ checkout, ref, mentions }) {
   // How often each name is defined: top-level classes and functions in the
   // files read and in shared components (once per file, so overloads count
   // once), plus the methods and aliases the extractor found.
-  function definitionCounts(files, symbols) {
+  function definitionCounts(files: SourceFile[], symbols: Extracted[]) {
     const read = new Set(files.map((file) => file.path));
-    const counts = new Map();
-    const count = (name) => counts.set(name, (counts.get(name) ?? 0) + 1);
+    const counts = new Map<string, number>();
+    const count = (name: string) => counts.set(name, (counts.get(name) ?? 0) + 1);
 
     const output = git("grep", "-o", "-E", "^(async def|def|class) [A-Za-z_][A-Za-z0-9_]*", commit, "--", "homeassistant", "tests/common.py");
     const seen = new Set();
@@ -295,8 +318,8 @@ export function generateCore({ checkout, ref, mentions }) {
   // How often a method of an entity platform is defined in that platform,
   // like `turn_on` of the climate entity. On the page of the platform, the
   // bare name means that one, whatever other classes call a method.
-  function domainCounts(symbols) {
-    const counts = new Map();
+  function domainCounts(symbols: Extracted[]) {
+    const counts = new Map<string, number>();
     for (const symbol of symbols) {
       const domain = entityDomainOf(symbol);
       if (domain && !extended.has(symbol.path)) {
@@ -308,7 +331,7 @@ export function generateCore({ checkout, ref, mentions }) {
   }
 
   // Why a symbol may not link by its bare name, or undefined when it may.
-  function bareBlocker(symbol, counts, attributes, { onOwnPage = false } = {}) {
+  function bareBlocker(symbol: Extracted, counts: Map<string, number>, attributes: Set<string>, { onOwnPage = false } = {}) {
     if (overrides.has(symbol) && !onOwnPage) {
       return "overrides the method of a base class";
     }
@@ -339,7 +362,10 @@ export function generateCore({ checkout, ref, mentions }) {
 
   // The modules the pages name, read for their docstring only.
   const namedModules = [...new Set(mentions.map((mention) => moduleMention(mention.text)).filter((name) => modules.has(name)))];
-  const moduleFiles = namedModules.map((name) => ({ path: modules.get(name), moduleOnly: true }));
+  const moduleFiles = namedModules.flatMap((name) => {
+    const file = modules.get(name);
+    return file ? [{ path: file, moduleOnly: true }] : [];
+  });
 
   const { symbols: found, attributes: attributeList } = extract([...files, ...moduleFiles]);
   const attributes = new Set(attributeList);
@@ -353,14 +379,14 @@ export function generateCore({ checkout, ref, mentions }) {
   // `class ConfigFlow(config_entries.ConfigFlow)` would shadow the real one.
   const primary = symbols.filter((symbol) => !extended.has(symbol.path));
   const basesOf = new Map(
-    primary.filter((symbol) => symbol.bases).map((symbol) => [symbol.name, symbol.bases.filter((base) => base !== symbol.name)]),
+    primary.flatMap((symbol) => (symbol.bases ? [[symbol.name, symbol.bases.filter((base) => base !== symbol.name)] as const] : [])),
   );
-  const methodsOf = new Map();
+  const methodsOf = new Map<string, Set<string>>();
   for (const symbol of primary.filter((symbol) => symbol.kind === "method")) {
     const owner = symbol.qualname.split(".")[0];
     methodsOf.set(owner, (methodsOf.get(owner) ?? new Set()).add(symbol.name));
   }
-  const inherits = (owner, name, seen = new Set()) =>
+  const inherits = (owner: string, name: string, seen = new Set<string>()): boolean =>
     (basesOf.get(owner) ?? []).some((base) => {
       if (seen.has(base)) {
         return false;
@@ -374,7 +400,10 @@ export function generateCore({ checkout, ref, mentions }) {
 
   // An alias has the docstring of what it is another name for.
   const classes = new Map(symbols.filter((symbol) => !symbol.aliasOf && !symbol.qualname.includes(".")).map((symbol) => [symbol.name, symbol]));
-  for (const symbol of symbols.filter((symbol) => symbol.aliasOf)) {
+  for (const symbol of symbols) {
+    if (!symbol.aliasOf) {
+      continue;
+    }
     const target = classes.get(symbol.aliasOf);
     symbol.doc ??= target?.doc ?? null;
     if (target?.members) {
@@ -403,13 +432,13 @@ export function generateCore({ checkout, ref, mentions }) {
 
   const { hooks, missing } = readHooks(git, commit);
   const resolve = createResolver(candidates, aliases, hooks);
-  const used = new Map();
-  const usedHooks = new Map();
-  const linked = [];
+  const used = new Map<string, Candidate>();
+  const usedHooks = new Map<string, Hook>();
+  const linked: Mention[] = [];
 
   for (const mention of mentions) {
-    const symbol = resolve(mention.text, mention.domain, mention.url);
-    if (symbol?.kind === "hook") {
+    const symbol: Candidate | Hook | undefined = resolve(mention.text, mention.domain, mention.url);
+    if (symbol && "page" in symbol) {
       usedHooks.set(symbol.id, symbol);
       linked.push(mention);
       continue;
@@ -421,7 +450,7 @@ export function generateCore({ checkout, ref, mentions }) {
   }
 
   const kept = [...used.values()].sort((a, b) => a.id.localeCompare(b.id));
-  const index = {
+  const index: SymbolIndex = {
     repository: INDEXES.core.repository,
     commit,
     symbols: kept.map(({ id, name, qualname, kind, module, path: file, line, signature, doc, bare, pageBare, aliasOf, members }) => ({

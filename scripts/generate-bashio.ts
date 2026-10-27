@@ -38,7 +38,7 @@ const { values: options } = parseArgs({
 // Source links point at the same ref the lists come from.
 const SOURCE = `https://github.com/${REPOSITORY}/blob/${options.ref}/lib`;
 
-const PLACEHOLDERS = {
+const PLACEHOLDERS: Record<string, string> = {
   generated:
     "The function lists on this page are generated from the docblocks in the" +
     " source of Bashio. The descriptions are the ones in the" +
@@ -48,13 +48,32 @@ const PLACEHOLDERS = {
 
 // Docblocks that carry an example after their description. The example is
 // shown as a code block below the list, instead of inside a list item.
-const EXAMPLES = {
+const EXAMPLES: Record<string, string> = {
   "bashio::string.substring": "stringZ=",
   "bashio::try": "Simple example:",
 };
 
 // Names that are not part of the public API.
 const PRIVATE = /(\.|::)__/;
+
+interface BashioFunction {
+  module: string;
+  name: string;
+  description: string[];
+  args: string[];
+}
+
+interface Template {
+  file: string;
+  data: {
+    title: string;
+    description: string;
+    sidebarLabel: string;
+    order: number;
+    modules: { module: string; heading: string; intro: string }[];
+  };
+  body: string;
+}
 
 // Reading the source
 
@@ -63,7 +82,7 @@ const RULER = /^#\s*-{10,}\s*$/;
 
 // The comment lines of the docblock right above line `index`, or null when
 // the function has none.
-function docblockAbove(lines, index) {
+function docblockAbove(lines: string[], index: number) {
   const end = index - 1;
   if (end < 0 || !RULER.test(lines[end])) {
     return null;
@@ -85,9 +104,9 @@ function docblockAbove(lines, index) {
 }
 
 // Splits a docblock into its description lines and its arguments.
-function splitDocblock(comment) {
-  const description = [];
-  const args = [];
+function splitDocblock(comment: string[]) {
+  const description: string[] = [];
+  const args: string[] = [];
   let inArguments = false;
 
   for (const line of comment) {
@@ -120,8 +139,8 @@ function splitDocblock(comment) {
   return { description, args };
 }
 
-async function readFunctions(lib) {
-  const functions = [];
+async function readFunctions(lib: string) {
+  const functions: BashioFunction[] = [];
   const files = (await readdir(lib)).filter((file) => file.endsWith(".sh")).sort();
 
   for (const file of files) {
@@ -165,7 +184,7 @@ async function libFolder() {
 // Rendering the pages
 
 // Makes docblock text safe for Markdown, without changing its meaning.
-function clean(text) {
+function clean(text: string) {
   return text
     .replace(/\be\.g\.,?/g, "for example")
     .replace(/\beg\./g, "for example")
@@ -177,7 +196,7 @@ function clean(text) {
 }
 
 // The description lines and the example lines of a docblock.
-function splitExample(fn) {
+function splitExample(fn: BashioFunction) {
   const marker = EXAMPLES[fn.name];
   const index = marker ? fn.description.findIndex((line) => line.trim().startsWith(marker)) : -1;
   if (index === -1) {
@@ -190,20 +209,24 @@ function splitExample(fn) {
 }
 
 // One function as a list item, with its arguments below it.
-function renderFunction(fn) {
+function renderFunction(fn: BashioFunction) {
   const { description } = splitExample(fn);
   const out = [`- \`${fn.name}\`: ${clean(description.join(" "))}`];
 
   for (const argument of fn.args) {
-    const [, name, rest] = /^(\$[0-9*@])\s*(.*)$/.exec(argument);
+    const match = /^(\$[0-9*@])\s*(.*)$/.exec(argument);
+    if (!match) {
+      throw new Error(`${fn.name}: the argument "${argument}" does not start with $1, $* or $@.`);
+    }
+    const [, name, rest] = match;
     out.push(`  - \`${name}\`: ${clean(rest)}`);
   }
 
   return out;
 }
 
-function renderExamples(functions) {
-  const out = [];
+function renderExamples(functions: BashioFunction[]) {
+  const out: string[] = [];
 
   for (const fn of functions) {
     const { example } = splitExample(fn);
@@ -225,11 +248,11 @@ function renderExamples(functions) {
 }
 
 // Quotes a front matter value, so a colon in it is not a problem.
-const quote = (value) => `"${value.replaceAll('"', '\\"')}"`;
+const quote = (value: string) => `"${value.replaceAll('"', '\\"')}"`;
 
-function renderPage(template, functions) {
+function renderPage(template: Template, functions: BashioFunction[]) {
   const { data, body } = template;
-  const intro = body.replace(/\{\{([a-z-]+)\}\}/g, (placeholder, name) => {
+  const intro = body.replace(/\{\{([a-z-]+)\}\}/g, (placeholder, name: string) => {
     if (!(name in PLACEHOLDERS)) {
       throw new Error(`${template.file}: unknown placeholder ${placeholder}`);
     }
@@ -265,7 +288,7 @@ function renderPage(template, functions) {
 }
 
 async function readTemplates() {
-  const templates = [];
+  const templates: Template[] = [];
 
   for (const file of (await readdir(TEMPLATES)).filter((name) => name.endsWith(".md")).sort()) {
     const source = await readFile(path.join(TEMPLATES, file), "utf8");
@@ -312,7 +335,7 @@ try {
     );
   }
 
-  const pages = templates.map((template) => [template.file, renderPage(template, functions)]);
+  const pages = templates.map((template) => [template.file, renderPage(template, functions)] as const);
   for (const [file, content] of pages) {
     await writeFile(path.join(OUTPUT, file), content);
   }

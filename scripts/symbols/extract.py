@@ -1,6 +1,6 @@
 """Reads Python source files and prints their public symbols as JSON.
 
-Used by scripts/generate-symbols.mjs, which reads the files from a Home
+Used by scripts/generate-symbols.ts, which reads the files from a Home
 Assistant core checkout with Git and pipes them in. Python reads Python best:
 its own parser knows every syntax the core code uses, so this needs the
 Python version core needs (see `.python-version` in core).

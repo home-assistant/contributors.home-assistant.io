@@ -1,7 +1,7 @@
 // Generates src/data/symbols/frontend.json: the code symbols of the Home
 // Assistant frontend that the docs mention, for the cards on inline code
 // (see src/lib/code-symbols.mjs and src/components/HoverCards.astro). Run
-// it with `pnpm symbols` (scripts/generate-symbols.mjs).
+// it with `pnpm symbols` (scripts/generate-symbols.ts).
 //
 // It reads every TypeScript file in src/ of a commit of a frontend checkout,
 // with Git, and parses it with the TypeScript compiler API. Nothing of the
@@ -27,8 +27,28 @@
 import { execFileSync } from "node:child_process";
 import ts from "typescript";
 import { INDEXES, createResolver, isPlainWord } from "../../src/lib/code-symbols.mjs";
-import { LINE_LENGTH, formatCall, formatPart } from "./format.mjs";
-import { readFiles } from "./git.mjs";
+import { LINE_LENGTH, formatCall, formatPart } from "./format.ts";
+import { readFiles } from "./git.ts";
+import type { Mention } from "./mentions.ts";
+import type { CodeSymbol, GenerateOptions, Generated, SymbolIndex } from "./types.ts";
+
+// A symbol as it is read from the source, before the rules for linking.
+type Found = Omit<CodeSymbol, "id" | "bare" | "pageBare" | "aliasOf"> & {
+  ownerKind?: string;
+  bases?: string[];
+  inherited?: boolean;
+};
+
+type Candidate = Found & Pick<CodeSymbol, "id" | "bare">;
+
+interface Member {
+  name: string;
+  kind: "method" | "property";
+  node: ts.Node;
+  signature: string;
+}
+
+type SignatureNode = ts.SignatureDeclarationBase;
 
 const { aliases } = INDEXES.frontend;
 
@@ -62,7 +82,7 @@ const PROPERTY_DECORATORS = new Set(["property", "state", "consume", "provide", 
 
 // Code written over several lines, on one line the way Prettier writes it:
 // `{ bubbles?: boolean; composed?: boolean }`, `(a: string)`.
-const oneLine = (text) =>
+const oneLine = (text: string) =>
   text
     .replace(/\s+/g, " ")
     .replace(/([(<[]) /g, "$1")
@@ -75,7 +95,7 @@ const oneLine = (text) =>
 
 // `interface Name extends A, B`, or when that is too long, the way
 // Prettier breaks it: `extends` on its own line, one base per line.
-function heritageHead(head, node) {
+function heritageHead(head: string, node: ts.ClassDeclaration | ts.InterfaceDeclaration) {
   const clauses = (node.heritageClauses ?? []).map((clause) => ({
     keyword: clause.token === ts.SyntaxKind.ExtendsKeyword ? "extends" : "implements",
     types: clause.types.map((type) => oneLine(type.getText())),
@@ -87,9 +107,10 @@ function heritageHead(head, node) {
   return [head, ...clauses.map(({ keyword, types }) => `  ${keyword}\n${types.map((type) => `    ${type}`).join(",\n")}`)].join("\n");
 }
 
-const typeParameters = (node) => (node.typeParameters?.length ? `<${node.typeParameters.map((parameter) => oneLine(parameter.getText())).join(", ")}>` : "");
+const typeParameters = (node: { typeParameters?: ts.NodeArray<ts.TypeParameterDeclaration> }) =>
+  node.typeParameters?.length ? `<${node.typeParameters.map((parameter) => oneLine(parameter.getText())).join(", ")}>` : "";
 
-function functionSignature(name, node) {
+function functionSignature(name: string, node: SignatureNode) {
   const tail = node.type ? `: ${oneLine(node.type.getText())}` : "";
   return formatCall(
     `${name}${typeParameters(node)}`,
@@ -99,10 +120,11 @@ function functionSignature(name, node) {
   );
 }
 
-const hasModifier = (node, kind) => node.modifiers?.some((modifier) => modifier.kind === kind) ?? false;
-const isExported = (node) => hasModifier(node, ts.SyntaxKind.ExportKeyword) && !hasModifier(node, ts.SyntaxKind.DefaultKeyword);
+const hasModifier = (node: ts.Node, kind: ts.SyntaxKind) =>
+  (ts.canHaveModifiers(node) ? ts.getModifiers(node) : undefined)?.some((modifier) => modifier.kind === kind) ?? false;
+const isExported = (node: ts.Node) => hasModifier(node, ts.SyntaxKind.ExportKeyword) && !hasModifier(node, ts.SyntaxKind.DefaultKeyword);
 
-function decoratorNames(node) {
+function decoratorNames(node: ts.Node) {
   return (ts.canHaveDecorators(node) ? (ts.getDecorators(node) ?? []) : []).map((decorator) => {
     const expression = ts.isCallExpression(decorator.expression) ? decorator.expression.expression : decorator.expression;
     return ts.isIdentifier(expression) ? expression.text : "";
@@ -110,9 +132,9 @@ function decoratorNames(node) {
 }
 
 // The first sentence of the JSDoc of a node, or null.
-function firstSentence(node) {
-  const docs = node.jsDoc ?? [];
-  const comment = docs.length ? ts.getTextOfJSDocComment(docs.at(-1).comment) : undefined;
+function firstSentence(node: ts.Node) {
+  const docs = ts.getJSDocCommentsAndTags(node).filter(ts.isJSDoc);
+  const comment = ts.getTextOfJSDocComment(docs.at(-1)?.comment);
   if (!comment) {
     return null;
   }
@@ -122,14 +144,15 @@ function firstSentence(node) {
   return end === -1 ? text : text.slice(0, end + 1);
 }
 
-const memberName = (member) => (member.name && (ts.isIdentifier(member.name) || ts.isStringLiteral(member.name)) ? member.name.text : undefined);
+const memberName = (member: ts.ClassElement | ts.TypeElement) =>
+  member.name && (ts.isIdentifier(member.name) || ts.isStringLiteral(member.name)) ? member.name.text : undefined;
 
-const isPublicName = (name) => name && !name.startsWith("_") && !name.startsWith("#");
+const isPublicName = (name: string | undefined): name is string => !!name && !name.startsWith("_") && !name.startsWith("#");
 
 // The members of a class a page can mean: public and protected methods and
 // fields. Not private ones, and not the ones with a leading underscore.
-function classMembers(node, owner) {
-  const members = [];
+function classMembers(node: ts.ClassLikeDeclaration, owner: string) {
+  const members: Member[] = [];
 
   for (const member of node.members) {
     const name = memberName(member);
@@ -148,8 +171,8 @@ function classMembers(node, owner) {
   return members;
 }
 
-function interfaceMembers(node, owner) {
-  const members = [];
+function interfaceMembers(node: ts.InterfaceDeclaration, owner: string) {
+  const members: Member[] = [];
 
   for (const member of node.members) {
     const name = memberName(member);
@@ -170,7 +193,7 @@ function interfaceMembers(node, owner) {
 
 // The class a mixin returns: `(superClass) => class extends superClass {}`,
 // or a function body that declares a class and returns it.
-function mixinClass(fn) {
+function mixinClass(fn: ts.FunctionLikeDeclaration) {
   const body = fn.body;
   if (!body) {
     return undefined;
@@ -196,22 +219,29 @@ function mixinClass(fn) {
   return undefined;
 }
 
-function isFunction(node) {
-  return node && (ts.isArrowFunction(node) || ts.isFunctionExpression(node));
+function isFunction(node: ts.Node | undefined) {
+  return node !== undefined && (ts.isArrowFunction(node) || ts.isFunctionExpression(node));
 }
 
 // The public symbols of one file, and the names of element properties in
 // it.
-function symbolsOf(file, source) {
+function symbolsOf(file: string, source: string) {
   const sourceFile = ts.createSourceFile(file, source, ts.ScriptTarget.Latest, true);
-  const symbols = [];
-  const attributes = new Set();
-  const elements = new Set();
+  const symbols: Found[] = [];
+  const attributes = new Set<string>();
+  const elements = new Set<string>();
 
-  const line = (node) => sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile)).line + 1;
-  const add = (name, qualname, kind, node, signature, doc, extra = {}) =>
-    symbols.push({ name, qualname, kind, module: file, path: file, line: line(node), signature, doc, ...extra });
-  const addMembers = (owner, members, ownerKind) => {
+  const line = (node: ts.Node) => sourceFile.getLineAndCharacterOfPosition(node.getStart(sourceFile)).line + 1;
+  const add = (
+    name: string,
+    qualname: string,
+    kind: string,
+    node: ts.Node,
+    signature: string,
+    doc: string | null,
+    extra: Pick<Found, "ownerKind" | "bases" | "members"> = {},
+  ) => symbols.push({ name, qualname, kind, module: file, path: file, line: line(node), signature, doc, ...extra });
+  const addMembers = (owner: string, members: Member[], ownerKind: string) => {
     for (const member of members) {
       add(member.name, `${owner}.${member.name}`, member.kind, member.node, member.signature, firstSentence(member.node), { ownerKind });
     }
@@ -219,10 +249,11 @@ function symbolsOf(file, source) {
 
   // Element properties in every class of the file, exported or not, and
   // the classes that are custom elements.
-  const visit = (node) => {
-    if ((ts.isPropertyDeclaration(node) || ts.isGetAccessorDeclaration(node) || ts.isSetAccessorDeclaration(node)) && memberName(node)) {
-      if (decoratorNames(node).some((name) => PROPERTY_DECORATORS.has(name))) {
-        attributes.add(memberName(node));
+  const visit = (node: ts.Node) => {
+    if (ts.isPropertyDeclaration(node) || ts.isGetAccessorDeclaration(node) || ts.isSetAccessorDeclaration(node)) {
+      const name = memberName(node);
+      if (name && decoratorNames(node).some((decorator) => PROPERTY_DECORATORS.has(decorator))) {
+        attributes.add(name);
       }
     }
     if (ts.isClassDeclaration(node) && node.name && decoratorNames(node).includes("customElement")) {
@@ -313,7 +344,7 @@ function symbolsOf(file, source) {
 }
 
 // Why a symbol may not link by its bare name, or undefined when it may.
-function bareBlocker(symbol, counts, attributes) {
+function bareBlocker(symbol: Found, counts: Map<string, number>, attributes: Set<string>) {
   // `Supervisor` is also the name of a label, a product, or a heading.
   if (isPlainWord(symbol.name) || /^[A-Z][a-z0-9]+$/.test(symbol.name)) {
     return "a plain word";
@@ -333,8 +364,8 @@ function bareBlocker(symbol, counts, attributes) {
   return undefined;
 }
 
-export function generateFrontend({ checkout, ref, mentions }) {
-  const git = (...args) => execFileSync("git", args, { cwd: checkout, encoding: "utf8", maxBuffer: 256 * 1024 * 1024 });
+export function generateFrontend({ checkout, ref, mentions }: GenerateOptions): Generated {
+  const git = (...args: string[]) => execFileSync("git", args, { cwd: checkout, encoding: "utf8", maxBuffer: 256 * 1024 * 1024 });
 
   const commit = git("rev-parse", `${ref}^{commit}`).trim();
   const files = git("ls-tree", "-r", "--name-only", commit, "src")
@@ -342,10 +373,10 @@ export function generateFrontend({ checkout, ref, mentions }) {
     .filter((file) => /\.ts$/.test(file) && !/\.d\.ts$/.test(file));
   const sources = readFiles(checkout, commit, files);
 
-  const found = [];
-  const attributes = new Set();
+  const found: Found[] = [];
+  const attributes = new Set<string>();
   for (const file of files) {
-    const result = symbolsOf(file, sources.get(file));
+    const result = symbolsOf(file, sources.get(file) ?? "");
     found.push(...result.symbols);
     for (const name of result.attributes) {
       attributes.add(name);
@@ -357,15 +388,15 @@ export function generateFrontend({ checkout, ref, mentions }) {
   // `HomeAssistant` extends. A base is looked up in the same file first,
   // then by its name when only one file exports it.
   const interfaces = found.filter((symbol) => symbol.kind === "interface");
-  const membersOf = (owner) =>
+  const membersOf = (owner: Found) =>
     found.filter((symbol) => symbol.ownerKind === "interface" && symbol.path === owner.path && symbol.qualname.startsWith(`${owner.name}.`));
-  const findBase = (name, file) => {
+  const findBase = (name: string, file: string) => {
     const local = interfaces.find((symbol) => symbol.name === name && symbol.path === file);
     const exported = interfaces.filter((symbol) => symbol.name === name);
     return local ?? (exported.length === 1 ? exported[0] : undefined);
   };
-  const inherited = (owner, seen = new Set()) =>
-    owner.bases.flatMap((name) => {
+  const inherited = (owner: Found, seen = new Set<Found>()): Found[] =>
+    (owner.bases ?? []).flatMap((name) => {
       const base = findBase(name, owner.path);
       if (!base || seen.has(base)) {
         return [];
@@ -406,10 +437,10 @@ export function generateFrontend({ checkout, ref, mentions }) {
   // src/util/websocket.ts. Members of classes and mixins do compete with
   // interface fields: `getStubConfig` is a convention of many interfaces.
   const hassInterface = aliases.hass;
-  const isInterfaceField = (symbol) => symbol.kind === "property" && symbol.ownerKind === "interface";
-  const countWith = (include) => {
-    const counts = new Map();
-    const seen = new Set();
+  const isInterfaceField = (symbol: Found) => symbol.kind === "property" && symbol.ownerKind === "interface";
+  const countWith = (include: (symbol: Found) => boolean) => {
+    const counts = new Map<string, number>();
+    const seen = new Set<string>();
     for (const symbol of found.filter(include)) {
       const key = `${symbol.path}:${symbol.name}`;
       if (!seen.has(key)) {
@@ -421,17 +452,17 @@ export function generateFrontend({ checkout, ref, mentions }) {
   };
   // `HomeAssistant` gets most of its fields from the interfaces it
   // extends, like `callWS` from `HomeAssistantApi`: those count too.
-  const isHassField = (symbol) => `${symbol.module}.${symbol.qualname.split(".")[0]}` === hassInterface;
+  const isHassField = (symbol: Found) => `${symbol.module}.${symbol.qualname.split(".")[0]}` === hassInterface;
   const allCounts = countWith((symbol) => !symbol.inherited);
   const exportCounts = countWith((symbol) => (symbol.inherited ? isHassField(symbol) : !isInterfaceField(symbol) || isHassField(symbol)));
-  const countsFor = (symbol) => (symbol.ownerKind ? allCounts : exportCounts);
+  const countsFor = (symbol: Found) => (symbol.ownerKind ? allCounts : exportCounts);
 
   // In that case the bare name means the implementation, not the
   // interface.
   const implemented = new Set(
     found.filter((symbol) => symbol.ownerKind && symbol.ownerKind !== "interface").map((symbol) => `${symbol.path}:${symbol.name}`),
   );
-  const candidates = found.map((symbol) => ({
+  const candidates = found.map((symbol): Candidate => ({
     id: `${symbol.path}:${symbol.qualname}`,
     ...symbol,
     bare:
@@ -441,11 +472,11 @@ export function generateFrontend({ checkout, ref, mentions }) {
   }));
 
   const resolve = createResolver(candidates, aliases);
-  const used = new Map();
-  const linked = [];
+  const used = new Map<string, Candidate>();
+  const linked: Mention[] = [];
 
   for (const mention of mentions) {
-    const symbol = resolve(mention.text, mention.domain, mention.url);
+    const symbol: Candidate | undefined = resolve(mention.text, mention.domain, mention.url);
     if (symbol) {
       used.set(symbol.id, symbol);
       linked.push(mention);
@@ -453,7 +484,7 @@ export function generateFrontend({ checkout, ref, mentions }) {
   }
 
   const kept = [...used.values()].sort((a, b) => a.id.localeCompare(b.id));
-  const index = {
+  const index: SymbolIndex = {
     repository: INDEXES.frontend.repository,
     commit,
     symbols: kept.map(({ id, name, qualname, kind, module, path: file, line, signature, doc, bare, members }) => ({

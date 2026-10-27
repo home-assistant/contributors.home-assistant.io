@@ -22,28 +22,40 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { parse as parseYaml } from "yaml";
+import { AREAS } from "../src/data/areas.ts";
 
 const DOCS = fileURLToPath(new URL("../src/content/docs/", import.meta.url));
-const AREAS_FILE = fileURLToPath(new URL("../src/data/areas.ts", import.meta.url));
 const LABELER_FILE = fileURLToPath(new URL("../.github/labeler.yml", import.meta.url));
 const LABELS_FILE = fileURLToPath(new URL("../.github/labels.yml", import.meta.url));
 
 // Areas without a first contribution page, on purpose.
 const NO_FIRST_CONTRIBUTION = new Set(["architecture", "glossary"]);
 
-const problems = [];
+const problems: string[] = [];
 
-function frontMatter(file) {
+interface FrontMatter {
+  order?: number;
+  title?: string;
+  sidebarLabel?: string;
+  sidebarGroup?: string;
+  sidebarGroups?: string[];
+}
+
+// A label in .github/labels.yml.
+interface Label {
+  name: string;
+}
+
+function frontMatter(file: string): FrontMatter {
   const source = readFileSync(file, "utf8");
   return parseYaml(/^---\n([\s\S]*?)\n---/.exec(source)?.[1] ?? "") ?? {};
 }
 
-function pageFile(dir, name) {
+function pageFile(dir: string, name: string) {
   return [".md", ".mdx"].map((extension) => path.join(dir, name + extension)).find((file) => existsSync(file));
 }
 
-// The area IDs, read from the source: this runs without TypeScript.
-const areaIds = [...readFileSync(AREAS_FILE, "utf8").matchAll(/^\s+id: "([^"]+)",$/gm)].map((match) => match[1]);
+const areaIds = AREAS.map((area) => area.id);
 const folders = readdirSync(DOCS, { withFileTypes: true })
   .filter((entry) => entry.isDirectory())
   .map((entry) => entry.name);
@@ -68,7 +80,7 @@ for (const area of areaIds) {
   const firstContribution = pageFile(dir, "first-contribution");
   if (NO_FIRST_CONTRIBUTION.has(area)) {
     if (firstContribution) {
-      problems.push(`${area}: has a first contribution page, but is listed as an exception in scripts/check-structure.mjs.`);
+      problems.push(`${area}: has a first contribution page, but is listed as an exception in scripts/check-structure.ts.`);
     }
   } else if (!firstContribution) {
     problems.push(`${area}: no first-contribution.md.`);
@@ -90,9 +102,9 @@ for (const area of areaIds) {
   checkFolder(dir, area, 0);
 }
 
-function checkFolder(dir, label, depth) {
+function checkFolder(dir: string, label: string, depth: number) {
   const entries = readdirSync(dir, { withFileTypes: true });
-  const usedGroups = new Set();
+  const usedGroups = new Set<string>();
 
   for (const entry of entries) {
     if (entry.isDirectory()) {
@@ -122,12 +134,13 @@ function checkFolder(dir, label, depth) {
 
 // The labels of pull requests and feedback issues follow the areas.
 const labelerLabels = Object.keys(parseYaml(readFileSync(LABELER_FILE, "utf8")) ?? {});
-const repositoryLabels = (parseYaml(readFileSync(LABELS_FILE, "utf8")) ?? []).map((label) => label.name);
+const labels: Label[] = parseYaml(readFileSync(LABELS_FILE, "utf8")) ?? [];
+const repositoryLabels = labels.map((label) => label.name);
 
 for (const [file, labels] of [
   [".github/labeler.yml", labelerLabels],
   [".github/labels.yml", repositoryLabels],
-]) {
+] as const) {
   const labelAreas = labels.filter((label) => label.startsWith("area: ")).map((label) => label.slice(6));
 
   for (const area of areaIds) {

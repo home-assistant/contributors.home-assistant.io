@@ -31,7 +31,7 @@ import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 import GithubSlugger from "github-slugger";
 import { parse as parseYaml } from "yaml";
-import { readMap, readRedirects } from "./generate-redirects.mjs";
+import { readMap, readRedirects } from "./generate-redirects.ts";
 
 const DIST = fileURLToPath(new URL("../dist/", import.meta.url));
 const OUTPUT = fileURLToPath(new URL("../redirects/fragments.tsv", import.meta.url));
@@ -61,13 +61,23 @@ const STOPWORDS = new Set(
   ),
 );
 
-const git = (checkout, ...args) =>
+interface Heading {
+  id: string;
+  text: string;
+}
+
+interface OldFrontMatter {
+  id?: string;
+  slug?: unknown;
+}
+
+const git = (checkout: string, ...args: string[]) =>
   execFileSync("git", args, { cwd: checkout, encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
 
 // The URL path of every doc of an old Docusaurus site, and its Markdown:
 // { "/docs/integration_fetching_data": "..." }.
-function readOldDocs({ checkout, prefix }) {
-  const docs = new Map();
+function readOldDocs({ checkout, prefix }: (typeof SOURCES)[number]) {
+  const docs = new Map<string, string>();
   const files = git(checkout, "ls-tree", "-r", "--name-only", options.ref, "docs")
     .split("\n")
     .filter((file) => /\.mdx?$/.test(file));
@@ -75,7 +85,7 @@ function readOldDocs({ checkout, prefix }) {
   for (const file of files) {
     const markdown = git(checkout, "show", `${options.ref}:${file}`);
     const frontMatter = /^---\n([\s\S]*?)\n---/.exec(markdown)?.[1];
-    const data = frontMatter ? (parseYaml(frontMatter) ?? {}) : {};
+    const data: OldFrontMatter = frontMatter ? (parseYaml(frontMatter) ?? {}) : {};
 
     const dir = path.posix.dirname(file).replace(/^docs\/?/, "");
     const name = path.posix.basename(file).replace(/\.mdx?$/, "");
@@ -94,9 +104,9 @@ function readOldDocs({ checkout, prefix }) {
 
 // The headings of old Markdown, with their anchors the way Docusaurus made
 // them: an explicit {#id}, or the slug of the text, numbered when repeated.
-function oldHeadings(markdown) {
+function oldHeadings(markdown: string) {
   const slugger = new GithubSlugger();
-  const headings = [];
+  const headings: Heading[] = [];
   let inFence = false;
 
   for (const line of markdown.split("\n")) {
@@ -124,7 +134,7 @@ function oldHeadings(markdown) {
 }
 
 // The headings of a built page: { id, text }.
-function newHeadings(page) {
+function newHeadings(page: string) {
   const file = path.join(DIST, page, "index.html");
   if (!existsSync(file)) {
     return undefined;
@@ -140,7 +150,7 @@ function newHeadings(page) {
   return { ids, headings };
 }
 
-const words = (text) =>
+const words = (text: string) =>
   text
     .toLowerCase()
     .split(/[^a-z0-9]+/)
@@ -149,7 +159,7 @@ const words = (text) =>
 // Two words match fully when they are the same, and partly when they share
 // a long start, like "request" and "requests", or "parallel" and
 // "parallelism".
-function wordMatch(a, b) {
+function wordMatch(a: string, b: string) {
   if (a === b) {
     return 1;
   }
@@ -163,7 +173,7 @@ function wordMatch(a, b) {
 }
 
 // The Dice coefficient of two headings, with partly matching words.
-function similarity(oldText, newText) {
+function similarity(oldText: string, newText: string) {
   const oldWords = words(oldText);
   const newWords = words(newText);
   if (oldWords.length === 0 || newWords.length === 0) {
@@ -175,7 +185,7 @@ function similarity(oldText, newText) {
 }
 
 const existing = existsSync(OUTPUT) ? readMap("fragments.tsv") : [];
-const rows = new Map(existing.map(([page, oldId, newId]) => [`${page}\t${oldId}`, newId]));
+const rows = new Map(existing.map(([page, oldId, newId]): [string, string] => [`${page}\t${oldId}`, newId]));
 const redirects = readRedirects();
 // Without a build, every page looks like it lost all its headings, and the
 // cleanup below would throw away every row.
@@ -210,7 +220,7 @@ for (const source of SOURCES) {
         continue;
       }
 
-      let best;
+      let best: (Heading & { score: number }) | undefined;
       for (const candidate of page.headings) {
         const score = similarity(heading.text, candidate.text);
         if (score >= THRESHOLD && (!best || score > best.score)) {
@@ -232,7 +242,7 @@ for (const source of SOURCES) {
 // again on the next run instead of pointing nowhere.
 // A page that is not built at all says nothing about its headings, so that
 // fails before anything is written instead of dropping its rows.
-const missingPages = new Set();
+const missingPages = new Set<string>();
 let dropped = 0;
 for (const [key, newId] of rows) {
   const [page] = key.split("\t");

@@ -8,7 +8,17 @@
 // The card is narrow: lines of about this many characters fit.
 export const LINE_LENGTH = 60;
 
-const STYLES = {
+export type Language = "python" | "typescript";
+
+type Pairs = Record<string, string>;
+
+interface Style {
+  step: string;
+  pairs: Pairs;
+  itemEnd: (opening: string, isLast: boolean) => string;
+}
+
+const STYLES: Record<Language, Style> = {
   // Ruff: four spaces, and a comma after every item, the last one too.
   python: { step: "    ", pairs: { "(": ")", "[": "]", "{": "}" }, itemEnd: () => "," },
   // Prettier with `trailingComma: "es5"`: two spaces, no comma after the
@@ -22,7 +32,7 @@ const STYLES = {
 };
 
 // The brackets in the text, without the `>` of an arrow, `=>`.
-function bracketAt(text, index, pairs) {
+function bracketAt(text: string, index: number, pairs: Pairs) {
   const character = text[index];
   if (character === ">" && text[index - 1] === "=") {
     return undefined;
@@ -35,8 +45,8 @@ function bracketAt(text, index, pairs) {
 
 // Splits text at the separators that are not inside brackets: commas, and
 // in an object type, semicolons.
-function splitTopLevel(text, pairs, separators) {
-  const parts = [];
+function splitTopLevel(text: string, pairs: Pairs, separators: string[]) {
+  const parts: string[] = [];
   let depth = 0;
   let current = "";
   for (let index = 0; index < text.length; index += 1) {
@@ -56,10 +66,10 @@ function splitTopLevel(text, pairs, separators) {
 }
 
 // Where the last pair of brackets at the top level opens and closes.
-function lastBrackets(text, pairs) {
+function lastBrackets(text: string, pairs: Pairs) {
   let depth = 0;
-  let opened;
-  let found;
+  let opened: number | undefined;
+  let found: [number, number] | undefined;
   for (let index = 0; index < text.length; index += 1) {
     const bracket = bracketAt(text, index, pairs);
     if (bracket === "open") {
@@ -79,7 +89,7 @@ function lastBrackets(text, pairs) {
 
 // The lines of one part, like a parameter, at an indent, followed by
 // `suffix`.
-export function formatPart(text, indent, suffix, language) {
+export function formatPart(text: string, indent: string, suffix: string, language: Language): string[] {
   const style = STYLES[language];
   const line = `${indent}${text}${suffix}`;
   const brackets = lastBrackets(text, style.pairs);
@@ -98,7 +108,7 @@ export function formatPart(text, indent, suffix, language) {
   }
 
   // An object type always puts its members on lines of their own.
-  let body;
+  let body: string[];
   if (opening !== "{" && `${deeper}${inner}`.length <= LINE_LENGTH) {
     body = [`${deeper}${inner}`];
   } else {
@@ -110,7 +120,7 @@ export function formatPart(text, indent, suffix, language) {
 }
 
 // `head(parameters)tail` on one line, or one parameter per line.
-export function formatCall(head, parts, tail, language) {
+export function formatCall(head: string, parts: string[], tail: string, language: Language) {
   const line = `${head}(${parts.join(", ")})${tail}`;
   if (line.length <= LINE_LENGTH) {
     return line;

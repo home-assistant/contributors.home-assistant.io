@@ -89,9 +89,11 @@ const LIFECYCLE_METHODS = new Set([
   "shadowRootOptions",
 ]);
 
-const KINDS = ["attributes", "properties", "slots", "events", "cssProperties", "methods"];
+const KINDS = ["attributes", "properties", "slots", "events", "cssProperties", "methods"] as const;
 
-const KIND_LABELS = {
+type Kind = (typeof KINDS)[number];
+
+const KIND_LABELS: Record<Kind, string> = {
   attributes: "attribute",
   properties: "property",
   slots: "slot",
@@ -99,6 +101,77 @@ const KIND_LABELS = {
   cssProperties: "CSS custom property",
   methods: "method",
 };
+
+type ClassNode = ts.ClassDeclaration | ts.ClassExpression;
+
+interface ParsedFile {
+  file: string;
+  text: string;
+  sourceFile: ts.SourceFile;
+  classes: ClassNode[];
+  imports: Map<string, { specifier: string; name: string }>;
+  tags: Map<string, ClassNode | undefined>;
+}
+
+interface ElementApi {
+  attributes: Map<string, string | undefined>;
+  styledAttributes: Set<string>;
+  properties: Map<string, { declared: boolean; attribute: string | null }>;
+  slots: Set<string>;
+  events: Set<string>;
+  eventPatterns: RegExp[];
+  declaredEvents: Set<string>;
+  cssProperties: Set<string>;
+  cssReads: Set<string>;
+  cssMentions: Set<string>;
+  methods: Set<string>;
+  inherits: string[];
+  wraps: string[];
+  files: string[];
+}
+
+// What a page documents for one element, per kind.
+type Documented = Record<Kind, Set<string>>;
+
+interface PageFrontMatter {
+  title?: string;
+  lastVerified?: string | number | Date;
+}
+
+interface Page {
+  file: string;
+  title: string;
+  lastVerified: string | null;
+  sources: string[];
+  elements: Map<string, Documented>;
+}
+
+interface Finding {
+  kind: Kind;
+  name: string;
+  note?: string;
+}
+
+interface ElementResult {
+  element: string;
+  file: string | null;
+  inherits: string[];
+  wraps: string[];
+  missing: Finding[];
+  inherited: Finding[];
+  documented: Record<string, string[]>;
+  undocumented: Record<Kind, string[]>;
+}
+
+interface PageResult {
+  page: string;
+  title: string;
+  lastVerified: string | null;
+  sources: string[];
+  elements: ElementResult[];
+  notes: string[];
+  gone: string[];
+}
 
 const { values: options } = parseArgs({
   options: {
@@ -111,16 +184,16 @@ const { values: options } = parseArgs({
 
 const checkout = path.resolve(options.from);
 
-function git(...args) {
+function git(...args: string[]) {
   return execFileSync("git", args, { cwd: checkout, encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
 }
 
 const commit = git("rev-parse", `${options.ref}^{commit}`).trim();
 const sourceFiles = new Set(git("ls-tree", "-r", "--name-only", commit, "src").split("\n").filter(Boolean));
 
-const fileContents = new Map();
+const fileContents = new Map<string, string | undefined>();
 
-function readSource(file) {
+function readSource(file: string) {
   if (!fileContents.has(file)) {
     fileContents.set(file, sourceFiles.has(file) ? git("show", `${commit}:${file}`) : undefined);
   }
@@ -132,7 +205,7 @@ function readSource(file) {
 // element without linking its file, and so the elements a component renders
 // can be found.
 function indexElements() {
-  const elements = new Map();
+  const elements = new Map<string, string>();
   const pattern = `customElement\\(\\s*"[a-z0-9-]+"|customElements\\.define\\(\\s*"[a-z0-9-]+"`;
   const output = git("grep", "-n", "-E", pattern, commit, "--", "src");
 
@@ -151,11 +224,11 @@ const elementFiles = indexElements();
 // The custom properties the theme defines. Components read these, like
 // --primary-color, but they are tokens of the theme, not API of the component.
 function themeTokens() {
-  const tokens = new Set();
+  const tokens = new Set<string>();
 
   for (const file of sourceFiles) {
     if (file.startsWith("src/resources/theme/")) {
-      for (const match of readSource(file).matchAll(/(--[a-z0-9-]+)\s*:/g)) {
+      for (const match of (readSource(file) ?? "").matchAll(/(--[a-z0-9-]+)\s*:/g)) {
         tokens.add(match[1]);
       }
     }
@@ -166,7 +239,7 @@ function themeTokens() {
 
 const THEME_TOKENS = themeTokens();
 
-function resolveImport(fromFile, specifier) {
+function resolveImport(fromFile: string, specifier: string) {
   if (!specifier.startsWith(".")) {
     return undefined;
   }
@@ -175,20 +248,23 @@ function resolveImport(fromFile, specifier) {
   return [`${base}.ts`, `${base}/index.ts`, base].find((candidate) => sourceFiles.has(candidate));
 }
 
-const parsedFiles = new Map();
+const parsedFiles = new Map<string, ParsedFile>();
 
 // Parses a file once: its classes (declarations and the class expressions
 // of mixins), the names it imports, and the custom elements it defines.
-function parseFile(file) {
-  if (parsedFiles.has(file)) {
-    return parsedFiles.get(file);
+function parseFile(file: string) {
+  const cached = parsedFiles.get(file);
+  if (cached) {
+    return cached;
   }
 
-  const text = readSource(file);
+  const text = readSource(file) ?? "";
   const sourceFile = ts.createSourceFile(file, text, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
-  const parsed = { file, text, sourceFile, classes: [], imports: new Map(), tags: new Map() };
+  const parsed: ParsedFile = { file, text, sourceFile, classes: [], imports: new Map(), tags: new Map() };
+  // A class, or the name of one for customElements.define.
+  const defined = new Map<string, ClassNode | string>();
 
-  function visit(node) {
+  function visit(node: ts.Node) {
     if (ts.isImportDeclaration(node) && ts.isStringLiteral(node.moduleSpecifier)) {
       const specifier = node.moduleSpecifier.text;
       const clause = node.importClause;
@@ -212,7 +288,7 @@ function parseFile(file) {
         if (ts.isCallExpression(call) && call.expression.getText() === "customElement") {
           const [tag] = call.arguments;
           if (tag && ts.isStringLiteral(tag)) {
-            parsed.tags.set(tag.text, node);
+            defined.set(tag.text, node);
           }
         }
       }
@@ -222,7 +298,7 @@ function parseFile(file) {
     if (ts.isCallExpression(node) && node.expression.getText() === "customElements.define") {
       const [tag, element] = node.arguments;
       if (tag && ts.isStringLiteral(tag) && element && ts.isIdentifier(element)) {
-        parsed.tags.set(tag.text, element.text);
+        defined.set(tag.text, element.text);
       }
     }
 
@@ -232,17 +308,15 @@ function parseFile(file) {
   visit(sourceFile);
 
   // A tag registered with customElements.define points to a class by name.
-  for (const [tag, target] of parsed.tags) {
-    if (typeof target === "string") {
-      parsed.tags.set(tag, parsed.classes.find((node) => node.name?.text === target));
-    }
+  for (const [tag, target] of defined) {
+    parsed.tags.set(tag, typeof target === "string" ? parsed.classes.find((node) => node.name?.text === target) : target);
   }
 
   parsedFiles.set(file, parsed);
   return parsed;
 }
 
-function emptyApi() {
+function emptyApi(): ElementApi {
   return {
     // Attribute name, in lowercase, to the name of its property.
     attributes: new Map(),
@@ -272,11 +346,11 @@ function emptyApi() {
   };
 }
 
-function hasModifier(node, kind) {
-  return (ts.getModifiers(node) ?? []).some((modifier) => modifier.kind === kind);
+function hasModifier(node: ts.Node, kind: ts.SyntaxKind) {
+  return ((ts.canHaveModifiers(node) ? ts.getModifiers(node) : undefined) ?? []).some((modifier) => modifier.kind === kind);
 }
 
-function isPublicMember(node) {
+function isPublicMember(node: ts.ClassElement) {
   const name = node.name?.getText();
   return (
     name &&
@@ -290,8 +364,8 @@ function isPublicMember(node) {
 
 // What a `@property(...)` decorator says about the attribute: its name, or
 // null for `attribute: false`.
-function propertyAttribute(decorator, propertyName) {
-  const [argument] = decorator.expression.arguments;
+function propertyAttribute(decorator: ts.Decorator, propertyName: string) {
+  const [argument] = ts.isCallExpression(decorator.expression) ? decorator.expression.arguments : [];
   if (!argument || !ts.isObjectLiteralExpression(argument)) {
     return propertyName.toLowerCase();
   }
@@ -311,19 +385,21 @@ function propertyAttribute(decorator, propertyName) {
   return propertyName.toLowerCase();
 }
 
-function decoratorName(decorator) {
+function decoratorName(decorator: ts.Decorator) {
   const expression = decorator.expression;
   return ts.isCallExpression(expression) ? expression.expression.getText() : expression.getText();
 }
 
-function collectMembers(classNode, api) {
+function collectMembers(classNode: ClassNode, api: ElementApi) {
   for (const member of classNode.members) {
     if (!member.name || !isPublicMember(member)) {
       continue;
     }
 
     const name = member.name.getText();
-    const decorators = (ts.getDecorators(member) ?? []).map((decorator) => [decoratorName(decorator), decorator]);
+    const decorators = (ts.canHaveDecorators(member) ? (ts.getDecorators(member) ?? []) : []).map(
+      (decorator) => [decoratorName(decorator), decorator] as const,
+    );
 
     if (decorators.some(([decorator]) => decorator === "state" || decorator.startsWith("query"))) {
       continue;
@@ -356,7 +432,7 @@ function collectMembers(classNode, api) {
 
 // Everything that is found in the text of a file, not in a class: JSDoc
 // tags, events, slots in templates, and custom properties in the styles.
-function collectFromText(parsed, api) {
+function collectFromText(parsed: ParsedFile, api: ElementApi) {
   const { text, sourceFile } = parsed;
 
   for (const match of text.matchAll(/@slot\s+([^\s*]+)/g)) {
@@ -408,7 +484,7 @@ function collectFromText(parsed, api) {
     }
   }
 
-  function visit(node) {
+  function visit(node: ts.Node) {
     if (ts.isCallExpression(node) && node.expression.getText() === "fireEvent") {
       const [target, event] = node.arguments;
       if (target?.kind === ts.SyntaxKind.ThisKeyword && event) {
@@ -443,8 +519,8 @@ function collectFromText(parsed, api) {
 }
 
 // `${this._activeSlider}-changed` matches any name that ends in "-changed".
-function templatePattern(template) {
-  const escape = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+function templatePattern(template: ts.TemplateExpression) {
+  const escape = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const parts = [escape(template.head.text)];
   for (const span of template.templateSpans) {
     parts.push("[\\w-]+", escape(span.literal.text));
@@ -456,7 +532,7 @@ function templatePattern(template) {
 // Follows `extends` to the base class: in the same file, in another file of
 // the frontend, or through a mixin like `SubscribeMixin(LitElement)`. Stops
 // at Lit, and at classes from packages, which it records as inherited.
-function collectHeritage(parsed, classNode, api, visited) {
+function collectHeritage(parsed: ParsedFile, classNode: ClassNode, api: ElementApi, visited: Set<ClassNode>) {
   const heritage = classNode.heritageClauses?.find((clause) => clause.token === ts.SyntaxKind.ExtendsKeyword);
   const expression = heritage?.types[0]?.expression;
   if (expression) {
@@ -464,7 +540,7 @@ function collectHeritage(parsed, classNode, api, visited) {
   }
 }
 
-function followBase(parsed, expression, api, visited) {
+function followBase(parsed: ParsedFile, expression: ts.Expression, api: ElementApi, visited: Set<ClassNode>) {
   if (ts.isCallExpression(expression)) {
     // A mixin: everything in its file, and then what it is applied to.
     const mixin = expression.expression.getText();
@@ -492,8 +568,8 @@ function followBase(parsed, expression, api, visited) {
   }
 
   const imported = parsed.imports.get(name);
-  const file = imported && resolveImport(parsed.file, imported.specifier);
-  if (file) {
+  const file = imported ? resolveImport(parsed.file, imported.specifier) : undefined;
+  if (imported && file) {
     const base = parseFile(file);
     const target =
       imported.name === "default"
@@ -511,7 +587,7 @@ function followBase(parsed, expression, api, visited) {
   }
 }
 
-function collectClass(parsed, classNode, api, visited) {
+function collectClass(parsed: ParsedFile, classNode: ClassNode, api: ElementApi, visited: Set<ClassNode>) {
   if (visited.has(classNode)) {
     return;
   }
@@ -523,7 +599,7 @@ function collectClass(parsed, classNode, api, visited) {
 
 // Collects one class of a file, or all of them for a mixin file, and what
 // the text of the file declares.
-function collectFile(file, classNode, api, visited) {
+function collectFile(file: string, classNode: ClassNode | undefined, api: ElementApi, visited: Set<ClassNode>) {
   const parsed = parseFile(file);
 
   if (!api.files.includes(file)) {
@@ -536,15 +612,15 @@ function collectFile(file, classNode, api, visited) {
   }
 }
 
-const elementApis = new Map();
+const elementApis = new Map<string, ElementApi | undefined>();
 
-function elementApi(tag) {
+function elementApi(tag: string) {
   if (elementApis.has(tag)) {
     return elementApis.get(tag);
   }
 
   const file = elementFiles.get(tag);
-  let api;
+  let api: ElementApi | undefined;
 
   if (file) {
     const classNode = parseFile(file).tags.get(tag);
@@ -561,11 +637,11 @@ function elementApi(tag) {
 // `grid: () => import("./ha-form-grid")`. Custom properties inherit, and
 // events bubble out of the shadow root, so a custom property or an event
 // documented on a component can belong to one of these.
-function renderedElements(api) {
-  const tags = new Set();
+function renderedElements(api: ElementApi) {
+  const tags = new Set<string>();
 
   for (const file of api.files) {
-    const text = readSource(file);
+    const text = readSource(file) ?? "";
 
     for (const match of text.matchAll(/<([a-z][a-z0-9]*-[a-z0-9-]+)[\s>]/g)) {
       if (elementFiles.has(match[1])) {
@@ -592,7 +668,7 @@ function renderedElements(api) {
 // that is not inside backticks. "`name` and `value`: submitted with a form"
 // documents `name` and `value`. For events, "`action` on `ha-list`" also
 // says which element fires it.
-function parseListItem(item) {
+function parseListItem(item: string) {
   let inCode = false;
   let lead = item;
 
@@ -605,7 +681,7 @@ function parseListItem(item) {
     }
   }
 
-  let element;
+  let element: string | undefined;
   const on = lead.match(/\bon `<?([a-z][a-z0-9]*-[a-z0-9-]+)>?`/);
   if (on) {
     element = on[1];
@@ -625,7 +701,7 @@ function parseListItem(item) {
 
 // Finds the kind of a heading or a lead-in paragraph, like "### Slots of
 // ha-list-item", "Attributes:", or "These can only be set from code:".
-const HEADING_KINDS = {
+const HEADING_KINDS: Record<string, Kind> = {
   Attributes: "attributes",
   Properties: "properties",
   Slots: "slots",
@@ -634,7 +710,7 @@ const HEADING_KINDS = {
   Methods: "methods",
 };
 
-function kindOf(text) {
+function kindOf(text: string): Kind | undefined {
   const match = text.match(/^(Attributes|Properties|Slots|Events|Styling|Methods)\b/);
   if (match) {
     return HEADING_KINDS[match[1]];
@@ -647,18 +723,25 @@ function kindOf(text) {
   return undefined;
 }
 
-function emptyDocumented() {
-  return Object.fromEntries(KINDS.map((kind) => [kind, new Set()]));
+function emptyDocumented(): Documented {
+  return {
+    attributes: new Set(),
+    properties: new Set(),
+    slots: new Set(),
+    events: new Set(),
+    cssProperties: new Set(),
+    methods: new Set(),
+  };
 }
 
-async function parsePage(file) {
+async function parsePage(file: string) {
   const text = await readFile(path.join(PAGES_DIR, file), "utf8");
   const frontMatter = text.match(/^---\n([\s\S]*?)\n---/);
-  const data = frontMatter ? parseYaml(frontMatter[1]) : {};
+  const data: PageFrontMatter = frontMatter ? parseYaml(frontMatter[1]) : {};
 
   const body = text.slice(frontMatter ? frontMatter[0].length : 0);
   const start = body.search(/^## In code\s*$/m);
-  const page = {
+  const page: Page = {
     file,
     title: data.title ?? file,
     lastVerified: data.lastVerified ? new Date(data.lastVerified).toISOString().slice(0, 10) : null,
@@ -677,7 +760,7 @@ async function parsePage(file) {
   page.sources = [...new Set([...section.join("\n").matchAll(SOURCE_LINK)].map((match) => match[1]))];
 
   // The elements of the page: the ones its source files define, in order.
-  const tags = [];
+  const tags: string[] = [];
   for (const source of page.sources) {
     for (const [tag, file] of elementFiles) {
       if (file === source && !tags.includes(tag)) {
@@ -690,15 +773,18 @@ async function parsePage(file) {
   const primary = named?.[1] ?? tags[0];
 
   let element = primary;
-  let kind;
+  let kind: Kind | undefined;
   let inFence = false;
 
-  const documented = (tag) => {
-    if (!page.elements.has(tag)) {
-      page.elements.set(tag, emptyDocumented());
+  const documented = (tag: string) => {
+    const existing = page.elements.get(tag);
+    if (existing) {
+      return existing;
     }
 
-    return page.elements.get(tag);
+    const created = emptyDocumented();
+    page.elements.set(tag, created);
+    return created;
   };
 
   for (const line of section.slice(1)) {
@@ -766,7 +852,7 @@ async function parsePage(file) {
 
 // Comparing.
 
-function findDocumented(kind, name, api) {
+function findDocumented(kind: Kind, name: string, api: ElementApi) {
   switch (kind) {
     case "attributes":
       return api.attributes.has(name.toLowerCase()) || api.styledAttributes.has(name.toLowerCase());
@@ -792,15 +878,15 @@ function findDocumented(kind, name, api) {
 // fallback that carry its name, like --control-slider-color for
 // <ha-control-slider>. A read like var(--value, 0) or var(--ha-card-background)
 // is an internal or a shared variable, not API of this component.
-function cssApiOf(tag, api) {
+function cssApiOf(tag: string, api: ElementApi) {
   const stem = tag.replace(/^ha-/, "");
   const own = [...api.cssReads].filter((name) => name.includes(stem));
 
   return new Set([...api.cssProperties, ...own]);
 }
 
-function undocumentedOf(tag, api, documented) {
-  const lower = (set) => new Set([...set].map((name) => name.toLowerCase()));
+function undocumentedOf(tag: string, api: ElementApi, documented: Documented): Record<Kind, string[]> {
+  const lower = (set: Set<string>) => new Set([...set].map((name) => name.toLowerCase()));
   const documentedAttributes = lower(documented.attributes);
   const documentedProperties = lower(documented.properties);
 
@@ -814,7 +900,7 @@ function undocumentedOf(tag, api, documented) {
     .map(([attribute]) => attribute);
 
   const properties = [...api.properties.entries()]
-    .filter(([name, property]) => property.declared && property.attribute === null)
+    .filter(([, property]) => property.declared && property.attribute === null)
     .filter(([name]) => !documentedProperties.has(name.toLowerCase()) && !documentedAttributes.has(name.toLowerCase()))
     .map(([name]) => name);
 
@@ -828,8 +914,8 @@ function undocumentedOf(tag, api, documented) {
   };
 }
 
-function checkPage(page) {
-  const result = {
+function checkPage(page: Page) {
+  const result: PageResult = {
     page: `${PAGES_PATH}/${page.file}`,
     title: page.title,
     lastVerified: page.lastVerified,
@@ -864,7 +950,7 @@ function checkPage(page) {
       continue;
     }
 
-    const entry = {
+    const entry: ElementResult = {
       element: tag,
       file: elementFiles.get(tag) ?? null,
       inherits: [...new Set(api.inherits)],
@@ -872,11 +958,11 @@ function checkPage(page) {
       missing: [],
       inherited: [],
       documented: Object.fromEntries(KINDS.map((kind) => [kind, [...documented[kind]]])),
-      undocumented: {},
+      undocumented: undocumentedOf(tag, api, documented),
     };
     result.elements.push(entry);
 
-    const children = [...renderedElements(api)].map(elementApi).filter(Boolean);
+    const children = [...renderedElements(api)].flatMap((child) => elementApi(child) ?? []);
 
     for (const kind of KINDS) {
       for (const name of documented[kind]) {
@@ -903,7 +989,7 @@ function checkPage(page) {
         const fromChild =
           kind === "events" && name.startsWith("wa-") && children.some((child) => child.inherits.length > 0);
 
-        const finding = { kind, name: name || "(default)" };
+        const finding: Finding = { kind, name: name || "(default)" };
 
         // Documented as an attribute, but the source has it as a property
         // only (`attribute: false`): setting it in HTML does nothing.
@@ -923,8 +1009,6 @@ function checkPage(page) {
         }
       }
     }
-
-    entry.undocumented = undocumentedOf(tag, api, documented);
   }
 
   return result;
@@ -932,16 +1016,16 @@ function checkPage(page) {
 
 // Reporting.
 
-function codeList(names) {
+function codeList(names: string[]) {
   return names.map((name) => `\`${name || "(default)"}\``).join(", ");
 }
 
-function findingName(finding) {
+function findingName(finding: Finding) {
   return finding.note ? `\`${finding.name}\` (${finding.note})` : `\`${finding.name}\``;
 }
 
-function findingsByKind(findings) {
-  const byKind = new Map();
+function findingsByKind(findings: Finding[]) {
+  const byKind = new Map<Kind, string[]>();
   for (const finding of findings) {
     byKind.set(finding.kind, [...(byKind.get(finding.kind) ?? []), findingName(finding)]);
   }
@@ -949,8 +1033,8 @@ function findingsByKind(findings) {
   return [...byKind].map(([kind, names]) => `${KIND_LABELS[kind]}: ${names.join(", ")}`).join("; ");
 }
 
-function markdownReport(results) {
-  const lines = [];
+function markdownReport(results: PageResult[]) {
+  const lines: string[] = [];
   const missingCount = results.reduce(
     (sum, result) => sum + result.elements.reduce((count, element) => count + element.missing.length, 0),
     0,
@@ -1018,7 +1102,7 @@ function markdownReport(results) {
         lines.push(`  - Not in the frontend code, may come from the package: ${findingsByKind(element.inherited)}`);
       }
 
-      const undocumented = KINDS.filter((kind) => element.undocumented[kind]?.length > 0)
+      const undocumented = KINDS.filter((kind) => element.undocumented[kind].length > 0)
         .map((kind) => `${KIND_LABELS[kind]}: ${codeList(element.undocumented[kind])}`)
         .join("; ");
       if (undocumented) {
@@ -1039,7 +1123,7 @@ function markdownReport(results) {
 const pageFiles = (await readdir(PAGES_DIR))
   .filter((file) => /\.mdx?$/.test(file) && file !== "index.md")
   .sort();
-const results = [];
+const results: PageResult[] = [];
 for (const file of pageFiles) {
   results.push(checkPage(await parsePage(file)));
 }

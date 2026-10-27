@@ -12,7 +12,7 @@
 //   pnpm check:demos                        # against ../frontend
 //   pnpm check:demos --from /path/frontend  # another checkout
 //
-// scripts/build-components.mjs runs the same check on the commit it
+// scripts/build-components.ts runs the same check on the commit it
 // bundles, before it bundles anything.
 
 import { readdirSync } from "node:fs";
@@ -24,7 +24,7 @@ import ts from "typescript";
 const DEMO_RUNTIME = fileURLToPath(new URL("../demo-runtime/", import.meta.url));
 
 // Returns the formatted errors in demo-runtime/, or an empty string.
-export function checkDemoRuntime(frontend) {
+export function checkDemoRuntime(frontend: string) {
   const { config, error } = ts.readConfigFile(path.join(frontend, "tsconfig.json"), ts.sys.readFile);
   if (error) {
     throw new Error(ts.flattenDiagnosticMessageText(error.messageText, "\n"));
@@ -64,7 +64,7 @@ export function checkDemoRuntime(frontend) {
   });
 }
 
-// Run as a script, not imported by build-components.mjs.
+// Run as a script, not imported by build-components.ts.
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const { values } = parseArgs({
     options: { from: { type: "string", default: "../frontend" } },

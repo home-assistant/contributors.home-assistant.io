@@ -21,7 +21,7 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { readFragments } from "./generate-redirects.mjs";
+import { readFragments } from "./generate-redirects.ts";
 
 const DIST = fileURLToPath(new URL("../dist/", import.meta.url));
 const DOCS = fileURLToPath(new URL("../src/content/docs/", import.meta.url));
@@ -36,7 +36,7 @@ if (!existsSync(DIST)) {
 }
 
 // Every page, by its path, with the ids on it.
-const pages = new Map();
+const pages = new Map<string, { html: string; ids: Set<string> }>();
 
 for (const entry of readdirSync(DIST, { recursive: true, withFileTypes: true })) {
   if (!entry.isFile() || !entry.name.endsWith(".html")) {
@@ -55,24 +55,24 @@ const redirectLines = readFileSync(path.join(DIST, "_redirects"), "utf8")
   .filter((line) => line && !line.startsWith("#"));
 const redirectedPaths = new Set(redirectLines.filter((line) => line.startsWith("/")).map((line) => line.split(" ")[0]));
 
-const decodeEntities = (text) =>
+const decodeEntities = (text: string) =>
   text.replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">");
 
 // Problems, by the broken link, with the pages it is on.
-const broken = new Map();
+const broken = new Map<string, string[]>();
 
-function report(link, foundOn) {
+function report(link: string, foundOn: string) {
   broken.set(link, [...(broken.get(link) ?? []), foundOn]);
 }
 
-function pageExists(pagePath, anchor) {
+function pageExists(pagePath: string, anchor: string | undefined) {
   const key = pagePath.endsWith("/") ? pagePath : `${pagePath}/`;
   const page = pages.get(key);
-  return Boolean(page) && (!anchor || page.ids.has(anchor));
+  return page !== undefined && (!anchor || page.ids.has(anchor));
 }
 
 // Checks one link to a path of this site, like "/start/#anchor".
-function checkLink(link, foundOn) {
+function checkLink(link: string, foundOn: string) {
   const [withoutAnchor, anchor] = link.split("#");
   const target = withoutAnchor.split("?")[0];
 

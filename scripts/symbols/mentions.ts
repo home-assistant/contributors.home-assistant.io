@@ -12,7 +12,17 @@ import { areaOf, indexOfPage, pageDomainOf, pageUrlOf } from "../../src/lib/code
 export const ROOT = fileURLToPath(new URL("../../", import.meta.url));
 const DOCS_DIR = path.join(ROOT, "src/content/docs");
 
-function pages(dir) {
+export interface Mention {
+  file: string;
+  url: ReturnType<typeof pageUrlOf>;
+  area: ReturnType<typeof areaOf>;
+  index: ReturnType<typeof indexOfPage>;
+  domain: ReturnType<typeof pageDomainOf>;
+  line: number;
+  text: string;
+}
+
+function pages(dir: string): string[] {
   return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) {
@@ -23,7 +33,7 @@ function pages(dir) {
 }
 
 export function docsMentions() {
-  const mentions = [];
+  const mentions: Mention[] = [];
 
   for (const file of pages(DOCS_DIR)) {
     const lines = readFileSync(file, "utf8").split("\n");
@@ -34,7 +44,7 @@ export function docsMentions() {
       index: indexOfPage(file),
       domain: pageDomainOf(file),
     };
-    let fence;
+    let fence: string | undefined;
     let inFrontMatter = lines[0] === "---";
 
     lines.forEach((line, number) => {
