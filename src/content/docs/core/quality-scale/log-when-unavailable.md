@@ -18,7 +18,7 @@ When entities go [unavailable](/glossary/unavailable/), users look in the logs t
 
 ### With a coordinator
 
-The coordinator does this for you. Raise `UpdateFailed` when the update fails. The coordinator logs the first failure, stays quiet while the failures continue, and logs at `info` level when fetching the data recovers:
+The coordinator does this for you. Raise `UpdateFailed` when the update fails. The coordinator logs the first failure at `error` level, stays quiet while the failures continue, and logs at `info` level when fetching the data recovers:
 
 ```python
 async def _async_update_data(self) -> MyData:
@@ -31,6 +31,22 @@ async def _async_update_data(self) -> MyData:
             translation_key="update_failed",
         ) from err
 ```
+
+When the device being unavailable is expected, like a device that the user turned off, raise `DeviceUnavailable` instead. It is a subclass of `UpdateFailed`, so everything else works the same, but the coordinator logs the first failure at `info` level:
+
+```python
+async def _async_update_data(self) -> MyData:
+    """Fetch the latest data."""
+    try:
+        return await self.client.get_data()
+    except MyDeviceOffError as err:
+        raise DeviceUnavailable(
+            translation_domain=DOMAIN,
+            translation_key="device_off",
+        ) from err
+```
+
+Only use `DeviceUnavailable` when nothing is wrong. A device that should be reachable but is not, or a service that fails, is an error: keep raising `UpdateFailed` for those.
 
 ### With async_update
 
