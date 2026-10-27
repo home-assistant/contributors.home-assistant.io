@@ -1,5 +1,5 @@
 // Every inline code span on the docs pages, with its page, line, area, and
-// the index of code symbols the page uses (see src/lib/code-symbols.mjs).
+// the index of code symbols the page uses (see src/lib/code-symbols.ts).
 // Not in code blocks, headings, or link text. A plain reading of the
 // Markdown: good enough to choose what to keep in an index and to count
 // coverage. The plugin decides on the real tree.
@@ -7,7 +7,7 @@
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { areaOf, indexOfPage, pageDomainOf, pageUrlOf } from "../../src/lib/code-symbols.mjs";
+import { areaOf, indexOfPage, pageDomainOf, pageUrlOf } from "../../src/lib/code-symbols.ts";
 
 export const ROOT = fileURLToPath(new URL("../../", import.meta.url));
 const DOCS_DIR = path.join(ROOT, "src/content/docs");

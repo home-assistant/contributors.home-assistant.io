@@ -9,6 +9,8 @@
 // written to public/ by `pnpm redirects`. It is only fetched when an anchor
 // misses, which is rare.
 
+import type { AstroIntegration } from "astro";
+
 const SCRIPT = `
 const anchor = (() => {
   try {
@@ -32,7 +34,7 @@ if (anchor && !document.getElementById(anchor)) {
 }
 `;
 
-export function redirectFragments() {
+export function redirectFragments(): AstroIntegration {
   return {
     name: "redirect-fragments",
     hooks: {

@@ -31,6 +31,34 @@
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
+import type { AstroIntegration } from "astro";
+import type { Parents } from "hast";
+import { defineHastPlugin } from "satteri";
+
+interface Repository {
+  repository: string;
+  branch: string;
+}
+
+// The repositories of a folder of pages in SCOPES.
+interface ScopeRule {
+  id: RepositoryId;
+  only?: string[];
+}
+
+// A path of a repository the docs mention, in the index. `type` is "file"
+// or "folder".
+export interface PathEntry {
+  path: string;
+  repository: string;
+  branch: string;
+  type?: string;
+}
+
+// src/data/source-paths.json.
+export interface SourcePathsIndex {
+  paths?: PathEntry[];
+}
 
 export const INDEX_FILE = fileURLToPath(new URL("../data/source-paths.json", import.meta.url));
 
@@ -52,7 +80,9 @@ export const REPOSITORIES = {
   iOS: { repository: "home-assistant/iOS", branch: "main" },
   "operating-system": { repository: "home-assistant/operating-system", branch: "dev" },
   supervisor: { repository: "home-assistant/supervisor", branch: "main" },
-};
+} satisfies Record<string, Repository>;
+
+export type RepositoryId = keyof typeof REPOSITORIES;
 
 // The repositories the pages in a folder of src/content/docs/ are about.
 // The longest folder that holds the page wins. `only` limits a repository
@@ -64,7 +94,7 @@ export const REPOSITORIES = {
 // one the page means. The AI tools page in Start is left out on purpose: it
 // names the same files for six repositories and this site, often in one
 // sentence, so even a path that exists in only one of them can mean another.
-export const SCOPES = {
+export const SCOPES: Record<string, ScopeRule[]> = {
   "apps/": [{ id: "apps-example" }, { id: "builder", only: ["actions/"] }],
   // Walks through the example app of the community apps, not the one of
   // Home Assistant.
@@ -104,7 +134,7 @@ export const SCOPES = {
 // they look like one: a file you create yourself, an example, or the same
 // folder in another repository. They never link, and the generator does not
 // report them as missing.
-export const NOT_REPOSITORY_PATHS = {
+export const NOT_REPOSITORY_PATHS: Partial<Record<string, string[]>> = {
   // The folder of every plugin repository, not the one of the Supervisor.
   "os/supervisor/plugins.md": ["rootfs/"],
   // Files you create, or the build writes.
@@ -129,21 +159,21 @@ export const NOT_REPOSITORY_PATHS = {
 // `../`, and `https://example.org/` are not.
 const PATH = /^(?!\.\.?\/)[\w.@+-]+(?:\/[\w.@+-]+)*\/?$/;
 
-export function isPathMention(text) {
+export function isPathMention(text: string) {
   const path = text.trim();
-  const lastSegment = path.split("/").at(-1);
+  const lastSegment = path.split("/").at(-1) ?? "";
   return PATH.test(path) && path.includes("/") && (path.endsWith("/") || /\.\w+$/.test(lastSegment));
 }
 
 // The page path inside src/content/docs/, like core/entities/cover.md, or
 // undefined for any other file.
-export function docsPathOf(file) {
+export function docsPathOf(file: string) {
   return file.startsWith(DOCS_DIR) ? file.slice(DOCS_DIR.length) : undefined;
 }
 
 // The repositories a page is about: the rules of the longest folder in
 // SCOPES that holds it.
-export function scopeOf(docsPath) {
+export function scopeOf(docsPath: string | undefined) {
   if (!docsPath) {
     return [];
   }
@@ -157,7 +187,7 @@ export function scopeOf(docsPath) {
 
 // The repositories a path mention on a page could be in, by the rules
 // alone. Whether the path exists there is up to the index.
-export function candidatesFor(docsPath, text) {
+export function candidatesFor(docsPath: string, text: string) {
   if (!isPathMention(text)) {
     return [];
   }
@@ -177,25 +207,26 @@ export function readIndex() {
     return undefined;
   }
 
-  return JSON.parse(readFileSync(INDEX_FILE, "utf8"));
+  const index: SourcePathsIndex = JSON.parse(readFileSync(INDEX_FILE, "utf8"));
+  return index;
 }
 
 // The URL of a path in a repository: blob/ for a file, tree/ for a folder.
-export function sourcePathUrl(entry) {
+export function sourcePathUrl(entry: PathEntry) {
   const kind = entry.type === "folder" ? "tree" : "blob";
   return `https://github.com/${entry.repository}/${kind}/${entry.branch}/${entry.path.replace(/\/$/, "")}`;
 }
 
 // Finds the entry of the index a path mention on a page means, or
 // undefined when it means none, or more than one.
-export function createResolver(index) {
+export function createResolver(index: SourcePathsIndex | undefined) {
   const byKey = new Map((index?.paths ?? []).map((entry) => [`${entry.repository}\n${entry.path}`, entry]));
 
-  return (docsPath, text) => {
+  return (docsPath: string, text: string) => {
     const path = text.trim();
     const matches = candidatesFor(docsPath, text)
       .map((id) => byKey.get(`${REPOSITORIES[id].repository}\n${path}`))
-      .filter(Boolean);
+      .filter((entry) => entry !== undefined);
 
     return matches.length === 1 ? matches[0] : undefined;
   };
@@ -209,7 +240,7 @@ export function sourcePaths() {
   const index = readIndex();
   const resolve = createResolver(index);
 
-  return {
+  return defineHastPlugin({
     name: "source-paths",
     // Not used by the plugin: it is here so Astro sees a new configuration,
     // and renders every page again, when the index changes.
@@ -226,7 +257,7 @@ export function sourcePaths() {
           return;
         }
 
-        for (let parent = ctx.parent(node); parent && parent.type !== "root"; parent = ctx.parent(parent)) {
+        for (let parent: Readonly<Parents> | undefined = ctx.parent(node); parent && parent.type !== "root"; parent = ctx.parent(parent)) {
           const isSkipped = parent.type === "element" && SKIP_TAGS.has(parent.tagName);
           if (isSkipped || parent.type.startsWith("mdxJsx")) {
             return;
@@ -246,12 +277,12 @@ export function sourcePaths() {
         });
       },
     },
-  };
+  });
 }
 
 // For `pnpm dev`: restarts the server when the index changes, so every page
 // links the new paths, not only the ones you open next.
-export function sourcePathsWatch() {
+export function sourcePathsWatch(): AstroIntegration {
   return {
     name: "source-paths-watch",
     hooks: {

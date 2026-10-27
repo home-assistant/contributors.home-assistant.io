@@ -38,13 +38,9 @@
 // - A typo or an outdated name: fix the page.
 // - Code of another project, like `ClientSession` of aiohttp: it stays plain.
 
-import { createResolver, INDEXES } from "../../src/lib/code-symbols.mjs";
+import { INDEXES, type IndexName, type Resolve, createResolver, isIndexName } from "../../src/lib/code-symbols.ts";
 import type { Mention } from "./mentions.ts";
-import type { CodeSymbol, Hook, SymbolIndex } from "./types.ts";
-
-export type IndexName = keyof typeof INDEXES;
-
-export const isIndexName = (name: string | undefined): name is IndexName => name !== undefined && Object.hasOwn(INDEXES, name);
+import type { SymbolIndex } from "./types.ts";
 
 interface AreaCoverage {
   index: string | null;
@@ -166,7 +162,7 @@ export function looksLikeSymbol(text: string) {
 // The coverage of `mentions` (from docsMentions()) with `indexes`, the
 // parsed index files by name.
 export function measureCoverage(mentions: Mention[], indexes: Partial<Record<IndexName, SymbolIndex>>): Coverage {
-  const resolvers = new Map<string, (text: string, pageDomain: string | undefined, pageUrl: string) => CodeSymbol | Hook | undefined>();
+  const resolvers = new Map<string, Resolve>();
   for (const [name, index] of Object.entries(indexes)) {
     if (index && isIndexName(name)) {
       resolvers.set(name, createResolver(index.symbols, INDEXES[name].aliases, index.hooks ?? []));
@@ -179,7 +175,7 @@ export function measureCoverage(mentions: Mention[], indexes: Partial<Record<Ind
   for (const mention of mentions) {
     const resolve = mention.index ? resolvers.get(mention.index) : undefined;
     const resolved = Boolean(resolve?.(mention.text, mention.domain, mention.url));
-    if (!resolved && !looksLikeSymbol(mention.text)) {
+    if (mention.area === undefined || (!resolved && !looksLikeSymbol(mention.text))) {
       continue;
     }
 

@@ -63,6 +63,52 @@ import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import type { AstroIntegration } from "astro";
+import type { Nodes, Parents, Root } from "hast";
+import { defineHastPlugin } from "satteri";
+import type { CodeSymbol, Hook, SymbolIndex } from "../../scripts/symbols/types.ts";
+
+export type IndexName = "core" | "frontend";
+
+// Short names the docs use for a module or an object, and its full id.
+type Aliases = Partial<Record<string, string>>;
+
+interface IndexConfig {
+  file: string;
+  repository: string;
+  areas: Set<string>;
+  aliases: Aliases;
+}
+
+// What a mention resolves to: a symbol, or a hook that links to its page.
+export type Resolved = CodeSymbol | Hook;
+
+export type Resolve<S extends CodeSymbol = CodeSymbol, H extends Hook = Hook> = (text: string, pageDomain?: string, pageUrl?: string) => S | H | undefined;
+
+// An inline code span read as a name and what qualifies it.
+interface ParsedMention {
+  name: string;
+  qualifier: string;
+}
+
+interface LoadedIndex extends SymbolIndex {
+  resolve: Resolve;
+}
+
+interface CodeSymbolsState {
+  indexName: IndexName | undefined;
+  index: LoadedIndex | undefined;
+  pageDomain: string | undefined;
+  pageUrl: string;
+  linkedPages: Set<string>;
+  linked: Set<string>;
+}
+
+declare module "satteri" {
+  interface DataMap {
+    codeSymbols: CodeSymbolsState;
+  }
+}
 
 const DOCS_DIR = fileURLToPath(new URL("../content/docs/", import.meta.url));
 const COMPONENTS_DIR = fileURLToPath(new URL("../content/docs/design/components/", import.meta.url));
@@ -91,7 +137,7 @@ const INTEGRATION_CONVENTIONS = new Set([
   "setup_entry",
 ]);
 
-export const isIntegrationConvention = (name) => INTEGRATION_CONVENTIONS.has(name) || name.startsWith("async_step_");
+export const isIntegrationConvention = (name: string) => INTEGRATION_CONVENTIONS.has(name) || name.startsWith("async_step_");
 
 // Modules whose names are mostly plain words or configuration keys, like
 // `string`, `url`, `time_zone`, or `now`. Only a qualified mention, like
@@ -102,7 +148,7 @@ export const QUALIFIED_ONLY_MODULES = new Set(["homeassistant.helpers.config_val
 // repository and the docs usually call a module or an object. In core,
 // `hass.bus.async_fire` is the `async_fire` of the event bus. In the
 // frontend, `hass.callWS` is a member of the `HomeAssistant` interface.
-export const INDEXES = {
+export const INDEXES: Record<IndexName, IndexConfig> = {
   core: {
     file: fileURLToPath(new URL("../data/symbols/core.json", import.meta.url)),
     repository: "home-assistant/core",
@@ -133,6 +179,8 @@ export const INDEXES = {
   },
 };
 
+export const isIndexName = (name: string | undefined): name is IndexName => name !== undefined && Object.hasOwn(INDEXES, name);
+
 // The glossary has terms of both sides. A term in this sidebar group uses
 // the frontend index, every other term the one of core.
 const FRONTEND_GLOSSARY_GROUP = "Frontend";
@@ -140,12 +188,12 @@ const FRONTEND_GLOSSARY_GROUP = "Frontend";
 const IDENTIFIER_PATH = /^[A-Za-z_$][\w$]*(?:\.[A-Za-z_$][\w$]*)*$/;
 
 // A plain lowercase word, like `state`, `date`, or `json`.
-export const isPlainWord = (name) => /^[a-z][a-z0-9]*$/.test(name);
+export const isPlainWord = (name: string) => /^[a-z][a-z0-9]*$/.test(name);
 
 // The text of an inline code span as a name and what qualifies it, or
 // undefined when it is not just a name. `self.` and `this.` are left out:
 // they mean the class the page is about, so it is a bare name.
-export function parseMention(text) {
+export function parseMention(text: string): ParsedMention | undefined {
   const mention = text
     .trim()
     .replace(/\(\)$/, "")
@@ -155,8 +203,8 @@ export function parseMention(text) {
     return undefined;
   }
 
-  const parts = mention.split(".");
-  return { name: parts.at(-1), qualifier: parts.slice(0, -1).join(".") };
+  const dot = mention.lastIndexOf(".");
+  return { name: mention.slice(dot + 1), qualifier: dot === -1 ? "" : mention.slice(0, dot) };
 }
 
 // The module of core an inline code span names, or undefined: a dotted path
@@ -164,7 +212,7 @@ export function parseMention(text) {
 // `from homeassistant.components.fan import FanEntity` or
 // `import homeassistant.helpers.config_validation as cv`. Whether the module
 // exists is up to the index.
-export function moduleMention(text) {
+export function moduleMention(text: string) {
   const mention = text.trim();
   const match =
     mention.match(/^(homeassistant(?:\.\w+)+)$/) ??
@@ -174,10 +222,10 @@ export function moduleMention(text) {
 }
 
 // The module, or the module and class, a symbol is defined in.
-const ownerOf = (symbol) =>
+const ownerOf = (symbol: CodeSymbol) =>
   symbol.qualname.includes(".") ? `${symbol.module}.${symbol.qualname.split(".")[0]}` : symbol.module;
 
-function qualifierMatches(qualifier, symbol, aliases) {
+function qualifierMatches(qualifier: string, symbol: CodeSymbol, aliases: Aliases) {
   const alias = aliases[qualifier];
   const target = alias ?? qualifier;
   const owner = ownerOf(symbol);
@@ -195,22 +243,24 @@ function qualifierMatches(qualifier, symbol, aliases) {
 
 // The entity domain a method belongs to, like `cover` for
 // `CoverEntity.open_cover`, or undefined.
-export const entityDomainOf = (symbol) =>
+export const entityDomainOf = (symbol: Pick<CodeSymbol, "kind" | "module">) =>
   symbol.kind === "method" ? symbol.module.match(/^homeassistant\.components\.([a-z0-9_]+)/)?.[1] : undefined;
 
 // The entity domain a page is about: `cover` for core/entities/cover.md.
-export function pageDomainOf(file) {
+export function pageDomainOf(file: string) {
   return file.match(/\/core\/entities\/([a-z0-9-]+)\.mdx?$/)?.[1].replaceAll("-", "_");
 }
+
+const isHook = (symbol: Resolved): symbol is Hook => symbol.kind === "hook";
 
 // Finds the symbol an inline code span means, or undefined. `pageDomain` is
 // the entity domain of the page, from pageDomainOf(), and `pageUrl` its URL.
 // `aliases` are the aliases of the index the symbols come from, and `hooks`
 // the integration hooks of core, like `async_setup_entry`: integrations
 // define those themselves, so they link to the page that explains them.
-export function createResolver(symbols, aliases = {}, hooks = []) {
-  const byName = new Map();
-  const modules = new Map();
+export function createResolver<S extends CodeSymbol, H extends Hook = never>(symbols: S[], aliases: Aliases = {}, hooks: H[] = []) {
+  const byName = new Map<string, S[]>();
+  const modules = new Map<string, S>();
   for (const symbol of symbols) {
     if (symbol.kind === "module") {
       modules.set(symbol.id, symbol);
@@ -221,8 +271,9 @@ export function createResolver(symbols, aliases = {}, hooks = []) {
   const hooksByName = new Map(hooks.map((hook) => [hook.name, hook]));
   const byId = new Map(symbols.map((symbol) => [symbol.id, symbol]));
 
-  const resolve = (text, pageDomain, pageUrl) => {
-    const module = modules.get(moduleMention(text));
+  const resolve: Resolve<S, H> = (text, pageDomain, pageUrl) => {
+    const modulePath = moduleMention(text);
+    const module = modulePath ? modules.get(modulePath) : undefined;
     if (module) {
       return module;
     }
@@ -231,7 +282,7 @@ export function createResolver(symbols, aliases = {}, hooks = []) {
     // same name means something else, like `async_step_user` of a subentry
     // flow.
     const hookMention = parseMention(text);
-    const hook = !hookMention?.qualifier && hooksByName.get(hookMention?.name);
+    const hook = hookMention && !hookMention.qualifier ? hooksByName.get(hookMention.name) : undefined;
     if (hook) {
       const onOwnPage = pageUrl && (hook.page.split("#")[0] === pageUrl || hook.notOn?.includes(pageUrl));
       return onOwnPage ? undefined : hook;
@@ -242,9 +293,10 @@ export function createResolver(symbols, aliases = {}, hooks = []) {
 
     // `hass.bus` on its own is the event bus. Not `hass` alone: that is a
     // word in the text as much as code.
-    const path = mention && [mention.qualifier, mention.name].filter(Boolean).join(".");
-    if (mention?.qualifier && byId.has(aliases[path])) {
-      return byId.get(aliases[path]);
+    const alias = mention?.qualifier ? aliases[`${mention.qualifier}.${mention.name}`] : undefined;
+    const aliased = alias === undefined ? undefined : byId.get(alias);
+    if (aliased) {
+      return aliased;
     }
 
     // The methods of an entity platform, like `send_message` of a notify
@@ -272,19 +324,19 @@ export function createResolver(symbols, aliases = {}, hooks = []) {
 
     // `SensorDeviceClass.TEMPERATURE`: a member of an enum.
     const owner = resolve(mention.qualifier, pageDomain, pageUrl);
-    return owner?.members?.includes(mention.name) ? owner : undefined;
+    return owner && !isHook(owner) && owner.members?.includes(mention.name) ? owner : undefined;
   };
 
   return resolve;
 }
 
 // The area of a page in src/content/docs/, or undefined for any other file.
-export function areaOf(file) {
+export function areaOf(file: string) {
   return file.startsWith(DOCS_DIR) ? file.slice(DOCS_DIR.length).split("/")[0] : undefined;
 }
 
 // The name of the index a page uses, or undefined when it uses none.
-export function indexOfPage(file) {
+export function indexOfPage(file: string): IndexName | undefined {
   const area = areaOf(file);
 
   if (area === "glossary") {
@@ -292,20 +344,23 @@ export function indexOfPage(file) {
     return group === FRONTEND_GLOSSARY_GROUP ? "frontend" : "core";
   }
 
-  return Object.keys(INDEXES).find((name) => INDEXES[name].areas.has(area));
+  return Object.keys(INDEXES)
+    .filter(isIndexName)
+    .find((name) => area !== undefined && INDEXES[name].areas.has(area));
 }
 
-export function sourceUrl(index, symbol) {
+export function sourceUrl(index: SymbolIndex, symbol: CodeSymbol) {
   return `https://github.com/${index.repository}/blob/${index.commit}/${symbol.path}#L${symbol.line}`;
 }
 
-export function readIndex(name) {
+export function readIndex(name: IndexName) {
   const file = INDEXES[name].file;
   if (!existsSync(file)) {
     return undefined;
   }
 
-  return JSON.parse(readFileSync(file, "utf8"));
+  const index: SymbolIndex = JSON.parse(readFileSync(file, "utf8"));
+  return index;
 }
 
 // The element tags that have a component page in the Design area, like
@@ -314,10 +369,10 @@ export function readIndex(name) {
 // `src/components/ha-button.ts`. A tag that two pages link is left out.
 export function elementPages() {
   if (!existsSync(COMPONENTS_DIR)) {
-    return new Map();
+    return new Map<string, string>();
   }
 
-  const owners = new Map();
+  const owners = new Map<string, string[]>();
 
   for (const file of readdirSync(COMPONENTS_DIR).filter((name) => /\.mdx?$/.test(name))) {
     const page = file.replace(/\.mdx?$/, "");
@@ -341,16 +396,16 @@ export function elementPages() {
 }
 
 // The tag of an element in inline code, `ha-button` or `<ha-button>`.
-const elementTagOf = (text) => text.trim().match(/^(?:<([a-z][a-z0-9]*-[a-z0-9-]+)>|([a-z][a-z0-9]*-[a-z0-9-]+))$/)?.slice(1).find(Boolean);
+const elementTagOf = (text: string) => text.trim().match(/^(?:<([a-z][a-z0-9]*-[a-z0-9-]+)>|([a-z][a-z0-9]*-[a-z0-9-]+))$/)?.slice(1).find(Boolean);
 
 // The pages a page links to, without the anchor.
-function linkedPages(root) {
-  const linked = new Set();
-  const visit = (node) => {
+function linkedPages(root: Readonly<Root>) {
+  const linked = new Set<string>();
+  const visit = (node: Readonly<Nodes>) => {
     if (node.type === "element" && node.tagName === "a") {
       linked.add(String(node.properties?.href ?? "").split("#")[0]);
     }
-    for (const child of node.children ?? []) {
+    for (const child of "children" in node ? node.children : []) {
       visit(child);
     }
   };
@@ -360,7 +415,7 @@ function linkedPages(root) {
 
 // The URL of a docs page: /design/components/button/ for
 // src/content/docs/design/components/button.mdx.
-export const pageUrlOf = (file) =>
+export const pageUrlOf = (file: string) =>
   areaOf(file) ? `/${file.slice(DOCS_DIR.length).replace(/\.mdx?$/, "").replace(/(^|\/)index$/, "")}/`.replace(/\/+/g, "/") : "";
 
 // Text inside these is never linked: it already is a link, it is a code
@@ -368,8 +423,8 @@ export const pageUrlOf = (file) =>
 const SKIP_TAGS = new Set(["a", "pre", "h1", "h2", "h3", "h4", "h5", "h6", "button", "script", "style", "svg"]);
 
 export function codeSymbols() {
-  const indexes = {};
-  for (const name of Object.keys(INDEXES)) {
+  const indexes: Partial<Record<IndexName, LoadedIndex>> = {};
+  for (const name of Object.keys(INDEXES).filter(isIndexName)) {
     const index = readIndex(name);
     if (index?.symbols?.length) {
       indexes[name] = { ...index, resolve: createResolver(index.symbols, INDEXES[name].aliases, index.hooks) };
@@ -378,7 +433,7 @@ export function codeSymbols() {
 
   const elements = elementPages();
 
-  return {
+  return defineHastPlugin({
     name: "code-symbols",
     // Not used by the plugin: it is here so Astro sees a new configuration,
     // and renders every page again, when an index or a component page
@@ -394,7 +449,7 @@ export function codeSymbols() {
 
       ctx.data.codeSymbols = {
         indexName,
-        index: indexes[indexName],
+        index: indexName ? indexes[indexName] : undefined,
         pageDomain: pageDomainOf(file),
         pageUrl: pageUrlOf(file),
         // Element tags link only on pages of the frontend index, and not to
@@ -412,7 +467,7 @@ export function codeSymbols() {
           return;
         }
 
-        for (let parent = ctx.parent(node); parent && parent.type !== "root"; parent = ctx.parent(parent)) {
+        for (let parent: Readonly<Parents> | undefined = ctx.parent(node); parent && parent.type !== "root"; parent = ctx.parent(parent)) {
           const isSkipped = parent.type === "element" && SKIP_TAGS.has(parent.tagName);
           if (isSkipped || parent.type.startsWith("mdxJsx")) {
             return;
@@ -422,7 +477,8 @@ export function codeSymbols() {
         const text = ctx.textContent(node);
 
         if (state.indexName === "frontend") {
-          const page = elements.get(elementTagOf(text));
+          const tag = elementTagOf(text);
+          const page = tag ? elements.get(tag) : undefined;
           if (page) {
             if (page !== state.pageUrl && !state.linkedPages.has(page)) {
               state.linkedPages.add(page);
@@ -432,8 +488,9 @@ export function codeSymbols() {
           }
         }
 
-        const symbol = state.index?.resolve(text, state.pageDomain, state.pageUrl);
-        if (!symbol || state.linked.has(symbol.id)) {
+        const { index } = state;
+        const symbol = index?.resolve(text, state.pageDomain, state.pageUrl);
+        if (!index || !symbol || state.linked.has(symbol.id)) {
           return;
         }
 
@@ -442,7 +499,7 @@ export function codeSymbols() {
           type: "element",
           tagName: "a",
           properties: {
-            href: symbol.kind === "hook" ? symbol.page : sourceUrl(state.index, symbol),
+            href: isHook(symbol) ? symbol.page : sourceUrl(index, symbol),
             className: ["code-symbol"],
             dataSymbol: symbol.id,
             dataSymbolIndex: state.indexName,
@@ -451,7 +508,7 @@ export function codeSymbols() {
         });
       },
     },
-  };
+  });
 }
 
 // The element tags with their component page, as one string to compare.
@@ -461,7 +518,7 @@ const elementsStamp = () => JSON.stringify([...elementPages()]);
 // links the new symbols, not only the ones you open next. The same when a
 // component page starts or stops linking an element in its "In code"
 // section. Editing the rest of a component page restarts nothing.
-export function codeSymbolsWatch() {
+export function codeSymbolsWatch(): AstroIntegration {
   return {
     name: "code-symbols-watch",
     hooks: {

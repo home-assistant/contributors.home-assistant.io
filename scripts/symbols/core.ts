@@ -1,6 +1,6 @@
 // Generates src/data/symbols/core.json: the code symbols and modules of Home
 // Assistant core that the docs mention, for the cards on inline code (see
-// src/lib/code-symbols.mjs and src/components/HoverCards.astro). Run it with
+// src/lib/code-symbols.ts and src/components/HoverCards.astro). Run it with
 // `pnpm symbols` (scripts/generate-symbols.ts).
 //
 // It reads core from a commit of a core checkout, with Git:
@@ -27,7 +27,7 @@
 // first sentence of the docstring, and the line.
 //
 // Then it keeps only the symbols an inline code span on a page of the core
-// index links to, with the rules in src/lib/code-symbols.mjs. So the file
+// index links to, with the rules in src/lib/code-symbols.ts. So the file
 // holds what the docs use, not all of core, and stays small enough to
 // review.
 
@@ -43,7 +43,7 @@ import {
   isIntegrationConvention,
   isPlainWord,
   moduleMention,
-} from "../../src/lib/code-symbols.mjs";
+} from "../../src/lib/code-symbols.ts";
 
 import { formatCall } from "./format.ts";
 import { readFiles } from "./git.ts";
@@ -361,7 +361,14 @@ export function generateCore({ checkout, ref, mentions }: GenerateOptions): Gene
   const extended = new Set(files.filter((file) => file.extended).map((file) => file.path));
 
   // The modules the pages name, read for their docstring only.
-  const namedModules = [...new Set(mentions.map((mention) => moduleMention(mention.text)).filter((name) => modules.has(name)))];
+  const namedModules = [
+    ...new Set(
+      mentions.flatMap((mention) => {
+        const name = moduleMention(mention.text);
+        return name && modules.has(name) ? [name] : [];
+      }),
+    ),
+  ];
   const moduleFiles = namedModules.flatMap((name) => {
     const file = modules.get(name);
     return file ? [{ path: file, moduleOnly: true }] : [];
@@ -437,7 +444,7 @@ export function generateCore({ checkout, ref, mentions }: GenerateOptions): Gene
   const linked: Mention[] = [];
 
   for (const mention of mentions) {
-    const symbol: Candidate | Hook | undefined = resolve(mention.text, mention.domain, mention.url);
+    const symbol = resolve(mention.text, mention.domain, mention.url);
     if (symbol && "page" in symbol) {
       usedHooks.set(symbol.id, symbol);
       linked.push(mention);

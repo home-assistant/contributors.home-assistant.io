@@ -11,9 +11,22 @@
 // rendered pages between builds: remove node_modules/.astro to see a change
 // here on every page.
 
+import type { Element, ElementContent, Properties, Text } from "hast";
+import { defineHastPlugin } from "satteri";
+import type { ShikiTransformer } from "shiki";
+
+// An SVG shape of an icon: its tag and attributes.
+type Shape = [tagName: string, properties: Properties];
+
+// Where linkUrls() is in a line of a code block.
+interface LineCursor {
+  text: string;
+  position: number;
+}
+
 // Readable names for the languages used in the fences. Ids that mean the
 // same language share a name: `sh`, `bash`, and `shell` are all "Shell".
-const LANGUAGE_LABELS = {
+const LANGUAGE_LABELS: Partial<Record<string, string>> = {
   bash: "Shell",
   console: "Shell",
   css: "CSS",
@@ -59,13 +72,13 @@ const LANGUAGE_LABELS = {
 const PLAIN_TEXT = new Set(["", "plaintext", "text", "txt", "plain"]);
 
 // Lucide style icons, drawn like the ones in src/components/Icon.astro.
-const COPY_ICON = [
+const COPY_ICON: Shape[] = [
   ["rect", { x: "9", y: "9", width: "13", height: "13", rx: "2" }],
   ["path", { d: "M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" }],
 ];
-const CHECK_ICON = [["polyline", { points: "20 6 9 17 4 12" }]];
+const CHECK_ICON: Shape[] = [["polyline", { points: "20 6 9 17 4 12" }]];
 
-function languageLabel(language) {
+function languageLabel(language: Properties[string]) {
   const id = String(language ?? "").toLowerCase();
   if (PLAIN_TEXT.has(id)) {
     return undefined;
@@ -75,22 +88,21 @@ function languageLabel(language) {
 }
 
 // The `title="..."` (or `title='...'`) in the meta of a fence.
-function fenceTitle(meta) {
-  const match = String(meta ?? "").match(/(?:^|\s)title=(?:"([^"]*)"|'([^']*)')/);
+function fenceTitle(meta: string | undefined) {
+  const match = (meta ?? "").match(/(?:^|\s)title=(?:"([^"]*)"|'([^']*)')/);
   const title = (match?.[1] ?? match?.[2])?.trim();
   return title || undefined;
 }
 
-// The `const` casts keep the node types literal, as the hast types expect.
-const element = (tagName, properties, children = []) => ({
-  type: /** @type {const} */ ("element"),
+const element = (tagName: string, properties: Properties, children: ElementContent[] = []): Element => ({
+  type: "element",
   tagName,
   properties,
   children,
 });
-const text = (value) => ({ type: /** @type {const} */ ("text"), value });
+const text = (value: string): Text => ({ type: "text", value });
 
-function icon(name, shapes) {
+function icon(name: string, shapes: Shape[]) {
   return element(
     "svg",
     {
@@ -134,9 +146,9 @@ const PLACEHOLDER_START = /^[<{$]/;
  * `line` is the text of the Shiki line the node is in, and how far into it
  * the walk got, so the text right after a URL can be read across tokens.
  */
-function linkUrls(node, line) {
+function linkUrls(node: ElementContent, line?: LineCursor): ElementContent[] {
   if (node.type === "text") {
-    const parts = [];
+    const parts: ElementContent[] = [];
     let last = 0;
     const lineText = line?.text ?? node.value;
     const nodeStart = line?.position ?? 0;
@@ -168,27 +180,32 @@ function linkUrls(node, line) {
     return parts;
   }
 
-  if (!node.children) {
+  if (node.type !== "element") {
     return [node];
   }
 
+  return [linkElementUrls(node, line)];
+}
+
+// linkUrls() for an element and everything in it.
+function linkElementUrls(node: Element, line?: LineCursor): Element {
   const isLine = String(node.properties?.className ?? node.properties?.class ?? "").split(/[\s,]+/).includes("line");
   const context = isLine ? { text: plainText(node), position: 0 } : line;
 
-  return [{ ...node, children: node.children.flatMap((child) => linkUrls(child, context)) }];
+  return { ...node, children: node.children.flatMap((child) => linkUrls(child, context)) };
 }
 
 /** The text of a node and everything in it, like `textContent`. */
-function plainText(node) {
+function plainText(node: ElementContent): string {
   if (node.type === "text") {
     return node.value;
   }
 
-  return (node.children ?? []).map(plainText).join("");
+  return node.type === "element" ? node.children.map(plainText).join("") : "";
 }
 
 /** Shiki transformer: keeps the title from the fence on the `pre`. */
-export const codeBlockTitle = {
+export const codeBlockTitle: ShikiTransformer = {
   name: "code-block-title",
   pre(node) {
     const title = fenceTitle(this.options.meta?.__raw);
@@ -200,7 +217,7 @@ export const codeBlockTitle = {
 
 /** Hast plugin: wraps each highlighted `pre` in a figure with a header. */
 export function codeBlocks() {
-  return {
+  return defineHastPlugin({
     name: "code-blocks",
 
     element: {
@@ -212,7 +229,8 @@ export function codeBlocks() {
           return;
         }
 
-        const { dataTitle: title, ...preProperties } = node.properties;
+        const { dataTitle, ...preProperties } = node.properties;
+        const title = typeof dataTitle === "string" ? dataTitle : undefined;
 
         // A Mermaid diagram is drawn in the browser, not shown as code. The
         // source goes into a plain `pre`, which src/components/MermaidDiagrams
@@ -223,18 +241,22 @@ export function codeBlocks() {
           ]);
         }
 
-        const [linked] = linkUrls(node);
+        const linked = linkElementUrls(node);
         const label = languageLabel(preProperties.dataLanguage);
 
-        const header = element("div", { className: ["code-block-header"], dataPagefindIgnore: "" }, [
-          title && element("span", { className: ["code-block-title"], title }, [text(title)]),
-          label && element("span", { className: ["code-block-language"] }, [text(label)]),
-          element("span", { className: ["code-block-status"], role: "status" }),
-          element("button", { type: "button", className: ["code-block-copy"], ariaLabel: "Copy code", dataCopyCode: "" }, [
-            icon("copy", COPY_ICON),
-            icon("check", CHECK_ICON),
-          ]),
-        ].filter(Boolean));
+        const header = element(
+          "div",
+          { className: ["code-block-header"], dataPagefindIgnore: "" },
+          [
+            title ? element("span", { className: ["code-block-title"], title }, [text(title)]) : undefined,
+            label ? element("span", { className: ["code-block-language"] }, [text(label)]) : undefined,
+            element("span", { className: ["code-block-status"], role: "status" }),
+            element("button", { type: "button", className: ["code-block-copy"], ariaLabel: "Copy code", dataCopyCode: "" }, [
+              icon("copy", COPY_ICON),
+              icon("check", CHECK_ICON),
+            ]),
+          ].filter((child) => child !== undefined),
+        );
 
         return element("figure", { className: title ? ["code-block", "has-title"] : ["code-block"] }, [
           header,
@@ -242,5 +264,5 @@ export function codeBlocks() {
         ]);
       },
     },
-  };
+  });
 }

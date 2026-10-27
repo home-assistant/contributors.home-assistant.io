@@ -19,7 +19,34 @@ import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import type { AstroIntegration } from "astro";
+import type { ElementContent, Nodes, Parents, Root } from "hast";
+import { defineHastPlugin } from "satteri";
 import { parse } from "yaml";
+
+// A word that links to a term.
+interface AutolinkWord {
+  term: string;
+  word: string;
+  matchCase: boolean;
+}
+
+// The front matter of a term's page, as far as autolinks go.
+interface TermFrontMatter {
+  term?: { autolink?: string[] };
+}
+
+interface GlossaryAutolinkState {
+  enabled: boolean;
+  currentTerm: string | undefined;
+  linked: Set<string>;
+}
+
+declare module "satteri" {
+  interface DataMap {
+    glossaryAutolink: GlossaryAutolinkState;
+  }
+}
 
 const DOCS_DIR = fileURLToPath(new URL("../content/docs/", import.meta.url));
 const GLOSSARY_DIR = `${DOCS_DIR}glossary/`;
@@ -33,9 +60,9 @@ const DEV_STAMP = fileURLToPath(new URL("../../.astro/glossary-autolink.txt", im
 // interface, like **Run Home Assistant Core**, which is not the term.
 const SKIP_TAGS = new Set(["a", "code", "pre", "kbd", "strong", "h1", "h2", "h3", "h4", "h5", "h6", "button", "script", "style", "svg"]);
 
-// Every word that links to a term: { term, word, matchCase }.
+// Every word that links to a term.
 function readTerms() {
-  const words = [];
+  const words: AutolinkWord[] = [];
 
   for (const file of readdirSync(GLOSSARY_DIR)) {
     if (!file.endsWith(".md")) {
@@ -44,7 +71,8 @@ function readTerms() {
 
     const source = readFileSync(`${GLOSSARY_DIR}${file}`, "utf8");
     const frontMatter = source.match(/^---\n([\s\S]*?)\n---/)?.[1];
-    const autolink = frontMatter ? (parse(frontMatter)?.term?.autolink ?? []) : [];
+    const data: TermFrontMatter | null = frontMatter ? parse(frontMatter) : null;
+    const autolink = data?.term?.autolink ?? [];
     const term = file.replace(/\.md$/, "");
 
     for (const word of autolink) {
@@ -56,15 +84,15 @@ function readTerms() {
 }
 
 // The terms a page links to itself, like [entity](/glossary/entity/).
-function linkedByHand(root) {
-  const linked = new Set();
-  const visit = (node) => {
+function linkedByHand(root: Readonly<Root>) {
+  const linked = new Set<string>();
+  const visit = (node: Readonly<Nodes>) => {
     const href = node.type === "element" && node.tagName === "a" ? String(node.properties?.href ?? "") : "";
     const term = href.match(/^\/glossary\/([^/]+)\/$/)?.[1];
     if (term) {
       linked.add(term);
     }
-    for (const child of node.children ?? []) {
+    for (const child of "children" in node ? node.children : []) {
       visit(child);
     }
   };
@@ -73,9 +101,9 @@ function linkedByHand(root) {
 }
 
 // Changes when any autolink word, or the term it links to, changes.
-const fingerprint = (words) => createHash("sha256").update(JSON.stringify(words)).digest("hex").slice(0, 16);
+const fingerprint = (words: AutolinkWord[]) => createHash("sha256").update(JSON.stringify(words)).digest("hex").slice(0, 16);
 
-const escape = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const escape = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 export function glossaryAutolink() {
   const words = readTerms();
@@ -94,7 +122,7 @@ export function glossaryAutolink() {
     .join("|");
   const pattern = new RegExp(`(?<![\\w-])(?:${alternatives})(?![\\w-])`, "gi");
 
-  return {
+  return defineHastPlugin({
     name: "glossary-autolink",
     // Not used by the plugin: it is here so Astro sees a new configuration,
     // and renders every page again, when the words change.
@@ -118,7 +146,7 @@ export function glossaryAutolink() {
         return;
       }
 
-      for (let parent = ctx.parent(node); parent && parent.type !== "root"; parent = ctx.parent(parent)) {
+      for (let parent: Readonly<Parents> | undefined = ctx.parent(node); parent && parent.type !== "root"; parent = ctx.parent(parent)) {
         const isSkipped = parent.type === "element" && SKIP_TAGS.has(parent.tagName);
         // Components in MDX, like a live demo, render their own content.
         const isComponent = parent.type.startsWith("mdxJsx");
@@ -127,7 +155,7 @@ export function glossaryAutolink() {
         }
       }
 
-      const pieces = [];
+      const pieces: ElementContent[] = [];
       let last = 0;
 
       for (const match of node.value.matchAll(pattern)) {
@@ -163,12 +191,12 @@ export function glossaryAutolink() {
         pieces.filter((piece) => piece.type !== "text" || piece.value),
       );
     },
-  };
+  });
 }
 
 // For `pnpm dev`: restarts the server when the autolink words change, so
 // every page links the new words, not only the ones you open next.
-export function glossaryAutolinkWatch() {
+export function glossaryAutolinkWatch(): AstroIntegration {
   return {
     name: "glossary-autolink-watch",
     hooks: {

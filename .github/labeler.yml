@@ -103,7 +103,7 @@ blog:
 site code:
   - changed-files:
       - any-glob-to-any-file:
-          - astro.config.mjs
+          - astro.config.ts
           - scripts/**
           - src/components/**
           - src/content.config.ts

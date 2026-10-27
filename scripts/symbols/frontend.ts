@@ -1,6 +1,6 @@
 // Generates src/data/symbols/frontend.json: the code symbols of the Home
 // Assistant frontend that the docs mention, for the cards on inline code
-// (see src/lib/code-symbols.mjs and src/components/HoverCards.astro). Run
+// (see src/lib/code-symbols.ts and src/components/HoverCards.astro). Run
 // it with `pnpm symbols` (scripts/generate-symbols.ts).
 //
 // It reads every TypeScript file in src/ of a commit of a frontend checkout,
@@ -22,11 +22,11 @@
 // line.
 //
 // Then it keeps only the symbols an inline code span on a page of the
-// frontend index links to, with the rules in src/lib/code-symbols.mjs.
+// frontend index links to, with the rules in src/lib/code-symbols.ts.
 
 import { execFileSync } from "node:child_process";
 import ts from "typescript";
-import { INDEXES, createResolver, isPlainWord } from "../../src/lib/code-symbols.mjs";
+import { INDEXES, createResolver, isPlainWord } from "../../src/lib/code-symbols.ts";
 import { LINE_LENGTH, formatCall, formatPart } from "./format.ts";
 import { readFiles } from "./git.ts";
 import type { Mention } from "./mentions.ts";
@@ -476,7 +476,7 @@ export function generateFrontend({ checkout, ref, mentions }: GenerateOptions): 
   const linked: Mention[] = [];
 
   for (const mention of mentions) {
-    const symbol: Candidate | undefined = resolve(mention.text, mention.domain, mention.url);
+    const symbol = resolve(mention.text, mention.domain, mention.url);
     if (symbol) {
       used.set(symbol.id, symbol);
       linked.push(mention);

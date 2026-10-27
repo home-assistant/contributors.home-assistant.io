@@ -25,20 +25,34 @@
 // here on every page.
 
 import Slugger from "github-slugger";
+import type { Element } from "hast";
+import { defineHastPlugin } from "satteri";
 import { ICONS } from "./icons.ts";
+
+interface HeadingAnchorsState {
+  slugger: Slugger;
+}
+
+declare module "satteri" {
+  interface DataMap {
+    headingAnchors: HeadingAnchorsState;
+  }
+}
 
 const HEADINGS = ["h1", "h2", "h3", "h4", "h5", "h6"];
 
 // Feather's link icon, from src/lib/icons.ts, as hast nodes.
-const LINK_ICON = [...ICONS.link.matchAll(/<path d="([^"]+)"\/>/g)].map((match) => ({
-  type: /** @type {const} */ ("element"),
-  tagName: "path",
-  properties: { d: match[1] },
-  children: [],
-}));
+const LINK_ICON = [...ICONS.link.matchAll(/<path d="([^"]+)"\/>/g)].map(
+  (match): Element => ({
+    type: "element",
+    tagName: "path",
+    properties: { d: match[1] },
+    children: [],
+  }),
+);
 
 export function headingAnchors() {
-  return {
+  return defineHastPlugin({
     name: "heading-anchors",
 
     before(_root, ctx) {
@@ -48,9 +62,14 @@ export function headingAnchors() {
     element: {
       filter: HEADINGS,
       visit(node, ctx) {
+        const state = ctx.data.headingAnchors;
+        if (!state) {
+          return;
+        }
+
         const text = ctx.textContent(node);
         const existingId = node.properties?.id;
-        const id = typeof existingId === "string" ? existingId : ctx.data.headingAnchors.slugger.slug(text);
+        const id = typeof existingId === "string" ? existingId : state.slugger.slug(text);
 
         if (typeof existingId !== "string") {
           ctx.setProperty(node, "id", id);
@@ -62,8 +81,8 @@ export function headingAnchors() {
           return;
         }
 
-        const anchor = {
-          type: /** @type {const} */ ("element"),
+        const anchor: Element = {
+          type: "element",
           tagName: "a",
           properties: {
             href: `#${id}`,
@@ -73,7 +92,7 @@ export function headingAnchors() {
           },
           children: [
             {
-              type: /** @type {const} */ ("element"),
+              type: "element",
               tagName: "svg",
               properties: {
                 width: "16",
@@ -100,5 +119,5 @@ export function headingAnchors() {
         });
       },
     },
-  };
+  });
 }

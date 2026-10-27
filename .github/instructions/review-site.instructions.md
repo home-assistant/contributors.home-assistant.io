@@ -1,5 +1,5 @@
 ---
-applyTo: "src/components/**,src/layouts/**,src/lib/**,src/pages/**,src/styles/**,scripts/**,demo-runtime/**,astro.config.mjs,src/content.config.ts"
+applyTo: "src/components/**,src/layouts/**,src/lib/**,src/pages/**,src/styles/**,scripts/**,demo-runtime/**,astro.config.ts,src/content.config.ts"
 ---
 
 # Reviewing the site code

@@ -21,7 +21,7 @@ import { type DocsEntry, groupOverview, hrefOf, isIndex, pathOf } from "./docs";
 import { getUpcomingEvents } from "./events";
 import { getTerms, relatedTerms, termHref } from "./glossary";
 import { CATEGORIES_SOURCE, getIntegrationCategories } from "./integration-categories";
-import { createResolver, sourcePathUrl } from "./source-paths.mjs";
+import { createResolver, sourcePathUrl } from "./source-paths.ts";
 
 export const SITE_URL = import.meta.env.SITE.replace(/\/$/, "");
 
@@ -696,7 +696,7 @@ async function absoluteLinks(markdown: string, entry: DocsEntry, pageUrl: string
   );
 }
 
-// Discord, as src/lib/discord-links.mjs links it on the site: **#core**
+// Discord, as src/lib/discord-links.ts links it on the site: **#core**
 // becomes a link to the channel, and discord:project-forum its URL.
 async function discordLinks(markdown: string): Promise<string> {
   const byName = new Map<string, string>();
@@ -720,7 +720,7 @@ async function discordLinks(markdown: string): Promise<string> {
   );
 }
 
-// Repository paths, as src/lib/source-paths.mjs links them on the site:
+// Repository paths, as src/lib/source-paths.ts links them on the site:
 // inline code that is exactly a known path becomes a link to the file on
 // GitHub. Not in headings, and not in the text of a link, inline or by
 // reference.

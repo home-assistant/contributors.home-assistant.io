@@ -14,6 +14,9 @@
 
 import { createHash } from "node:crypto";
 import { fileURLToPath } from "node:url";
+import type { AstroIntegration } from "astro";
+import type { Element, Parents } from "hast";
+import { defineHastPlugin, type HastVisitorContext } from "satteri";
 import { DISCORD_CHANNELS } from "../data/discord.ts";
 
 const DATA_FILE = fileURLToPath(new URL("../data/discord.ts", import.meta.url));
@@ -23,8 +26,8 @@ const SKIP_TAGS = new Set(["a", "h1", "h2", "h3", "h4", "h5", "h6", "button"]);
 const byName = new Map(DISCORD_CHANNELS.filter((channel) => channel.name).map((channel) => [channel.name, channel]));
 const byId = new Map(DISCORD_CHANNELS.map((channel) => [channel.id, channel]));
 
-function isSkipped(node, ctx) {
-  for (let parent = ctx.parent(node); parent && parent.type !== "root"; parent = ctx.parent(parent)) {
+function isSkipped(node: Readonly<Element>, ctx: HastVisitorContext) {
+  for (let parent: Readonly<Parents> | undefined = ctx.parent(node); parent && parent.type !== "root"; parent = ctx.parent(parent)) {
     if ((parent.type === "element" && SKIP_TAGS.has(parent.tagName)) || parent.type.startsWith("mdxJsx")) {
       return true;
     }
@@ -33,7 +36,7 @@ function isSkipped(node, ctx) {
 }
 
 export function discordLinks() {
-  return {
+  return defineHastPlugin({
     name: "discord-links",
     // Not used by the plugin: it is here so Astro sees a new configuration,
     // and renders every page again, when the channels change.
@@ -71,12 +74,12 @@ export function discordLinks() {
         });
       },
     },
-  };
+  });
 }
 
 // For `pnpm dev`: restarts the server when the channels change, so every
 // page links the new URLs, not only the ones you open next.
-export function discordLinksWatch() {
+export function discordLinksWatch(): AstroIntegration {
   return {
     name: "discord-links-watch",
     hooks: {

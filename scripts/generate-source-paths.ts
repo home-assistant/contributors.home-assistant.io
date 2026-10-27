@@ -1,6 +1,6 @@
 // Generates the index of repository paths the docs link to, in
 // src/data/source-paths.json. See "Source paths" in README.md, and
-// src/lib/source-paths.mjs for the rules of what links.
+// src/lib/source-paths.ts for the rules of what links.
 //
 // It collects every inline code span on the docs pages that looks like a
 // path, finds the repositories each page is about, and checks which of those
@@ -26,32 +26,18 @@ import { execFileSync } from "node:child_process";
 import { mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { parseArgs } from "node:util";
-import { INDEX_FILE, REPOSITORIES, candidatesFor, isPathMention, readIndex } from "../src/lib/source-paths.mjs";
+import { INDEX_FILE, REPOSITORIES, type PathEntry, type RepositoryId, candidatesFor, isPathMention, readIndex } from "../src/lib/source-paths.ts";
 import { docsMentions } from "./symbols/mentions.ts";
-
-type RepositoryId = keyof typeof REPOSITORIES;
 
 interface TreeEntry {
   path: string;
   type: "file" | "folder";
 }
 
-interface PathEntry {
-  path: string;
-  repository: string;
-  branch: string;
-  type: TreeEntry["type"] | undefined;
-}
-
 interface PagesEntry {
   path: string;
   repositories: string[];
   pages: string[];
-}
-
-// src/data/source-paths.json.
-interface SourcePathsIndex {
-  paths?: PathEntry[];
 }
 
 // A tree from the GitHub API.
@@ -66,11 +52,6 @@ interface RepositoryTree {
 }
 
 const isRepository = (id: string): id is RepositoryId => Object.hasOwn(REPOSITORIES, id);
-
-function repositoriesFor(docsPath: string, text: string) {
-  const ids: string[] = candidatesFor(docsPath, text);
-  return ids.filter(isRepository);
-}
 
 const { values: options } = parseArgs({
   options: {
@@ -129,7 +110,7 @@ const mentions = docsMentions()
     path: mention.text.trim(),
     docsPath: mention.file.replace(/^src\/content\/docs\//, ""),
   }))
-  .map((mention) => ({ ...mention, candidates: repositoriesFor(mention.docsPath, mention.path) }));
+  .map((mention) => ({ ...mention, candidates: candidatesFor(mention.docsPath, mention.path) }));
 
 type PathMention = (typeof mentions)[number];
 
@@ -143,7 +124,7 @@ for (const id of [...needed].sort()) {
   });
 }
 
-const previous: SourcePathsIndex | undefined = readIndex();
+const previous = readIndex();
 const previouslyLinked = new Set((previous?.paths ?? []).map((entry) => `${entry.repository}\n${entry.path}`));
 
 // The type of a path in a repository, or undefined when it is not there.
@@ -233,7 +214,7 @@ if (missing.size) {
     "",
     "## Missing",
     "",
-    "These paths look like they belong to a repository of the page, but the default branch does not have them. The file moved or is gone: update the page. If the page means a file you create yourself, or an example, add the path to `NOT_REPOSITORY_PATHS` in `src/lib/source-paths.mjs`.",
+    "These paths look like they belong to a repository of the page, but the default branch does not have them. The file moved or is gone: update the page. If the page means a file you create yourself, or an example, add the path to `NOT_REPOSITORY_PATHS` in `src/lib/source-paths.ts`.",
     "",
   );
   for (const entry of index.missing) {

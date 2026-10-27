@@ -1,6 +1,6 @@
 // Generates the indexes of code symbols the docs link to, and measures how
 // much of the docs they cover. See "Code symbols" in README.md, and
-// src/lib/code-symbols.mjs for the rules of what links.
+// src/lib/code-symbols.ts for the rules of what links.
 //
 // - src/data/symbols/core.json, from a core checkout: scripts/symbols/core.ts
 //   (and extract.py, which needs the Python version core needs). With the
@@ -28,9 +28,9 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { parseArgs } from "node:util";
-import { INDEXES, createResolver, readIndex } from "../src/lib/code-symbols.mjs";
+import { INDEXES, type IndexName, createResolver, isIndexName, readIndex } from "../src/lib/code-symbols.ts";
 import { generateCore } from "./symbols/core.ts";
-import { type Coverage, type IndexName, coverageReport, isIndexName, measureCoverage } from "./symbols/coverage.ts";
+import { type Coverage, coverageReport, measureCoverage } from "./symbols/coverage.ts";
 import { generateFrontend } from "./symbols/frontend.ts";
 import { ROOT, docsMentions } from "./symbols/mentions.ts";
 import type { GenerateOptions, Generated, SymbolIndex } from "./symbols/types.ts";
@@ -73,7 +73,7 @@ const report = ["# Code symbols"];
 const indexes: Partial<Record<IndexName, SymbolIndex>> = {};
 
 for (const name of NAMES) {
-  const previous: SymbolIndex | undefined = readIndex(name);
+  const previous = readIndex(name);
 
   if (!selected.includes(name)) {
     indexes[name] = previous;
