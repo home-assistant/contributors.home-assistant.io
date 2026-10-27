@@ -411,7 +411,7 @@ export function groupOverview(folderPath: string): Promise<GroupOverview | undef
       return { anchors, sections: [] };
     }
 
-    // Heading ids come from github-slugger (see src/lib/heading-anchors.mjs),
+    // Heading ids come from github-slugger (see src/lib/heading-anchors.ts),
     // so a group matches a heading when both make the same slug.
     const { headings } = await render(folder.index);
     const takenIds = new Set(headings.map((heading) => heading.slug));

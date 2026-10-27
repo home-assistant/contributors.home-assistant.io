@@ -1,4 +1,4 @@
-// The indexes in src/data/symbols/, which src/lib/code-symbols.mjs reads.
+// The indexes in src/data/symbols/, which src/lib/code-symbols.ts reads.
 
 import type { Mention } from "./mentions.ts";
 

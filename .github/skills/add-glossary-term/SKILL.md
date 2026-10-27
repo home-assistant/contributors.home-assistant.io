@@ -64,7 +64,7 @@ A word in `autolink` becomes a link to the term the first time any page of the d
 
 Only add a word that means this term everywhere it appears on the site. "state" is not one: it is also the state of a button. "theme" and "unavailable" do not autolink for the same reason: an Android theme and a service that is unavailable are not the glossary terms.
 
-How matching works (`src/lib/glossary-autolink.mjs`):
+How matching works (`src/lib/glossary-autolink.ts`):
 
 - A lowercase word matches any case. A word with a capital, like "Assist", only matches as written.
 - It matches whole words only, not inside a longer word or next to a hyphen.

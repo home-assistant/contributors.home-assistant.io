@@ -4,7 +4,7 @@
 // - public/redirect-fragments.json: old heading anchors and the heading they
 //   became, from redirects/fragments.tsv. A small script on every page uses
 //   it when a link arrives with an anchor that no longer exists (see
-//   src/lib/redirect-fragments.mjs).
+//   src/lib/redirect-fragments.ts).
 //
 // Both files are generated, and not committed: `pnpm build` and `pnpm dev`
 // run this first. Edit the maps in redirects/, never the output.

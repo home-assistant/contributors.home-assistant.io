@@ -328,7 +328,7 @@ pre {
 
 /*
  * A section heading sits in a wrapper, next to the link to itself (see
- * src/lib/heading-anchors.mjs). The wrapper takes the size and spacing of
+ * src/lib/heading-anchors.ts). The wrapper takes the size and spacing of
  * the heading, and the heading flows inline in it, so the link icon follows
  * the last word, also when a long heading wraps.
  */
@@ -492,7 +492,7 @@ pre {
 
 /*
  * A repository path linked to its file on GitHub (see
- * src/lib/source-paths.mjs): it keeps the look of inline code, with the same
+ * src/lib/source-paths.ts): it keeps the look of inline code, with the same
  * dotted line as a linked code symbol.
  */
 .prose a.source-path {
@@ -525,7 +525,7 @@ pre {
 }
 
 /*
- * Highlighted code blocks sit in a figure (src/lib/code-blocks.mjs). Nothing
+ * Highlighted code blocks sit in a figure (src/lib/code-blocks.ts). Nothing
  * takes room of its own: the language sits small in the bottom-right corner,
  * the copy button floats in the top-right corner, and an optional file name
  * sits on top, in the padding of the block. The figure draws the frame, the

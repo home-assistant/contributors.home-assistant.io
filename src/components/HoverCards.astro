@@ -4,9 +4,9 @@
 //
 // - A link to a glossary term, like [entity](/glossary/entity/): the title
 //   and the short definition of the term. Writers only link the term (or
-//   src/lib/glossary-autolink.mjs does): the card comes with it.
+//   src/lib/glossary-autolink.ts does): the card comes with it.
 // - A code symbol, like `HomeAssistant` of core or `SubscribeMixin` of the
-//   frontend, linked to its source by src/lib/code-symbols.mjs: what it is,
+//   frontend, linked to its source by src/lib/code-symbols.ts: what it is,
 //   where it lives, its signature, and the first sentence of its
 //   documentation. An integration hook, like `async_setup_entry`, links to
 //   the page that explains it instead, with the same kind of card.
@@ -367,7 +367,7 @@
     font-size: 14px;
   }
 
-  /* A term linked by itself (see src/lib/glossary-autolink.mjs): it reads as
+  /* A term linked by itself (see src/lib/glossary-autolink.ts): it reads as
      text, with a light dotted line to say there is more to know. */
   :global(.prose a.glossary-term) {
     color: inherit;
@@ -383,7 +383,7 @@
     text-decoration-color: currentColor;
   }
 
-  /* A code symbol linked to its source (see src/lib/code-symbols.mjs): it
+  /* A code symbol linked to its source (see src/lib/code-symbols.ts): it
      keeps the look of inline code, with the same dotted line. */
   :global(.prose a.code-symbol) {
     color: var(--site-on-accent-quiet);

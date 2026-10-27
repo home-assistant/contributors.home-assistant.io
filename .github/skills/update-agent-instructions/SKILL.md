@@ -21,7 +21,7 @@ All other sections describe this site. Review them against the repository:
 
 - `src/data/areas.ts` for the list of areas.
 - `src/content.config.ts` for the front matter of pages and blog posts.
-- `astro.config.mjs` for Markdown features like callouts.
+- `astro.config.ts` for Markdown features like callouts.
 - `package.json` for the available scripts.
 
 ## Rules

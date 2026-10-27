@@ -77,11 +77,11 @@ The function lists of the Bashio pages come from the docblocks in Bashio itself.
 
 ### Code symbols
 
-Inline code that names a class, function, or module of core or the frontend links to its source, with a card. A page uses the index of its area, and a mention only links when it can mean one thing. The rules are in [`src/lib/code-symbols.mjs`](src/lib/code-symbols.mjs), the generator in [`scripts/generate-symbols.ts`](scripts/generate-symbols.ts), and the coverage guess in [`scripts/symbols/coverage.ts`](scripts/symbols/coverage.ts). [A weekly workflow](.github/workflows/update-symbols.yml) opens a pull request when an index changed.
+Inline code that names a class, function, or module of core or the frontend links to its source, with a card. A page uses the index of its area, and a mention only links when it can mean one thing. The rules are in [`src/lib/code-symbols.ts`](src/lib/code-symbols.ts), the generator in [`scripts/generate-symbols.ts`](scripts/generate-symbols.ts), and the coverage guess in [`scripts/symbols/coverage.ts`](scripts/symbols/coverage.ts). [A weekly workflow](.github/workflows/update-symbols.yml) opens a pull request when an index changed.
 
 ### Source paths
 
-Inline code that is exactly a path in a repository the page is about, like `homeassistant/helpers/`, links to it on GitHub. The rules are in [`src/lib/source-paths.mjs`](src/lib/source-paths.mjs), the generator in [`scripts/generate-source-paths.ts`](scripts/generate-source-paths.ts). The weekly symbols workflow updates the index too.
+Inline code that is exactly a path in a repository the page is about, like `homeassistant/helpers/`, links to it on GitHub. The rules are in [`src/lib/source-paths.ts`](src/lib/source-paths.ts), the generator in [`scripts/generate-source-paths.ts`](scripts/generate-source-paths.ts). The weekly symbols workflow updates the index too.
 
 ### Live demos
 
@@ -97,7 +97,7 @@ The build writes `/llms.txt`, one per area, full-text versions, and a Markdown v
 
 ### Caches
 
-Astro only renders a page again when the page changes. The glossary autolink, the code symbols, and the source paths plugins carry a fingerprint of their data, so a change there renders every page again, and `pnpm dev` restarts. See [`src/lib/glossary-autolink.mjs`](src/lib/glossary-autolink.mjs). When a page still looks stale, run `pnpm clean`.
+Astro only renders a page again when the page changes. The glossary autolink, the code symbols, and the source paths plugins carry a fingerprint of their data, so a change there renders every page again, and `pnpm dev` restarts. See [`src/lib/glossary-autolink.ts`](src/lib/glossary-autolink.ts). When a page still looks stale, run `pnpm clean`.
 
 ### Page feedback
 

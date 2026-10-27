@@ -5,7 +5,7 @@
 // with an anchor, like integration_fetching_data#coordinated-single-api-poll,
 // keeps that anchor across the redirect, but the new page names its headings
 // differently. With this map, a small script on the page scrolls to the
-// heading that took its place (see src/lib/redirect-fragments.mjs).
+// heading that took its place (see src/lib/redirect-fragments.ts).
 //
 // How it works: for every old page that redirects to a page of this site,
 // it reads the headings of the old page from its Git history, makes their
