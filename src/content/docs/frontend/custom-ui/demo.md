@@ -122,17 +122,24 @@ Weather entities get a forecast made up from their condition and temperature, or
 
 ## Change and watch entities from your page
 
-The `entities` property of the provider replaces all entities. To change one entity, start from the current states in `provider.hass.states`:
+The `entities` property of the provider replaces all entities. To change one entity, start from the current states in `provider.hass.states`, and keep the area, device, and platform of each entity from `provider.hass.entities`. Run it from a module script, after the provider has set up its entities:
 
 ```js
+await customElements.whenDefined("ha-embed-provider");
 const provider = document.querySelector("ha-embed-provider");
+await provider.updateComplete;
 
-provider.entities = Object.values(provider.hass.states).map(
-  (entity) =>
-    entity.entity_id === "sensor.outside_temperature"
-      ? { ...entity, state: "18.1" }
-      : entity
-);
+provider.entities = Object.values(provider.hass.states).map((entity) => {
+  const { area_id, device_id, platform } =
+    provider.hass.entities[entity.entity_id];
+  return {
+    ...entity,
+    area_id,
+    device_id,
+    platform,
+    ...(entity.entity_id === "sensor.outside_temperature" && { state: "18.1" }),
+  };
+});
 ```
 
 To use an action of an entity, call it. The provider updates the state and the cards:
@@ -151,7 +158,7 @@ The mocked backend only knows a part of the Home Assistant API. Keep these limit
 
 - The actions of lights, switches, climate, covers, fans, locks, media players, and more change the state of the entity.
 - History and statistics are made up from the current state of each entity.
-- Templates are not rendered. They come back as they are.
+- Templates are not rendered. Template subscriptions fill in simple `{{ variable }}` references from the variables you pass and return the rest as it is. The REST `template` endpoint returns an error.
 - The logbook is empty.
 - Actions that open a dialog, like `more-info`, do nothing.
 - Map cards only work on the demo site itself, not embedded on another site.
