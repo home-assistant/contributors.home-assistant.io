@@ -26,39 +26,39 @@ This entity has no supported features.
 
 ## Device classes
 
-The [device class](/glossary/device-class/) changes how the frontend shows on and off, and which icon the entity gets. A binary sensor with a device class and no name is named after its device class. See [naming](/core/entities/naming/).
+The [device class](/glossary/device-class/) changes how the frontend shows on and off, and which icon the entity gets. A binary sensor with a device class and no name is named after its device class. See [naming](/core/entities/naming/). The value column is what you put in YAML, for example as `device_class` of an [MQTT binary sensor](https://www.home-assistant.io/integrations/binary_sensor.mqtt/) or a [template binary sensor](https://www.home-assistant.io/integrations/template/).
 
-| Device class | On means | Off means |
-| --- | --- | --- |
-| `BATTERY` | Low | Normal |
-| `BATTERY_CHARGING` | Charging | Not charging |
-| `CO` | Carbon monoxide detected | Clear |
-| `COLD` | Cold | Normal |
-| `CONNECTIVITY` | Connected | Disconnected |
-| `DOOR` | Open | Closed |
-| `GARAGE_DOOR` | Open | Closed |
-| `GAS` | Gas detected | Clear |
-| `GLASS_BREAK` | Glass break detected | Clear |
-| `HEAT` | Hot | Normal |
-| `LIGHT` | Light detected | No light |
-| `LOCK` | Unlocked | Locked |
-| `MOISTURE` | Wet | Dry |
-| `MOTION` | Motion detected | Clear |
-| `MOVING` | Moving | Stopped |
-| `OCCUPANCY` | Occupied | Clear |
-| `OPENING` | Open | Closed |
-| `PLUG` | Plugged in | Unplugged |
-| `POWER` | Power detected | No power |
-| `PRESENCE` | Home | Away |
-| `PROBLEM` | Problem detected | OK |
-| `RUNNING` | Running | Not running |
-| `SAFETY` | Unsafe | Safe |
-| `SMOKE` | Smoke detected | Clear |
-| `SOUND` | Sound detected | Clear |
-| `TAMPER` | Tampering detected | Clear |
-| `UPDATE` | Update available | Up to date |
-| `VIBRATION` | Vibration detected | No vibration |
-| `WINDOW` | Open | Closed |
+| Device class | Value | On means | Off means |
+| --- | --- | --- | --- |
+| `BATTERY` | `battery` | Low | Normal |
+| `BATTERY_CHARGING` | `battery_charging` | Charging | Not charging |
+| `CO` | `carbon_monoxide` | Carbon monoxide detected | Clear |
+| `COLD` | `cold` | Cold | Normal |
+| `CONNECTIVITY` | `connectivity` | Connected | Disconnected |
+| `DOOR` | `door` | Open | Closed |
+| `GARAGE_DOOR` | `garage_door` | Open | Closed |
+| `GAS` | `gas` | Gas detected | Clear |
+| `GLASS_BREAK` | `glass_break` | Glass break detected | Clear |
+| `HEAT` | `heat` | Hot | Normal |
+| `LIGHT` | `light` | Light detected | No light |
+| `LOCK` | `lock` | Unlocked | Locked |
+| `MOISTURE` | `moisture` | Wet | Dry |
+| `MOTION` | `motion` | Motion detected | Clear |
+| `MOVING` | `moving` | Moving | Stopped |
+| `OCCUPANCY` | `occupancy` | Occupied | Clear |
+| `OPENING` | `opening` | Open | Closed |
+| `PLUG` | `plug` | Plugged in | Unplugged |
+| `POWER` | `power` | Power detected | No power |
+| `PRESENCE` | `presence` | Home | Away |
+| `PROBLEM` | `problem` | Problem detected | OK |
+| `RUNNING` | `running` | Running | Not running |
+| `SAFETY` | `safety` | Unsafe | Safe |
+| `SMOKE` | `smoke` | Smoke detected | Clear |
+| `SOUND` | `sound` | Sound detected | Clear |
+| `TAMPER` | `tamper` | Tampering detected | Clear |
+| `UPDATE` | `update` | Update available | Up to date |
+| `VIBRATION` | `vibration` | Vibration detected | No vibration |
+| `WINDOW` | `window` | Open | Closed |
 
 The device classes are in `BinarySensorDeviceClass`, in `homeassistant/components/binary_sensor/const.py`.
 
