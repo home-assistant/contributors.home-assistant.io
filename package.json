@@ -10,7 +10,7 @@
     "dev": "pnpm redirects && astro dev",
     "build": "pnpm redirects && astro build && pagefind --site dist",
     "preview": "astro preview",
-    "check": "astro check",
+    "check": "astro check && tsc -p .github/scripts",
     "check:demos": "node scripts/check-demos.ts",
     "check:component-docs": "node scripts/check-component-docs.ts",
     "links": "node scripts/check-links.ts",
@@ -46,7 +46,9 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
+    "@octokit/rest": "^22.0.1",
     "@types/hast": "^3.0.5",
+    "@types/node": "^24.19.1",
     "esbuild": "^0.28.2",
     "github-slugger": "^2.0.0",
     "pagefind": "^1.5.2",
