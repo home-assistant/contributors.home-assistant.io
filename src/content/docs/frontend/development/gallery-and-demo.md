@@ -50,6 +50,14 @@ The gallery imports some of those stubs too. When you change a stub, check both 
 
 Some demo data is generated from Core: the action descriptions in `src/fake_data/demo_services.ts`, and the trigger and condition descriptions in `demo/src/stubs/`. Don't edit those by hand. Run `script/gen_demo_core_data` to regenerate them from the `dev` branch of Core.
 
+## Embed cards on other sites
+
+The demo also builds `embed.js`, which puts dashboard cards on any web page with the `<ha-embed-provider>` and `<ha-embed-card>` elements. Card authors use it for [live demos of their cards](/frontend/custom-ui/demo/). Its code is in `demo/src/embed/`, and `demo/src/html/components.html.template` is the page that documents it, at `/components.html` of the demo.
+
+The provider sets up the same mocked backend as the demo, from the stubs in `demo/src/stubs/`. A stub you add or fix there reaches the demo, the embed, and the gallery pages that import it.
+
+The script loads its other files from the site it came from, so it works on other sites too. Map cards are the exception: they only work on the demo site itself for now.
+
 ## Translations in the gallery and the demo
 
 Both start in English. Add `--fetch-translations` to load the latest translations, like `pnpm dev:demo --fetch-translations`. Both also accept the [background flags](/frontend/development/run/#keep-a-server-running-in-the-background).
