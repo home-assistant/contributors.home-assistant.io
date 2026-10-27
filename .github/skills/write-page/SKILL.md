@@ -74,7 +74,7 @@ If you cannot source something, leave it out and say so in the pull request.
   </Demo>
   ```
 
-  The number of `../` depends on the folder depth. `<Demo hass>` wraps components that need Home Assistant. `<DoDont doText="..." dontText="...">` shows a do and a don't side by side, with `slot="do"` and `slot="dont"`. Only use elements that `scripts/build-components.mjs` bundles. See the [`design-component-page` skill](../design-component-page/SKILL.md).
+  The number of `../` depends on the folder depth. `<Demo hass>` wraps components that need Home Assistant. `<DoDont doText="..." dontText="...">` shows a do and a don't side by side, with `slot="do"` and `slot="dont"`. Only use elements that `scripts/build-components.ts` bundles. See the [`design-component-page` skill](../design-component-page/SKILL.md).
 - In `.mdx`, keep `{` and `}` inside code fences or JSX.
 - Images go next to the page, with a relative path and meaningful alt text.
 

@@ -9,10 +9,10 @@
 //
 // - core: src/data/symbols/core.json, the Python API of core, and the
 //   modules of core. `pnpm symbols` generates it with
-//   scripts/symbols/core.mjs.
+//   scripts/symbols/core.ts.
 // - frontend: src/data/symbols/frontend.json, the TypeScript API of the
 //   frontend: functions, classes, mixins, contexts, types, and interfaces.
-//   Generated with scripts/symbols/frontend.mjs.
+//   Generated with scripts/symbols/frontend.ts.
 //
 // The rules for what links live here, so the generators and this plugin
 // always agree on them. A rule that needs a new exception goes here too,

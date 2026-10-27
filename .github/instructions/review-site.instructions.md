@@ -34,11 +34,11 @@ The site rules are in `.github/copilot-instructions.md` ("The tech behind the we
 
 - A hand edit to a generated file. Edit the generator, run it, and commit the output:
   - `src/styles/tokens.css`: `pnpm tokens`
-  - `public/components/`, `public/static/`: `scripts/build-components.mjs`, `pnpm components`
+  - `public/components/`, `public/static/`: `scripts/build-components.ts`, `pnpm components`
   - `src/content/docs/apps/bashio/` (all but `index.md`): `scripts/bashio/`, `pnpm bashio`
   - `public/_redirects`, `public/redirect-fragments.json`: `redirects/`, built by `pnpm redirects`
-- A new component used in a `<Demo>` that is not in `COMPONENTS` or `EXTRA_ELEMENTS` of `scripts/build-components.mjs`.
-- A change to `PATCHES` in `scripts/build-components.mjs` that no longer makes the build fail when a pattern stops matching.
+- A new component used in a `<Demo>` that is not in `COMPONENTS` or `EXTRA_ELEMENTS` of `scripts/build-components.ts`.
+- A change to `PATCHES` in `scripts/build-components.ts` that no longer makes the build fail when a pattern stops matching.
 
 ## Checks and docs
 

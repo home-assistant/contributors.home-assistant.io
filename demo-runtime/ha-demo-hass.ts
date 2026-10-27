@@ -4,7 +4,7 @@
 //
 // It uses provideHass, the same fake backend the frontend gallery uses.
 // Imports starting with "frontend/" point into the frontend source, see
-// scripts/build-components.mjs.
+// scripts/build-components.ts.
 
 import { mockAreaRegistry } from "frontend/demo/src/stubs/area_registry";
 import { mockConfigEntries } from "frontend/demo/src/stubs/config_entries";
@@ -94,7 +94,7 @@ function extractFromTarget(target: Record<string, string | string[]> = {}) {
 
 // The site has a light and a dark mode of its own: `data-theme` on <html>
 // when the visitor picked one, the system setting otherwise. The theme CSS of
-// a demo follows it (see scripts/build-components.mjs). Some components also
+// a demo follows it (see scripts/build-components.ts). Some components also
 // look at `darkMode` in hass, like the map for its tiles, so that follows the
 // site too, also when the visitor switches.
 const systemDark = matchMedia("(prefers-color-scheme: dark)");

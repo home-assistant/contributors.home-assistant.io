@@ -14,7 +14,7 @@
 //   on Core pages, `src/` paths are of the frontend, the rest of core.
 // - The index in src/data/source-paths.json lists the paths the docs
 //   mention that exist, per repository. `pnpm source-paths` generates it
-//   (scripts/generate-source-paths.mjs), with the rules in this file.
+//   (scripts/generate-source-paths.ts), with the rules in this file.
 // - Only inline code that is exactly a path: with a `/`, and a file
 //   extension or a trailing `/` for a folder. Nothing with a placeholder,
 //   like `<domain>`, nothing absolute, and no URLs.

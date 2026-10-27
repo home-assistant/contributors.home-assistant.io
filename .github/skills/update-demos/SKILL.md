@@ -5,7 +5,7 @@ description: Use this to rebuild the live frontend component demos of the Home A
 
 # Update the demos
 
-The Design pages show real frontend components, bundled from the [frontend](https://github.com/home-assistant/frontend) source by `scripts/build-components.mjs`. The bundle is committed in `public/components/` and `public/static/`, so building the site never needs the frontend. This skill rebuilds that bundle. How the parts fit together is in "Live demos" in `README.md`.
+The Design pages show real frontend components, bundled from the [frontend](https://github.com/home-assistant/frontend) source by `scripts/build-components.ts`. The bundle is committed in `public/components/` and `public/static/`, so building the site never needs the frontend. This skill rebuilds that bundle. How the parts fit together is in "Live demos" in `README.md`.
 
 Never edit files in `public/components/` or `public/static/` by hand. They are generated.
 
@@ -34,7 +34,7 @@ This type-checks `demo-runtime/` against the commit, and checks that every patch
 When it fails:
 
 - **A type error in `demo-runtime/`**: the frontend changed an API the fake Home Assistant uses. Fix `demo-runtime/` to match the frontend. `pnpm check:demos` runs only this part.
-- **A patch that matches 0 times, or more than once**: the frontend changed the code a patch rewrites. Find the new code in the file the error names, read it on the frontend `dev` branch, and update the `pattern` (and the `replacement`, if needed) in `PATCHES` of `scripts/build-components.mjs`. Keep the rule that a patch matches exactly once. Never make a patch optional to get the build through: a bundle with an unpatched worker or import fails in the browser, not in the build.
+- **A patch that matches 0 times, or more than once**: the frontend changed the code a patch rewrites. Find the new code in the file the error names, read it on the frontend `dev` branch, and update the `pattern` (and the `replacement`, if needed) in `PATCHES` of `scripts/build-components.ts`. Keep the rule that a patch matches exactly once. Never make a patch optional to get the build through: a bundle with an unpatched worker or import fails in the browser, not in the build.
 
 Run `pnpm components --check` again until it passes.
 
@@ -84,11 +84,11 @@ pnpm links
 
 ## 5. Commit together
 
-Commit `public/components/`, `public/static/`, and any change to `demo-runtime/` and `scripts/build-components.mjs` in one pull request. Mention the frontend commit from the manifest.
+Commit `public/components/`, `public/static/`, and any change to `demo-runtime/` and `scripts/build-components.ts` in one pull request. Mention the frontend commit from the manifest.
 
 ## Add a component
 
-1. Add its path to `COMPONENTS` in `scripts/build-components.mjs`: the path in `src/components/` of the frontend, without the extension. Components that need Home Assistant go at the end of the list, under the comment that says so. Elements from outside `src/components/` go in `EXTRA_ELEMENTS`, with their path from the root of the frontend.
+1. Add its path to `COMPONENTS` in `scripts/build-components.ts`: the path in `src/components/` of the frontend, without the extension. Components that need Home Assistant go at the end of the list, under the comment that says so. Elements from outside `src/components/` go in `EXTRA_ELEMENTS`, with their path from the root of the frontend.
 2. If a demo needs a device or an entity the fake home does not have, add it to `demo-runtime/demo-home.ts`.
 3. Run steps 2 to 5 above.
 4. Use it in a `<Demo>`. See the [`design-component-page` skill](../design-component-page/SKILL.md).

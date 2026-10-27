@@ -2,7 +2,7 @@ name: Component docs drift
 
 # Compares the "In code" sections of the component pages in the Design area
 # with the frontend source on dev, once a week, with
-# scripts/check-component-docs.mjs. Keeps one issue up to date with what the
+# scripts/check-component-docs.ts. Keeps one issue up to date with what the
 # pages document that the frontend no longer has: it opens the issue when
 # that list is not empty, updates it while it stays that way, and closes it
 # when the list is empty again.

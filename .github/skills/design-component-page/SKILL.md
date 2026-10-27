@@ -34,7 +34,7 @@ git -C ../frontend fetch origin dev
 pnpm check:component-docs
 ```
 
-It compares the "In code" section of every component page with the frontend source on `origin/dev`, and lists per page what is documented but no longer in the source, what may come from a Web Awesome or Material base class (check those by hand), and what is in the source but not documented. Before you start, it shows what is already wrong on the page. When you are done, the page must have nothing under "Documented, but not in the source". How it works is in the header of `scripts/check-component-docs.mjs`.
+It compares the "In code" section of every component page with the frontend source on `origin/dev`, and lists per page what is documented but no longer in the source, what may come from a Web Awesome or Material base class (check those by hand), and what is in the source but not documented. Before you start, it shows what is already wrong on the page. When you are done, the page must have nothing under "Documented, but not in the source". How it works is in the header of `scripts/check-component-docs.ts`.
 
 ## 2. Follow the template
 
@@ -124,7 +124,7 @@ import DoDont from "../../../../components/docs/DoDont.astro";
 
 ## 6. Build the demos from what is bundled
 
-Demos run the real components, bundled by `scripts/build-components.mjs`. Only elements in its `COMPONENTS` list or `EXTRA_ELEMENTS` map work. The current bundle lists them in `public/components/manifest.json`:
+Demos run the real components, bundled by `scripts/build-components.ts`. Only elements in its `COMPONENTS` list or `EXTRA_ELEMENTS` map work. The current bundle lists them in `public/components/manifest.json`:
 
 ```shell
 node -e 'console.log(require("./public/components/manifest.json").components.join("\n"))'

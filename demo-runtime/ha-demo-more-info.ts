@@ -3,7 +3,7 @@
 // it. Use it inside <Demo hass>.
 //
 // Imports starting with "frontend/" point into the frontend source, see
-// scripts/build-components.mjs.
+// scripts/build-components.ts.
 
 import "frontend/src/components/ha-card";
 import { computeShowNewMoreInfo } from "frontend/src/dialogs/more-info/const";

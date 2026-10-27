@@ -2,7 +2,7 @@ name: Update demos
 
 # Rebuilds the live component demos from the dev branch of the frontend,
 # once a week, and opens a pull request when they changed. How the demos
-# are built is in scripts/build-components.mjs.
+# are built is in scripts/build-components.ts.
 #
 # Two jobs, so the frontend's dependencies never run with a token that can
 # write. The build job installs and runs the frontend, with read access
@@ -56,7 +56,7 @@ jobs:
       # default. The frontend's own CI sets the same.
       NODE_OPTIONS: --max_old_space_size=6144
     steps:
-      # Side by side, so scripts/build-components.mjs finds the frontend at
+      # Side by side, so scripts/build-components.ts finds the frontend at
       # its default place, ../frontend.
       - name: Check out the repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
