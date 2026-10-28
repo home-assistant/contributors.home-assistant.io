@@ -16,7 +16,7 @@ Until now, the `device_info` of a `ScannerEntity` was final and always `None`. T
 
 Now, `device_info` is no longer final. Set `_attr_device_info` to include the tracker in a device, like for any other entity. To include it in a device for the tracked client, use the MAC address of the client as connection.
 
-Until Home Assistant Core 2027.5, the base class still sets device info for a tracker that has a MAC address but no device info: a device with the MAC address as connection, named after the hostname, or after the MAC address when the device is new. Starting with 2027.5, a tracker without device info is not included in a device.
+Until Home Assistant Core 2028.11, the base class still sets device info for a tracker that has a MAC address but no device info: a device with the MAC address as connection, named after the hostname, or after the MAC address when the device is new. Starting with 2028.11, a tracker without device info is not included in a device.
 
 If your tracker should not be included in a device, set `_attr_device_info = DeviceInfo()` during the deprecation period. An empty device info means no device, and the default only applies when the device info is `None`, so the base class leaves your tracker alone.
 
@@ -50,7 +50,7 @@ Override `_attr_entity_registry_enabled_default` when the tracker is not just an
 
 ## What to change in your integration
 
-- Set `_attr_device_info` for the device you want the tracker in. For a device for the tracked client, use the MAC address of the client as connection and the name of the client as `name`. Do not rely on the default device info from the base class, it will be removed in 2027.5. To keep the tracker out of a device, set `_attr_device_info = DeviceInfo()`.
+- Set `_attr_device_info` for the device you want the tracker in. For a device for the tracked client, use the MAC address of the client as connection and the name of the client as `name`. Do not rely on the default device info from the base class, it will be removed in 2028.11. To keep the tracker out of a device, set `_attr_device_info = DeviceInfo()`.
 - When the tracker is the main feature of its device, remove the name of the tracker: an `_attr_name`, or a `name` property.
 - When the name of the client changes at runtime, rename the device.
 - When your integration reads `original_name` from the entity registry entry of a tracker, like to restore clients that are offline at startup, read the name of the device instead: `original_name` is `None` for a tracker without a name.
