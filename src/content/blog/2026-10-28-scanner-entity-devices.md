@@ -12,11 +12,11 @@ As of Home Assistant Core 2026.11, `ScannerEntity`, the base class for device tr
 
 ## Devices work like for any other entity
 
-Until now, the `device_info` of a `ScannerEntity` was final and always `None`. The base class added a device for the MAC address of the tracker itself, but only once another integration had registered a device with the same MAC address. A tracker created before that got an entity ID without the device name, and kept it. A tracker the user enabled never got a device at all.
+Until now, the `device_info` of a `ScannerEntity` was final and always `None`. The base class added a device for the MAC address of the tracker itself, but only once another integration had registered a device with the same MAC address. A tracker created before that got an entity ID without the device name, and kept it. A tracker the user enabled only got a device once another integration knew its MAC address.
 
 Now, `device_info` is no longer final. Set `_attr_device_info` to include the tracker in a device, like for any other entity. To include it in a device for the tracked client, use the MAC address of the client as connection.
 
-Until Home Assistant Core 2027.5, the base class still sets device info for a tracker that has a MAC address but no device info: a device with the MAC address as connection, named after the hostname, or after the MAC address when the device is new. After 2027.5, a tracker without device info is not included in a device.
+Until Home Assistant Core 2027.5, the base class still sets device info for a tracker that has a MAC address but no device info: a device with the MAC address as connection, named after the hostname, or after the MAC address when the device is new. Starting with 2027.5, a tracker without device info is not included in a device.
 
 If your tracker should not be included in a device, set `_attr_device_info = DeviceInfo()` during the deprecation period. An empty device info means no device, and the default only applies when the device info is `None`, so the base class leaves your tracker alone.
 
@@ -40,7 +40,7 @@ class ExampleClientTracker(ScannerEntity):
         )
 ```
 
-When the name of the client changes while Home Assistant runs, rename the device with `async_update_device`.
+When the name of the client changes while Home Assistant runs, rename the device with `async_update_device`. Code in the tracker only runs while it is enabled; a disabled tracker gets the current name on its device the next time the integration is set up.
 
 ## Trackers are disabled by default
 

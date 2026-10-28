@@ -57,7 +57,7 @@ A `TrackerEntity` does not poll by default, and every update is written to the s
 A `ScannerEntity` is keyed on the MAC address, and has a few defaults of its own:
 
 - Its unique ID is the MAC address. You do not set one yourself.
-- Until Home Assistant Core 2027.5, the base class sets device info for a tracker that has a MAC address but no device info: a device with the MAC address as connection, named after the hostname, or after the MAC address when the device is new. The MAC address never replaces the name of an existing device. Do not rely on it: after 2027.5, a tracker without device info is not included in a device, like any other entity. To keep a tracker out of a device until then, set `_attr_device_info = DeviceInfo()`. An empty device info means no device, and the default only applies when the device info is `None`.
+- Until Home Assistant Core 2027.5, the base class sets device info for a tracker that has a MAC address but no device info: a device with the MAC address as connection, named after the hostname, or after the MAC address when the device is new. The MAC address never replaces the name of an existing device. Do not rely on it: starting with 2027.5, a tracker without device info is not included in a device, like any other entity. To keep a tracker out of a device until then, set `_attr_device_info = DeviceInfo()`. An empty device info means no device, and the default only applies when the device info is `None`.
 - It is disabled by default. A router sees many clients, and most of them are not worth tracking: the devices users most want to track, like phones, are usually tracked with the Home Assistant Companion app instead. Override `_attr_entity_registry_enabled_default` when the tracker is not just another client seen on a network. For example, when tracking is the purpose of the device, like for the Zigbee presence tags that ZHA models as device trackers, or when the user set up the tracked device on its own.
 - When you set the MAC address and IP address, DHCP discovery uses them, with the hostname when you set one, to discover integrations for the device. That happens when Home Assistant sets up the entity while the device is connected, even when the tracker is disabled. DHCP discovery also looks at trackers with the `router` source type that are `home`: once when DHCP discovery starts, and when such a tracker gets its first state. A tracker that changes from `not_home` to `home` later does not trigger this.
 
@@ -115,7 +115,7 @@ class ExampleCarTracker(TrackerEntity):
         self.async_write_ha_state()
 ```
 
-A tracker for a client of a router, included in a device for the client. The client name goes on the device, and the device is renamed when the name changes on the router:
+A tracker for a client of a router, included in a device for the client. The client name goes on the device, and the device is renamed when the name changes on the router. That rename only happens while the tracker is enabled: Home Assistant does not add a disabled entity, so it gets no coordinator updates. The device info of a disabled tracker is still used each time the integration is set up, so its device gets the current name then.
 
 ```python
 from homeassistant.components.device_tracker import ScannerEntity
