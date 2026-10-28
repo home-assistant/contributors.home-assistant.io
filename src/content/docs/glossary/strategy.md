@@ -1,6 +1,6 @@
 ---
 title: "Strategy"
-description: "Code that builds a dashboard or a view from the home itself, its areas, devices, and entities, instead of a fixed configuration."
+description: "Code that builds a dashboard, a view, or a section from the home itself, its areas, devices, and entities, instead of a fixed configuration."
 sidebarGroup: "Frontend"
 term:
   aliases:

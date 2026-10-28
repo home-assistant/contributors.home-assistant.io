@@ -1,6 +1,6 @@
 ---
 title: Custom strategies
-description: Generate a whole dashboard, a view, or a section from code, and offer your dashboard in the new dashboard dialog.
+description: Generate a whole dashboard, a view, or a section from code, and offer it in the dashboard editor.
 order: 6
 ---
 
@@ -14,9 +14,19 @@ There are three kinds:
 
 They work together. A dashboard strategy often generates a list of views that each use a view strategy, so each view is only built when someone opens it.
 
+## How a strategy works
+
+A strategy is a custom element with a static `generate()` method. It gets the strategy configuration and `hass`, and returns the configuration of what it generates: a dashboard, a view, or a section.
+
+The tag name decides the kind: `ll-strategy-dashboard-<name>`, `ll-strategy-view-<name>`, or `ll-strategy-section-<name>`. The `<name>` is what follows `custom:` in the configuration. Everything in the `strategy` section, including your own options, is passed to `generate()` as `config`.
+
+Load your strategy as a [resource](/frontend/custom-ui/resources/), like a custom card.
+
+The [built-in strategies](https://github.com/home-assistant/frontend/tree/dev/src/panels/lovelace/strategies) are good examples. The [map dashboard strategy](https://github.com/home-assistant/frontend/blob/dev/src/panels/lovelace/strategies/map/map-dashboard-strategy.ts) is a small one.
+
 ## A dashboard strategy
 
-A strategy is a custom element with a static `generate()` method. It gets the strategy configuration and `hass`, and returns a dashboard configuration:
+A dashboard strategy returns a whole dashboard configuration:
 
 ```js
 class MyDemoDashboardStrategy extends HTMLElement {
@@ -45,7 +55,7 @@ customElements.define(
 );
 ```
 
-Load it as a [resource](/frontend/custom-ui/resources/), and use it as the configuration of a dashboard:
+Use it as the configuration of a dashboard:
 
 ```yaml
 strategy:
@@ -53,9 +63,17 @@ strategy:
   title: Generated dashboard
 ```
 
-The tag name decides what kind of strategy it is: `ll-strategy-dashboard-<name>`, `ll-strategy-view-<name>`, or `ll-strategy-section-<name>`. The `<name>` is what follows `custom:` in the configuration. Everything in the `strategy` section, including your own options, is passed to `generate()` as `config`.
+[Register it](#register-your-strategy) with `strategyType: "dashboard"`, and users can pick it under **Community dashboards** in the dialog to add a dashboard.
 
-The [built-in strategies](https://github.com/home-assistant/frontend/tree/dev/src/panels/lovelace/strategies) are good examples. The [map dashboard strategy](https://github.com/home-assistant/frontend/blob/dev/src/panels/lovelace/strategies/map/map-dashboard-strategy.ts) is a small one.
+### Suggest a title and icon
+
+A dashboard strategy can suggest the title and icon of the new dashboard with a static `getCreateSuggestions(hass)`. Users can still change both before they create it.
+
+```js
+static getCreateSuggestions(hass) {
+  return { title: "My demo dashboard", icon: "mdi:view-dashboard" };
+}
+```
 
 ## A view strategy
 
@@ -114,6 +132,79 @@ customElements.define("ll-strategy-view-my-area", MyAreaViewStrategy);
 
 Both use the name `my-area`: one as a dashboard strategy, one as a view strategy. That is fine, because the kind is part of the tag name.
 
+## A section strategy
+
+A section strategy returns the configuration of one section, with its cards. Use it in a sections view, next to regular sections:
+
+```yaml
+views:
+  - type: sections
+    sections:
+      - strategy:
+          type: custom:my-domain
+          domain: light
+```
+
+The section strategy below shows a tile for every entity of one domain, like all the lights:
+
+```js
+class MyDomainSectionStrategy extends HTMLElement {
+  static async generate(config, hass) {
+    const cards = Object.keys(hass.entities)
+      .filter((entityId) => entityId.startsWith(`${config.domain}.`))
+      .map((entityId) => ({ type: "tile", entity: entityId }));
+
+    return { type: "grid", cards };
+  }
+}
+
+customElements.define(
+  "ll-strategy-section-my-domain",
+  MyDomainSectionStrategy
+);
+```
+
+[Register it](#register-your-strategy) with `strategyType: "section"`, and users can pick it under **Community sections** when they create a section and choose **Automatic section**. After they pick it, the section editor opens with your [settings](#settings).
+
+### Show a preview
+
+The dialog shows each section strategy as a tile with a live preview. To get one, add a static `getStubConfig(hass)` that returns a strategy configuration with good defaults. It can be async. The dialog passes it to `generate()` to render the preview, and the new section starts with it.
+
+```js
+static getStubConfig(hass) {
+  return { type: "custom:my-domain", domain: "light" };
+}
+```
+
+Include `custom:` in the `type`, like in the configuration. Without `getStubConfig()`, or when it throws, the tile shows no preview. Pick defaults that show something in most homes.
+
+## Register your strategy
+
+Register your strategy in `window.customStrategies`, and users can pick it in the dashboard editor without writing any YAML:
+
+```js
+window.customStrategies = window.customStrategies || [];
+window.customStrategies.push({
+  type: "my-demo",
+  strategyType: "dashboard",
+  name: "My demo dashboard",
+  description: "A starter dashboard generated from JavaScript.",
+  documentationURL: "https://example.com/my-demo-dashboard",
+});
+```
+
+| Key | Required | Meaning |
+| --- | --- | --- |
+| `type` | Yes | The name of the strategy, without `custom:`. |
+| `strategyType` | Yes | `"dashboard"` or `"section"`. |
+| `name` | | The name in the dialog. |
+| `description` | | A short description below the name. |
+| `documentationURL` | | A link to your documentation. The frontend does not show it anywhere yet. |
+
+View strategies can't be picked in the editor yet, so there is no need to register them.
+
+The resource has to be loaded for the dialog to see it. After adding or updating it, reload the page and open the dialog again.
+
 ## When to generate again
 
 A strategy runs when the dashboard loads. By default, it runs again when the entity, device, area, or floor registry changes, so a new device shows up without a reload. State changes don't trigger it.
@@ -130,65 +221,28 @@ class MyDemoDashboardStrategy extends HTMLElement {
 }
 ```
 
-## Show up in the new dashboard dialog
-
-Register your dashboard strategy in `window.customStrategies`, and it appears in the **Community dashboards** section of the dialog to add a dashboard:
-
-```js
-window.customStrategies = window.customStrategies || [];
-window.customStrategies.push({
-  type: "my-demo",
-  strategyType: "dashboard",
-  name: "My demo dashboard",
-  description: "A starter dashboard generated from JavaScript.",
-  documentationURL: "https://example.com/my-demo-dashboard",
-});
-```
-
-| Key | Required | Meaning |
-| --- | --- | --- |
-| `type` | Yes | The name of the strategy, without `custom:`. |
-| `strategyType` | Yes | `"dashboard"`. |
-| `name` | | The name in the dialog. |
-| `description` | | A short description below the name. |
-| `documentationURL` | | A link to your documentation. The frontend does not show it anywhere yet. |
-
-The resource has to be loaded for the dialog to see it. After adding or updating it, reload the page and open the dialog again.
-
-### Suggest a title and icon
-
-A dashboard strategy can suggest the title and icon of the new dashboard with a static `getCreateSuggestions(hass)`. Users can still change both before they create it.
-
-```js
-static getCreateSuggestions(hass) {
-  return { title: "My demo dashboard", icon: "mdi:view-dashboard" };
-}
-```
-
 ## Settings
 
 A strategy can have a visual editor for its options. Return an editor element from the static `getConfigElement()`. It works like a [card editor](/frontend/custom-ui/card-editor/#a-visual-editor-of-your-own): Home Assistant calls `setConfig()` with the strategy configuration and sets `hass`, and the editor fires `config-changed` with the new configuration.
 
-Two more static options:
-
-- `configRequired = true`: the strategy can't work without settings. Home Assistant shows the editor before it creates the dashboard.
-- `noEditor = true`: the strategy has no settings to edit.
+Give every section strategy an editor: it is the first thing users see after they pick your section in the dialog. Without one, they only get a YAML editor.
 
 ```js
-class MyDemoDashboardStrategy extends HTMLElement {
-  static configRequired = true;
-
+class MyDomainSectionStrategy extends HTMLElement {
   static getConfigElement() {
-    return document.createElement("my-demo-strategy-editor");
+    return document.createElement("my-domain-strategy-editor");
   }
 
   static async generate(config, hass) {
-    return {
-      views: [{ cards: [{ type: "iframe", url: config.url }] }],
-    };
+    // ...
   }
 }
 ```
+
+A dashboard strategy has two more static options:
+
+- `configRequired = true`: the strategy can't work without settings. Home Assistant shows the editor before it creates the dashboard.
+- `noEditor = true`: the strategy has no settings to edit.
 
 ## Tips
 
