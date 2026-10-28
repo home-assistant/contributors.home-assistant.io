@@ -522,6 +522,7 @@
 /frontend/custom-ui/card/	sizing-in-sections-view	sizing-in-the-sections-view
 /frontend/custom-ui/strategy/	dashboards	a-dashboard-strategy
 /frontend/custom-ui/strategy/	show-your-community-dashboard-in-the-new-dashboard-dialog	register-your-strategy
+/frontend/custom-ui/strategy/	show-up-in-the-new-dashboard-dialog	register-your-strategy
 /frontend/custom-ui/view/	edit-delete-or-add-a-card	edit-delete-and-add-cards
 /frontend/custom-ui/view/	example	an-example
 /frontend/custom-ui/view/	store-custom-data	store-layout-data-per-card

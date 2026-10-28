@@ -145,7 +145,7 @@ views:
           domain: light
 ```
 
-The section strategy below shows a tile for every entity of one domain, like all the lights:
+The section strategy below shows a tile for every registered entity of one domain, like all the lights:
 
 ```js
 class MyDomainSectionStrategy extends HTMLElement {
