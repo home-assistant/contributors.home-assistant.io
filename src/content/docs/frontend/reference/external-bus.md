@@ -164,7 +164,7 @@ Payload:
 | `vendor_id` | The vendor ID of the device, when the Matter server reported it. |
 | `product_id` | The product ID of the device, when the Matter server reported it. |
 | `device_name` | The name of the device in Home Assistant, to suggest to the other platform. |
-| `remaining_seconds` | Seconds until the window closes, when the Matter server reported its timeout. Always at least 1: when the window has run out, the frontend does not send the message, and asks the user to start over. |
+| `remaining_seconds` | Estimated seconds until the window closes, when the Matter server reported its timeout. When 30 seconds or less remain, the frontend treats the code as expired, does not send the message, and asks you to get a new code. When sent, this value is greater than 30. |
 
 Answer: an empty object once the flow of the platform has completed. When it did not work, answer with an error result:
 
