@@ -231,7 +231,7 @@ for device in coordinator.data.devices.values():
 After:
 
 ```python
-with ir.async_begin_issues_refresh(
+with ir.async_refresh_issues(
     hass,
     DOMAIN,
     issue_id_pattern="firmware_too_old_",
@@ -253,7 +253,7 @@ with ir.async_begin_issues_refresh(
 
 ### Choose the issues to refresh
 
-`ir.async_begin_issues_refresh` returns an `IssuesRefresh`. It takes the domain of the issues, and narrows down the set with these arguments:
+`ir.async_refresh_issues` returns an `IssuesRefresh`. It takes the domain of the issues, and narrows down the set with these arguments:
 
 | Argument | What it selects |
 | --- | --- |
@@ -272,7 +272,7 @@ VEHICLE_ISSUE_ID_PATTERN = re.compile(
     f"({'|'.join(map(re.escape, VEHICLE_ISSUE_TYPES))})_"
 )
 
-with ir.async_begin_issues_refresh(
+with ir.async_refresh_issues(
     hass,
     DOMAIN,
     issue_id_pattern=VEHICLE_ISSUE_ID_PATTERN,
@@ -298,7 +298,7 @@ async def async_setup_entry(
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
     """Set up the cameras."""
-    with ir.async_begin_issues_refresh(
+    with ir.async_refresh_issues(
         hass,
         DOMAIN,
         issue_id_pattern="rtsp_disabled_",
@@ -317,7 +317,7 @@ This only works when your issue IDs are stable: the same problem must get the sa
 Sometimes you cannot tell whether an issue is still valid. The device did not answer, or the data you need is not there yet. Deleting the issue would be wrong, and so would creating it again with stale information. Call `IssuesRefresh.async_keep` to leave those issues as they are:
 
 ```python
-with ir.async_begin_issues_refresh(
+with ir.async_refresh_issues(
     hass,
     DOMAIN,
     issue_id_pattern="firmware_too_old_",
@@ -388,7 +388,7 @@ The `with` block finishes the refresh when the block completes, and cancels it w
 You can also call the methods yourself, when the refresh does not fit in one block. In `async_setup_entry`, register `async_cancel` with `entry.async_on_unload`, so that a failed setup cancels the refresh:
 
 ```python
-refresh = ir.async_begin_issues_refresh(
+refresh = ir.async_refresh_issues(
     hass,
     DOMAIN,
     issue_id_pattern="gateway_not_found_",
@@ -419,7 +419,7 @@ async def async_will_remove_from_hass(self) -> None:
 Then run the reload in a refresh of those issues:
 
 ```python
-with ir.async_begin_issues_refresh(
+with ir.async_refresh_issues(
     hass,
     DOMAIN,
     issue_ids=[entity.repair_issue_id for entity in old_entities],
@@ -458,7 +458,7 @@ def update_issues(hass: HomeAssistant) -> None:
     @callback
     def apply_issues() -> None:
         """Create the issues and delete the stale ones."""
-        with ir.async_begin_issues_refresh(
+        with ir.async_refresh_issues(
             hass, DOMAIN, issue_id_pattern="units_changed_"
         ):
             for issue_id, placeholders in problems.items():

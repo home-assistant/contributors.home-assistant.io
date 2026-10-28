@@ -1,7 +1,7 @@
 ---
 title: Repair issues can belong to a config entry, and be refreshed
 description: Link a repair issue to its config entry, and Home Assistant deletes it when the entry is removed. Refresh a set of issues, and only the stale ones are deleted.
-date: 2026-10-23
+date: 2026-10-28
 authors:
   - Erik Montnémery
 areas:
@@ -44,10 +44,10 @@ This is implemented in core [PR #186197](https://github.com/home-assistant/core/
 
 A common pattern is to delete all issues of a kind, and then create the ones that are still valid. It is simple, but every issue that is still valid is deleted and created again: users see it disappear and come back, and an issue they ignored shows up again. The same happens to issues that an integration deletes when its config entry unloads, because a reload unloads the entry too. Set their `config_entry_id` instead.
 
-The new `ir.async_begin_issues_refresh` deletes only the stale issues:
+The new `ir.async_refresh_issues` deletes only the stale issues:
 
 ```python
-with ir.async_begin_issues_refresh(
+with ir.async_refresh_issues(
     hass,
     DOMAIN,
     issue_id_pattern="firmware_too_old_",
@@ -82,6 +82,6 @@ Also new:
 - `ir.async_keep_issue(hass, domain, issue_id)` and `IssuesRefresh.async_keep` keep issues that you could not check, like those of a device that did not answer.
 - `ir.async_delete_issue` takes a `defer_to_refresh` argument. An issue in the set of an active refresh is then left for that refresh to delete, so it survives if it is created or kept again while the refresh runs. This is meant for entities that are removed during a reload, which may create the issue again.
 
-`ir.async_begin_issues_refresh` returns an `IssuesRefresh`. Used in a `with` block, it finishes the refresh when the block completes, and cancels it when an exception is raised. A cancelled refresh only applies deferred deletes. You can also call `IssuesRefresh.async_finish()` and `IssuesRefresh.async_cancel()` yourself.
+`ir.async_refresh_issues` returns an `IssuesRefresh`. Used in a `with` block, it finishes the refresh when the block completes, and cancels it when an exception is raised. A cancelled refresh only applies deferred deletes. You can also call `IssuesRefresh.async_finish()` and `IssuesRefresh.async_cancel()` yourself.
 
 The refresh API only works in the event loop. It is implemented in core [PR #187990](https://github.com/home-assistant/core/pull/187990). For the details, including overlapping refreshes and checking for issues in a worker thread, see [refresh a set of issues](/core/integrations/repairs/#refresh-a-set-of-issues).
