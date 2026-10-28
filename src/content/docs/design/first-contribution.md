@@ -26,7 +26,7 @@ New to GitHub? See [Use GitHub, without being a developer](/start/github/).
 
 ## 3. Get the design kit
 
-The [Home Assistant Design Kit](https://www.figma.com/design/2WGI8IDGyxINjSV6NRvPur/Home-Assistant-Design-Kit) on Figma has the components and styles of the interface. Working from it keeps your mockups close to what can actually be built. The [components](/design/components/) and [patterns](/design/patterns/) in this area show how those pieces behave.
+The [Home Assistant Design Kit](https://www.figma.com/community/file/1697311104929761103/home-assistant-design-kit) on Figma has the components and styles of the interface. Working from it keeps your mockups close to what can actually be built. The [components](/design/components/) and [patterns](/design/patterns/) in this area show how those pieces behave.
 
 ## 4. Share your proposal
 

@@ -27,7 +27,7 @@ The **#designers** channel on the [Home Assistant Discord](https://www.home-assi
 
 ### Figma
 
-The [Home Assistant Design Kit](https://www.figma.com/design/2WGI8IDGyxINjSV6NRvPur/Home-Assistant-Design-Kit) on Figma has the components and styles of the interface. Mockups that start from it stay close to what can be built.
+The [Home Assistant Design Kit](https://www.figma.com/community/file/1697311104929761103/home-assistant-design-kit) on Figma Community is the official Figma library for the Home Assistant interface, maintained by the Open Home Foundation. Its variables, text styles, and components are generated from the [frontend](https://github.com/home-assistant/frontend) source, so what you design matches what ships. It includes light and dark modes, the [components](/design/components/) documented in this area, and usage guidelines with links to the docs and source for each one. Mockups that start from it stay close to what can be built.
 
 ### The frontend repository
 
