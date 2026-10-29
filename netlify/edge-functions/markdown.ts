@@ -7,7 +7,7 @@
 // with q=0.
 function wantsMarkdown(accept: string): boolean {
   return accept.split(",").some((part) => {
-    const [type, ...params] = part.split(";").map((value) => value.trim());
+    const [type, ...params] = part.split(";").map((value) => value.trim().toLowerCase());
     const quality = params.find((param) => param.startsWith("q="));
     return type === "text/markdown" && (!quality || Number(quality.slice(2)) > 0);
   });
