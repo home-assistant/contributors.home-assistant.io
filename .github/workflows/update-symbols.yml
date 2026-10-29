@@ -14,6 +14,12 @@ name: Update code symbols
 # exist: those pages need an update. How that works is in "Source paths" in
 # README.md.
 #
+# It also regenerates the theme variables reference
+# (src/content/docs/marketplace/reference/theme-variables.md) from the
+# frontend. Its report lists the variables added and removed, and the entries
+# of scripts/theme-variables/components.yaml that are no longer in the
+# frontend. How that works is in "Theme variables" in README.md.
+#
 # Nothing from core or the frontend is installed or run. The generators read
 # them with Git, and parse them with the parser of Python itself and the
 # TypeScript compiler of this repository, so one job is enough.
@@ -108,6 +114,12 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: pnpm --silent source-paths | tee "$RUNNER_TEMP/source-paths.md"
 
+      # Reads the frontend checkout with Git, at the commit checked out.
+      - name: Generate the theme variables
+        working-directory: site
+        shell: bash
+        run: pnpm --silent theme-variables --ref HEAD | tee "$RUNNER_TEMP/theme-variables.md"
+
       # An index records the commit it was read from, and the line of every
       # symbol. The links point at that commit, so they stay right when only
       # those moved: no pull request then, the old indexes stay, and so does
@@ -136,7 +148,17 @@ jobs:
             paths=true
           fi
 
-          if [ "$symbols" = "true" ] || [ "$paths" = "true" ]; then
+          # The theme variables page names the frontend commit in one line.
+          # A new commit alone is no reason for a pull request.
+          themes=false
+          page=src/content/docs/marketplace/reference/theme-variables.md
+          if git diff -U0 -- "$page" | grep '^[-+][^-+]' | grep -qv 'generated from the frontend source'; then
+            themes=true
+          else
+            git checkout -- "$page"
+          fi
+
+          if [ "$symbols" = "true" ] || [ "$paths" = "true" ] || [ "$themes" = "true" ]; then
             echo "changed=true" >> "$GITHUB_OUTPUT"
           else
             echo "changed=false" >> "$GITHUB_OUTPUT"
@@ -162,6 +184,9 @@ jobs:
             echo "## Source paths"
             echo
             sed -e 's/^#/###/' "$RUNNER_TEMP/source-paths.md"
+            echo
+            # The report starts with its own "# Theme variables" heading.
+            sed -e 's/^#/##/' "$RUNNER_TEMP/theme-variables.md"
           } > "$RUNNER_TEMP/full.md"
           # GitHub takes 65536 characters at most in a description.
           head -c 60000 "$RUNNER_TEMP/full.md" > "$RUNNER_TEMP/body.md"
@@ -180,9 +205,11 @@ jobs:
             src/data/symbols/frontend.json
             src/data/symbols/coverage.json
             src/data/source-paths.json
+            src/content/docs/marketplace/reference/theme-variables.md
           commit-message: Update the code symbols to core@${{ steps.symbols.outputs.core }} and frontend@${{ steps.symbols.outputs.frontend }}
           title: Update the code symbols to core@${{ steps.symbols.outputs.core }} and frontend@${{ steps.symbols.outputs.frontend }}
           labels: |
             area: core
             area: frontend
+            area: marketplace
           body-path: ${{ runner.temp }}/body.md
