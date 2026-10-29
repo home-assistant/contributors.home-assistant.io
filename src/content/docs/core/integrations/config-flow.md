@@ -53,8 +53,7 @@ class ExampleConfigFlow(ConfigFlow, domain=DOMAIN):
             except ExampleConnectionError:
                 errors["base"] = "cannot_connect"
             else:
-                await self.async_set_unique_id(device.serial_number)
-                self._abort_if_unique_id_configured()
+                await self.async_set_unique_id_or_abort(device.serial_number)
 
                 return self.async_create_entry(
                     title=device.model,
@@ -89,15 +88,18 @@ Some step names have a fixed meaning. Home Assistant calls them for you:
 
 ## Unique IDs
 
-A unique ID ties a config entry to the device or account behind it, so it cannot be set up twice. Set it in the flow with `async_set_unique_id`, and the config entry inherits it. It only needs to be unique within your integration.
+A unique ID ties a config entry to the device or account behind it, so it cannot be set up twice. Set it in the flow with `async_set_unique_id_or_abort`, and the config entry inherits it. It only needs to be unique within your integration.
 
 ```python
-# Abort if another flow for this device is already in progress
-await self.async_set_unique_id(device.serial_number)
-
-# Abort if a config entry for this device already exists
-self._abort_if_unique_id_configured()
+await self.async_set_unique_id_or_abort(device.serial_number)
 ```
+
+`async_set_unique_id_or_abort` sets the unique ID, and then runs the check that fits the source of the flow:
+
+- In a reauthentication or reconfiguration flow, it aborts with `unique_id_mismatch` when the unique ID differs from the one of the entry. See [reauthentication and reconfiguration](/core/integrations/reauth-reconfigure/).
+- In any other flow, it aborts with `already_configured` when an entry with this unique ID exists. Pass `updates` and `reload_on_update` to update that entry, as shown below.
+
+A flow started by the user does not abort when another flow for the same device is in progress, so the user takes over from a discovery flow. Other flows do abort in that case. Pass `raise_on_progress` to change this, and `reason` to use another abort reason, like `reason="wrong_account"`.
 
 When the flow aborts because the entry exists, users see the `already_configured` abort reason from your `strings.json`. Use the shared string for it:
 
@@ -113,13 +115,14 @@ When the flow aborts because the entry exists, users see the `already_configured
 
 A unique ID also lets users ignore a discovered device, so they are not asked about it again. That is why discovery requires one.
 
+Sometimes the flow has to set the unique ID and abort at different moments. For example, a discovery step that sets the unique ID early to stop duplicate flows, but only checks for an existing entry later, or a reconfiguration flow that allows the unique ID to change. Then call `async_set_unique_id` with `_abort_if_unique_id_configured` or `_abort_if_unique_id_mismatch` yourself.
+
 ### Update connection details on the fly
 
-When a device on the local network gets a new IP address, the unique ID lets you update the existing entry from a discovery step. Pass the new values to `_abort_if_unique_id_configured`. If the data changed, Home Assistant updates the entry and reloads it:
+When a device on the local network gets a new IP address, the unique ID lets you update the existing entry from a discovery step. Pass the new values as `updates`. If the data changed, Home Assistant updates the entry and reloads it:
 
 ```python
-await self.async_set_unique_id(serial_number)
-self._abort_if_unique_id_configured(updates={CONF_HOST: host})
+await self.async_set_unique_id_or_abort(serial_number, updates={CONF_HOST: host})
 ```
 
 The reload only happens when the entry is loaded or waiting to retry its setup. Pass `reload_on_update=False` to update the entry without a reload. Even without changes, a discovery reloads an entry that is waiting to retry its setup: the device is evidently online again.
@@ -162,9 +165,8 @@ async def async_step_zeroconf(
 ) -> ConfigFlowResult:
     """Handle a discovered device."""
     serial_number = discovery_info.properties["serialno"]
-    await self.async_set_unique_id(serial_number)
-    self._abort_if_unique_id_configured(
-        updates={CONF_HOST: discovery_info.host}
+    await self.async_set_unique_id_or_abort(
+        serial_number, updates={CONF_HOST: discovery_info.host}
     )
 
     self._host = discovery_info.host

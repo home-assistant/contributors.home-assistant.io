@@ -69,8 +69,7 @@ async def async_step_reauth_confirm(
         except ExampleAuthError:
             errors["base"] = "invalid_auth"
         else:
-            await self.async_set_unique_id(account.id)
-            self._abort_if_unique_id_mismatch()
+            await self.async_set_unique_id_or_abort(account.id)
 
             return self.async_update_reload_and_abort(
                 self._get_reauth_entry(),
@@ -87,7 +86,7 @@ async def async_step_reauth_confirm(
 A few things happen here:
 
 - `self._get_reauth_entry()` returns the config entry that needs new credentials. `self.source == SOURCE_REAUTH` tells you that you are in a reauthentication flow.
-- `async_set_unique_id` followed by `_abort_if_unique_id_mismatch()` makes sure the user logs in to the same account, not a different one.
+- `async_set_unique_id_or_abort` makes sure the user logs in to the same account, not a different one. In a reauthentication flow, it aborts with `unique_id_mismatch` when the account differs.
 - `async_update_reload_and_abort` merges `data_updates` into the entry data, reloads the entry, and aborts the flow with `reauth_successful`. Pass `reload_even_if_entry_is_unchanged=False` to only reload when something changed.
 
 Add the step to `strings.json`, using the shared title:
@@ -136,8 +135,7 @@ async def async_step_reconfigure(
         except ExampleConnectionError:
             errors["base"] = "cannot_connect"
         else:
-            await self.async_set_unique_id(device.serial_number)
-            self._abort_if_unique_id_mismatch()
+            await self.async_set_unique_id_or_abort(device.serial_number)
 
             return self.async_update_reload_and_abort(
                 entry, data_updates=user_input

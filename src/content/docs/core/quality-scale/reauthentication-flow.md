@@ -47,8 +47,9 @@ class MyConfigFlow(ConfigFlow, domain=DOMAIN):
             except MyConnectionError:
                 errors["base"] = "cannot_connect"
             else:
-                await self.async_set_unique_id(account_id)
-                self._abort_if_unique_id_mismatch(reason="wrong_account")
+                await self.async_set_unique_id_or_abort(
+                    account_id, reason="wrong_account"
+                )
                 return self.async_update_reload_and_abort(
                     entry, data_updates=user_input
                 )
@@ -65,7 +66,7 @@ class MyConfigFlow(ConfigFlow, domain=DOMAIN):
 A few details matter here:
 
 - The flow tests the new credentials before it saves them, just like the config flow does.
-- `_abort_if_unique_id_mismatch` stops users from logging in with a different account by accident, which would swap the data behind all their entities.
+- `async_set_unique_id_or_abort` stops users from logging in with a different account by accident, which would swap the data behind all their entities.
 - `async_update_reload_and_abort` updates the entry, reloads it, and ends the flow with the `reauth_successful` reason.
 
 ## How it is checked
