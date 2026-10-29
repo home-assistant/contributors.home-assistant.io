@@ -49,6 +49,20 @@ export function areaOf(entry: DocsEntry): string {
   return pathOf(entry).split("/")[0];
 }
 
+// The folder of the area a page is in, like "core/integrations", for a page
+// in it and for its overview. Pages at the top of an area have none.
+export function folderOf(entry: DocsEntry): string | undefined {
+  const segments = pathOf(entry).split("/");
+  const inFolder = segments.length > 2 || (segments.length === 2 && isIndex(entry));
+  return inFolder ? segments.slice(0, 2).join("/") : undefined;
+}
+
+// The llms.txt that lists a page: the one of its folder, or of its area.
+// See src/lib/llms.ts.
+export function llmsHref(entry: DocsEntry): string {
+  return `/${folderOf(entry) ?? areaOf(entry)}/llms.txt`;
+}
+
 // Every page renders the sidebar, the breadcrumbs, and the search, which
 // all need the docs. In a build the docs don't change, so they are loaded,
 // and the trees built, once instead of for every page. `pnpm dev` keeps

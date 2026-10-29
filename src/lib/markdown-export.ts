@@ -16,8 +16,9 @@ import { getImage } from "astro:assets";
 import { DISCORD_CHANNELS } from "../data/discord";
 import sourcePathIndex from "../data/source-paths.json";
 import { APIS, CORE, INTEGRATIONS, type MapLayer, NETWORK, OUTSIDE, PEOPLE, PLATFORM } from "../data/architecture-map";
+import { type BlogPost, postHref } from "./blog";
 import { type Palette, paletteSwatches, type Scale, tokenScale } from "./design-tokens";
-import { type DocsEntry, groupOverview, hrefOf, isIndex, pathOf } from "./docs";
+import { type DocsEntry, groupOverview, hrefOf, isIndex, llmsHref, pathOf } from "./docs";
 import { getUpcomingEvents } from "./events";
 import { getTerms, relatedTerms, termHref } from "./glossary";
 import { CATEGORIES_SOURCE, getIntegrationCategories } from "./integration-categories";
@@ -38,6 +39,7 @@ export async function pageMarkdown(entry: DocsEntry): Promise<string> {
     const date = lastVerified.toISOString().slice(0, 10);
     header.push(source ? `Last verified on ${date}, against ${source}.` : `Last verified on ${date}.`);
   }
+  header.push(`Index of this section: ${absoluteUrl(llmsHref(entry))}`);
 
   let body = entry.body ?? "";
   if (entry.filePath?.endsWith(".mdx")) {
@@ -56,6 +58,25 @@ export async function pageMarkdown(entry: DocsEntry): Promise<string> {
   ];
 
   return `${parts.filter(Boolean).join("\n\n")}\n`;
+}
+
+// The Markdown version of a blog post. Posts are plain Markdown, and don't
+// link repository paths like the docs do.
+export async function postMarkdown(post: BlogPost): Promise<string> {
+  const pageUrl = absoluteUrl(postHref(post));
+  const date = post.data.date.toISOString().slice(0, 10);
+  const header = [
+    `# ${post.data.title}`,
+    `> ${post.data.description}`,
+    `Source: ${pageUrl}`,
+    `Published on ${date} by ${post.data.authors.join(", ")}.`,
+    `Index of the blog: ${absoluteUrl("/blog/llms.txt")}`,
+  ];
+
+  let body = await discordLinks(post.body ?? "");
+  body = await absoluteLinks(body, post, pageUrl);
+
+  return `${header.join("\n\n")}\n\n${body.trim()}\n`;
 }
 
 // The box at the top of a glossary page (TermFacts.astro), as a list.
@@ -629,12 +650,16 @@ async function eventList(): Promise<string> {
 
 // Links
 
-const contentImages = import.meta.glob<ImageMetadata>("../content/docs/**/*.{png,jpg,jpeg,gif,webp,avif,svg}", {
+// The file a page or post comes from, for the links in it that are relative
+// to that file.
+type Source = Pick<DocsEntry | BlogPost, "filePath">;
+
+const contentImages = import.meta.glob<ImageMetadata>("../content/{docs,blog}/**/*.{png,jpg,jpeg,gif,webp,avif,svg}", {
   import: "default",
 });
 
 // An image next to the page, at the URL the build gives it.
-async function imageUrl(target: string, entry: DocsEntry): Promise<string> {
+async function imageUrl(target: string, entry: Source): Promise<string> {
   const folder = (entry.filePath ?? "").replace(/[^/]+$/, "");
   const file = new URL(target, `file:///${folder}`).pathname.slice(1).replace(/^src\//, "../");
   const load = contentImages[file];
@@ -646,7 +671,7 @@ async function imageUrl(target: string, entry: DocsEntry): Promise<string> {
   return absoluteUrl(image.src);
 }
 
-async function absoluteTarget(target: string, entry: DocsEntry, pageUrl: string): Promise<string> {
+async function absoluteTarget(target: string, entry: Source, pageUrl: string): Promise<string> {
   if (/^[a-z][a-z0-9+.-]*:/i.test(target) || target.startsWith("//")) {
     return target;
   }
@@ -669,7 +694,7 @@ async function replaceAsync(
   return text.replace(pattern, () => replacements[index++]);
 }
 
-async function absoluteLinks(markdown: string, entry: DocsEntry, pageUrl: string): Promise<string> {
+async function absoluteLinks(markdown: string, entry: Source, pageUrl: string): Promise<string> {
   const absolute = (target: string) => absoluteTarget(target, entry, pageUrl);
 
   return mapText(markdown, (text) =>
