@@ -12,13 +12,7 @@ In a theme file, a variable has no `--` in front, the way this page shows them. 
 
 Many defaults point to another variable, like `var(--primary-color)`. Those follow that variable: change `primary-color`, and everything that defaults to it changes with it. So set the variables at the top of the chain first, and only set the ones below them where you want something different.
 
-## Classic variables
-
-The variables most themes set, from `src/resources/theme/color/color.globals.ts`. Most components use them. The **Dark** column shows the value the frontend uses in dark mode, when it differs from the light one. **Not set** means the frontend sets no value in that mode, and the components that read the variable use a default of their own.
-
-The variables starting with `mdc-` in the same file are left out: they pass these variables on to older components, and follow them by themselves.
-
-{{classic}}
+The **Dark** column shows the value the frontend uses in dark mode, when it differs from the light one. **Not set** means the frontend sets no value in that mode, and the components that read the variable use a default of their own.
 
 ## Design tokens
 
@@ -37,3 +31,11 @@ The other tokens are below, by the file of the frontend that defines them.
 Some components read a variable of their own, with a default in the component itself. These are the ones meant for themes. When a theme does not set one, the component uses the default in the table.
 
 {{components}}
+
+## Classic variables
+
+The older variables, from `src/resources/theme/color/color.globals.ts`. Most themes still set them, and many components still use them.
+
+The variables starting with `mdc-` in the same file are left out: they pass these variables on to older components, and follow them by themselves.
+
+{{classic}}

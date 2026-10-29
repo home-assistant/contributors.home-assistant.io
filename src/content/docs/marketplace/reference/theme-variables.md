@@ -8,15 +8,291 @@ order: 4
 
 A [theme](/glossary/theme/) sets variables of the frontend. This page lists the ones a theme can set, with the default value of each. For how to write a theme, and which variables most themes set, start with [Publish a theme](/marketplace/guides/themes/).
 
-The tables on this page are generated from the frontend source, at [`a30193b8ef`](https://github.com/home-assistant/frontend/commit/a30193b8efc81790b572f35c6f092a4d8306e89e) of the `dev` branch. Variables can be renamed or removed in any release, so test your theme with every beta.
+The tables on this page are generated from the frontend source, at [`27489f188e`](https://github.com/home-assistant/frontend/commit/27489f188eb85f21a428a44242879c8c038b2448) of the `dev` branch. Variables can be renamed or removed in any release, so test your theme with every beta.
 
 In a theme file, a variable has no `--` in front, the way this page shows them. In the frontend source, and in CSS, it does: `primary-color` in your theme is `--primary-color` in the code.
 
 Many defaults point to another variable, like `var(--primary-color)`. Those follow that variable: change `primary-color`, and everything that defaults to it changes with it. So set the variables at the top of the chain first, and only set the ones below them where you want something different.
 
+The **Dark** column shows the value the frontend uses in dark mode, when it differs from the light one. **Not set** means the frontend sets no value in that mode, and the components that read the variable use a default of their own.
+
+## Design tokens
+
+Newer components use [design tokens](/glossary/design-token/), with names that start with `ha-`. A theme can set them too. The Design area shows several of them, with what each is for, so they are not repeated here:
+
+- [Color](/design/foundations/color/): the color palettes, like `ha-color-primary-40`. Set the primary palette to give newer components your color, as [Publish a theme](/marketplace/guides/themes/#the-design-tokens) explains.
+- [Spacing](/design/foundations/spacing/): the spacing scale, `ha-space-1` to `ha-space-20`, and the corner radius scale, `ha-border-radius-*`.
+- [Typography](/design/foundations/typography/): the font sizes, `ha-font-size-*`.
+
+The other tokens are below, by the file of the frontend that defines them.
+
+### Borders, radii, and motion
+
+From [`src/resources/theme/core.globals.ts`](https://github.com/home-assistant/frontend/blob/dev/src/resources/theme/core.globals.ts).
+
+| Variable | Default |
+| --- | --- |
+| `ha-border-width-sm` | `1px` |
+| `ha-border-width-md` | `2px` |
+| `ha-border-width-lg` | `3px` |
+| `ha-picture-border-radius` | `var(--ha-border-radius-lg)` |
+| `ha-picture-border-radius-sm` | `var(--ha-border-radius-sm)` |
+| `ha-animation-duration-none` | `1ms` |
+| `ha-animation-duration-instant` | `75ms` |
+| `ha-animation-duration-fast` | `150ms` |
+| `ha-animation-duration-normal` | `250ms` |
+| `ha-animation-duration-slow` | `350ms` |
+
+### Typography
+
+From [`src/resources/theme/typography.globals.ts`](https://github.com/home-assistant/frontend/blob/dev/src/resources/theme/typography.globals.ts).
+
+| Variable | Default |
+| --- | --- |
+| `ha-font-family-body` | `Roboto, Noto, sans-serif` |
+| `ha-font-family-code` | `monospace` |
+| `ha-font-family-longform` | `ui-sans-serif, system-ui, sans-serif` |
+| `ha-font-size-scale` | `1` |
+| `ha-font-weight-light` | `300` |
+| `ha-font-weight-normal` | `400` |
+| `ha-font-weight-medium` | `500` |
+| `ha-font-weight-bold` | `700` |
+| `ha-font-family-heading` | `var(--ha-font-family-body)` |
+| `ha-font-weight-body` | `var(--ha-font-weight-normal)` |
+| `ha-font-weight-heading` | `var(--ha-font-weight-bold)` |
+| `ha-font-weight-action` | `var(--ha-font-weight-medium)` |
+| `ha-line-height-condensed` | `1.2` |
+| `ha-line-height-normal` | `1.6` |
+| `ha-line-height-expanded` | `2` |
+| `ha-font-smoothing` | `antialiased` |
+| `ha-moz-osx-font-smoothing` | `grayscale` |
+
+### Shadows
+
+From [`src/resources/theme/semantic.globals.ts`](https://github.com/home-assistant/frontend/blob/dev/src/resources/theme/semantic.globals.ts).
+
+| Variable | Light | Dark |
+| --- | --- | --- |
+| `ha-box-shadow-s` | `0 1px 2px 0 rgba(0, 0, 0, 0.08), 0 1px 3px 0 rgba(0, 0, 0, 0.12)` | `0 1px 2px 0 rgba(0, 0, 0, 0.4), 0 1px 3px 0 rgba(0, 0, 0, 0.5)` |
+| `ha-box-shadow-m` | `0 3px 6px -1px rgba(0, 0, 0, 0.1), 0 8px 16px -2px rgba(0, 0, 0, 0.15)` | `0 3px 6px -1px rgba(0, 0, 0, 0.35), 0 8px 16px -2px rgba(0, 0, 0, 0.45)` |
+| `ha-box-shadow-l` | `0 6px 12px -3px rgba(0, 0, 0, 0.12), 0 16px 32px -6px rgba(0, 0, 0, 0.2)` | `0 6px 12px -3px rgba(0, 0, 0, 0.4), 0 16px 32px -6px rgba(0, 0, 0, 0.55)` |
+
+### Semantic colors
+
+From [`src/resources/theme/color/semantic.globals.ts`](https://github.com/home-assistant/frontend/blob/dev/src/resources/theme/color/semantic.globals.ts).
+
+| Variable | Light | Dark |
+| --- | --- | --- |
+| `ha-color-focus` | `var(--ha-color-neutral-60)` | Same |
+| `ha-color-text-primary` | `var(--ha-color-neutral-05)` | `var(--white-color)` |
+| `ha-color-text-secondary` | `var(--ha-color-neutral-40)` | `var(--ha-color-neutral-80)` |
+| `ha-color-text-disabled` | `var(--ha-color-neutral-60)` | Same |
+| `ha-color-text-link` | `var(--ha-color-primary-40)` | `var(--ha-color-primary-60)` |
+| `ha-color-text-primary-inverted` | `var(--ha-color-white)` | `var(--ha-color-black)` |
+| `ha-color-text-secondary-inverted` | `var(--ha-color-neutral-20)` | `var(--ha-color-neutral-40)` |
+| `ha-color-border-primary-quiet` | `var(--ha-color-primary-90)` | Same |
+| `ha-color-border-primary-normal` | `var(--ha-color-primary-70)` | Same |
+| `ha-color-border-primary-loud` | `var(--ha-color-primary-40)` | Same |
+| `ha-color-border-neutral-quiet` | `var(--ha-color-neutral-90)` | `var(--ha-color-neutral-40)` |
+| `ha-color-border-neutral-normal` | `var(--ha-color-neutral-60)` | `var(--ha-color-neutral-50)` |
+| `ha-color-border-neutral-loud` | `var(--ha-color-neutral-40)` | `var(--ha-color-neutral-70)` |
+| `ha-color-border-danger-quiet` | `var(--ha-color-red-90)` | Same |
+| `ha-color-border-danger-normal` | `var(--ha-color-red-70)` | `var(--ha-color-red-50)` |
+| `ha-color-border-danger-loud` | `var(--ha-color-red-40)` | `var(--ha-color-red-50)` |
+| `ha-color-border-warning-quiet` | `var(--ha-color-orange-90)` | Same |
+| `ha-color-border-warning-normal` | `var(--ha-color-orange-70)` | `var(--ha-color-orange-50)` |
+| `ha-color-border-warning-loud` | `var(--ha-color-orange-40)` | `var(--ha-color-orange-50)` |
+| `ha-color-border-success-quiet` | `var(--ha-color-green-90)` | Same |
+| `ha-color-border-success-normal` | `var(--ha-color-green-70)` | Same |
+| `ha-color-border-success-loud` | `var(--ha-color-green-40)` | Same |
+| `ha-color-fill-primary-quiet-resting` | `var(--ha-color-primary-95)` | `var(--ha-color-primary-05)` |
+| `ha-color-fill-primary-quiet-hover` | `var(--ha-color-primary-90)` | `var(--ha-color-primary-10)` |
+| `ha-color-fill-primary-quiet-active` | `var(--ha-color-primary-95)` | `var(--ha-color-primary-05)` |
+| `ha-color-fill-primary-normal-resting` | `var(--ha-color-primary-90)` | `var(--ha-color-primary-10)` |
+| `ha-color-fill-primary-normal-hover` | `var(--ha-color-primary-80)` | `var(--ha-color-primary-20)` |
+| `ha-color-fill-primary-normal-active` | `var(--ha-color-primary-90)` | `var(--ha-color-primary-10)` |
+| `ha-color-fill-primary-loud-resting` | `var(--ha-color-primary-40)` | Same |
+| `ha-color-fill-primary-loud-hover` | `var(--ha-color-primary-30)` | Same |
+| `ha-color-fill-primary-loud-active` | `var(--ha-color-primary-40)` | Same |
+| `ha-color-fill-neutral-quiet-resting` | `var(--ha-color-neutral-95)` | `var(--ha-color-neutral-05)` |
+| `ha-color-fill-neutral-quiet-hover` | `var(--ha-color-neutral-90)` | `var(--ha-color-neutral-10)` |
+| `ha-color-fill-neutral-quiet-active` | `var(--ha-color-neutral-95)` | `var(--ha-color-neutral-00)` |
+| `ha-color-fill-neutral-normal-resting` | `var(--ha-color-neutral-90)` | `var(--ha-color-neutral-10)` |
+| `ha-color-fill-neutral-normal-hover` | `var(--ha-color-neutral-80)` | `var(--ha-color-neutral-20)` |
+| `ha-color-fill-neutral-normal-active` | `var(--ha-color-neutral-90)` | `var(--ha-color-neutral-10)` |
+| `ha-color-fill-neutral-loud-resting` | `var(--ha-color-neutral-40)` | `var(--ha-color-neutral-60)` |
+| `ha-color-fill-neutral-loud-hover` | `var(--ha-color-neutral-30)` | `var(--ha-color-neutral-70)` |
+| `ha-color-fill-neutral-loud-active` | `var(--ha-color-neutral-40)` | `var(--ha-color-neutral-60)` |
+| `ha-color-fill-disabled-quiet-resting` | `var(--ha-color-neutral-95)` | `var(--ha-color-neutral-10)` |
+| `ha-color-fill-disabled-quiet-hover` | `var(--ha-color-neutral-90)` | `var(--ha-color-neutral-20)` |
+| `ha-color-fill-disabled-normal-resting` | `var(--ha-color-neutral-95)` | `var(--ha-color-neutral-20)` |
+| `ha-color-fill-disabled-normal-hover` | `var(--ha-color-neutral-90)` | `var(--ha-color-neutral-30)` |
+| `ha-color-fill-disabled-loud-resting` | `var(--ha-color-neutral-80)` | `var(--ha-color-neutral-30)` |
+| `ha-color-fill-disabled-loud-hover` | `var(--ha-color-neutral-70)` | `var(--ha-color-neutral-40)` |
+| `ha-color-fill-danger-quiet-resting` | `var(--ha-color-red-95)` | `var(--ha-color-red-05)` |
+| `ha-color-fill-danger-quiet-hover` | `var(--ha-color-red-90)` | `var(--ha-color-red-10)` |
+| `ha-color-fill-danger-quiet-active` | `var(--ha-color-red-95)` | `var(--ha-color-red-05)` |
+| `ha-color-fill-danger-normal-resting` | `var(--ha-color-red-90)` | `var(--ha-color-red-10)` |
+| `ha-color-fill-danger-normal-hover` | `var(--ha-color-red-80)` | `var(--ha-color-red-20)` |
+| `ha-color-fill-danger-normal-active` | `var(--ha-color-red-90)` | `var(--ha-color-red-10)` |
+| `ha-color-fill-danger-loud-resting` | `var(--ha-color-red-50)` | `var(--ha-color-red-40)` |
+| `ha-color-fill-danger-loud-hover` | `var(--ha-color-red-40)` | `var(--ha-color-red-30)` |
+| `ha-color-fill-danger-loud-active` | `var(--ha-color-red-50)` | `var(--ha-color-red-40)` |
+| `ha-color-fill-warning-quiet-resting` | `var(--ha-color-orange-95)` | `var(--ha-color-orange-05)` |
+| `ha-color-fill-warning-quiet-hover` | `var(--ha-color-orange-90)` | `var(--ha-color-orange-10)` |
+| `ha-color-fill-warning-quiet-active` | `var(--ha-color-orange-95)` | `var(--ha-color-orange-05)` |
+| `ha-color-fill-warning-normal-resting` | `var(--ha-color-orange-90)` | `var(--ha-color-orange-10)` |
+| `ha-color-fill-warning-normal-hover` | `var(--ha-color-orange-80)` | `var(--ha-color-orange-20)` |
+| `ha-color-fill-warning-normal-active` | `var(--ha-color-orange-90)` | `var(--ha-color-orange-10)` |
+| `ha-color-fill-warning-loud-resting` | `var(--ha-color-orange-70)` | `var(--ha-color-orange-40)` |
+| `ha-color-fill-warning-loud-hover` | `var(--ha-color-orange-50)` | `var(--ha-color-orange-30)` |
+| `ha-color-fill-warning-loud-active` | `var(--ha-color-orange-70)` | `var(--ha-color-orange-40)` |
+| `ha-color-fill-success-quiet-resting` | `var(--ha-color-green-95)` | `var(--ha-color-green-05)` |
+| `ha-color-fill-success-quiet-hover` | `var(--ha-color-green-90)` | `var(--ha-color-green-10)` |
+| `ha-color-fill-success-quiet-active` | `var(--ha-color-green-95)` | `var(--ha-color-green-05)` |
+| `ha-color-fill-success-normal-resting` | `var(--ha-color-green-90)` | `var(--ha-color-green-10)` |
+| `ha-color-fill-success-normal-hover` | `var(--ha-color-green-80)` | `var(--ha-color-green-20)` |
+| `ha-color-fill-success-normal-active` | `var(--ha-color-green-90)` | `var(--ha-color-green-10)` |
+| `ha-color-fill-success-loud-resting` | `var(--ha-color-green-50)` | `var(--ha-color-green-40)` |
+| `ha-color-fill-success-loud-hover` | `var(--ha-color-green-40)` | `var(--ha-color-green-30)` |
+| `ha-color-fill-success-loud-active` | `var(--ha-color-green-50)` | `var(--ha-color-green-40)` |
+| `ha-color-on-primary-quiet` | `var(--ha-color-primary-50)` | `var(--ha-color-primary-70)` |
+| `ha-color-on-primary-normal` | `var(--ha-color-primary-40)` | `var(--ha-color-primary-60)` |
+| `ha-color-on-primary-loud` | `var(--white-color)` | Same |
+| `ha-color-on-neutral-quiet` | `var(--ha-color-neutral-50)` | `var(--ha-color-neutral-70)` |
+| `ha-color-on-neutral-normal` | `var(--ha-color-neutral-40)` | `var(--ha-color-neutral-60)` |
+| `ha-color-on-neutral-loud` | `var(--white-color)` | Same |
+| `ha-color-on-disabled-quiet` | `var(--ha-color-neutral-80)` | `var(--ha-color-neutral-40)` |
+| `ha-color-on-disabled-normal` | `var(--ha-color-neutral-70)` | `var(--ha-color-neutral-50)` |
+| `ha-color-on-disabled-loud` | `var(--ha-color-neutral-95)` | `var(--ha-color-neutral-50)` |
+| `ha-color-on-danger-quiet` | `var(--ha-color-red-50)` | `var(--ha-color-red-70)` |
+| `ha-color-on-danger-normal` | `var(--ha-color-red-40)` | `var(--ha-color-red-60)` |
+| `ha-color-on-danger-loud` | `var(--white-color)` | Same |
+| `ha-color-on-warning-quiet` | `var(--ha-color-orange-50)` | `var(--ha-color-orange-70)` |
+| `ha-color-on-warning-normal` | `var(--ha-color-orange-40)` | `var(--ha-color-orange-60)` |
+| `ha-color-on-warning-loud` | `var(--white-color)` | Same |
+| `ha-color-on-success-quiet` | `var(--ha-color-green-50)` | `var(--ha-color-green-70)` |
+| `ha-color-on-success-normal` | `var(--ha-color-green-40)` | `var(--ha-color-green-60)` |
+| `ha-color-on-success-loud` | `var(--white-color)` | Same |
+| `ha-color-surface-default` | `var(--ha-color-white)` | `var(--ha-color-neutral-10)` |
+| `ha-color-surface-low` | `var(--ha-color-neutral-95)` | `var(--ha-color-neutral-05)` |
+| `ha-color-surface-lower` | `var(--ha-color-neutral-90)` | `var(--ha-color-black)` |
+| `ha-color-surface-default-inverted` | `var(--ha-color-neutral-10)` | `var(--ha-color-white)` |
+| `ha-color-surface-low-inverted` | `var(--ha-color-neutral-05)` | `var(--ha-color-neutral-95)` |
+| `ha-color-surface-lower-inverted` | `var(--ha-color-black)` | `var(--ha-color-90)` |
+| `ha-color-on-surface-default` | `var(--ha-color-neutral-05)` | `var(--ha-color-neutral-95)` |
+| `ha-color-form-background` | `var(--ha-color-neutral-95)` | `var(--ha-color-neutral-20)` |
+| `ha-color-form-background-hover` | `var(--ha-color-neutral-90)` | `var(--ha-color-neutral-30)` |
+| `ha-color-form-background-disabled` | `var(--ha-color-neutral-80)` | `var(--ha-color-neutral-20)` |
+| `ha-color-shadow-scrollable-fade` | `rgba(0, 0, 0, 0.08)` | Same |
+| `ha-color-border-normal` | Not set | `var(--ha-color-primary-50)` |
+
+## Component variables
+
+Some components read a variable of their own, with a default in the component itself. These are the ones meant for themes. When a theme does not set one, the component uses the default in the table.
+
+### Cards
+
+| Variable | Default | What it changes |
+| --- | --- | --- |
+| `ha-card-background` | `var(--card-background-color, white)` | The background of cards. |
+| `ha-card-backdrop-filter` | `none` | A backdrop filter behind cards, like a blur. |
+| `ha-card-border-radius` | `var(--ha-border-radius-lg)` | The roundness of the corners of cards. Many other surfaces, like tiles and expansion panels, follow it. |
+| `ha-card-border-width` | `1px` | The width of the border of cards. |
+| `ha-card-border-color` | `var(--divider-color, #e0e0e0)` | The color of the border of cards. |
+| `ha-card-box-shadow` | `none` | The shadow of cards. |
+| `ha-card-header-color` | `var(--primary-text-color)` | The color of the title of a card. |
+| `ha-card-header-font-family` | `inherit` | The font of the title of a card. |
+| `ha-card-header-font-size` | `var(--ha-font-size-2xl)` | The size of the title of a card. |
+| `ha-card-feature-gap` | `12px` | The space between the features of a card. |
+
+### Dashboard layout
+
+| Variable | Default | What it changes |
+| --- | --- | --- |
+| `masonry-view-card-margin` | `4px 4px 8px` | The margin around cards in the masonry and sidebar views. |
+| `ha-view-sections-column-min-width` | `320px` | The narrowest a column of the sections view gets. |
+| `ha-view-sections-column-max-width` | `500px` | The widest a column of the sections view gets. |
+| `ha-view-sections-column-gap` | `32px` | The space between the columns of the sections view. |
+| `ha-view-sections-narrow-column-gap` | `8px` | The space between the columns of the sections view on narrow screens. |
+| `ha-view-sections-row-gap` | `24px` | The space between the rows of the sections view. |
+| `ha-view-sections-row-height` | `56px` | The height of a row of the sections view. |
+| `ha-view-sections-extra-top-margin` | `80px` | The space above the sections view. |
+| `ha-section-grid-column-gap` | `8px` | The space between the cards of a section, side by side. |
+| `ha-section-grid-row-gap` | `8px` | The space between the rows of cards in a section. |
+| `ha-section-grid-row-height` | `56px` | The height of a row of cards in a section. |
+| `ha-section-background-color` | `var(--secondary-background-color)` | The background of a section that has one turned on. |
+| `ha-section-border-radius` | `var(--ha-border-radius-xl)` | The roundness of the corners of a section. |
+| `grid-card-gap` | `8px` | The space between the cards of a grid card. |
+| `stack-card-gap` | `8px` | The space between the cards of a horizontal or vertical stack card. |
+| `horizontal-stack-card-gap` | `var(--stack-card-gap, 8px)` | The space between the cards of a horizontal stack card. |
+| `vertical-stack-card-gap` | `var(--stack-card-gap, 8px)` | The space between the cards of a vertical stack card. |
+
+### Cards and rows
+
+| Variable | Default | What it changes |
+| --- | --- | --- |
+| `ha-heading-card-title-color` | `var(--primary-text-color)` | The color of the title of a heading card. |
+| `ha-heading-card-title-font-size` | `var(--ha-font-size-l)` | The size of the title of a heading card. |
+| `ha-heading-card-subtitle-color` | `var(--secondary-text-color)` | The color of a subtitle of a heading card. |
+| `ha-picture-card-text-color` | `white` | The text on top of the picture of the picture entity and picture glance cards. |
+| `ha-picture-icon-button-color` | `#a9a9a9` | The icons of a picture glance card, for entities that are off. |
+| `ha-picture-icon-button-on-color` | `white` | The icons of a picture glance card, for entities that are on. |
+| `section-header-text-color` | `var(--primary-text-color)` | The label of a section row in an entities card. |
+| `entities-divider-color` | `var(--divider-color)` | The line of a divider or section row in an entities card. |
+
+### Badges
+
+| Variable | Default | What it changes |
+| --- | --- | --- |
+| `ha-heading-badge-text-color` | `var(--secondary-text-color)` | The text of the badges of a heading card. |
+| `ha-heading-badge-font-size` | `var(--ha-font-size-m)` | The size of the text of the badges of a heading card. |
+| `ha-heading-badge-font-weight` | `400` | The weight of the text of the badges of a heading card. |
+| `ha-heading-badge-line-height` | `20px` | The line height of the badges of a heading card. |
+| `ha-heading-badge-size` | `26px` | The height of the button badges of a heading card. |
+| `ha-heading-badge-icon-size` | `16px` | The size of the icon of the button badges of a heading card. |
+| `ha-label-badge-color` | `var(--primary-color)` | The ring and the label background of a label badge. |
+| `ha-label-badge-label-color` | `white` | The text of the label of a label badge. |
+| `ha-label-badge-label-text-transform` | `uppercase` | The capitalization of the label of a label badge. |
+| `ha-label-badge-size` | `2.5em` | The size of a label badge. |
+| `ha-label-badge-font-size` | `1.5em` | The size of the value in a label badge. |
+| `ha-label-badge-border-radius` | `50%` | The roundness of a label badge. |
+| `ha-label-badge-padding` | `0 0 0 0` | The padding around a label badge. |
+| `ha-label-badge-title-font-size` | `0.9em` | The size of the title below a label badge. |
+| `ha-label-badge-title-width` | `5em` | The width of the title below a label badge. |
+
+### Dashboard header
+
+| Variable | Default | What it changes |
+| --- | --- | --- |
+| `app-header-backdrop-filter` | `none` | A backdrop filter behind the header of dashboards, like a blur. |
+| `app-header-edit-background-color` | `#455a64` | The header of a dashboard while you edit it. |
+| `app-header-edit-text-color` | `white` | The text and icons in the header of a dashboard while you edit it. |
+
+### Markdown
+
+| Variable | Default | What it changes |
+| --- | --- | --- |
+| `markdown-link-color` | `var(--primary-color)` | Links in Markdown, like in the Markdown card. |
+| `markdown-code-text-color` | `inherit` | The text of code in Markdown. |
+| `markdown-list-indent` | `revert` | The indent of lists in Markdown. |
+| `markdown-table-border-color` | `var(--divider-color)` | The color of the borders of tables in Markdown. |
+| `markdown-table-border-width` | `1px` | The width of the borders of tables in Markdown. |
+| `markdown-table-border-style` | `solid` | The style of the borders of tables in Markdown. |
+| `markdown-table-padding-inline` | `0.5em` | The space left and right in the cells of tables in Markdown. |
+| `markdown-table-padding-block` | `0.25em` | The space above and below in the cells of tables in Markdown. |
+| `markdown-table-text-align` | `start` | The alignment of text in tables in Markdown. |
+
+### Code editor
+
+| Variable | Default | What it changes |
+| --- | --- | --- |
+| `code-editor-background-color` | `var(--card-background-color)` | The background of the code editor. |
+| `code-editor-gutter-color` | `var(--secondary-background-color, whitesmoke)` | The gutter of the code editor, with the line numbers. |
+
 ## Classic variables
 
-The variables most themes set, from `src/resources/theme/color/color.globals.ts`. Most components use them. The **Dark** column shows the value the frontend uses in dark mode, when it differs from the light one. **Not set** means the frontend sets no value in that mode, and the components that read the variable use a default of their own.
+The older variables, from `src/resources/theme/color/color.globals.ts`. Most themes still set them, and many components still use them.
 
 The variables starting with `mdc-` in the same file are left out: they pass these variables on to older components, and follow them by themselves.
 
@@ -384,277 +660,3 @@ The variables starting with `mdc-` in the same file are left out: they pass thes
 | --- | --- | --- |
 | `bar-box-shadow` | `0 2px 12px var(--shadow-color)` | Same |
 | `map-filter` | Not set | `invert(0.9) hue-rotate(170deg) brightness(1.5) contrast(1.2) saturate(0.3)` |
-
-## Design tokens
-
-Newer components use [design tokens](/glossary/design-token/), with names that start with `ha-`. A theme can set them too. The Design area shows several of them, with what each is for, so they are not repeated here:
-
-- [Color](/design/foundations/color/): the color palettes, like `ha-color-primary-40`. Set the primary palette to give newer components your color, as [Publish a theme](/marketplace/guides/themes/#the-design-tokens) explains.
-- [Spacing](/design/foundations/spacing/): the spacing scale, `ha-space-1` to `ha-space-20`, and the corner radius scale, `ha-border-radius-*`.
-- [Typography](/design/foundations/typography/): the font sizes, `ha-font-size-*`.
-
-The other tokens are below, by the file of the frontend that defines them.
-
-### Borders, radii, and motion
-
-From [`src/resources/theme/core.globals.ts`](https://github.com/home-assistant/frontend/blob/dev/src/resources/theme/core.globals.ts).
-
-| Variable | Default |
-| --- | --- |
-| `ha-border-width-sm` | `1px` |
-| `ha-border-width-md` | `2px` |
-| `ha-border-width-lg` | `3px` |
-| `ha-picture-border-radius` | `var(--ha-border-radius-lg)` |
-| `ha-picture-border-radius-sm` | `var(--ha-border-radius-sm)` |
-| `ha-animation-duration-none` | `1ms` |
-| `ha-animation-duration-instant` | `75ms` |
-| `ha-animation-duration-fast` | `150ms` |
-| `ha-animation-duration-normal` | `250ms` |
-| `ha-animation-duration-slow` | `350ms` |
-
-### Typography
-
-From [`src/resources/theme/typography.globals.ts`](https://github.com/home-assistant/frontend/blob/dev/src/resources/theme/typography.globals.ts).
-
-| Variable | Default |
-| --- | --- |
-| `ha-font-family-body` | `Roboto, Noto, sans-serif` |
-| `ha-font-family-code` | `monospace` |
-| `ha-font-family-longform` | `ui-sans-serif, system-ui, sans-serif` |
-| `ha-font-size-scale` | `1` |
-| `ha-font-weight-light` | `300` |
-| `ha-font-weight-normal` | `400` |
-| `ha-font-weight-medium` | `500` |
-| `ha-font-weight-bold` | `700` |
-| `ha-font-family-heading` | `var(--ha-font-family-body)` |
-| `ha-font-weight-body` | `var(--ha-font-weight-normal)` |
-| `ha-font-weight-heading` | `var(--ha-font-weight-bold)` |
-| `ha-font-weight-action` | `var(--ha-font-weight-medium)` |
-| `ha-line-height-condensed` | `1.2` |
-| `ha-line-height-normal` | `1.6` |
-| `ha-line-height-expanded` | `2` |
-| `ha-font-smoothing` | `antialiased` |
-| `ha-moz-osx-font-smoothing` | `grayscale` |
-
-### Shadows
-
-From [`src/resources/theme/semantic.globals.ts`](https://github.com/home-assistant/frontend/blob/dev/src/resources/theme/semantic.globals.ts).
-
-| Variable | Light | Dark |
-| --- | --- | --- |
-| `ha-box-shadow-s` | `0 1px 2px 0 rgba(0, 0, 0, 0.08), 0 1px 3px 0 rgba(0, 0, 0, 0.12)` | `0 1px 2px 0 rgba(0, 0, 0, 0.4), 0 1px 3px 0 rgba(0, 0, 0, 0.5)` |
-| `ha-box-shadow-m` | `0 3px 6px -1px rgba(0, 0, 0, 0.1), 0 8px 16px -2px rgba(0, 0, 0, 0.15)` | `0 3px 6px -1px rgba(0, 0, 0, 0.35), 0 8px 16px -2px rgba(0, 0, 0, 0.45)` |
-| `ha-box-shadow-l` | `0 6px 12px -3px rgba(0, 0, 0, 0.12), 0 16px 32px -6px rgba(0, 0, 0, 0.2)` | `0 6px 12px -3px rgba(0, 0, 0, 0.4), 0 16px 32px -6px rgba(0, 0, 0, 0.55)` |
-
-### Semantic colors
-
-From [`src/resources/theme/color/semantic.globals.ts`](https://github.com/home-assistant/frontend/blob/dev/src/resources/theme/color/semantic.globals.ts).
-
-| Variable | Light | Dark |
-| --- | --- | --- |
-| `ha-color-focus` | `var(--ha-color-neutral-60)` | Same |
-| `ha-color-text-primary` | `var(--ha-color-neutral-05)` | `var(--white-color)` |
-| `ha-color-text-secondary` | `var(--ha-color-neutral-40)` | `var(--ha-color-neutral-80)` |
-| `ha-color-text-disabled` | `var(--ha-color-neutral-60)` | Same |
-| `ha-color-text-link` | `var(--ha-color-primary-40)` | `var(--ha-color-primary-60)` |
-| `ha-color-text-primary-inverted` | `var(--ha-color-white)` | `var(--ha-color-black)` |
-| `ha-color-text-secondary-inverted` | `var(--ha-color-neutral-20)` | `var(--ha-color-neutral-40)` |
-| `ha-color-border-primary-quiet` | `var(--ha-color-primary-90)` | Same |
-| `ha-color-border-primary-normal` | `var(--ha-color-primary-70)` | Same |
-| `ha-color-border-primary-loud` | `var(--ha-color-primary-40)` | Same |
-| `ha-color-border-neutral-quiet` | `var(--ha-color-neutral-90)` | `var(--ha-color-neutral-40)` |
-| `ha-color-border-neutral-normal` | `var(--ha-color-neutral-60)` | `var(--ha-color-neutral-50)` |
-| `ha-color-border-neutral-loud` | `var(--ha-color-neutral-40)` | `var(--ha-color-neutral-70)` |
-| `ha-color-border-danger-quiet` | `var(--ha-color-red-90)` | Same |
-| `ha-color-border-danger-normal` | `var(--ha-color-red-70)` | `var(--ha-color-red-50)` |
-| `ha-color-border-danger-loud` | `var(--ha-color-red-40)` | `var(--ha-color-red-50)` |
-| `ha-color-border-warning-quiet` | `var(--ha-color-orange-90)` | Same |
-| `ha-color-border-warning-normal` | `var(--ha-color-orange-70)` | `var(--ha-color-orange-50)` |
-| `ha-color-border-warning-loud` | `var(--ha-color-orange-40)` | `var(--ha-color-orange-50)` |
-| `ha-color-border-success-quiet` | `var(--ha-color-green-90)` | Same |
-| `ha-color-border-success-normal` | `var(--ha-color-green-70)` | Same |
-| `ha-color-border-success-loud` | `var(--ha-color-green-40)` | Same |
-| `ha-color-fill-primary-quiet-resting` | `var(--ha-color-primary-95)` | `var(--ha-color-primary-05)` |
-| `ha-color-fill-primary-quiet-hover` | `var(--ha-color-primary-90)` | `var(--ha-color-primary-10)` |
-| `ha-color-fill-primary-quiet-active` | `var(--ha-color-primary-95)` | `var(--ha-color-primary-05)` |
-| `ha-color-fill-primary-normal-resting` | `var(--ha-color-primary-90)` | `var(--ha-color-primary-10)` |
-| `ha-color-fill-primary-normal-hover` | `var(--ha-color-primary-80)` | `var(--ha-color-primary-20)` |
-| `ha-color-fill-primary-normal-active` | `var(--ha-color-primary-90)` | `var(--ha-color-primary-10)` |
-| `ha-color-fill-primary-loud-resting` | `var(--ha-color-primary-40)` | Same |
-| `ha-color-fill-primary-loud-hover` | `var(--ha-color-primary-30)` | Same |
-| `ha-color-fill-primary-loud-active` | `var(--ha-color-primary-40)` | Same |
-| `ha-color-fill-neutral-quiet-resting` | `var(--ha-color-neutral-95)` | `var(--ha-color-neutral-05)` |
-| `ha-color-fill-neutral-quiet-hover` | `var(--ha-color-neutral-90)` | `var(--ha-color-neutral-10)` |
-| `ha-color-fill-neutral-quiet-active` | `var(--ha-color-neutral-95)` | `var(--ha-color-neutral-00)` |
-| `ha-color-fill-neutral-normal-resting` | `var(--ha-color-neutral-90)` | `var(--ha-color-neutral-10)` |
-| `ha-color-fill-neutral-normal-hover` | `var(--ha-color-neutral-80)` | `var(--ha-color-neutral-20)` |
-| `ha-color-fill-neutral-normal-active` | `var(--ha-color-neutral-90)` | `var(--ha-color-neutral-10)` |
-| `ha-color-fill-neutral-loud-resting` | `var(--ha-color-neutral-40)` | `var(--ha-color-neutral-60)` |
-| `ha-color-fill-neutral-loud-hover` | `var(--ha-color-neutral-30)` | `var(--ha-color-neutral-70)` |
-| `ha-color-fill-neutral-loud-active` | `var(--ha-color-neutral-40)` | `var(--ha-color-neutral-60)` |
-| `ha-color-fill-disabled-quiet-resting` | `var(--ha-color-neutral-95)` | `var(--ha-color-neutral-10)` |
-| `ha-color-fill-disabled-quiet-hover` | `var(--ha-color-neutral-90)` | `var(--ha-color-neutral-20)` |
-| `ha-color-fill-disabled-normal-resting` | `var(--ha-color-neutral-95)` | `var(--ha-color-neutral-20)` |
-| `ha-color-fill-disabled-normal-hover` | `var(--ha-color-neutral-90)` | `var(--ha-color-neutral-30)` |
-| `ha-color-fill-disabled-loud-resting` | `var(--ha-color-neutral-80)` | `var(--ha-color-neutral-30)` |
-| `ha-color-fill-disabled-loud-hover` | `var(--ha-color-neutral-70)` | `var(--ha-color-neutral-40)` |
-| `ha-color-fill-danger-quiet-resting` | `var(--ha-color-red-95)` | `var(--ha-color-red-05)` |
-| `ha-color-fill-danger-quiet-hover` | `var(--ha-color-red-90)` | `var(--ha-color-red-10)` |
-| `ha-color-fill-danger-quiet-active` | `var(--ha-color-red-95)` | `var(--ha-color-red-05)` |
-| `ha-color-fill-danger-normal-resting` | `var(--ha-color-red-90)` | `var(--ha-color-red-10)` |
-| `ha-color-fill-danger-normal-hover` | `var(--ha-color-red-80)` | `var(--ha-color-red-20)` |
-| `ha-color-fill-danger-normal-active` | `var(--ha-color-red-90)` | `var(--ha-color-red-10)` |
-| `ha-color-fill-danger-loud-resting` | `var(--ha-color-red-50)` | `var(--ha-color-red-40)` |
-| `ha-color-fill-danger-loud-hover` | `var(--ha-color-red-40)` | `var(--ha-color-red-30)` |
-| `ha-color-fill-danger-loud-active` | `var(--ha-color-red-50)` | `var(--ha-color-red-40)` |
-| `ha-color-fill-warning-quiet-resting` | `var(--ha-color-orange-95)` | `var(--ha-color-orange-05)` |
-| `ha-color-fill-warning-quiet-hover` | `var(--ha-color-orange-90)` | `var(--ha-color-orange-10)` |
-| `ha-color-fill-warning-quiet-active` | `var(--ha-color-orange-95)` | `var(--ha-color-orange-05)` |
-| `ha-color-fill-warning-normal-resting` | `var(--ha-color-orange-90)` | `var(--ha-color-orange-10)` |
-| `ha-color-fill-warning-normal-hover` | `var(--ha-color-orange-80)` | `var(--ha-color-orange-20)` |
-| `ha-color-fill-warning-normal-active` | `var(--ha-color-orange-90)` | `var(--ha-color-orange-10)` |
-| `ha-color-fill-warning-loud-resting` | `var(--ha-color-orange-70)` | `var(--ha-color-orange-40)` |
-| `ha-color-fill-warning-loud-hover` | `var(--ha-color-orange-50)` | `var(--ha-color-orange-30)` |
-| `ha-color-fill-warning-loud-active` | `var(--ha-color-orange-70)` | `var(--ha-color-orange-40)` |
-| `ha-color-fill-success-quiet-resting` | `var(--ha-color-green-95)` | `var(--ha-color-green-05)` |
-| `ha-color-fill-success-quiet-hover` | `var(--ha-color-green-90)` | `var(--ha-color-green-10)` |
-| `ha-color-fill-success-quiet-active` | `var(--ha-color-green-95)` | `var(--ha-color-green-05)` |
-| `ha-color-fill-success-normal-resting` | `var(--ha-color-green-90)` | `var(--ha-color-green-10)` |
-| `ha-color-fill-success-normal-hover` | `var(--ha-color-green-80)` | `var(--ha-color-green-20)` |
-| `ha-color-fill-success-normal-active` | `var(--ha-color-green-90)` | `var(--ha-color-green-10)` |
-| `ha-color-fill-success-loud-resting` | `var(--ha-color-green-50)` | `var(--ha-color-green-40)` |
-| `ha-color-fill-success-loud-hover` | `var(--ha-color-green-40)` | `var(--ha-color-green-30)` |
-| `ha-color-fill-success-loud-active` | `var(--ha-color-green-50)` | `var(--ha-color-green-40)` |
-| `ha-color-on-primary-quiet` | `var(--ha-color-primary-50)` | `var(--ha-color-primary-70)` |
-| `ha-color-on-primary-normal` | `var(--ha-color-primary-40)` | `var(--ha-color-primary-60)` |
-| `ha-color-on-primary-loud` | `var(--white-color)` | Same |
-| `ha-color-on-neutral-quiet` | `var(--ha-color-neutral-50)` | `var(--ha-color-neutral-70)` |
-| `ha-color-on-neutral-normal` | `var(--ha-color-neutral-40)` | `var(--ha-color-neutral-60)` |
-| `ha-color-on-neutral-loud` | `var(--white-color)` | Same |
-| `ha-color-on-disabled-quiet` | `var(--ha-color-neutral-80)` | `var(--ha-color-neutral-40)` |
-| `ha-color-on-disabled-normal` | `var(--ha-color-neutral-70)` | `var(--ha-color-neutral-50)` |
-| `ha-color-on-disabled-loud` | `var(--ha-color-neutral-95)` | `var(--ha-color-neutral-50)` |
-| `ha-color-on-danger-quiet` | `var(--ha-color-red-50)` | `var(--ha-color-red-70)` |
-| `ha-color-on-danger-normal` | `var(--ha-color-red-40)` | `var(--ha-color-red-60)` |
-| `ha-color-on-danger-loud` | `var(--white-color)` | Same |
-| `ha-color-on-warning-quiet` | `var(--ha-color-orange-50)` | `var(--ha-color-orange-70)` |
-| `ha-color-on-warning-normal` | `var(--ha-color-orange-40)` | `var(--ha-color-orange-60)` |
-| `ha-color-on-warning-loud` | `var(--white-color)` | Same |
-| `ha-color-on-success-quiet` | `var(--ha-color-green-50)` | `var(--ha-color-green-70)` |
-| `ha-color-on-success-normal` | `var(--ha-color-green-40)` | `var(--ha-color-green-60)` |
-| `ha-color-on-success-loud` | `var(--white-color)` | Same |
-| `ha-color-surface-default` | `var(--ha-color-white)` | `var(--ha-color-neutral-10)` |
-| `ha-color-surface-low` | `var(--ha-color-neutral-95)` | `var(--ha-color-neutral-05)` |
-| `ha-color-surface-lower` | `var(--ha-color-neutral-90)` | `var(--ha-color-black)` |
-| `ha-color-surface-default-inverted` | `var(--ha-color-neutral-10)` | `var(--ha-color-white)` |
-| `ha-color-surface-low-inverted` | `var(--ha-color-neutral-05)` | `var(--ha-color-neutral-95)` |
-| `ha-color-surface-lower-inverted` | `var(--ha-color-black)` | `var(--ha-color-90)` |
-| `ha-color-on-surface-default` | `var(--ha-color-neutral-05)` | `var(--ha-color-neutral-95)` |
-| `ha-color-form-background` | `var(--ha-color-neutral-95)` | `var(--ha-color-neutral-20)` |
-| `ha-color-form-background-hover` | `var(--ha-color-neutral-90)` | `var(--ha-color-neutral-30)` |
-| `ha-color-form-background-disabled` | `var(--ha-color-neutral-80)` | `var(--ha-color-neutral-20)` |
-| `ha-color-shadow-scrollable-fade` | `rgba(0, 0, 0, 0.08)` | Same |
-| `ha-color-border-normal` | Not set | `var(--ha-color-primary-50)` |
-
-## Component variables
-
-Some components read a variable of their own, with a default in the component itself. These are the ones meant for themes. When a theme does not set one, the component uses the default in the table.
-
-### Cards
-
-| Variable | Default | What it changes |
-| --- | --- | --- |
-| `ha-card-background` | `var(--card-background-color, white)` | The background of cards. |
-| `ha-card-backdrop-filter` | `none` | A backdrop filter behind cards, like a blur. |
-| `ha-card-border-radius` | `var(--ha-border-radius-lg)` | The roundness of the corners of cards. Many other surfaces, like tiles and expansion panels, follow it. |
-| `ha-card-border-width` | `1px` | The width of the border of cards. |
-| `ha-card-border-color` | `var(--divider-color, #e0e0e0)` | The color of the border of cards. |
-| `ha-card-box-shadow` | `none` | The shadow of cards. |
-| `ha-card-header-color` | `var(--primary-text-color)` | The color of the title of a card. |
-| `ha-card-header-font-family` | `inherit` | The font of the title of a card. |
-| `ha-card-header-font-size` | `var(--ha-font-size-2xl)` | The size of the title of a card. |
-| `ha-card-feature-gap` | `12px` | The space between the features of a card. |
-
-### Dashboard layout
-
-| Variable | Default | What it changes |
-| --- | --- | --- |
-| `masonry-view-card-margin` | `4px 4px 8px` | The margin around cards in the masonry and sidebar views. |
-| `ha-view-sections-column-min-width` | `320px` | The narrowest a column of the sections view gets. |
-| `ha-view-sections-column-max-width` | `500px` | The widest a column of the sections view gets. |
-| `ha-view-sections-column-gap` | `32px` | The space between the columns of the sections view. |
-| `ha-view-sections-narrow-column-gap` | `8px` | The space between the columns of the sections view on narrow screens. |
-| `ha-view-sections-row-gap` | `24px` | The space between the rows of the sections view. |
-| `ha-view-sections-row-height` | `56px` | The height of a row of the sections view. |
-| `ha-view-sections-extra-top-margin` | `80px` | The space above the sections view. |
-| `ha-section-grid-column-gap` | `8px` | The space between the cards of a section, side by side. |
-| `ha-section-grid-row-gap` | `8px` | The space between the rows of cards in a section. |
-| `ha-section-grid-row-height` | `56px` | The height of a row of cards in a section. |
-| `ha-section-background-color` | `var(--secondary-background-color)` | The background of a section that has one turned on. |
-| `ha-section-border-radius` | `var(--ha-border-radius-xl)` | The roundness of the corners of a section. |
-| `grid-card-gap` | `8px` | The space between the cards of a grid card. |
-| `stack-card-gap` | `8px` | The space between the cards of a horizontal or vertical stack card. |
-| `horizontal-stack-card-gap` | `var(--stack-card-gap, 8px)` | The space between the cards of a horizontal stack card. |
-| `vertical-stack-card-gap` | `var(--stack-card-gap, 8px)` | The space between the cards of a vertical stack card. |
-
-### Cards and rows
-
-| Variable | Default | What it changes |
-| --- | --- | --- |
-| `ha-heading-card-title-color` | `var(--primary-text-color)` | The color of the title of a heading card. |
-| `ha-heading-card-title-font-size` | `var(--ha-font-size-l)` | The size of the title of a heading card. |
-| `ha-heading-card-subtitle-color` | `var(--secondary-text-color)` | The color of a subtitle of a heading card. |
-| `ha-picture-card-text-color` | `white` | The text on top of the picture of the picture entity and picture glance cards. |
-| `ha-picture-icon-button-color` | `#a9a9a9` | The icons of a picture glance card, for entities that are off. |
-| `ha-picture-icon-button-on-color` | `white` | The icons of a picture glance card, for entities that are on. |
-| `section-header-text-color` | `var(--primary-text-color)` | The label of a section row in an entities card. |
-| `entities-divider-color` | `var(--divider-color)` | The line of a divider or section row in an entities card. |
-
-### Badges
-
-| Variable | Default | What it changes |
-| --- | --- | --- |
-| `ha-heading-badge-text-color` | `var(--secondary-text-color)` | The text of the badges of a heading card. |
-| `ha-heading-badge-font-size` | `var(--ha-font-size-m)` | The size of the text of the badges of a heading card. |
-| `ha-heading-badge-font-weight` | `400` | The weight of the text of the badges of a heading card. |
-| `ha-heading-badge-line-height` | `20px` | The line height of the badges of a heading card. |
-| `ha-heading-badge-size` | `26px` | The height of the button badges of a heading card. |
-| `ha-heading-badge-icon-size` | `16px` | The size of the icon of the button badges of a heading card. |
-| `ha-label-badge-color` | `var(--primary-color)` | The ring and the label background of a label badge. |
-| `ha-label-badge-label-color` | `white` | The text of the label of a label badge. |
-| `ha-label-badge-label-text-transform` | `uppercase` | The capitalization of the label of a label badge. |
-| `ha-label-badge-size` | `2.5em` | The size of a label badge. |
-| `ha-label-badge-font-size` | `1.5em` | The size of the value in a label badge. |
-| `ha-label-badge-border-radius` | `50%` | The roundness of a label badge. |
-| `ha-label-badge-padding` | `0 0 0 0` | The padding around a label badge. |
-| `ha-label-badge-title-font-size` | `0.9em` | The size of the title below a label badge. |
-| `ha-label-badge-title-width` | `5em` | The width of the title below a label badge. |
-
-### Dashboard header
-
-| Variable | Default | What it changes |
-| --- | --- | --- |
-| `app-header-backdrop-filter` | `none` | A backdrop filter behind the header of dashboards, like a blur. |
-| `app-header-edit-background-color` | `#455a64` | The header of a dashboard while you edit it. |
-| `app-header-edit-text-color` | `white` | The text and icons in the header of a dashboard while you edit it. |
-
-### Markdown
-
-| Variable | Default | What it changes |
-| --- | --- | --- |
-| `markdown-link-color` | `var(--primary-color)` | Links in Markdown, like in the Markdown card. |
-| `markdown-code-text-color` | `inherit` | The text of code in Markdown. |
-| `markdown-list-indent` | `revert` | The indent of lists in Markdown. |
-| `markdown-table-border-color` | `var(--divider-color)` | The color of the borders of tables in Markdown. |
-| `markdown-table-border-width` | `1px` | The width of the borders of tables in Markdown. |
-| `markdown-table-border-style` | `solid` | The style of the borders of tables in Markdown. |
-| `markdown-table-padding-inline` | `0.5em` | The space left and right in the cells of tables in Markdown. |
-| `markdown-table-padding-block` | `0.25em` | The space above and below in the cells of tables in Markdown. |
-| `markdown-table-text-align` | `start` | The alignment of text in tables in Markdown. |
-
-### Code editor
-
-| Variable | Default | What it changes |
-| --- | --- | --- |
-| `code-editor-background-color` | `var(--card-background-color)` | The background of the code editor. |
-| `code-editor-gutter-color` | `var(--secondary-background-color, whitesmoke)` | The gutter of the code editor, with the line numbers. |
