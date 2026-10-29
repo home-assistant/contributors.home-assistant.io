@@ -51,4 +51,4 @@ Below 600px, the settings dashboard and the system navigation page let their car
 
 ## Not covered yet
 
-Breakpoints, dialogs, dashboards, and the automation, script, and scene editors are not part of these widths yet.
+Breakpoints, dialogs, dashboards, and the automation and script editors are not part of these widths yet.
