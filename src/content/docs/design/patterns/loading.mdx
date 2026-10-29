@@ -62,7 +62,7 @@ A skeleton keeps the layout in place while the content loads, so nothing jumps a
 Loading indicators fade in rather than pop up, but not all at the same pace:
 
 - **A skeleton** fades in straight away, over about 300 milliseconds. It stands in for the content, so waiting would leave a gap where the layout should be.
-- **A spinner or progress bar** waits half a second before it fades in, or a full second for a whole page. Most loads finish sooner, and then people never see a spinner flash on and off.
+- **A spinner or progress bar** usually waits half a second before it fades in. Some slower areas, such as backups and updates, wait a full second. When the load finishes within that time, people never see a spinner flash on and off.
 - **The content itself** appears as soon as it arrives, without a fade.
 
 ### Where loading ends
