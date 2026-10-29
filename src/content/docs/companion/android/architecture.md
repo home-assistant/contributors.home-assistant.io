@@ -49,6 +49,18 @@ Inside a module, code is packaged by feature: `sensors/`, `notifications/`, `set
 | App settings | SharedPreferences, behind a `LocalStorage` abstraction |
 | Logging | [Timber](https://github.com/JakeWharton/timber) |
 
+## Picking a flow type
+
+When you expose a stream, pick its type by what must happen to a value while nobody collects it:
+
+| What it carries | Use |
+| --- | --- |
+| State: only the latest value matters, and rendering it again is fine, like screen state or a mode | `StateFlow` |
+| An event every collector must receive, or one that means nothing once its context is gone and must be dropped when nobody listens, like WebView actions bound to the loaded page | `SharedFlow` |
+| An event one consumer must handle exactly once, never lost and never repeated, like navigation, a snackbar, or opening a link | `Channel(Channel.BUFFERED)` exposed with `receiveAsFlow()` |
+
+A `Channel` keeps a value until a consumer is there, and hands each value to a single collector. An event sent before the screen starts collecting still arrives. A `SharedFlow` without replay drops it. Use `send` from a coroutine, and `trySend` only in callbacks that can't suspend.
+
 ## Talking to Home Assistant
 
 The app uses three channels:
