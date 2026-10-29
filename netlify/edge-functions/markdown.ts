@@ -26,7 +26,9 @@ export default async (request: Request, context: Context) => {
 
   if (wantsMarkdown(request.headers.get("accept") ?? "")) {
     // Relative to the page, so a path like //example.com/ stays on this site.
-    const markdown = await fetch(new URL("index.md", url));
+    // A redirect, like the catch-all of an old domain, is not the Markdown
+    // version, so it falls through to the page as usual.
+    const markdown = await fetch(new URL("index.md", url), { redirect: "manual" });
     if (markdown.ok) {
       return new Response(markdown.body, {
         headers: { "Content-Type": "text/markdown; charset=utf-8", Vary: "Accept" },
