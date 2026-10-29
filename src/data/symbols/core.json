@@ -1,6 +1,6 @@
 {
   "repository": "home-assistant/core",
-  "commit": "6883a0c95d6dccb18e551aab794b18648a793cc5",
+  "commit": "7a5feb60cf4d8e5f46d479a87dc9fafa54382cd2",
   "symbols": [
     {
       "id": "homeassistant.auth.AuthManager",
@@ -9,7 +9,7 @@
       "kind": "class",
       "module": "homeassistant.auth",
       "path": "homeassistant/auth/__init__.py",
-      "line": 172,
+      "line": 177,
       "signature": "AuthManager(\n    hass: HomeAssistant,\n    store: auth_store.AuthStore,\n    providers: _ProviderDict,\n    mfa_modules: _MfaModuleDict,\n)",
       "doc": "Manage the authentication for Home Assistant.",
       "bare": true
@@ -57,7 +57,7 @@
       "kind": "class",
       "module": "homeassistant.auth.providers",
       "path": "homeassistant/auth/providers/__init__.py",
-      "line": 48,
+      "line": 52,
       "signature": "AuthProvider(\n    hass: HomeAssistant,\n    store: AuthStore,\n    config: dict[str, Any],\n)",
       "doc": "Provider of user authentication.",
       "bare": true
@@ -69,7 +69,7 @@
       "kind": "class",
       "module": "homeassistant.auth.providers",
       "path": "homeassistant/auth/providers/__init__.py",
-      "line": 193,
+      "line": 209,
       "signature": "LoginFlow(auth_provider: _AuthProviderT)",
       "doc": "Handler for the login flow.",
       "bare": true
@@ -698,7 +698,7 @@
       "kind": "method",
       "module": "homeassistant.components.assist_satellite.entity",
       "path": "homeassistant/components/assist_satellite/entity.py",
-      "line": 555,
+      "line": 556,
       "signature": "def on_pipeline_event(event: PipelineEvent) -> None:",
       "doc": "Handle pipeline events.",
       "bare": true
@@ -710,7 +710,7 @@
       "kind": "method",
       "module": "homeassistant.components.assist_satellite.entity",
       "path": "homeassistant/components/assist_satellite/entity.py",
-      "line": 603,
+      "line": 604,
       "signature": "def tts_response_finished() -> None:",
       "doc": "Tell entity that the text-to-speech response has finished playing.",
       "bare": true
@@ -1040,7 +1040,7 @@
       "kind": "class",
       "module": "homeassistant.components.bluetooth.passive_update_processor",
       "path": "homeassistant/components/bluetooth/passive_update_processor.py",
-      "line": 128,
+      "line": 130,
       "signature": "class PassiveBluetoothDataUpdate:",
       "doc": "Generic bluetooth data.",
       "bare": true
@@ -1052,7 +1052,7 @@
       "kind": "class",
       "module": "homeassistant.components.bluetooth.passive_update_processor",
       "path": "homeassistant/components/bluetooth/passive_update_processor.py",
-      "line": 289,
+      "line": 291,
       "signature": "PassiveBluetoothProcessorCoordinator(\n    hass: HomeAssistant,\n    logger: logging.Logger,\n    address: str,\n    mode: BluetoothScanningMode,\n    update_method: Callable[\n        [BluetoothServiceInfoBleak], _DataT\n    ],\n    connectable: bool = False,\n    scan_interval: float | None = None,\n    scan_duration: float | None = None,\n)",
       "doc": "Passive bluetooth processor coordinator for bluetooth advertisements.",
       "bare": true
@@ -1218,7 +1218,7 @@
       "kind": "enum",
       "module": "homeassistant.components.camera.const",
       "path": "homeassistant/components/camera/const.py",
-      "line": 76,
+      "line": 78,
       "signature": "class CameraEntityFeature(IntFlag):",
       "doc": "Supported features of the camera entity.",
       "bare": true,
@@ -1234,7 +1234,7 @@
       "kind": "enum",
       "module": "homeassistant.components.camera.const",
       "path": "homeassistant/components/camera/const.py",
-      "line": 53,
+      "line": 55,
       "signature": "class CameraState(StrEnum):",
       "doc": "Camera entity states.",
       "bare": true,
@@ -1251,7 +1251,7 @@
       "kind": "method",
       "module": "homeassistant.components.camera.entity",
       "path": "homeassistant/components/camera/entity.py",
-      "line": 462,
+      "line": 478,
       "signature": "def _async_get_webrtc_client_configuration() -> WebRTCClientConfiguration:",
       "doc": "Return the WebRTC client configuration adjustable per integration.",
       "bare": true
@@ -1263,7 +1263,7 @@
       "kind": "method",
       "module": "homeassistant.components.camera.entity",
       "path": "homeassistant/components/camera/entity.py",
-      "line": 286,
+      "line": 303,
       "signature": "async def async_camera_image(\n    width: int | None = None,\n    height: int | None = None,\n) -> bytes | None:",
       "doc": "Return bytes of camera image.",
       "bare": true
@@ -1275,7 +1275,7 @@
       "kind": "method",
       "module": "homeassistant.components.camera.entity",
       "path": "homeassistant/components/camera/entity.py",
-      "line": 356,
+      "line": 373,
       "signature": "async def async_disable_motion_detection() -> None:",
       "doc": "Call the job and disable motion detection.",
       "bare": true
@@ -1287,7 +1287,7 @@
       "kind": "method",
       "module": "homeassistant.components.camera.entity",
       "path": "homeassistant/components/camera/entity.py",
-      "line": 348,
+      "line": 365,
       "signature": "async def async_enable_motion_detection() -> None:",
       "doc": "Call the job and enable motion detection.",
       "bare": true
@@ -1299,7 +1299,7 @@
       "kind": "method",
       "module": "homeassistant.components.camera.entity",
       "path": "homeassistant/components/camera/entity.py",
-      "line": 257,
+      "line": 274,
       "signature": "async def async_handle_async_webrtc_offer(\n    offer_sdp: str,\n    session_id: str,\n    send_message: WebRTCSendMessage,\n) -> None:",
       "doc": "Handle the async WebRTC offer.",
       "bare": true
@@ -1311,7 +1311,7 @@
       "kind": "method",
       "module": "homeassistant.components.camera.entity",
       "path": "homeassistant/components/camera/entity.py",
-      "line": 332,
+      "line": 349,
       "signature": "async def async_turn_off() -> None:",
       "doc": "Turn off camera.",
       "bare": false,
@@ -1324,7 +1324,7 @@
       "kind": "method",
       "module": "homeassistant.components.camera.entity",
       "path": "homeassistant/components/camera/entity.py",
-      "line": 340,
+      "line": 357,
       "signature": "async def async_turn_on() -> None:",
       "doc": "Turn on camera.",
       "bare": false,
@@ -1337,7 +1337,7 @@
       "kind": "method",
       "module": "homeassistant.components.camera.entity",
       "path": "homeassistant/components/camera/entity.py",
-      "line": 280,
+      "line": 297,
       "signature": "def camera_image(\n    width: int | None = None,\n    height: int | None = None,\n) -> bytes | None:",
       "doc": "Return bytes of camera image.",
       "bare": true
@@ -1349,7 +1349,7 @@
       "kind": "method",
       "module": "homeassistant.components.camera.entity",
       "path": "homeassistant/components/camera/entity.py",
-      "line": 352,
+      "line": 369,
       "signature": "def disable_motion_detection() -> None:",
       "doc": "Disable motion detection in camera.",
       "bare": true
@@ -1361,7 +1361,7 @@
       "kind": "method",
       "module": "homeassistant.components.camera.entity",
       "path": "homeassistant/components/camera/entity.py",
-      "line": 344,
+      "line": 361,
       "signature": "def enable_motion_detection() -> None:",
       "doc": "Enable motion detection in the camera.",
       "bare": true
@@ -1373,7 +1373,7 @@
       "kind": "method",
       "module": "homeassistant.components.camera.entity",
       "path": "homeassistant/components/camera/entity.py",
-      "line": 249,
+      "line": 266,
       "signature": "async def stream_source() -> str | None:",
       "doc": "Return the source of the stream.",
       "bare": true
@@ -1385,7 +1385,7 @@
       "kind": "method",
       "module": "homeassistant.components.camera.entity",
       "path": "homeassistant/components/camera/entity.py",
-      "line": 328,
+      "line": 345,
       "signature": "def turn_off() -> None:",
       "doc": "Turn off camera.",
       "bare": false,
@@ -1398,11 +1398,23 @@
       "kind": "method",
       "module": "homeassistant.components.camera.entity",
       "path": "homeassistant/components/camera/entity.py",
-      "line": 336,
+      "line": 353,
       "signature": "def turn_on() -> None:",
       "doc": "Turn on camera.",
       "bare": false,
       "pageBare": true
+    },
+    {
+      "id": "homeassistant.components.camera.entity.CameraEntityCapabilities",
+      "name": "CameraEntityCapabilities",
+      "qualname": "CameraEntityCapabilities",
+      "kind": "class",
+      "module": "homeassistant.components.camera.entity",
+      "path": "homeassistant/components/camera/entity.py",
+      "line": 53,
+      "signature": "class CameraEntityCapabilities:",
+      "doc": "Capabilities declared by a camera entity.",
+      "bare": true
     },
     {
       "id": "homeassistant.components.camera.webrtc.CameraWebRTCProvider",
@@ -1824,7 +1836,7 @@
       "kind": "class",
       "module": "homeassistant.components.conversation.chat_log",
       "path": "homeassistant/components/conversation/chat_log.py",
-      "line": 261,
+      "line": 262,
       "signature": "class AssistantContent:",
       "doc": "Assistant content.",
       "bare": true
@@ -1836,7 +1848,7 @@
       "kind": "class",
       "module": "homeassistant.components.conversation.chat_log",
       "path": "homeassistant/components/conversation/chat_log.py",
-      "line": 355,
+      "line": 356,
       "signature": "class ChatLog:",
       "doc": "Class holding the chat history of a specific conversation.",
       "bare": true
@@ -1848,7 +1860,7 @@
       "kind": "exception",
       "module": "homeassistant.components.conversation.chat_log",
       "path": "homeassistant/components/conversation/chat_log.py",
-      "line": 176,
+      "line": 177,
       "signature": "class ConverseError(HomeAssistantError):",
       "doc": "Error during initialization of conversation.",
       "bare": true
@@ -1860,7 +1872,7 @@
       "kind": "class",
       "module": "homeassistant.components.conversation.chat_log",
       "path": "homeassistant/components/conversation/chat_log.py",
-      "line": 199,
+      "line": 200,
       "signature": "class SystemContent:",
       "doc": "Base class for chat messages.",
       "bare": true
@@ -1872,7 +1884,7 @@
       "kind": "class",
       "module": "homeassistant.components.conversation.chat_log",
       "path": "homeassistant/components/conversation/chat_log.py",
-      "line": 289,
+      "line": 290,
       "signature": "class ToolResultContent:",
       "doc": "Tool result content.",
       "bare": true
@@ -1884,7 +1896,7 @@
       "kind": "class",
       "module": "homeassistant.components.conversation.chat_log",
       "path": "homeassistant/components/conversation/chat_log.py",
-      "line": 216,
+      "line": 217,
       "signature": "class UserContent:",
       "doc": "Assistant content.",
       "bare": true
@@ -1923,7 +1935,7 @@
       "kind": "method",
       "module": "homeassistant.components.conversation.entity",
       "path": "homeassistant/components/conversation/entity.py",
-      "line": 72,
+      "line": 74,
       "signature": "async def _async_handle_message(\n    user_input: ConversationInput,\n    chat_log: ChatLog,\n) -> ConversationResult:",
       "doc": "Call the API.",
       "bare": true
@@ -2048,7 +2060,7 @@
       "kind": "class",
       "module": "homeassistant.components.cover.entity",
       "path": "homeassistant/components/cover/entity.py",
-      "line": 40,
+      "line": 38,
       "signature": "class CoverEntity(Entity):",
       "doc": "Base class for cover entities.",
       "bare": true
@@ -2060,7 +2072,7 @@
       "kind": "method",
       "module": "homeassistant.components.cover.entity",
       "path": "homeassistant/components/cover/entity.py",
-      "line": 243,
+      "line": 214,
       "signature": "async def async_close_cover(**kwargs: Any) -> None:",
       "doc": "Close cover.",
       "bare": true
@@ -2072,7 +2084,7 @@
       "kind": "method",
       "module": "homeassistant.components.cover.entity",
       "path": "homeassistant/components/cover/entity.py",
-      "line": 295,
+      "line": 266,
       "signature": "async def async_close_cover_tilt(**kwargs: Any) -> None:",
       "doc": "Close the cover tilt.",
       "bare": true
@@ -2084,7 +2096,7 @@
       "kind": "method",
       "module": "homeassistant.components.cover.entity",
       "path": "homeassistant/components/cover/entity.py",
-      "line": 235,
+      "line": 206,
       "signature": "async def async_open_cover(**kwargs: Any) -> None:",
       "doc": "Open the cover.",
       "bare": true
@@ -2096,7 +2108,7 @@
       "kind": "method",
       "module": "homeassistant.components.cover.entity",
       "path": "homeassistant/components/cover/entity.py",
-      "line": 286,
+      "line": 257,
       "signature": "async def async_open_cover_tilt(**kwargs: Any) -> None:",
       "doc": "Open the cover tilt.",
       "bare": true
@@ -2108,7 +2120,7 @@
       "kind": "method",
       "module": "homeassistant.components.cover.entity",
       "path": "homeassistant/components/cover/entity.py",
-      "line": 270,
+      "line": 241,
       "signature": "async def async_set_cover_position(**kwargs: Any) -> None:",
       "doc": "Move the cover to a specific position.",
       "bare": true
@@ -2120,7 +2132,7 @@
       "kind": "method",
       "module": "homeassistant.components.cover.entity",
       "path": "homeassistant/components/cover/entity.py",
-      "line": 304,
+      "line": 275,
       "signature": "async def async_set_cover_tilt_position(\n    **kwargs: Any,\n) -> None:",
       "doc": "Move the cover tilt to a specific position.",
       "bare": true
@@ -2132,7 +2144,7 @@
       "kind": "method",
       "module": "homeassistant.components.cover.entity",
       "path": "homeassistant/components/cover/entity.py",
-      "line": 279,
+      "line": 250,
       "signature": "async def async_stop_cover(**kwargs: Any) -> None:",
       "doc": "Stop the cover.",
       "bare": true
@@ -2144,7 +2156,7 @@
       "kind": "method",
       "module": "homeassistant.components.cover.entity",
       "path": "homeassistant/components/cover/entity.py",
-      "line": 313,
+      "line": 284,
       "signature": "async def async_stop_cover_tilt(**kwargs: Any) -> None:",
       "doc": "Stop the cover.",
       "bare": true
@@ -2156,7 +2168,7 @@
       "kind": "method",
       "module": "homeassistant.components.cover.entity",
       "path": "homeassistant/components/cover/entity.py",
-      "line": 239,
+      "line": 210,
       "signature": "def close_cover(**kwargs: Any) -> None:",
       "doc": "Close cover.",
       "bare": true
@@ -2168,7 +2180,7 @@
       "kind": "method",
       "module": "homeassistant.components.cover.entity",
       "path": "homeassistant/components/cover/entity.py",
-      "line": 292,
+      "line": 263,
       "signature": "def close_cover_tilt(**kwargs: Any) -> None:",
       "doc": "Close the cover tilt.",
       "bare": true
@@ -2180,7 +2192,7 @@
       "kind": "method",
       "module": "homeassistant.components.cover.entity",
       "path": "homeassistant/components/cover/entity.py",
-      "line": 231,
+      "line": 202,
       "signature": "def open_cover(**kwargs: Any) -> None:",
       "doc": "Open the cover.",
       "bare": true
@@ -2192,7 +2204,7 @@
       "kind": "method",
       "module": "homeassistant.components.cover.entity",
       "path": "homeassistant/components/cover/entity.py",
-      "line": 283,
+      "line": 254,
       "signature": "def open_cover_tilt(**kwargs: Any) -> None:",
       "doc": "Open the cover tilt.",
       "bare": true
@@ -2204,7 +2216,7 @@
       "kind": "method",
       "module": "homeassistant.components.cover.entity",
       "path": "homeassistant/components/cover/entity.py",
-      "line": 267,
+      "line": 238,
       "signature": "def set_cover_position(**kwargs: Any) -> None:",
       "doc": "Move the cover to a specific position.",
       "bare": true
@@ -2216,7 +2228,7 @@
       "kind": "method",
       "module": "homeassistant.components.cover.entity",
       "path": "homeassistant/components/cover/entity.py",
-      "line": 301,
+      "line": 272,
       "signature": "def set_cover_tilt_position(**kwargs: Any) -> None:",
       "doc": "Move the cover tilt to a specific position.",
       "bare": true
@@ -2228,7 +2240,7 @@
       "kind": "method",
       "module": "homeassistant.components.cover.entity",
       "path": "homeassistant/components/cover/entity.py",
-      "line": 276,
+      "line": 247,
       "signature": "def stop_cover(**kwargs: Any) -> None:",
       "doc": "Stop the cover.",
       "bare": true
@@ -2240,7 +2252,7 @@
       "kind": "method",
       "module": "homeassistant.components.cover.entity",
       "path": "homeassistant/components/cover/entity.py",
-      "line": 310,
+      "line": 281,
       "signature": "def stop_cover_tilt(**kwargs: Any) -> None:",
       "doc": "Stop the cover.",
       "bare": true
@@ -2252,7 +2264,7 @@
       "kind": "method",
       "module": "homeassistant.components.cover.entity",
       "path": "homeassistant/components/cover/entity.py",
-      "line": 319,
+      "line": 290,
       "signature": "def toggle_tilt(**kwargs: Any) -> None:",
       "doc": "Toggle the entity.",
       "bare": true
@@ -2342,7 +2354,7 @@
       "kind": "class",
       "module": "homeassistant.components.device_tracker.entity",
       "path": "homeassistant/components/device_tracker/entity.py",
-      "line": 433,
+      "line": 445,
       "signature": "class BaseScannerEntity(BaseTrackerEntity):",
       "doc": "Base class for a tracked device that can be connected or disconnected.",
       "bare": true
@@ -2354,7 +2366,7 @@
       "kind": "class",
       "module": "homeassistant.components.device_tracker.entity",
       "path": "homeassistant/components/device_tracker/entity.py",
-      "line": 619,
+      "line": 631,
       "signature": "class ScannerEntity(BaseScannerEntity):",
       "doc": "Base class for a tracked device that is on a scanned network.",
       "bare": true
@@ -2502,7 +2514,7 @@
       "kind": "method",
       "module": "homeassistant.components.event.entity",
       "path": "homeassistant/components/event/entity.py",
-      "line": 100,
+      "line": 102,
       "signature": "def _trigger_event(\n    event_type: str,\n    event_attributes: dict[str, Any] | None = None,\n) -> None:",
       "doc": "Process a new event.",
       "bare": true
@@ -2754,7 +2766,7 @@
       "kind": "function",
       "module": "homeassistant.components.http.auth",
       "path": "homeassistant/components/http/auth.py",
-      "line": 52,
+      "line": 51,
       "signature": "def async_sign_path(\n    hass: HomeAssistant,\n    path: str,\n    expiration: timedelta,\n    *,\n    refresh_token_id: str | None = None,\n    use_content_user: bool = False,\n) -> str:",
       "doc": "Sign a path for temporary access without auth header.",
       "bare": true
@@ -3028,7 +3040,8 @@
       "line": 146,
       "signature": "def _handle_received_signal(\n    signal: InfraredReceivedSignal,\n) -> None:",
       "doc": "Handle a received IR signal.",
-      "bare": true
+      "bare": false,
+      "pageBare": true
     },
     {
       "id": "homeassistant.components.infrared.helpers.InfraredEmitterConsumerEntity",
@@ -3037,7 +3050,7 @@
       "kind": "class",
       "module": "homeassistant.components.infrared.helpers",
       "path": "homeassistant/components/infrared/helpers.py",
-      "line": 173,
+      "line": 175,
       "signature": "class InfraredEmitterConsumerEntity(InfraredConsumerEntity):",
       "doc": "Base entity for integrations that send commands via an infrared emitter.",
       "bare": true
@@ -3049,9 +3062,21 @@
       "kind": "class",
       "module": "homeassistant.components.infrared.helpers",
       "path": "homeassistant/components/infrared/helpers.py",
-      "line": 197,
+      "line": 199,
       "signature": "class InfraredReceiverConsumerEntity(\n    InfraredConsumerEntity,\n):",
       "doc": "Base entity for integrations that consume signals from an infrared receiver.",
+      "bare": true
+    },
+    {
+      "id": "homeassistant.components.labs.helpers.async_subscribe_preview_feature",
+      "name": "async_subscribe_preview_feature",
+      "qualname": "async_subscribe_preview_feature",
+      "kind": "function",
+      "module": "homeassistant.components.labs.helpers",
+      "path": "homeassistant/components/labs/helpers.py",
+      "line": 36,
+      "signature": "def async_subscribe_preview_feature(\n    hass: HomeAssistant,\n    domain: str,\n    preview_feature: str,\n    listener: Callable[\n        [EventLabsUpdatedData], Coroutine[Any, Any, None]\n    ],\n) -> Callable[[], None]:",
+      "doc": "Listen for changes to a specific preview feature.",
       "bare": true
     },
     {
@@ -3238,7 +3263,7 @@
       "kind": "class",
       "module": "homeassistant.components.light.entity",
       "path": "homeassistant/components/light/entity.py",
-      "line": 60,
+      "line": 59,
       "signature": "class LightEntity(ToggleEntity):",
       "doc": "Base class for light entities.",
       "bare": true
@@ -3250,7 +3275,7 @@
       "kind": "method",
       "module": "homeassistant.components.light.entity",
       "path": "homeassistant/components/light/entity.py",
-      "line": 430,
+      "line": 429,
       "signature": "async def async_toggle(**kwargs: Any) -> None:",
       "doc": "Toggle the entity.",
       "bare": false,
@@ -3988,7 +4013,7 @@
       "kind": "function",
       "module": "homeassistant.components.mqtt.util",
       "path": "homeassistant/components/mqtt/util.py",
-      "line": 220,
+      "line": 221,
       "signature": "async def async_wait_for_mqtt_client(\n    hass: HomeAssistant,\n) -> bool:",
       "doc": "Wait for the MQTT client to become available.",
       "bare": true
@@ -4000,7 +4025,7 @@
       "kind": "function",
       "module": "homeassistant.components.mqtt.util",
       "path": "homeassistant/components/mqtt/util.py",
-      "line": 331,
+      "line": 332,
       "signature": "def valid_publish_topic(topic: Any) -> str:",
       "doc": "Validate that we can publish using this MQTT topic.",
       "bare": true
@@ -4012,7 +4037,7 @@
       "kind": "function",
       "module": "homeassistant.components.mqtt.util",
       "path": "homeassistant/components/mqtt/util.py",
-      "line": 293,
+      "line": 294,
       "signature": "def valid_subscribe_topic(topic: Any) -> str:",
       "doc": "Validate that we can subscribe using this MQTT topic.",
       "bare": true
@@ -4268,14 +4293,67 @@
       "bare": false
     },
     {
+      "id": "homeassistant.components.radio_frequency.entity.RadioFrequencyDeviceClass",
+      "name": "RadioFrequencyDeviceClass",
+      "qualname": "RadioFrequencyDeviceClass",
+      "kind": "enum",
+      "module": "homeassistant.components.radio_frequency.entity",
+      "path": "homeassistant/components/radio_frequency/entity.py",
+      "line": 22,
+      "signature": "class RadioFrequencyDeviceClass(StrEnum):",
+      "doc": "Device class for radio frequency entities.",
+      "bare": true,
+      "members": [
+        "TRANSMITTER",
+        "RECEIVER"
+      ]
+    },
+    {
+      "id": "homeassistant.components.radio_frequency.entity.RadioFrequencyReceivedSignal",
+      "name": "RadioFrequencyReceivedSignal",
+      "qualname": "RadioFrequencyReceivedSignal",
+      "kind": "class",
+      "module": "homeassistant.components.radio_frequency.entity",
+      "path": "homeassistant/components/radio_frequency/entity.py",
+      "line": 30,
+      "signature": "class RadioFrequencyReceivedSignal:",
+      "doc": "Represents a received RF signal.",
+      "bare": true
+    },
+    {
+      "id": "homeassistant.components.radio_frequency.entity.RadioFrequencyReceiverEntity",
+      "name": "RadioFrequencyReceiverEntity",
+      "qualname": "RadioFrequencyReceiverEntity",
+      "kind": "class",
+      "module": "homeassistant.components.radio_frequency.entity",
+      "path": "homeassistant/components/radio_frequency/entity.py",
+      "line": 126,
+      "signature": "class RadioFrequencyReceiverEntity(_RadioFrequencyEntity):",
+      "doc": "Base class for radio frequency receiver entities.",
+      "bare": true
+    },
+    {
+      "id": "homeassistant.components.radio_frequency.entity.RadioFrequencyReceiverEntity._handle_received_signal",
+      "name": "_handle_received_signal",
+      "qualname": "RadioFrequencyReceiverEntity._handle_received_signal",
+      "kind": "method",
+      "module": "homeassistant.components.radio_frequency.entity",
+      "path": "homeassistant/components/radio_frequency/entity.py",
+      "line": 162,
+      "signature": "def _handle_received_signal(\n    signal: RadioFrequencyReceivedSignal,\n) -> None:",
+      "doc": "Handle a received RF signal.",
+      "bare": false,
+      "pageBare": true
+    },
+    {
       "id": "homeassistant.components.radio_frequency.entity.RadioFrequencyTransmitterEntity",
       "name": "RadioFrequencyTransmitterEntity",
       "qualname": "RadioFrequencyTransmitterEntity",
       "kind": "class",
       "module": "homeassistant.components.radio_frequency.entity",
       "path": "homeassistant/components/radio_frequency/entity.py",
-      "line": 21,
-      "signature": "class RadioFrequencyTransmitterEntity(RestoreEntity):",
+      "line": 76,
+      "signature": "class RadioFrequencyTransmitterEntity(\n    _RadioFrequencyEntity,\n):",
       "doc": "Base class for radio frequency transmitter entities.",
       "bare": true
     },
@@ -4286,34 +4364,22 @@
       "kind": "method",
       "module": "homeassistant.components.radio_frequency.entity",
       "path": "homeassistant/components/radio_frequency/entity.py",
-      "line": 76,
+      "line": 111,
       "signature": "async def async_send_command(\n    command: RadioFrequencyCommand,\n) -> None:",
       "doc": "Send an RF command.",
       "bare": false,
       "pageBare": true
     },
     {
-      "id": "homeassistant.components.radio_frequency.entity.RadioFrequencyTransmitterEntity.supports_frequency",
-      "name": "supports_frequency",
-      "qualname": "RadioFrequencyTransmitterEntity.supports_frequency",
-      "kind": "method",
-      "module": "homeassistant.components.radio_frequency.entity",
-      "path": "homeassistant/components/radio_frequency/entity.py",
-      "line": 37,
-      "signature": "def supports_frequency(frequency: int) -> bool:",
-      "doc": "Return whether the transmitter supports the given frequency.",
-      "bare": true
-    },
-    {
-      "id": "homeassistant.components.radio_frequency.entity.RadioFrequencyTransmitterEntity.supports_modulation",
-      "name": "supports_modulation",
-      "qualname": "RadioFrequencyTransmitterEntity.supports_modulation",
-      "kind": "method",
-      "module": "homeassistant.components.radio_frequency.entity",
-      "path": "homeassistant/components/radio_frequency/entity.py",
-      "line": 45,
-      "signature": "def supports_modulation(modulation: ModulationType) -> bool:",
-      "doc": "Return whether the transmitter supports the given modulation.",
+      "id": "homeassistant.components.radio_frequency.helpers.RadioFrequencyReceiverConsumerEntity",
+      "name": "RadioFrequencyReceiverConsumerEntity",
+      "qualname": "RadioFrequencyReceiverConsumerEntity",
+      "kind": "class",
+      "module": "homeassistant.components.radio_frequency.helpers",
+      "path": "homeassistant/components/radio_frequency/helpers.py",
+      "line": 225,
+      "signature": "class RadioFrequencyReceiverConsumerEntity(\n    RadioFrequencyConsumerEntity,\n):",
+      "doc": "Base entity for integrations that consume signals from an RF receiver.",
       "bare": true
     },
     {
@@ -4323,8 +4389,8 @@
       "kind": "class",
       "module": "homeassistant.components.radio_frequency.helpers",
       "path": "homeassistant/components/radio_frequency/helpers.py",
-      "line": 88,
-      "signature": "class RadioFrequencyTransmitterConsumerEntity(Entity):",
+      "line": 198,
+      "signature": "class RadioFrequencyTransmitterConsumerEntity(\n    RadioFrequencyConsumerEntity,\n):",
       "doc": "Base entity for integrations that send commands via an RF transmitter.",
       "bare": true
     },
@@ -5205,7 +5271,7 @@
       "kind": "class",
       "module": "homeassistant.components.tts.entity",
       "path": "homeassistant/components/tts/entity.py",
-      "line": 53,
+      "line": 51,
       "signature": "class TextToSpeechEntity(RestoreEntity):",
       "doc": "Represent a single TTS engine.",
       "bare": true
@@ -5217,7 +5283,7 @@
       "kind": "method",
       "module": "homeassistant.components.tts.entity",
       "path": "homeassistant/components/tts/entity.py",
-      "line": 219,
+      "line": 217,
       "signature": "async def async_get_tts_audio(\n    message: str,\n    language: str,\n    options: dict[str, Any],\n) -> TtsAudioType:",
       "doc": "Load tts audio file from the engine.",
       "bare": true
@@ -5229,7 +5295,7 @@
       "kind": "method",
       "module": "homeassistant.components.tts.entity",
       "path": "homeassistant/components/tts/entity.py",
-      "line": 174,
+      "line": 172,
       "signature": "async def async_stream_tts_audio(\n    request: TTSAudioRequest,\n) -> TTSAudioResponse:",
       "doc": "Generate speech from an incoming message.",
       "bare": true
@@ -5241,7 +5307,7 @@
       "kind": "method",
       "module": "homeassistant.components.tts.entity",
       "path": "homeassistant/components/tts/entity.py",
-      "line": 201,
+      "line": 199,
       "signature": "def get_tts_audio(\n    message: str,\n    language: str,\n    options: dict[str, Any],\n) -> TtsAudioType:",
       "doc": "Load tts audio file from the engine.",
       "bare": true
@@ -5253,7 +5319,7 @@
       "kind": "class",
       "module": "homeassistant.components.tts.entity",
       "path": "homeassistant/components/tts/entity.py",
-      "line": 37,
+      "line": 35,
       "signature": "class TTSAudioRequest:",
       "doc": "Request to get TTS audio.",
       "bare": true
@@ -5265,7 +5331,7 @@
       "kind": "class",
       "module": "homeassistant.components.tts.entity",
       "path": "homeassistant/components/tts/entity.py",
-      "line": 46,
+      "line": 44,
       "signature": "class TTSAudioResponse:",
       "doc": "Response containing TTS audio stream.",
       "bare": true
@@ -6248,7 +6314,7 @@
       "kind": "class",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 2279,
+      "line": 2284,
       "signature": "ConfigEntries(hass: HomeAssistant, hass_config: ConfigType)",
       "doc": "Manage the configuration entries.",
       "bare": true
@@ -6260,7 +6326,7 @@
       "kind": "method",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 2347,
+      "line": 2352,
       "signature": "def async_entries(\n    domain: str | None = None,\n    include_ignore: bool = True,\n    include_disabled: bool = True,\n) -> list[ConfigEntry]:",
       "doc": "Return all entries or entries for a specific domain.",
       "bare": true
@@ -6272,7 +6338,7 @@
       "kind": "method",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 2985,
+      "line": 2990,
       "signature": "async def async_forward_entry_setups(\n    entry: ConfigEntry,\n    platforms: Iterable[Platform | str],\n) -> None:",
       "doc": "Forward the setup of an entry to platforms.",
       "bare": true
@@ -6284,7 +6350,7 @@
       "kind": "method",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 2370,
+      "line": 2375,
       "signature": "def async_loaded_entries(domain: str) -> list[ConfigEntry]:",
       "doc": "Return loaded entries for a specific domain.",
       "bare": true
@@ -6296,10 +6362,22 @@
       "kind": "method",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 2581,
+      "line": 2586,
       "signature": "async def async_setup(\n    entry_id: str,\n    _lock: bool = True,\n) -> bool:",
       "doc": "Set up a config entry.",
       "bare": false
+    },
+    {
+      "id": "homeassistant.config_entries.ConfigEntries.async_unload_platforms_or_raise",
+      "name": "async_unload_platforms_or_raise",
+      "qualname": "ConfigEntries.async_unload_platforms_or_raise",
+      "kind": "method",
+      "module": "homeassistant.config_entries",
+      "path": "homeassistant/config_entries.py",
+      "line": 3095,
+      "signature": "async def async_unload_platforms_or_raise(\n    entry: ConfigEntry,\n    platforms: Iterable[Platform | str],\n) -> None:",
+      "doc": "Forward the unloading of an entry to platforms, raising on failure.",
+      "bare": true
     },
     {
       "id": "homeassistant.config_entries.ConfigEntries.async_update_entry",
@@ -6308,7 +6386,7 @@
       "kind": "method",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 2742,
+      "line": 2747,
       "signature": "def async_update_entry(\n    entry: ConfigEntry,\n    *,\n    data: Mapping[str, Any] | UndefinedType = UNDEFINED,\n    discovery_keys: MappingProxyType[\n        str, tuple[DiscoveryKey, ...]\n    ] | UndefinedType = UNDEFINED,\n    minor_version: int | UndefinedType = UNDEFINED,\n    options: Mapping[str, Any] | UndefinedType = UNDEFINED,\n    pref_disable_new_entities: bool | UndefinedType = UNDEFINED,\n    pref_disable_polling: bool | UndefinedType = UNDEFINED,\n    title: str | UndefinedType = UNDEFINED,\n    unique_id: str | UndefinedType | None = UNDEFINED,\n    version: int | UndefinedType = UNDEFINED,\n) -> bool:",
       "doc": "Update a config entry.",
       "bare": true
@@ -6320,7 +6398,7 @@
       "kind": "method",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 2919,
+      "line": 2925,
       "signature": "def async_update_subentry(\n    entry: ConfigEntry,\n    subentry: ConfigSubentry,\n    *,\n    data: Mapping[str, Any] | UndefinedType = UNDEFINED,\n    title: str | UndefinedType = UNDEFINED,\n    unique_id: str | UndefinedType | None = UNDEFINED,\n) -> bool:",
       "doc": "Update a config subentry.",
       "bare": true
@@ -6332,7 +6410,7 @@
       "kind": "class",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 411,
+      "line": 442,
       "signature": "ConfigEntry(\n    *,\n    created_at: datetime | None = None,\n    data: Mapping[str, Any],\n    disabled_by: ConfigEntryDisabler | None = None,\n    discovery_keys: MappingProxyType[\n        str, tuple[DiscoveryKey, ...]\n    ],\n    domain: str,\n    entry_id: str | None = None,\n    minor_version: int,\n    modified_at: datetime | None = None,\n    options: Mapping[str, Any] | None,\n    pref_disable_new_entities: bool | None = None,\n    pref_disable_polling: bool | None = None,\n    source: str,\n    state: ConfigEntryState = ConfigEntryState.NOT_LOADED,\n    subentries_data: Iterable[\n        ConfigSubentryData | ConfigSubentryDataWithId\n    ] | None,\n    title: str,\n    unique_id: str | None,\n    version: int,\n)",
       "doc": "Hold a configuration entry.",
       "bare": true
@@ -6344,7 +6422,7 @@
       "kind": "method",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 1404,
+      "line": 1409,
       "signature": "def async_on_state_change(\n    func: CALLBACK_TYPE,\n) -> CALLBACK_TYPE:",
       "doc": "Add a function to call when a config entry changes its state.",
       "bare": true
@@ -6356,7 +6434,7 @@
       "kind": "method",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 1368,
+      "line": 1373,
       "signature": "def async_on_unload(\n    func: Callable[[], Coroutine[Any, Any, None] | None],\n) -> None:",
       "doc": "Add a function to call when config entry is unloaded.",
       "bare": true
@@ -6368,7 +6446,7 @@
       "kind": "enum",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 158,
+      "line": 159,
       "signature": "class ConfigEntryState(Enum):",
       "doc": "Config entry state.",
       "bare": true,
@@ -6390,7 +6468,7 @@
       "kind": "class",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 3248,
+      "line": 3242,
       "signature": "class ConfigFlow(ConfigEntryBaseFlow):",
       "doc": "Base class for config flows with some helpers.",
       "bare": true
@@ -6402,7 +6480,7 @@
       "kind": "method",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 3351,
+      "line": 3345,
       "signature": "def _abort_if_unique_id_configured(\n    updates: dict[str, Any] | None = None,\n    reload_on_update: bool = True,\n    *,\n    error: str = 'already_configured',\n    description_placeholders: Mapping[\n        str, str\n    ] | None = None,\n) -> None:",
       "doc": "Abort if the unique ID is already configured.",
       "bare": true
@@ -6414,7 +6492,7 @@
       "kind": "method",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 3330,
+      "line": 3324,
       "signature": "def _abort_if_unique_id_mismatch(\n    *,\n    reason: str = 'unique_id_mismatch',\n    description_placeholders: Mapping[\n        str, str\n    ] | None = None,\n) -> None:",
       "doc": "Abort if the unique ID does not match the reauth/reconfigure context.",
       "bare": true
@@ -6426,7 +6504,7 @@
       "kind": "method",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 3877,
+      "line": 3859,
       "signature": "def _get_reauth_entry() -> ConfigEntry:",
       "doc": "Return the reauth config entry linked to the current context.",
       "bare": true
@@ -6438,7 +6516,7 @@
       "kind": "method",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 3889,
+      "line": 3871,
       "signature": "def _get_reconfigure_entry() -> ConfigEntry:",
       "doc": "Return the reconfigure config entry linked to the current context.",
       "bare": true
@@ -6450,7 +6528,7 @@
       "kind": "method",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 3444,
+      "line": 3438,
       "signature": "def _set_confirm_only() -> None:",
       "doc": "Mark the config flow as only needing user confirmation to finish flow.",
       "bare": true
@@ -6462,7 +6540,7 @@
       "kind": "method",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 3268,
+      "line": 3262,
       "signature": "def async_get_options_flow(\n    config_entry: ConfigEntry,\n) -> OptionsFlow:",
       "doc": "Get the options flow for this handler.",
       "bare": true
@@ -6474,7 +6552,7 @@
       "kind": "method",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 3658,
+      "line": 3640,
       "signature": "async def async_on_create_entry(\n    result: ConfigFlowResult,\n) -> ConfigFlowResult:",
       "doc": "Runs after a config flow has created a config entry.",
       "bare": true
@@ -6486,7 +6564,7 @@
       "kind": "method",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 3407,
+      "line": 3401,
       "signature": "async def async_set_unique_id(\n    unique_id: str | None = None,\n    *,\n    raise_on_progress: bool = True,\n) -> ConfigEntry | None:",
       "doc": "Set a unique ID for the config flow.",
       "bare": true
@@ -6498,7 +6576,7 @@
       "kind": "method",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 3865,
+      "line": 3847,
       "signature": "def is_matching(other_flow: Self) -> bool:",
       "doc": "Return True if other_flow is matching this flow.",
       "bare": true
@@ -6510,7 +6588,7 @@
       "kind": "class",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 391,
+      "line": 422,
       "signature": "class ConfigSubentry:",
       "doc": "Container for a configuration subentry.",
       "bare": true
@@ -6522,7 +6600,7 @@
       "kind": "method",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 4138,
+      "line": 4120,
       "signature": "def _get_entry() -> ConfigEntry:",
       "doc": "Return the config entry linked to the current context.",
       "bare": true
@@ -6534,7 +6612,7 @@
       "kind": "method",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 4150,
+      "line": 4132,
       "signature": "def _get_reconfigure_subentry() -> ConfigSubentry:",
       "doc": "Return the reconfigure config subentry linked to the current context.",
       "bare": true
@@ -6546,7 +6624,7 @@
       "kind": "class",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 4236,
+      "line": 4218,
       "signature": "class OptionsFlow(ConfigEntryBaseFlow):",
       "doc": "Base class for config options flows.",
       "bare": true
@@ -6558,7 +6636,7 @@
       "kind": "class",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 4310,
+      "line": 4292,
       "signature": "class OptionsFlowWithReload(OptionsFlow):",
       "doc": "Automatic reloading class for config options flows.",
       "bare": true
@@ -6693,7 +6771,7 @@
       "kind": "class",
       "module": "homeassistant.core",
       "path": "homeassistant/core.py",
-      "line": 1290,
+      "line": 1344,
       "signature": "Context(\n    user_id: str | None = None,\n    parent_id: str | None = None,\n    id: str | None = None,\n)",
       "doc": "The context that triggered something.",
       "bare": true
@@ -6705,7 +6783,7 @@
       "kind": "enum",
       "module": "homeassistant.core",
       "path": "homeassistant/core.py",
-      "line": 373,
+      "line": 427,
       "signature": "class CoreState(enum.Enum):",
       "doc": "Represent the current state of Home Assistant.",
       "bare": true,
@@ -6725,7 +6803,7 @@
       "kind": "class",
       "module": "homeassistant.core",
       "path": "homeassistant/core.py",
-      "line": 1367,
+      "line": 1421,
       "signature": "Event(\n    event_type: EventType[_DataT] | str,\n    data: _DataT | None = None,\n    origin: EventOrigin = EventOrigin.local,\n    time_fired_timestamp: float | None = None,\n    context: Context | None = None,\n)",
       "doc": "Representation of an event within the bus.",
       "bare": true
@@ -6737,7 +6815,7 @@
       "kind": "class",
       "module": "homeassistant.core",
       "path": "homeassistant/core.py",
-      "line": 1514,
+      "line": 1568,
       "signature": "EventBus(hass: HomeAssistant)",
       "doc": "Allow the firing of and listening for events.",
       "bare": true
@@ -6749,7 +6827,7 @@
       "kind": "method",
       "module": "homeassistant.core",
       "path": "homeassistant/core.py",
-      "line": 1575,
+      "line": 1629,
       "signature": "def async_fire(\n    event_type: EventType[_DataT] | str,\n    event_data: _DataT | None = None,\n    origin: EventOrigin = EventOrigin.local,\n    context: Context | None = None,\n    time_fired: float | None = None,\n) -> None:",
       "doc": "Fire an event.",
       "bare": true
@@ -6761,7 +6839,7 @@
       "kind": "method",
       "module": "homeassistant.core",
       "path": "homeassistant/core.py",
-      "line": 1711,
+      "line": 1765,
       "signature": "def async_listen(\n    event_type: EventType[_DataT] | str,\n    listener: Callable[\n        [Event[_DataT]], Coroutine[Any, Any, None] | None\n    ],\n    event_filter: Callable[[_DataT], bool] | None = None,\n    run_immediately: bool | object = _SENTINEL,\n) -> CALLBACK_TYPE:",
       "doc": "Listen for all events or events of a specific type.",
       "bare": false
@@ -6773,7 +6851,7 @@
       "kind": "method",
       "module": "homeassistant.core",
       "path": "homeassistant/core.py",
-      "line": 1789,
+      "line": 1843,
       "signature": "def async_listen_once(\n    event_type: EventType[_DataT] | str,\n    listener: Callable[\n        [Event[_DataT]], Coroutine[Any, Any, None] | None\n    ],\n    run_immediately: bool | object = _SENTINEL,\n) -> CALLBACK_TYPE:",
       "doc": "Listen once for event of a specific type.",
       "bare": true
@@ -6785,7 +6863,7 @@
       "kind": "method",
       "module": "homeassistant.core",
       "path": "homeassistant/core.py",
-      "line": 1561,
+      "line": 1615,
       "signature": "def fire(\n    event_type: EventType[_DataT] | str,\n    event_data: _DataT | None = None,\n    origin: EventOrigin = EventOrigin.local,\n    context: Context | None = None,\n) -> None:",
       "doc": "Fire an event.",
       "bare": false
@@ -6797,7 +6875,7 @@
       "kind": "enum",
       "module": "homeassistant.core",
       "path": "homeassistant/core.py",
-      "line": 1349,
+      "line": 1403,
       "signature": "class EventOrigin(enum.Enum):",
       "doc": "Represent the origin of an event.",
       "bare": true,
@@ -6813,7 +6891,7 @@
       "kind": "class",
       "module": "homeassistant.core",
       "path": "homeassistant/core.py",
-      "line": 389,
+      "line": 443,
       "signature": "HomeAssistant(config_dir: str)",
       "doc": "Root object of the Home Assistant home automation.",
       "bare": true
@@ -6825,7 +6903,7 @@
       "kind": "method",
       "module": "homeassistant.core",
       "path": "homeassistant/core.py",
-      "line": 572,
+      "line": 626,
       "signature": "def add_job(\n    target: Callable[[*_Ts], Any] | Coroutine[\n        Any, Any, Any\n    ],\n    *args: *_Ts,\n) -> None:",
       "doc": "Add a job to be executed by the event loop or by an executor.",
       "bare": true
@@ -6837,7 +6915,7 @@
       "kind": "method",
       "module": "homeassistant.core",
       "path": "homeassistant/core.py",
-      "line": 879,
+      "line": 933,
       "signature": "def async_add_executor_job(\n    target: Callable[[*_Ts], _T],\n    *args: *_Ts,\n) -> asyncio.Future[_T]:",
       "doc": "Add an executor job from within the event loop.",
       "bare": true
@@ -6849,7 +6927,7 @@
       "kind": "method",
       "module": "homeassistant.core",
       "path": "homeassistant/core.py",
-      "line": 796,
+      "line": 850,
       "signature": "def async_create_task(\n    target: Coroutine[Any, Any, _R],\n    name: str | None = None,\n    eager_start: bool = True,\n) -> asyncio.Task[_R]:",
       "doc": "Create a task from within the event loop.",
       "bare": false
@@ -6861,7 +6939,7 @@
       "kind": "method",
       "module": "homeassistant.core",
       "path": "homeassistant/core.py",
-      "line": 782,
+      "line": 836,
       "signature": "def create_task(\n    target: Coroutine[Any, Any, Any],\n    name: str | None = None,\n) -> None:",
       "doc": "Add task to the executor pool.",
       "bare": true
@@ -6873,7 +6951,7 @@
       "kind": "class",
       "module": "homeassistant.core",
       "path": "homeassistant/core.py",
-      "line": 2596,
+      "line": 2654,
       "signature": "ServiceCall(\n    hass: HomeAssistant,\n    domain: str,\n    service: str,\n    data: dict[str, Any] | None = None,\n    context: Context | None = None,\n    return_response: bool = False,\n)",
       "doc": "Representation of a call to a service.",
       "bare": true
@@ -6885,7 +6963,7 @@
       "kind": "class",
       "module": "homeassistant.core",
       "path": "homeassistant/core.py",
-      "line": 2630,
+      "line": 2688,
       "signature": "ServiceRegistry(hass: HomeAssistant)",
       "doc": "Offer the services over the eventbus.",
       "bare": true
@@ -6897,7 +6975,7 @@
       "kind": "method",
       "module": "homeassistant.core",
       "path": "homeassistant/core.py",
-      "line": 2865,
+      "line": 2923,
       "signature": "async def async_call(\n    domain: str,\n    service: str,\n    service_data: dict[str, Any] | None = None,\n    blocking: bool = False,\n    context: Context | None = None,\n    target: dict[str, Any] | None = None,\n    return_response: bool = False,\n) -> ServiceResponse:",
       "doc": "Call a service.",
       "bare": false
@@ -6909,7 +6987,7 @@
       "kind": "method",
       "module": "homeassistant.core",
       "path": "homeassistant/core.py",
-      "line": 2723,
+      "line": 2782,
       "signature": "def async_register(\n    domain: str,\n    service: str,\n    service_func: Callable[\n        [ServiceCall],\n        Coroutine[\n            Any,\n            Any,\n            ServiceResponse | EntityServiceResponse,\n        ] | ServiceResponse | EntityServiceResponse | None,\n    ],\n    schema: VolSchemaType | None = None,\n    supports_response: SupportsResponse = SupportsResponse.NONE,\n    job_type: HassJobType | None = None,\n    *,\n    description_placeholders: Mapping[\n        str, str\n    ] | None = None,\n) -> None:",
       "doc": "Register a service.",
       "bare": false
@@ -6921,7 +6999,7 @@
       "kind": "method",
       "module": "homeassistant.core",
       "path": "homeassistant/core.py",
-      "line": 2808,
+      "line": 2867,
       "signature": "def async_remove(domain: str, service: str) -> None:",
       "doc": "Remove a registered service from service handler.",
       "bare": false
@@ -6933,7 +7011,7 @@
       "kind": "method",
       "module": "homeassistant.core",
       "path": "homeassistant/core.py",
-      "line": 2646,
+      "line": 2704,
       "signature": "def async_services() -> dict[str, dict[str, Service]]:",
       "doc": "Return dictionary with per domain a list of available services.",
       "bare": true
@@ -6945,7 +7023,7 @@
       "kind": "method",
       "module": "homeassistant.core",
       "path": "homeassistant/core.py",
-      "line": 2697,
+      "line": 2755,
       "signature": "def register(\n    domain: str,\n    service: str,\n    service_func: Callable[\n        [ServiceCall],\n        Coroutine[\n            Any, Any, ServiceResponse\n        ] | ServiceResponse | None,\n    ],\n    schema: probatio.Schema | None = None,\n    supports_response: SupportsResponse = SupportsResponse.NONE,\n) -> None:",
       "doc": "Register a service.",
       "bare": false
@@ -6957,7 +7035,7 @@
       "kind": "method",
       "module": "homeassistant.core",
       "path": "homeassistant/core.py",
-      "line": 2801,
+      "line": 2859,
       "signature": "def remove(domain: str, service: str) -> None:",
       "doc": "Remove a registered service from service handler.",
       "bare": false
@@ -6969,7 +7047,7 @@
       "kind": "class",
       "module": "homeassistant.core",
       "path": "homeassistant/core.py",
-      "line": 1866,
+      "line": 1920,
       "signature": "State(\n    entity_id: str,\n    state: str,\n    attributes: Mapping[str, Any] | None = None,\n    last_changed: dt.datetime | None = None,\n    last_reported: dt.datetime | None = None,\n    last_updated: dt.datetime | None = None,\n    context: Context | None = None,\n    validate_entity_id: bool | None = True,\n    state_info: StateInfo | None = None,\n    last_updated_timestamp: float | None = None,\n)",
       "doc": "Object to represent a state within the state machine.",
       "bare": true
@@ -6981,7 +7059,7 @@
       "kind": "class",
       "module": "homeassistant.core",
       "path": "homeassistant/core.py",
-      "line": 2210,
+      "line": 2268,
       "signature": "StateMachine(\n    bus: EventBus,\n    loop: asyncio.events.AbstractEventLoop,\n)",
       "doc": "Helper class that tracks the state of different entities.",
       "bare": true
@@ -6993,7 +7071,7 @@
       "kind": "method",
       "module": "homeassistant.core",
       "path": "homeassistant/core.py",
-      "line": 2399,
+      "line": 2457,
       "signature": "def async_set(\n    entity_id: str,\n    new_state: str,\n    attributes: Mapping[str, Any] | None = None,\n    force_update: bool = False,\n    context: Context | None = None,\n    state_info: StateInfo | None = None,\n    timestamp: float | None = None,\n) -> None:",
       "doc": "Set the state of an entity, add entity if it does not exist.",
       "bare": true
@@ -7005,7 +7083,7 @@
       "kind": "method",
       "module": "homeassistant.core",
       "path": "homeassistant/core.py",
-      "line": 2294,
+      "line": 2352,
       "signature": "def get(entity_id: str) -> State | None:",
       "doc": "Retrieve state of entity_id or None if not found.",
       "bare": false
@@ -7017,7 +7095,7 @@
       "kind": "method",
       "module": "homeassistant.core",
       "path": "homeassistant/core.py",
-      "line": 2311,
+      "line": 2369,
       "signature": "def remove(entity_id: str) -> bool:",
       "doc": "Remove the state of an entity.",
       "bare": false
@@ -7029,7 +7107,7 @@
       "kind": "method",
       "module": "homeassistant.core",
       "path": "homeassistant/core.py",
-      "line": 2348,
+      "line": 2406,
       "signature": "def set(\n    entity_id: str,\n    new_state: str,\n    attributes: Mapping[str, Any] | None = None,\n    force_update: bool = False,\n    context: Context | None = None,\n) -> None:",
       "doc": "Set the state of an entity, add entity if it does not exist.",
       "bare": false
@@ -7041,7 +7119,7 @@
       "kind": "enum",
       "module": "homeassistant.core",
       "path": "homeassistant/core.py",
-      "line": 2549,
+      "line": 2607,
       "signature": "class SupportsResponse(enum.StrEnum):",
       "doc": "Service call response configuration.",
       "bare": true,
@@ -7070,7 +7148,7 @@
       "kind": "method",
       "module": "homeassistant.data_entry_flow",
       "path": "homeassistant/data_entry_flow.py",
-      "line": 698,
+      "line": 720,
       "signature": "def add_suggested_values_to_schema(\n    data_schema: probatio.Schema,\n    suggested_values: Mapping[str, Any] | None,\n) -> probatio.Schema:",
       "doc": "Make a copy of the schema, populated with suggested values.",
       "bare": true
@@ -7082,7 +7160,7 @@
       "kind": "method",
       "module": "homeassistant.data_entry_flow",
       "path": "homeassistant/data_entry_flow.py",
-      "line": 780,
+      "line": 786,
       "signature": "def async_create_entry(\n    *,\n    title: str | None = None,\n    data: Mapping[str, Any],\n    description: str | None = None,\n    description_placeholders: Mapping[\n        str, str\n    ] | None = None,\n) -> _FlowResultT:",
       "doc": "Finish flow.",
       "bare": true
@@ -7094,7 +7172,7 @@
       "kind": "method",
       "module": "homeassistant.data_entry_flow",
       "path": "homeassistant/data_entry_flow.py",
-      "line": 827,
+      "line": 833,
       "signature": "def async_external_step(\n    *,\n    step_id: str | None = None,\n    url: str,\n    description_placeholders: Mapping[\n        str, str\n    ] | None = None,\n) -> _FlowResultT:",
       "doc": "Return the definition of an external step for the user to take.",
       "bare": true
@@ -7106,7 +7184,7 @@
       "kind": "method",
       "module": "homeassistant.data_entry_flow",
       "path": "homeassistant/data_entry_flow.py",
-      "line": 849,
+      "line": 855,
       "signature": "def async_external_step_done(\n    *,\n    next_step_id: str,\n) -> _FlowResultT:",
       "doc": "Return the definition of an external step for the user to take.",
       "bare": true
@@ -7118,7 +7196,7 @@
       "kind": "method",
       "module": "homeassistant.data_entry_flow",
       "path": "homeassistant/data_entry_flow.py",
-      "line": 752,
+      "line": 758,
       "signature": "def async_show_form(\n    *,\n    step_id: str | None = None,\n    data_schema: probatio.Schema | None = None,\n    errors: dict[str, str] | None = None,\n    description_placeholders: Mapping[\n        str, str\n    ] | None = None,\n    last_step: bool | None = None,\n    preview: str | None = None,\n) -> _FlowResultT:",
       "doc": "Return the definition of a form to gather user input.",
       "bare": true
@@ -7130,7 +7208,7 @@
       "kind": "method",
       "module": "homeassistant.data_entry_flow",
       "path": "homeassistant/data_entry_flow.py",
-      "line": 930,
+      "line": 936,
       "signature": "def async_show_menu(\n    *,\n    step_id: str | None = None,\n    menu_options: Container[str],\n    sort: bool = False,\n    description_placeholders: Mapping[\n        str, str\n    ] | None = None,\n) -> _FlowResultT:",
       "doc": "Show a navigation menu to the user.",
       "bare": true
@@ -7142,9 +7220,33 @@
       "kind": "method",
       "module": "homeassistant.data_entry_flow",
       "path": "homeassistant/data_entry_flow.py",
-      "line": 859,
+      "line": 865,
       "signature": "def async_show_progress(\n    *,\n    step_id: str | None = None,\n    progress_action: str,\n    description_placeholders: Mapping[\n        str, str\n    ] | None = None,\n    progress_task: asyncio.Task[Any] | None = None,\n) -> _FlowResultT:",
       "doc": "Show a progress message to the user, without user input allowed.",
+      "bare": true
+    },
+    {
+      "id": "homeassistant.data_entry_flow.Optional",
+      "name": "Optional",
+      "qualname": "Optional",
+      "kind": "class",
+      "module": "homeassistant.data_entry_flow",
+      "path": "homeassistant/data_entry_flow.py",
+      "line": 83,
+      "signature": "Optional(\n    *args: Any,\n    visible: bool | FieldCondition | list[\n        FieldCondition\n    ] | None = None,\n    **kwargs: Any,\n)",
+      "doc": "Optional schema marker that can be conditionally shown.",
+      "bare": true
+    },
+    {
+      "id": "homeassistant.data_entry_flow.Required",
+      "name": "Required",
+      "qualname": "Required",
+      "kind": "class",
+      "module": "homeassistant.data_entry_flow",
+      "path": "homeassistant/data_entry_flow.py",
+      "line": 64,
+      "signature": "Required(\n    *args: Any,\n    visible: bool | FieldCondition | list[\n        FieldCondition\n    ] | None = None,\n    **kwargs: Any,\n)",
+      "doc": "Required schema marker that can be conditionally shown.",
       "bare": true
     },
     {
@@ -7334,7 +7436,7 @@
       "kind": "function",
       "module": "homeassistant.helpers.aiohttp_client",
       "path": "homeassistant/helpers/aiohttp_client.py",
-      "line": 246,
+      "line": 250,
       "signature": "def async_create_clientsession(\n    hass: HomeAssistant,\n    verify_ssl: bool = True,\n    auto_cleanup: bool = True,\n    family: socket.AddressFamily = socket.AF_UNSPEC,\n    ssl_cipher: ssl_util.SSLCipherList = ssl_util.SSLCipherList.PYTHON_DEFAULT,\n    **kwargs: Any,\n) -> aiohttp.ClientSession:",
       "doc": "Create a new ClientSession with kwargs, i.e. for cookies.",
       "bare": true
@@ -7346,7 +7448,7 @@
       "kind": "function",
       "module": "homeassistant.helpers.aiohttp_client",
       "path": "homeassistant/helpers/aiohttp_client.py",
-      "line": 217,
+      "line": 221,
       "signature": "def async_get_clientsession(\n    hass: HomeAssistant,\n    verify_ssl: bool = True,\n    family: socket.AddressFamily = socket.AF_UNSPEC,\n    ssl_cipher: ssl_util.SSLCipherList = ssl_util.SSLCipherList.PYTHON_DEFAULT,\n) -> aiohttp.ClientSession:",
       "doc": "Return default aiohttp ClientSession.",
       "bare": true
@@ -7370,7 +7472,7 @@
       "kind": "class",
       "module": "homeassistant.helpers.condition.entity_condition",
       "path": "homeassistant/helpers/condition/entity_condition.py",
-      "line": 568,
+      "line": 613,
       "signature": "EntityNumericalConditionBase(\n    hass: HomeAssistant,\n    config: ConditionConfig,\n)",
       "doc": "Condition for numerical state comparisons with above/below thresholds.",
       "bare": true
@@ -7382,7 +7484,7 @@
       "kind": "function",
       "module": "homeassistant.helpers.condition.entity_condition",
       "path": "homeassistant/helpers/condition/entity_condition.py",
-      "line": 529,
+      "line": 574,
       "signature": "def make_entity_state_condition(\n    domain_specs: Mapping[str, DomainSpec] | str,\n    states: str | bool | set[str | bool],\n    *,\n    primary_entities_only: bool = True,\n) -> type[EntityStateConditionBase]:",
       "doc": "Create a condition for entity state changes to specific state(s).",
       "bare": true
@@ -7526,7 +7628,7 @@
       "kind": "function",
       "module": "homeassistant.helpers.config_validation",
       "path": "homeassistant/helpers/config_validation.py",
-      "line": 216,
+      "line": 217,
       "signature": "def boolean(value: Any) -> bool:",
       "doc": "Validate and coerce a boolean value.",
       "bare": false
@@ -7538,7 +7640,7 @@
       "kind": "function",
       "module": "homeassistant.helpers.config_validation",
       "path": "homeassistant/helpers/config_validation.py",
-      "line": 315,
+      "line": 316,
       "signature": "def entity_id(value: Any) -> str:",
       "doc": "Validate Entity ID.",
       "bare": false
@@ -7550,7 +7652,7 @@
       "kind": "function",
       "module": "homeassistant.helpers.config_validation",
       "path": "homeassistant/helpers/config_validation.py",
-      "line": 357,
+      "line": 360,
       "signature": "def entity_ids(value: str | list) -> list[str]:",
       "doc": "Validate Entity IDs.",
       "bare": false
@@ -7562,7 +7664,7 @@
       "kind": "function",
       "module": "homeassistant.helpers.config_validation",
       "path": "homeassistant/helpers/config_validation.py",
-      "line": 448,
+      "line": 451,
       "signature": "def icon(value: Any) -> str:",
       "doc": "Validate icon.",
       "bare": false
@@ -7574,7 +7676,7 @@
       "kind": "function",
       "module": "homeassistant.helpers.config_validation",
       "path": "homeassistant/helpers/config_validation.py",
-      "line": 285,
+      "line": 286,
       "signature": "def isfile(value: Any) -> str:",
       "doc": "Validate that the value is an existing file.",
       "bare": false
@@ -7586,7 +7688,7 @@
       "kind": "function",
       "module": "homeassistant.helpers.config_validation",
       "path": "homeassistant/helpers/config_validation.py",
-      "line": 600,
+      "line": 612,
       "signature": "def slug(value: Any) -> str:",
       "doc": "Validate value is a valid slug.",
       "bare": false
@@ -7598,7 +7700,7 @@
       "kind": "function",
       "module": "homeassistant.helpers.config_validation",
       "path": "homeassistant/helpers/config_validation.py",
-      "line": 651,
+      "line": 663,
       "signature": "def string(value: Any) -> str:",
       "doc": "Coerce value to string, except for None, list or dict.",
       "bare": false
@@ -7610,7 +7712,7 @@
       "kind": "function",
       "module": "homeassistant.helpers.config_validation",
       "path": "homeassistant/helpers/config_validation.py",
-      "line": 678,
+      "line": 690,
       "signature": "def temperature_unit(value: Any) -> UnitOfTemperature:",
       "doc": "Validate and transform temperature unit.",
       "bare": false
@@ -7622,7 +7724,7 @@
       "kind": "function",
       "module": "homeassistant.helpers.config_validation",
       "path": "homeassistant/helpers/config_validation.py",
-      "line": 688,
+      "line": 700,
       "signature": "def template(value: Any) -> template_helper.Template:",
       "doc": "Validate a jinja2 template.",
       "bare": false
@@ -7634,7 +7736,7 @@
       "kind": "function",
       "module": "homeassistant.helpers.config_validation",
       "path": "homeassistant/helpers/config_validation.py",
-      "line": 489,
+      "line": 501,
       "signature": "def time(value: Any) -> time_sys:",
       "doc": "Validate and transform a time.",
       "bare": false
@@ -7646,7 +7748,7 @@
       "kind": "function",
       "module": "homeassistant.helpers.config_validation",
       "path": "homeassistant/helpers/config_validation.py",
-      "line": 781,
+      "line": 793,
       "signature": "def time_zone(value: str) -> str:",
       "doc": "Validate timezone.",
       "bare": false
@@ -7658,7 +7760,7 @@
       "kind": "function",
       "module": "homeassistant.helpers.config_validation",
       "path": "homeassistant/helpers/config_validation.py",
-      "line": 810,
+      "line": 826,
       "signature": "def url(\n    value: Any,\n    _schema_list: frozenset[\n        UrlProtocolSchema\n    ] = EXTERNAL_URL_PROTOCOL_SCHEMA_LIST,\n) -> str:",
       "doc": "Validate a URL.",
       "bare": false
@@ -7730,10 +7832,22 @@
       "kind": "function",
       "module": "homeassistant.helpers.device_registry",
       "path": "homeassistant/helpers/device_registry.py",
-      "line": 4965,
+      "line": 5063,
       "signature": "def async_entries_for_config_entry(\n    registry: DeviceRegistry,\n    config_entry_id: str,\n) -> list[DeviceEntry]:",
       "doc": "Return entries that match a config entry.",
       "bare": false
+    },
+    {
+      "id": "homeassistant.helpers.device_registry.ChildDeviceEntry",
+      "name": "ChildDeviceEntry",
+      "qualname": "ChildDeviceEntry",
+      "kind": "class",
+      "module": "homeassistant.helpers.device_registry",
+      "path": "homeassistant/helpers/device_registry.py",
+      "line": 860,
+      "signature": "class ChildDeviceEntry(BaseDeviceEntry):",
+      "doc": "Child Device Registry Entry.",
+      "bare": true
     },
     {
       "id": "homeassistant.helpers.device_registry.ChildDeviceInfo",
@@ -7742,7 +7856,7 @@
       "kind": "class",
       "module": "homeassistant.helpers.device_registry",
       "path": "homeassistant/helpers/device_registry.py",
-      "line": 318,
+      "line": 319,
       "signature": "class ChildDeviceInfo(_DeviceInfoMapping):",
       "doc": "Entity device information for a child device in the device registry.",
       "bare": true
@@ -7754,10 +7868,28 @@
       "kind": "class",
       "module": "homeassistant.helpers.device_registry",
       "path": "homeassistant/helpers/device_registry.py",
-      "line": 664,
+      "line": 675,
       "signature": "class DeviceEntry(BaseDeviceEntry):",
       "doc": "Device Registry Entry.",
       "bare": true
+    },
+    {
+      "id": "homeassistant.helpers.device_registry.DeviceEntryDisabler",
+      "name": "DeviceEntryDisabler",
+      "qualname": "DeviceEntryDisabler",
+      "kind": "enum",
+      "module": "homeassistant.helpers.device_registry",
+      "path": "homeassistant/helpers/device_registry.py",
+      "line": 126,
+      "signature": "class DeviceEntryDisabler(StrEnum):",
+      "doc": "What disabled a device entry.",
+      "bare": true,
+      "members": [
+        "CONFIG_ENTRY",
+        "DEVICE",
+        "INTEGRATION",
+        "USER"
+      ]
     },
     {
       "id": "homeassistant.helpers.device_registry.DeviceEntryType",
@@ -7766,7 +7898,7 @@
       "kind": "enum",
       "module": "homeassistant.helpers.device_registry",
       "path": "homeassistant/helpers/device_registry.py",
-      "line": 365,
+      "line": 366,
       "signature": "class DeviceEntryType(StrEnum):",
       "doc": "Device entry type.",
       "bare": true,
@@ -7781,7 +7913,7 @@
       "kind": "class",
       "module": "homeassistant.helpers.device_registry",
       "path": "homeassistant/helpers/device_registry.py",
-      "line": 283,
+      "line": 284,
       "signature": "class DeviceInfo(_DeviceInfoMapping):",
       "doc": "Entity device information for device registry.",
       "bare": true
@@ -7793,9 +7925,45 @@
       "kind": "exception",
       "module": "homeassistant.helpers.device_registry",
       "path": "homeassistant/helpers/device_registry.py",
-      "line": 371,
+      "line": 372,
       "signature": "class DeviceInfoError(HomeAssistantError):",
       "doc": "Raised when device info is invalid.",
+      "bare": true
+    },
+    {
+      "id": "homeassistant.helpers.device_registry.DeviceRegistry.async_get_or_create_child",
+      "name": "async_get_or_create_child",
+      "qualname": "DeviceRegistry.async_get_or_create_child",
+      "kind": "method",
+      "module": "homeassistant.helpers.device_registry",
+      "path": "homeassistant/helpers/device_registry.py",
+      "line": 2914,
+      "signature": "def async_get_or_create_child(\n    *,\n    config_entry_id: str,\n    config_subentry_id: str | UndefinedType | None = UNDEFINED,\n    disabled_by: DeviceEntryDisabler | UndefinedType | None = UNDEFINED,\n    identifiers: set[tuple[str, str]],\n    name: str | UndefinedType | None = UNDEFINED,\n    parent_device_id: str,\n    suggested_area: str | UndefinedType | None = UNDEFINED,\n    translation_key: str | None = None,\n    translation_placeholders: Mapping[\n        str, str\n    ] | None = None,\n) -> ChildDeviceEntry:",
+      "doc": "Get child device.",
+      "bare": true
+    },
+    {
+      "id": "homeassistant.helpers.device_registry.DeviceRegistry.async_get_or_create_child_from_info",
+      "name": "async_get_or_create_child_from_info",
+      "qualname": "DeviceRegistry.async_get_or_create_child_from_info",
+      "kind": "method",
+      "module": "homeassistant.helpers.device_registry",
+      "path": "homeassistant/helpers/device_registry.py",
+      "line": 2948,
+      "signature": "def async_get_or_create_child_from_info(\n    *,\n    config_entry_id: str,\n    config_subentry_id: str | UndefinedType | None = UNDEFINED,\n    device_info: ChildDeviceInfo,\n) -> ChildDeviceEntry:",
+      "doc": "Get child device.",
+      "bare": true
+    },
+    {
+      "id": "homeassistant.helpers.device_registry.DeviceRegistry.async_get_or_create_from_info",
+      "name": "async_get_or_create_from_info",
+      "qualname": "DeviceRegistry.async_get_or_create_from_info",
+      "kind": "method",
+      "module": "homeassistant.helpers.device_registry",
+      "path": "homeassistant/helpers/device_registry.py",
+      "line": 2534,
+      "signature": "def async_get_or_create_from_info(\n    *,\n    config_entry_id: str,\n    config_subentry_id: str | UndefinedType | None = UNDEFINED,\n    device_info: DeviceInfo,\n) -> DeviceEntry:",
+      "doc": "Get device.",
       "bare": true
     },
     {
@@ -7805,9 +7973,21 @@
       "kind": "method",
       "module": "homeassistant.helpers.device_registry",
       "path": "homeassistant/helpers/device_registry.py",
-      "line": 4328,
+      "line": 4427,
       "signature": "def async_remove_device(device_id: str) -> None:",
       "doc": "Remove a device or child device from the device registry.",
+      "bare": true
+    },
+    {
+      "id": "homeassistant.helpers.device_registry.DeviceRegistry.async_update_child_device",
+      "name": "async_update_child_device",
+      "qualname": "DeviceRegistry.async_update_child_device",
+      "kind": "method",
+      "module": "homeassistant.helpers.device_registry",
+      "path": "homeassistant/helpers/device_registry.py",
+      "line": 4160,
+      "signature": "def async_update_child_device(\n    device_id: str,\n    *,\n    area_id: str | UndefinedType | None = UNDEFINED,\n    disabled_by: DeviceEntryDisabler | UndefinedType | None = UNDEFINED,\n    labels: set[str] | UndefinedType = UNDEFINED,\n    name_by_user: str | UndefinedType | None = UNDEFINED,\n    name: str | UndefinedType | None = UNDEFINED,\n    new_identifiers: set[\n        tuple[str, str]\n    ] | UndefinedType = UNDEFINED,\n) -> ChildDeviceEntry:",
+      "doc": "Update child device attributes.",
       "bare": true
     },
     {
@@ -7817,7 +7997,7 @@
       "kind": "function",
       "module": "homeassistant.helpers.device_registry",
       "path": "homeassistant/helpers/device_registry.py",
-      "line": 497,
+      "line": 508,
       "signature": "def format_mac(mac: str) -> str:",
       "doc": "Format the mac address string for entry into dev reg.",
       "bare": true
@@ -7925,7 +8105,7 @@
       "kind": "method",
       "module": "homeassistant.helpers.entity_registry",
       "path": "homeassistant/helpers/entity_registry.py",
-      "line": 1375,
+      "line": 1398,
       "signature": "def async_get_entity_id(\n    domain: str,\n    platform: str,\n    unique_id: str,\n) -> str | None:",
       "doc": "Check if an entity_id is currently registered.",
       "bare": true
@@ -7940,6 +8120,42 @@
       "line": 499,
       "signature": "class Entity:",
       "doc": "An abstract class for Home Assistant entities.",
+      "bare": true
+    },
+    {
+      "id": "homeassistant.helpers.entity.Entity.add_to_platform_abort",
+      "name": "add_to_platform_abort",
+      "qualname": "Entity.add_to_platform_abort",
+      "kind": "method",
+      "module": "homeassistant.helpers.entity",
+      "path": "homeassistant/helpers/entity.py",
+      "line": 1473,
+      "signature": "def add_to_platform_abort() -> None:",
+      "doc": "Abort adding an entity to a platform.",
+      "bare": true
+    },
+    {
+      "id": "homeassistant.helpers.entity.Entity.add_to_platform_finish",
+      "name": "add_to_platform_finish",
+      "qualname": "Entity.add_to_platform_finish",
+      "kind": "method",
+      "module": "homeassistant.helpers.entity",
+      "path": "homeassistant/helpers/entity.py",
+      "line": 1483,
+      "signature": "async def add_to_platform_finish() -> None:",
+      "doc": "Finish adding an entity to a platform.",
+      "bare": true
+    },
+    {
+      "id": "homeassistant.helpers.entity.Entity.add_to_platform_start",
+      "name": "add_to_platform_start",
+      "qualname": "Entity.add_to_platform_start",
+      "kind": "method",
+      "module": "homeassistant.helpers.entity",
+      "path": "homeassistant/helpers/entity.py",
+      "line": 1446,
+      "signature": "def add_to_platform_start(\n    hass: HomeAssistant,\n    platform: EntityPlatform,\n    parallel_updates: asyncio.Semaphore | None,\n) -> None:",
+      "doc": "Start adding an entity to a platform.",
       "bare": true
     },
     {
@@ -7964,6 +8180,18 @@
       "line": 1548,
       "signature": "async def async_prepare_to_add_to_hass() -> None:",
       "doc": "Run before the entity is added to hass.",
+      "bare": true
+    },
+    {
+      "id": "homeassistant.helpers.entity.Entity.async_registry_entry_updated",
+      "name": "async_registry_entry_updated",
+      "qualname": "Entity.async_registry_entry_updated",
+      "kind": "method",
+      "module": "homeassistant.helpers.entity",
+      "path": "homeassistant/helpers/entity.py",
+      "line": 1589,
+      "signature": "def async_registry_entry_updated() -> None:",
+      "doc": "Run when the entity registry entry has been updated.",
       "bare": true
     },
     {
@@ -8500,7 +8728,7 @@
       "kind": "function",
       "module": "homeassistant.helpers.issue_registry",
       "path": "homeassistant/helpers/issue_registry.py",
-      "line": 409,
+      "line": 594,
       "signature": "def async_create_issue(\n    hass: HomeAssistant,\n    domain: str,\n    issue_id: str,\n    *,\n    breaks_in_ha_version: str | None = None,\n    config_entry_id: str | None = None,\n    data: dict[str, str | int | float | None] | None = None,\n    is_fixable: bool,\n    is_persistent: bool = False,\n    issue_domain: str | None = None,\n    learn_more_url: str | None = None,\n    severity: IssueSeverity,\n    translation_key: str,\n    translation_placeholders: dict[str, str] | None = None,\n) -> None:",
       "doc": "Create an issue, or replace an existing one.",
       "bare": true
@@ -8512,8 +8740,8 @@
       "kind": "function",
       "module": "homeassistant.helpers.issue_registry",
       "path": "homeassistant/helpers/issue_registry.py",
-      "line": 489,
-      "signature": "def async_delete_issue(\n    hass: HomeAssistant,\n    domain: str,\n    issue_id: str,\n) -> None:",
+      "line": 674,
+      "signature": "def async_delete_issue(\n    hass: HomeAssistant,\n    domain: str,\n    issue_id: str,\n    *,\n    defer_to_refresh: bool = False,\n) -> None:",
       "doc": "Delete an issue.",
       "bare": true
     },
@@ -8524,7 +8752,7 @@
       "kind": "function",
       "module": "homeassistant.helpers.issue_registry",
       "path": "homeassistant/helpers/issue_registry.py",
-      "line": 509,
+      "line": 744,
       "signature": "def async_ignore_issue(\n    hass: HomeAssistant,\n    domain: str,\n    issue_id: str,\n    ignore: bool,\n) -> None:",
       "doc": "Ignore an issue.",
       "bare": true
@@ -8536,7 +8764,7 @@
       "kind": "function",
       "module": "homeassistant.helpers.issue_registry",
       "path": "homeassistant/helpers/issue_registry.py",
-      "line": 450,
+      "line": 635,
       "signature": "def create_issue(\n    hass: HomeAssistant,\n    domain: str,\n    issue_id: str,\n    *,\n    breaks_in_ha_version: str | None = None,\n    config_entry_id: str | None = None,\n    data: dict[str, str | int | float | None] | None = None,\n    is_fixable: bool,\n    is_persistent: bool = False,\n    issue_domain: str | None = None,\n    learn_more_url: str | None = None,\n    severity: IssueSeverity,\n    translation_key: str,\n    translation_placeholders: dict[str, str] | None = None,\n) -> None:",
       "doc": "Create an issue, or replace an existing one.",
       "bare": true
@@ -8548,7 +8776,7 @@
       "kind": "function",
       "module": "homeassistant.helpers.issue_registry",
       "path": "homeassistant/helpers/issue_registry.py",
-      "line": 498,
+      "line": 690,
       "signature": "def delete_issue(\n    hass: HomeAssistant,\n    domain: str,\n    issue_id: str,\n) -> None:",
       "doc": "Delete an issue.",
       "bare": true
@@ -8560,7 +8788,7 @@
       "kind": "enum",
       "module": "homeassistant.helpers.issue_registry",
       "path": "homeassistant/helpers/issue_registry.py",
-      "line": 47,
+      "line": 50,
       "signature": "class IssueSeverity(StrEnum):",
       "doc": "Issue severity.",
       "bare": true,
@@ -8569,6 +8797,18 @@
         "ERROR",
         "WARNING"
       ]
+    },
+    {
+      "id": "homeassistant.helpers.issue_registry.IssuesRefresh.async_finish",
+      "name": "async_finish",
+      "qualname": "IssuesRefresh.async_finish",
+      "kind": "method",
+      "module": "homeassistant.helpers.issue_registry",
+      "path": "homeassistant/helpers/issue_registry.py",
+      "line": 209,
+      "signature": "def async_finish() -> None:",
+      "doc": "Delete issues which were not created, updated, deleted or kept.",
+      "bare": true
     },
     {
       "id": "homeassistant.helpers.llm",
@@ -8913,7 +9153,7 @@
       "kind": "function",
       "module": "homeassistant.helpers.service",
       "path": "homeassistant/helpers/service.py",
-      "line": 1347,
+      "line": 1387,
       "signature": "def async_get_config_entry(\n    hass: HomeAssistant,\n    domain: str,\n    entry_id: str | None,\n) -> ConfigEntry:",
       "doc": "Get and validate a service config entry.",
       "bare": true
@@ -8925,7 +9165,7 @@
       "kind": "function",
       "module": "homeassistant.helpers.service",
       "path": "homeassistant/helpers/service.py",
-      "line": 992,
+      "line": 1032,
       "signature": "def async_register_admin_service(\n    hass: HomeAssistant,\n    domain: str,\n    service: str,\n    service_func: Callable[\n        [ServiceCall],\n        Coroutine[\n            Any,\n            Any,\n            ServiceResponse | EntityServiceResponse,\n        ] | ServiceResponse | EntityServiceResponse | None,\n    ],\n    schema: VolSchemaType = probatio.Schema(\n        {}, extra=probatio.PREVENT_EXTRA\n    ),\n    supports_response: SupportsResponse = SupportsResponse.NONE,\n    *,\n    description_placeholders: Mapping[\n        str, str\n    ] | None = None,\n) -> None:",
       "doc": "Register a service that requires admin access.",
       "bare": true
@@ -8937,7 +9177,7 @@
       "kind": "function",
       "module": "homeassistant.helpers.service",
       "path": "homeassistant/helpers/service.py",
-      "line": 1267,
+      "line": 1307,
       "signature": "def async_register_platform_entity_service(\n    hass: HomeAssistant,\n    service_domain: str,\n    service_name: str,\n    *,\n    admin_only: bool = False,\n    description_placeholders: Mapping[\n        str, str\n    ] | None = None,\n    entity_device_classes: Iterable[\n        str | None\n    ] | None = None,\n    entity_domain: str,\n    func: str | Callable[..., Any],\n    required_features: Iterable[int] | None = None,\n    schema: VolDictType | VolSchemaType | None,\n    supports_response: SupportsResponse = SupportsResponse.NONE,\n) -> None:",
       "doc": "Help registering a platform entity service.",
       "bare": true
@@ -8997,7 +9237,7 @@
       "kind": "method",
       "module": "homeassistant.helpers.template",
       "path": "homeassistant/helpers/template/__init__.py",
-      "line": 543,
+      "line": 562,
       "signature": "def async_render_to_info(\n    variables: TemplateVarsType = None,\n    strict: bool = False,\n    log_fn: Callable[[int, str], None] | None = None,\n    **kwargs: Any,\n) -> RenderInfo:",
       "doc": "Render the template and collect an entity filter.",
       "bare": true
@@ -9201,7 +9441,7 @@
       "kind": "function",
       "module": "homeassistant.util.color",
       "path": "homeassistant/util/color.py",
-      "line": 740,
+      "line": 742,
       "signature": "def brightness_to_value(\n    low_high_range: tuple[float, float],\n    brightness: int,\n) -> float:",
       "doc": "Given a brightness_scale convert a brightness to a single value.",
       "bare": true
@@ -9213,7 +9453,7 @@
       "kind": "function",
       "module": "homeassistant.util.color",
       "path": "homeassistant/util/color.py",
-      "line": 755,
+      "line": 757,
       "signature": "def value_to_brightness(\n    low_high_range: tuple[float, float],\n    value: float,\n) -> int:",
       "doc": "Given a brightness_scale convert a single value to a brightness.",
       "bare": true
@@ -9237,7 +9477,7 @@
       "kind": "function",
       "module": "homeassistant.util.dt",
       "path": "homeassistant/util/dt.py",
-      "line": 175,
+      "line": 177,
       "signature": "def as_local(dattim: dt.datetime) -> dt.datetime:",
       "doc": "Convert a UTC datetime object to local time zone.",
       "bare": false
@@ -9249,7 +9489,7 @@
       "kind": "function",
       "module": "homeassistant.util.dt",
       "path": "homeassistant/util/dt.py",
-      "line": 125,
+      "line": 127,
       "signature": "def now(time_zone: dt.tzinfo | None = None) -> dt.datetime:",
       "doc": "Get now in specified time zone.",
       "bare": false
@@ -9393,7 +9633,7 @@
       "kind": "class",
       "module": "homeassistant.util.unit_system",
       "path": "homeassistant/util/unit_system.py",
-      "line": 86,
+      "line": 87,
       "signature": "UnitSystem(\n    name: str,\n    *,\n    accumulated_precipitation: UnitOfPrecipitationDepth,\n    area: UnitOfArea,\n    conversions: dict[\n        tuple[SensorDeviceClass | str | None, str | None],\n        str,\n    ],\n    length: UnitOfLength,\n    mass: UnitOfMass,\n    pressure: UnitOfPressure,\n    temperature: UnitOfTemperature,\n    volume: UnitOfVolume,\n    wind_speed: UnitOfSpeed,\n)",
       "doc": "A container for units of measure.",
       "bare": true

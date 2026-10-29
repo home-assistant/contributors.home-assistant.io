@@ -1,11 +1,11 @@
 {
   "commits": {
-    "core": "6883a0c95d6dccb18e551aab794b18648a793cc5",
-    "frontend": "5cfaf7ed40e4df459fa65dc5722101eef631f40e"
+    "core": "7a5feb60cf4d8e5f46d479a87dc9fafa54382cd2",
+    "frontend": "4c9a05ef5b7d90434a83d1ab53aad032d7c8931c"
   },
   "totals": {
-    "symbols": 1680,
-    "resolved": 1579
+    "symbols": 1731,
+    "resolved": 1629
   },
   "areas": {
     "apps": {
@@ -25,8 +25,8 @@
     },
     "core": {
       "index": "core",
-      "symbols": 1437,
-      "resolved": 1384
+      "symbols": 1488,
+      "resolved": 1434
     },
     "data": {
       "index": null,
@@ -198,6 +198,14 @@
       "count": 2,
       "pages": [
         "src/content/docs/core/internals/lorawan.md"
+      ]
+    },
+    {
+      "text": "ModulationType.OOK",
+      "index": "core",
+      "count": 2,
+      "pages": [
+        "src/content/docs/core/entities/radio-frequency.md"
       ]
     },
     {
@@ -524,14 +532,6 @@
     },
     {
       "text": "ModulationType",
-      "index": "core",
-      "count": 1,
-      "pages": [
-        "src/content/docs/core/entities/radio-frequency.md"
-      ]
-    },
-    {
-      "text": "ModulationType.OOK",
       "index": "core",
       "count": 1,
       "pages": [
