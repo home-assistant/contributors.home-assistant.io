@@ -5,7 +5,8 @@ name: Component docs drift
 # scripts/check-component-docs.ts. Keeps one issue up to date with what the
 # pages document that the frontend no longer has: it opens the issue when
 # that list is not empty, updates it while it stays that way, and closes it
-# when the list is empty again.
+# when the list is empty again. How the issue is kept up to date is in
+# .github/scripts/update-drift-issue.mts.
 #
 # The check only reads the frontend with Git. Nothing from the frontend is
 # installed or run.
@@ -75,98 +76,7 @@ jobs:
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           script: |
-            const fs = require('fs');
-            const path = require('path');
-
-            const report = JSON.parse(fs.readFileSync(path.join(process.env.RUNNER_TEMP, 'drift.json'), 'utf8'));
-            const markdown = fs.readFileSync(path.join(process.env.RUNNER_TEMP, 'drift.md'), 'utf8');
-
-            // The marker finds the issue again, whatever its title says.
-            const marker = '<!-- component-docs-drift -->';
-            const label = 'area: design';
-            const commit = report.frontend.commit.slice(0, 10);
-
-            const openIssues = await github.paginate(github.rest.issues.listForRepo, {
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              state: 'open',
-              labels: label,
-              per_page: 100
-            });
-            const issue = openIssues.find((item) => !item.pull_request && item.body?.includes(marker));
-
-            // Removed source files and components count as drift too.
-            const driftCount = report.missingCount + report.goneCount;
-
-            if (driftCount === 0) {
-              if (issue) {
-                await github.rest.issues.createComment({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  issue_number: issue.number,
-                  body: `The component pages match home-assistant/frontend@${commit} again. Closing.`
-                });
-                await github.rest.issues.update({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  issue_number: issue.number,
-                  state: 'closed',
-                  state_reason: 'completed'
-                });
-                console.log(`Closed #${issue.number}`);
-              } else {
-                console.log('No drift, and no open issue.');
-              }
-              return;
-            }
-
-            // The full report per page goes in a collapsed section, so the
-            // list to act on stays on top.
-            const [summary, perPage = ''] = markdown.split(/^## Per page$/m);
-            const skill = `https://github.com/${context.repo.owner}/${context.repo.repo}/blob/main/.github/skills/design-component-page/SKILL.md`;
-            let body = [
-              marker,
-              'The weekly [Component docs drift workflow](' +
-                `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}) ` +
-                'keeps this issue up to date, and closes it when the pages match the frontend again.',
-              '',
-              'To fix a page, read the component on the `dev` branch of the frontend, and follow the ' +
-                `[\`design-component-page\` skill](${skill}). ` +
-                'Run `pnpm check:component-docs` against a frontend checkout before and after.',
-              '',
-              summary.replace(/^# Component docs drift\n+/, '').trim(),
-              '',
-              '<details>',
-              '<summary>Every page</summary>',
-              '',
-              perPage.trim(),
-              '',
-              '</details>'
-            ].join('\n');
-
-            // The limit of an issue body.
-            if (body.length > 65000) {
-              body = `${body.slice(0, 65000)}\n\n</details>\n\nThe report was cut off. Run the check locally for all of it.`;
-            }
-
-            const title = `Component pages document API the frontend no longer has (${driftCount})`;
-
-            if (issue) {
-              await github.rest.issues.update({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: issue.number,
-                title,
-                body
-              });
-              console.log(`Updated #${issue.number}`);
-            } else {
-              const { data: created } = await github.rest.issues.create({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                title,
-                body,
-                labels: [label]
-              });
-              console.log(`Opened #${created.number}`);
-            }
+            const { default: updateDriftIssue } = await import(
+              `${process.env.GITHUB_WORKSPACE}/site/.github/scripts/update-drift-issue.mts`
+            );
+            await updateDriftIssue({ github, context });

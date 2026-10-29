@@ -48,7 +48,7 @@ Before you open a pull request, run `pnpm check`, `pnpm build`, `pnpm links`, an
 | `pnpm dev` | Writes the redirects and starts the development server. |
 | `pnpm build` | The same, then builds the site to `dist/` and the search index. |
 | `pnpm preview` | Serves `dist/`. |
-| `pnpm check` | Type-checks the site and the front matter of every page. CI runs it. |
+| `pnpm check` | Type-checks the site, the scripts of the workflows in `.github/scripts/`, and the front matter of every page. CI runs it. |
 | `pnpm links` | Checks every link, anchor, redirect, share card, and Markdown version in `dist/`. Needs a build. CI runs it. |
 | `pnpm structure` | Checks that every area has the expected shape. CI runs it. |
 | `pnpm clean` | Removes `dist/` and the caches of Astro, for when something looks stale. |
