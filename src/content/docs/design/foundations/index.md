@@ -11,6 +11,7 @@ The color, typography, and spacing pages read the tokens directly. What you see 
 - [Color](/design/foundations/color/): the palettes, and the semantic colors built on them.
 - [Typography](/design/foundations/typography/): the type scale and font weights.
 - [Spacing](/design/foundations/spacing/): the spacing scale and corner radius.
+- [Layout](/design/foundations/layout/): content widths and the gutter at the sides of a page.
 - [Accessibility](/design/foundations/accessibility/): contrast, focus, keyboard, labels, target size, and screen readers. What WCAG asks, and how the frontend does it.
 - [Motion](/design/foundations/motion/): the animation durations, and how reduced motion works.
 
