@@ -39,7 +39,7 @@
     "ical.js": "^2.2.1",
     "mermaid": "^12.1.0",
     "satori": "^0.63.0",
-    "satteri": "^0.10.5",
+    "satteri": "^0.11.0",
     "satteri-callouts": "^1.0.1",
     "sharp": "^0.35.5",
     "shiki": "^4.5.0"
