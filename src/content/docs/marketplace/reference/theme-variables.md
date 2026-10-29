@@ -341,10 +341,10 @@ The variables starting with `mdc-` in the same file are left out: they pass thes
 | --- | --- | --- |
 | `rgb-primary-color` | `0, 154, 199` | Same |
 | `rgb-accent-color` | `255, 152, 0` | Same |
-| `rgb-primary-text-color` | `33, 33, 33` | Same |
-| `rgb-secondary-text-color` | `114, 114, 114` | Same |
+| `rgb-primary-text-color` | `33, 33, 33` | `225, 225, 225` |
+| `rgb-secondary-text-color` | `114, 114, 114` | `155, 155, 155` |
 | `rgb-text-primary-color` | `255, 255, 255` | Same |
-| `rgb-card-background-color` | `255, 255, 255` | Same |
+| `rgb-card-background-color` | `255, 255, 255` | `28, 28, 28` |
 | `rgb-warning-color` | `255, 166, 0` | Same |
 | `rgb-error-color` | `219, 68, 55` | Same |
 | `rgb-success-color` | `67, 160, 71` | Same |
