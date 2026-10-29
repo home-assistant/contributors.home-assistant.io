@@ -57,6 +57,14 @@ A skeleton keeps the layout in place while the content loads, so nothing jumps a
   </div>
 </Demo>
 
+### Fading in
+
+Loading indicators fade in rather than pop up, but not all at the same pace:
+
+- **A skeleton** fades in straight away, over about 300 milliseconds. It stands in for the content, so waiting would leave a gap where the layout should be.
+- **A spinner or progress bar** waits half a second before it fades in, or a full second for a whole page. Most loads finish sooner, and then people never see a spinner flash on and off.
+- **The content itself** appears as soon as it arrives, without a fade.
+
 ### Where loading ends
 
 A loading state always ends in one of three places: the content, an [empty state](/design/patterns/empty-states/), or an [error](/design/patterns/errors/). Never leave a spinner running when the request failed, and never show "nothing here" while the data is still on its way.
@@ -65,7 +73,7 @@ Dashboard cards follow the same rule. Every card handles loading, an error, an u
 
 ## Accessibility
 
-- The spinner has the role of a progress bar, with a translated "Loading" label.
+- The spinner has the role of a progress bar, with a translated "Loading" label. Give a group of skeletons the same role and label, rather than visible "Loading" text.
 - Skeletons and spinners keep their meaning without motion. Skeletons stop pulsing when people ask for reduced motion. See [Motion](/design/foundations/motion/).
 - When loading ends in an error, show it as text people can read, not only as a red button.
 
@@ -88,3 +96,16 @@ html`
 ```
 
 When the action of a progress button is done, call `actionSuccess()` or `actionError()` on it. The skeletons, `ha-skeleton`, `ha-skeleton-text`, and `ha-skeleton-icon`, live in `src/components/skeleton/`.
+
+Wrap a loading indicator in `ha-fade-in`, from `src/components/animation/`, to fade it in:
+
+```ts
+html`
+  <ha-fade-in .duration=${300} easing="ease-in">
+    <div role="progressbar" aria-label=${localize("ui.common.loading")}>
+      <ha-skeleton-text></ha-skeleton-text>
+    </div>
+  </ha-fade-in>
+  <ha-fade-in .delay=${500}><ha-spinner></ha-spinner></ha-fade-in>
+`;
+```
