@@ -9,7 +9,7 @@
 //   out: they pass the classic variables on to the old Material components.
 // - The design tokens the Foundations pages of the Design area do not
 //   render already: everything in the token files except the spacing,
-//   radius, and font size scales. The color palettes are not in these files.
+//   radius, and font size scales, and the color palettes.
 // - The component variables listed in scripts/theme-variables/components.yaml,
 //   with the default each component falls back to. Which component variables
 //   are meant for themes is kept by hand, in that file. An entry whose file no
@@ -49,12 +49,12 @@ const OUTPUT = fileURLToPath(
 const THEME_DIR = "src/resources/theme";
 const CLASSIC_FILE = `${THEME_DIR}/color/color.globals.ts`;
 
-// The token files, as sync-tokens.ts reads them, without color/core.globals.ts:
-// that only has the palettes, which the color page of Foundations shows.
+// The token files, as sync-tokens.ts reads them.
 const TOKEN_SOURCES = [
   { file: "core.globals.ts", title: "Borders, radii, and motion", light: "coreStyles" },
   { file: "typography.globals.ts", title: "Typography", light: "typographyStyles" },
   { file: "semantic.globals.ts", title: "Shadows", light: "semanticStyles", dark: "darkSemanticStyles" },
+  { file: "color/core.globals.ts", title: "Pure colors", light: "coreColorStyles" },
   {
     file: "color/semantic.globals.ts",
     title: "Semantic colors",
@@ -63,8 +63,10 @@ const TOKEN_SOURCES = [
   },
 ];
 
-// Shown on the Foundations pages by TokenScale, from src/styles/tokens.css.
-const FOUNDATIONS = /^--ha-(space-|border-radius-|font-size-(?!scale$))/;
+// Shown on the Foundations pages by TokenScale and ColorPalette, from
+// src/styles/tokens.css.
+const FOUNDATIONS =
+  /^--ha-(space-|border-radius-|font-size-(?!scale$)|color-(primary|neutral|orange|red|green)-\d+$)/;
 
 // The section comments of color.globals.ts do not group the variables well,
 // so they are grouped by name. The first match wins.

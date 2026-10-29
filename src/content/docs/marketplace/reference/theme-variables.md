@@ -77,6 +77,15 @@ From [`src/resources/theme/semantic.globals.ts`](https://github.com/home-assista
 | `ha-box-shadow-m` | `0 3px 6px -1px rgba(0, 0, 0, 0.1), 0 8px 16px -2px rgba(0, 0, 0, 0.15)` | `0 3px 6px -1px rgba(0, 0, 0, 0.35), 0 8px 16px -2px rgba(0, 0, 0, 0.45)` |
 | `ha-box-shadow-l` | `0 6px 12px -3px rgba(0, 0, 0, 0.12), 0 16px 32px -6px rgba(0, 0, 0, 0.2)` | `0 6px 12px -3px rgba(0, 0, 0, 0.4), 0 16px 32px -6px rgba(0, 0, 0, 0.55)` |
 
+### Pure colors
+
+From [`src/resources/theme/color/core.globals.ts`](https://github.com/home-assistant/frontend/blob/dev/src/resources/theme/color/core.globals.ts).
+
+| Variable | Default |
+| --- | --- |
+| `ha-color-black` | `#000000` |
+| `ha-color-white` | `#ffffff` |
+
 ### Semantic colors
 
 From [`src/resources/theme/color/semantic.globals.ts`](https://github.com/home-assistant/frontend/blob/dev/src/resources/theme/color/semantic.globals.ts).
