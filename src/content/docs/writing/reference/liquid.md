@@ -51,10 +51,13 @@ Most My links only need a `title`. A few more options exist for special cases:
 - `badge` shows the link as a My badge image instead of text. A badge cannot have a `title`.
 - `domain` sets the integration for pages that need one, like `config_flow_start`, which starts setting up a specific integration.
 - `addon`, `blueprint_url`, `brand`, `repository_url`, and `service` pass the app, blueprint, brand, repository, or action that the page should open.
+- `search` fills in the search field on pages that have one, like `logs`.
+- `provider`, `integration`, and `raw` pick what the `logs` page shows. `provider` is the log to open, like `supervisor` or an app slug. `integration` filters the Home Assistant Core log to one or more integrations, separated by commas. `raw` shows the full Home Assistant Core log instead of only the errors.
 
 ```liquid
 {% my config_flow_start badge domain="hue" %}
 {% my blueprint_import badge blueprint_url="https://example.com/blueprint.yaml" %}
+{% my logs title="**Settings** > **System** > **Logs**" provider="supervisor" search="token" %}
 ```
 
 Without a `title`, the link falls back to a default text. That default does not always follow the [style guide](/writing/reference/style/), so add a `title` for links in running text.
