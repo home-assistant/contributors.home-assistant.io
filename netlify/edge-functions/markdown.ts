@@ -25,7 +25,8 @@ export default async (request: Request, context: Context) => {
   }
 
   if (wantsMarkdown(request.headers.get("accept") ?? "")) {
-    const markdown = await fetch(new URL(`${url.pathname}index.md`, url));
+    // Relative to the page, so a path like //example.com/ stays on this site.
+    const markdown = await fetch(new URL("index.md", url));
     if (markdown.ok) {
       return new Response(markdown.body, {
         headers: { "Content-Type": "text/markdown; charset=utf-8", Vary: "Accept" },
