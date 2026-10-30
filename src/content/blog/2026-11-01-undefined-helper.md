@@ -17,7 +17,7 @@ from homeassistant.helpers.typing import UNDEFINED, UndefinedType
 def some_function(
     variable: str | UndefinedType | None = UNDEFINED,
 ) -> None:
-    ....
+    ...
 ```
 
 ```python
@@ -27,5 +27,5 @@ from homeassistant.helpers.typing import Undefined
 def some_function(
     variable: str | Undefined | None = Undefined,
 ) -> None:
-    ....
+    ...
 ```
