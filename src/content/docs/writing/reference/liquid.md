@@ -57,7 +57,8 @@ Most My links only need a `title`. A few more options exist for special cases:
 ```liquid
 {% my config_flow_start badge domain="hue" %}
 {% my blueprint_import badge blueprint_url="https://example.com/blueprint.yaml" %}
-{% my logs title="**Settings** > **System** > **Logs**" provider="supervisor" search="token" %}
+{% my logs title="**Settings** > **System** > **Logs**"
+   provider="supervisor" search="token" %}
 ```
 
 Without a `title`, the link falls back to a default text. That default does not always follow the [style guide](/writing/reference/style/), so add a `title` for links in running text.
