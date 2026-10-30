@@ -16,7 +16,7 @@ To align the repairs flow and repairs flow manager with other data entry flows a
 
 ## `issue_id` attribute in repairs flows
 
-Setting the `issue_id` attribute of a `RepairsFlow` is deprecated. Previously setting `issue_id` was futile as the `RepairsFlowManager` overwrote `issue_id` when initiating a `RepairsFlow`. Going forward the repairs flow manager sets the `context` attribute in the flow and `issue_id` is available as a property.
+Setting the `issue_id` attribute of a `RepairsFlow` is deprecated. Previously setting `issue_id` in the flow's constructor was futile as the `RepairsFlowManager` overwrote `issue_id` when creating a `RepairsFlow`. Going forward the repairs flow manager sets the `context` attribute in the flow and `issue_id` is available as a property.
 
 ## Use the `context` argument when initiating a repairs flow
 
