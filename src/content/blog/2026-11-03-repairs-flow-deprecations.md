@@ -28,5 +28,8 @@ from homeassistant.components.repairs import repairs_flow_manager, RepairsFlowCo
 from .const import DOMAIN
 
 if rep_flow_mngr := repairs_flow_manager(hass):
-  flow_result = await rep_flow_mngr.async_init(DOMAIN, context=RepairsFlowContext(issue_id="issue_id"))
+  flow_result = await rep_flow_mngr.async_init(
+    DOMAIN,
+    context=RepairsFlowContext(issue_id="issue_id")
+  )
 ```
