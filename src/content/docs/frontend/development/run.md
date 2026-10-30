@@ -69,9 +69,16 @@ To connect to another Home Assistant, pass its URL with `-c`. It does not have t
 pnpm dev:serve -c http://homeassistant.local:8123
 ```
 
-That Home Assistant has to accept requests from your development frontend. Add its address to the `http` section of the `configuration.yaml` of the Home Assistant you connect to, and restart it:
+That Home Assistant has to accept requests from your development frontend. In the Home Assistant you connect to:
 
-```yaml
+1. Go to **Settings** > **System** > **Network**.
+2. Under **HTTP server**, open **More options**, and add `http://localhost:8124` to **CORS allowed origins**. Enter it exactly like that, without a trailing slash, or your browser's requests won't match it.
+3. Select **Save**, then **Save and restart**.
+4. When Home Assistant is back, confirm the new settings in the **Confirm new HTTP server configuration** dialog. If you don't confirm them within 5 minutes, Home Assistant reverts them and restarts again.
+
+Before Home Assistant 2026.8, these settings live in `configuration.yaml` instead. Add the address to its `http` section, and restart Home Assistant:
+
+```yaml title="configuration.yaml"
 http:
   cors_allowed_origins:
     - http://localhost:8124
@@ -79,7 +86,7 @@ http:
 
 A few things to know:
 
-- Use `-p` to serve on another port, like `pnpm dev:serve -p 8654`. Add that address to `cors_allowed_origins` instead.
+- Use `-p` to serve on another port, like `pnpm dev:serve -p 8654`. Add that address to **CORS allowed origins** instead.
 - Inside the devcontainer, the frontend is served on port 8123 in the container, which is port 8124 on your computer. The URL you pass with `-c` is opened by your browser, not by the container, so `localhost` means your computer.
 - The frontend remembers which Home Assistant you logged in to. When you change `-c`, log out first, or it keeps using the old one.
 
