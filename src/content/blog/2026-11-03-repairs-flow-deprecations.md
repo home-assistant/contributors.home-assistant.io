@@ -21,3 +21,12 @@ Setting the `issue_id` attribute of a `RepairsFlow` is deprecated. Previously se
 ## Use the `context` argument when initiating a repairs flow
 
 Most integrations will not manually initiate a repairs flow.  Any integration doing so must provide the `issue_id` via `context` in `RepairsFlowManager.async_init`. Providing `issue_id` in the `data` argument (the legacy behavior) will still continue to initiate the corresponding flow with a deprecation warning in custom integrations until Home Assistant Core 2027.12.
+
+```python
+from homeassistant.components.repairs import repairs_flow_manager, RepairsFlowContext
+
+from .const import DOMAIN
+
+if rep_flow_mngr := repairs_flow_manager():
+  flow_result = await rep_flow_mngr.async_init(DOMAIN, context=RepairsFlowContext(issue_id="issue_id"))
+```
