@@ -46,7 +46,7 @@ Comments are full sentences that end with a period. Keep them short, and use the
 ## Order and constants
 
 - Keep constants, and the contents of lists and dictionaries, in alphabetical order where the order does not matter.
-- Constants that more than one module of an integration uses go in `const.py`, and are imported from there. A constant only one module uses stays in that module.
+- Constants used by multiple modules go in `const.py`, and are imported from there. A constant only one module uses stays in that module.
 - Replace magic strings with constants.
 
 ## Logging
