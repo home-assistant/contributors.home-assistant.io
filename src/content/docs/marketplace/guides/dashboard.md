@@ -59,6 +59,8 @@ The folder is named after the repository, without its owner. When a user has a c
 
 Users pick a card by how it looks. Put screenshots in your README, which the Marketplace shows on the page of your repository. The catalog checks that the README of a dashboard repository has images.
 
+To let people try your card before they install it, put a [live demo](/frontend/custom-ui/demo/) of it on your own site, and link to it from your README.
+
 ## Check it in your repository
 
 Run the [HACS action](https://github.com/hacs/action) with `category: "plugin"` on every push and pull request. See [validation checks](/marketplace/reference/validation/).
