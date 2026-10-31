@@ -19,7 +19,7 @@ When a change with new or updated English text is merged into the frontend or [c
 
 ## Where translation happens
 
-Each of those sources has its own Lokalise project. That is why there are four projects to join: frontend, backend, iOS, and Android. Within a project, every language is translated by the community. Anyone who joins can translate strings and improve existing translations. There is no separate approval step: the translation saved in Lokalise is the one that ships.
+Each of those sources has its own Lokalise project. That is why there are [four projects to join](/translate/first-contribution/#1-pick-a-project): frontend, backend, iOS, and Android. Within a project, every language is translated by the community. Anyone who joins can translate strings and improve existing translations. There is no separate approval step: the translation saved in Lokalise is the one that ships.
 
 ## How translations get back
 
