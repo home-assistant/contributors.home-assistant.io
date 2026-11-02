@@ -388,6 +388,8 @@ async function renderComponent(
       return demo(attributes, children);
     case "DoDont":
       return doDont(attributes, children);
+    case "EmbedDemo":
+      return embedDemo(attributes);
     case "StackDiagram":
       return stackDiagram(propValue(attributes.layers) as DiagramLayer[], propValue(attributes.caption) as string);
     case "ArchitectureMap":
@@ -441,6 +443,21 @@ function demo(attributes: Attributes, children: string): string {
   const note = `Live demo${of}${home}.${caption ? ` ${caption}` : ""}`;
 
   return `${note}\n\n${codeBlock(children)}`;
+}
+
+// The cards of an <EmbedDemo> as the HTML that shows them on any page.
+function embedDemo(attributes: Attributes): string {
+  const json = (value: unknown, indent: string) =>
+    JSON.stringify(value, null, 2).replaceAll("\n", `\n${indent}`);
+  const cards = (propValue(attributes.cards) as unknown[])
+    .map(
+      (card) =>
+        `  <ha-embed-card>\n    <script type="application/json">\n      ${json(card, "      ")}\n    </script>\n  </ha-embed-card>`,
+    )
+    .join("\n");
+  const markup = `<ha-embed-provider>\n  <script type="application/json">\n    ${json(propValue(attributes.entities), "    ")}\n  </script>\n${cards}\n</ha-embed-provider>`;
+
+  return `Live demo of dashboard cards, from the embed of the Home Assistant demo.\n\n${codeBlock(markup)}`;
 }
 
 // The top level elements of a piece of HTML, as written.
