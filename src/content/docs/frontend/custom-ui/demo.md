@@ -3,6 +3,8 @@ title: Show a live demo of your card
 description: Embed working dashboard cards, including your own custom card, on any web page, with the mocked backend of the Home Assistant demo.
 sidebarLabel: Live demos
 order: 9
+source: https://github.com/home-assistant/frontend/tree/dev/demo/src/embed
+lastVerified: 2026-11-02
 ---
 
 Screenshots show what a card looks like. A live demo shows how it works: people can turn on a light, move a slider, and see the other cards follow. The [Home Assistant demo](https://demo.home-assistant.io/) publishes two elements that put real dashboard cards on any web page, like your README site or your blog. They run against a mocked backend in the browser, so no Home Assistant server is needed.
@@ -58,9 +60,13 @@ YAML needs its indentation. If your site minifies HTML, make sure the minifier k
 
 ## Show your custom card
 
-Load the script of your card on the page, and use its `custom:` type, the same as in a dashboard:
+Load the script of your card on the page, after the script of the demo, and use its `custom:` type, the same as in a dashboard:
 
 ```html
+<script
+  type="module"
+  src="https://demo.home-assistant.io/embed.js"
+></script>
 <script
   type="module"
   src="https://example.com/my-card.js"
@@ -74,7 +80,31 @@ Load the script of your card on the page, and use its `custom:` type, the same a
 </ha-embed-card>
 ```
 
-Your card gets the same mocked `hass` object as the built-in cards, and `window.loadCardHelpers()` works for the [card helpers](/frontend/custom-ui/card/#card-helpers). When the script of your card is on another site than your page, that site needs to send CORS headers for it.
+Your card gets the same mocked `hass` object as the built-in cards, and `window.loadCardHelpers()` works for the [card helpers](/frontend/custom-ui/card/#card-helpers). The card helpers and the built-in elements only exist once the script of the demo has run. Module scripts run in the order they are on the page, so keep the script of your card after it, in case your card uses them as soon as its script loads. When the script of your card is on another site than your page, that site needs to send CORS headers for it.
+
+## Load the demo when it comes into view
+
+On a page with several demos, or with a demo far down the page, you can wait to load the script of the demo until a demo comes near, so the rest of the page loads first. The elements read their script tags when they are set up, so the cards still find their entities and configuration when the script comes later. Import the script of the demo first, then the script of your card:
+
+```js
+const loadDemo = async () => {
+  await import("https://demo.home-assistant.io/embed.js");
+  await import("https://example.com/my-card.js");
+};
+
+const observer = new IntersectionObserver(
+  (entries) => {
+    if (entries.some((entry) => entry.isIntersecting)) {
+      observer.disconnect();
+      loadDemo();
+    }
+  },
+  { rootMargin: "400px 0px" },
+);
+observer.observe(document.querySelector("ha-embed-provider"));
+```
+
+Leave out the script tags of the demo and your card when you load them this way.
 
 ## Place cards anywhere on the page
 
