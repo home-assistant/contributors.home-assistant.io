@@ -1,0 +1,139 @@
+---
+// Real dashboard cards, live on the page, from the embed of the Home
+// Assistant demo (see /frontend/custom-ui/demo/). The cards run against the
+// mocked backend of the demo, in the browser.
+//
+// The script loads from the demo site when the demo comes near, so pages
+// without one, or with one far down, don't pay for it. The cards follow the
+// light or dark mode of the site.
+//
+// The cards are laid out like one section of a dashboard: 12 columns, at
+// most 500px wide. A card spans all 12, or the `columns` of its
+// `grid_options`, the same option as in a dashboard.
+//
+// In MDX:
+//   <EmbedDemo
+//     entities={[{ entity_id: "light.kitchen", state: "on", attributes: {} }]}
+//     cards={[
+//       { type: "tile", entity: "light.kitchen", grid_options: { columns: 6 } },
+//     ]}
+//   />
+interface Props {
+  // The entities of the provider, or an object with `entities`, `areas`,
+  // `calendars`, and `energy`, as the provider takes them.
+  entities: unknown[] | Record<string, unknown>;
+  // The configuration of each card, the same as in a dashboard.
+  cards: Record<string, unknown>[];
+  caption?: string;
+}
+
+const EMBED_SCRIPT_URL = "https://demo.home-assistant.io/embed.js";
+const SECTION_COLUMNS = 12;
+
+const { entities, cards, caption } = Astro.props;
+
+// Keeps a "</script>" in the data from closing the script element.
+const toScriptJson = (value: unknown) => JSON.stringify(value).replaceAll("<", "\\u003c");
+
+const columns = (card: Record<string, unknown>) => {
+  const options = card.grid_options as { columns?: unknown } | undefined;
+  return typeof options?.columns === "number" ? Math.min(options.columns, SECTION_COLUMNS) : SECTION_COLUMNS;
+};
+---
+
+<figure class="embed-demo" data-pagefind-ignore>
+  <div class="stage">
+    <ha-embed-provider class="section" data-embed-src={EMBED_SCRIPT_URL}>
+      <script is:inline type="application/json" set:html={toScriptJson(entities)} />
+      {
+        cards.map((card) => (
+          <ha-embed-card style={`grid-column: span ${columns(card)}`}>
+            <script is:inline type="application/json" set:html={toScriptJson(card)} />
+          </ha-embed-card>
+        ))
+      }
+    </ha-embed-provider>
+  </div>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<script>
+  const providers = [
+    ...document.querySelectorAll<HTMLElement>(".embed-demo ha-embed-provider[data-embed-src]"),
+  ];
+  const prefersDark = matchMedia("(prefers-color-scheme: dark)");
+
+  function siteScheme(): "light" | "dark" {
+    const theme = document.documentElement.dataset.theme;
+
+    if (theme === "light" || theme === "dark") {
+      return theme;
+    }
+    return prefersDark.matches ? "dark" : "light";
+  }
+
+  function followSite() {
+    const scheme = siteScheme();
+
+    for (const provider of providers) {
+      provider.setAttribute("color-scheme", scheme);
+    }
+  }
+
+  if (providers.length > 0) {
+    followSite();
+    new MutationObserver(followSite).observe(document.documentElement, {
+      attributeFilter: ["data-theme"],
+    });
+    prefersDark.addEventListener("change", followSite);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const near = entries.find((entry) => entry.isIntersecting);
+        if (!near || !(near.target instanceof HTMLElement)) {
+          return;
+        }
+
+        observer.disconnect();
+        import(/* @vite-ignore */ near.target.dataset.embedSrc!).catch((error) => {
+          console.error("Loading the card demo failed", error);
+        });
+      },
+      { rootMargin: "400px 0px" },
+    );
+
+    for (const provider of providers) {
+      observer.observe(provider);
+    }
+  }
+</script>
+
+<style>
+  .embed-demo {
+    margin: var(--ha-space-6) 0;
+  }
+
+  .stage {
+    min-height: 120px;
+    padding: var(--ha-space-6);
+    border: 1px solid var(--site-border);
+    border-radius: var(--site-radius-tile);
+    background: var(--site-bg);
+  }
+
+  /* The size and gaps of a section in the sections view of a dashboard. */
+  .section {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--ha-space-2);
+    align-items: start;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  figcaption {
+    margin-top: var(--ha-space-2);
+    font-size: 14px;
+    color: var(--site-text-muted);
+  }
+</style>
