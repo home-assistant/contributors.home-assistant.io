@@ -84,7 +84,7 @@ Your card gets the same mocked `hass` object as the built-in cards, and `window.
 
 ## Load the demo when it comes into view
 
-On a page with several demos, or with a demo far down the page, you can wait to load the script of the demo until a demo comes near, so the rest of the page loads first. The elements read their script tags when they are set up, so the cards still find their entities and configuration when the script comes later. Import the script of the demo first, then the script of your card:
+On a page with several demos, or with a demo far down the page, you can wait to load the script of the demo until a demo comes near, so the rest of the page loads first. The elements read their script tags when they are set up, so the cards still find their entities and configuration when the script comes later. Watch every provider and card on the page, then import the script of the demo first, and the script of your card after it:
 
 ```js
 const loadDemo = async () => {
@@ -101,10 +101,15 @@ const observer = new IntersectionObserver(
   },
   { rootMargin: "400px 0px" },
 );
-observer.observe(document.querySelector("ha-embed-provider"));
+const demos = document.querySelectorAll(
+  "ha-embed-provider, ha-embed-card",
+);
+for (const demo of demos) {
+  observer.observe(demo);
+}
 ```
 
-Leave out the script tags of the demo and your card when you load them this way.
+Run it from a module script, so the elements of the page are there when it looks for them. Leave out the script tags of the demo and your card when you load them this way.
 
 ## Place cards anywhere on the page
 
