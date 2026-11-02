@@ -11,7 +11,7 @@ You do not need to know how to code to help. If you are a native speaker and you
 
 There are two kinds of translation work, and they use different tools:
 
-- **Interface text** is everything you read on screen: menus, settings, dialogs, error messages, and the names of entities and their states. You translate it in your browser, on [Lokalise](https://lokalise.com/).
+- **Interface text** is everything you read on screen: menus, settings, dialogs, error messages, and the names of entities and their states. You translate it in your browser, in [Home Assistant's projects on Lokalise](/translate/first-contribution/#1-pick-a-project).
 - **Voice commands** are the sentences Home Assistant understands when you talk to Assist, and the answers it gives back. They live in YAML files on GitHub, and language leaders review the changes for their language. See [Voice](/translate/voice/).
 
 Most people start with interface text. It takes a few minutes to get going, and what you translate ships without a review step, see [how translations get back](/translate/how-it-works/#how-translations-get-back).
