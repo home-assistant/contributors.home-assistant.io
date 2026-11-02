@@ -353,4 +353,4 @@ Hassfest validates `translations/en.json` of a custom integration too. You can r
 
 ## Who to talk to
 
-Questions about `strings.json` or a hassfest error? Start a thread in **#support** on the [Home Assistant Discord](https://www.home-assistant.io/join-chat/). For questions about translating itself, see the [Translate](/translate/) area.
+Questions about `strings.json` or a hassfest error? Start a thread in **#coding-support** on the [Home Assistant Discord](https://www.home-assistant.io/join-chat/). For questions about translating itself, see the [Translate](/translate/) area.

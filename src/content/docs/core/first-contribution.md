@@ -11,7 +11,7 @@ Plan an evening for the setup. Building the development container for the first 
 
 ## 1. Say hi
 
-Join the [Home Assistant Discord](https://www.home-assistant.io/join-chat/). Under **Channels & Roles**, choose **I want to contribute dev skills to Home Assistant** to see the channels for development. General development questions, like whether an integration belongs in core, fit **#developers**. When you are stuck on code, start a thread in **#support**. You do not need permission to start, but it helps to know where to ask when you get stuck.
+Join the [Home Assistant Discord](https://www.home-assistant.io/join-chat/). Under **Channels & Roles**, choose **I want to contribute dev skills to Home Assistant** to see the channels for development. General development questions, like whether an integration belongs in core, fit **#developers**. When you are stuck on code, start a thread in **#coding-support**. You do not need permission to start, but it helps to know where to ask when you get stuck.
 
 ## 2. Set up your environment
 

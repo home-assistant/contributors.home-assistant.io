@@ -31,7 +31,7 @@ export const DISCORD_CHANNELS: DiscordChannel[] = [
   },
   {
     id: "coding-support",
-    name: "#support",
+    name: "#coding-support",
     url: `${SERVER}/1257019582112334014`,
     purpose: "General coding support, when you are stuck",
   },
