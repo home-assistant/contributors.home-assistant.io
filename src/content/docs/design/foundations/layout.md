@@ -3,11 +3,8 @@ title: Layout
 description: How wide the content of a page can get, and how much space it keeps from the edges of the screen.
 order: 3.5
 source: https://github.com/home-assistant/frontend/blob/dev/src/resources/theme/core.globals.ts
-lastVerified: 2026-10-25
+lastVerified: 2026-11-02
 ---
-
-> [!NOTE]
-> This page describes tokens from a frontend pull request that is not merged yet. Until it is merged, the tokens below do not exist in the frontend.
 
 Every page in Home Assistant has a maximum width for its content, and space between the content and the edges of the screen. When every page picks its own values, moving between pages feels uneven. So there are three content widths and one gutter for the settings, profile, and marketplace pages. Some parts of the interface are not covered yet. They are listed at the end of this page.
 
@@ -37,7 +34,7 @@ The gutter is the space between the content and the left and right edges of the 
 
 You don't add the safe area of a phone, like a notch or rounded corners, to the gutter yourself. The page layouts `hass-subpage` and `hass-tabs-subpage` already keep their content inside the safe area.
 
-Below 600px, the settings dashboard and the system navigation page let their cards run from edge to edge, without rounded corners. Keep that for pages that are only a list of links to other pages. Other pages keep the gutter.
+Below 600px, the settings dashboard and the system navigation page let their cards run from edge to edge, without rounded corners. Keep that for pages that are only a list of links to other pages. The connectivity page is an exception: it had edge-to-edge cards before these widths, and keeps them. Other pages keep the gutter.
 
 ## Example
 
