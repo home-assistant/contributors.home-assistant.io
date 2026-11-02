@@ -32,7 +32,7 @@ function collapsedCurrent(item: NavNode): "page" | "true" | undefined {
       <Self items={items} depth={1} />
     </nav>
   ) : (
-    <ul class:list={["list", `list--depth-${depth}`]}>
+    <ul class="list">
       {items.map((item) => (
         <li>
           {item.collapsed ? (
@@ -114,8 +114,9 @@ function collapsedCurrent(item: NavNode): "page" | "true" | undefined {
     rotate: 90deg;
   }
 
-  /* Pages line up with the labels of groups, past the chevron. */
-  .list--depth-1 > li > a {
+  /* Pages line up with the labels of the groups next to them, past the
+     chevron, at every level. */
+  .list > li > a {
     padding-left: calc(var(--ha-space-1) + 16px + var(--ha-space-2));
   }
 
