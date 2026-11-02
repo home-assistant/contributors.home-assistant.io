@@ -65,7 +65,7 @@ CI must pass before your pull request can be reviewed and merged. Some tests are
 
 ## New integrations
 
-Before you build a new integration, read [does it belong in core](/core/integrations/create/#does-it-belong-in-core). The project recommends that you publish it in the [Marketplace](/marketplace/) first. Once it has matured and has a user base, reach out to the maintainers, for example in the **#core** channel on [Discord](https://www.home-assistant.io/join-chat/), to see whether it should ship built in.
+Before you build a new integration, read [does it belong in core](/core/integrations/create/#does-it-belong-in-core). The project recommends that you publish it in the [Marketplace](/marketplace/) first. Once it has matured and has a user base, ask in the **#developers** channel on [Discord](https://www.home-assistant.io/join-chat/) whether it should ship built in.
 
 When it does, [keep the first pull request small](/core/integrations/create/#keep-the-first-pull-request-small): Bronze tier, one platform, nothing extra.
 

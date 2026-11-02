@@ -70,6 +70,6 @@ Technical excellence: async dependencies, a shared web session, and strict typin
 
 ## Who to talk to
 
-- Ask about a rule, or whether an exemption is reasonable, in the **#core** channel on the [Home Assistant Discord](https://www.home-assistant.io/join-chat/).
+- Ask about a rule, or whether an exemption is reasonable, in a thread in **#support** on the [Home Assistant Discord](https://www.home-assistant.io/join-chat/).
 - The integration owners of an integration, listed as `codeowners` in its `manifest.json`, know best where it stands. Mention them in your pull request.
 - Ideas to change a rule, or to add one, belong in the [architecture discussions](https://github.com/home-assistant/architecture/discussions).

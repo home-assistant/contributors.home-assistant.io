@@ -41,7 +41,7 @@ The frontend caches aggressively. When you add a config flow and the integration
 
 ## Ask for help with a link
 
-When you ask a question in **#core** on [Discord](https://www.home-assistant.io/join-chat/), push your work to a branch first and share the link. Someone who can see your code can help you much faster. Do not paste large blocks of code into the channel: they are hard to read, and push other questions out of view.
+When you ask a technical question on [Discord](https://www.home-assistant.io/join-chat/), start a thread in **#support**, push your work to a branch first, and share the link. Someone who can see your code can help you much faster. Do not paste large blocks of code into the thread: they are hard to read.
 
 ## Look at good examples
 

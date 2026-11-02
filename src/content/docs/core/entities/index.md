@@ -116,6 +116,6 @@ If no platform fits, or a platform misses something many devices have, don't wor
 
 ## Who to talk to
 
-- Questions while building an entity? Ask in the **#core** channel on the [Home Assistant Discord](https://www.home-assistant.io/join-chat/).
+- Questions while building an entity? Start a thread in **#support** on the [Home Assistant Discord](https://www.home-assistant.io/join-chat/).
 - Want to add a feature, state, or device class to a domain? Open a discussion in the [architecture repository](https://github.com/home-assistant/architecture/discussions). When a decision is made, it is recorded there as an architecture decision record.
 - Found a bug in an entity platform? Open an issue in the [core repository](https://github.com/home-assistant/core/issues).

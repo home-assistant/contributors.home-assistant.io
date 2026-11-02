@@ -26,7 +26,7 @@ Every area of this site has a "Who to talk to" section. This table brings them t
 | --- | --- |
 | [Architecture](/architecture/) | **#developers** on Discord, and the [architecture discussions](https://github.com/home-assistant/architecture/discussions) on GitHub |
 | [Security](/security/) | A vulnerability: a [GitHub security advisory](https://github.com/home-assistant/core/security/advisories/new), never in public. Other questions: **#developers** on Discord |
-| [Core and integrations](/core/) | **#core** on Discord, **#developers** for general development questions (a thread in **#support** for a longer question), and [home-assistant/core](https://github.com/home-assistant/core) on GitHub |
+| [Core and integrations](/core/) | **#developers** on Discord for general development questions, like whether an integration belongs in core, a thread in **#support** for a technical question, and [home-assistant/core](https://github.com/home-assistant/core) on GitHub |
 | [Frontend](/frontend/) | **#frontend** on Discord, and [home-assistant/frontend](https://github.com/home-assistant/frontend) on GitHub. Design questions: **#designers**, **#product-and-ux**, or the [UX design discussions](https://github.com/OpenHomeFoundation/ux-design/discussions) |
 | [Apps](/apps/) | **#developers** on Discord (**#operating-system** for questions about the Supervisor), the issues of [home-assistant/supervisor](https://github.com/home-assistant/supervisor/issues) and [home-assistant/addons](https://github.com/home-assistant/addons/issues), and [Share your Projects](https://community.home-assistant.io/c/projects/9) on the forum |
 | [Companion apps](/companion/) | **#apple-apps** on Discord, the [Android project thread](discord:android-project) on Discord, and the issues of [home-assistant/android](https://github.com/home-assistant/android/issues) and [home-assistant/iOS](https://github.com/home-assistant/iOS/issues) |
@@ -54,7 +54,7 @@ The channels for contributors:
 | Channel | For |
 | --- | --- |
 | **#developers** | General development |
-| **#core** | Core and integrations |
+| **#core** | Discussions of the core team about Core, not for questions |
 | **#frontend** | The frontend |
 | **#operating-system** | Home Assistant OS, and the Supervisor |
 | **#apple-apps** | The Apple apps |

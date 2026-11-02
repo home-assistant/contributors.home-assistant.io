@@ -110,6 +110,6 @@ The [integration quality scale](/core/quality-scale/) has no tiers for custom in
 
 ## Bring it to core
 
-Once your integration has matured and has a user base, reach out to the maintainers, for example in the **#core** channel on [Discord](https://www.home-assistant.io/join-chat/), to see whether it should ship built in. [Does it belong in core](/core/integrations/create/#does-it-belong-in-core) lists what core asks for, and every new integration in core needs the [Bronze rules](/core/quality-scale/rules/#bronze) of the quality scale.
+Once your integration has matured and has a user base, ask in the **#developers** channel on [Discord](https://www.home-assistant.io/join-chat/) whether it should ship built in. [Does it belong in core](/core/integrations/create/#does-it-belong-in-core) lists what core asks for, and every new integration in core needs the [Bronze rules](/core/quality-scale/rules/#bronze) of the quality scale.
 
 Some differences on this page turn around in core. For example, the brand images go to the [brands repository](/core/integrations/brands/), and the translations come from `strings.json`.

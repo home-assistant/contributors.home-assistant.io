@@ -61,6 +61,6 @@ Building a conversation agent, a speech-to-text provider, or a text-to-speech pr
 
 ## Who to talk to
 
-- The **#core** channel on the [Home Assistant Discord](https://www.home-assistant.io/join-chat/) is the place for questions about core internals.
+- Have a technical question about core internals? Start a thread in **#support** on the [Home Assistant Discord](https://www.home-assistant.io/join-chat/).
 - Much of the voice work, like the sentences and the wake word engines, happens in the [OHF-Voice](https://github.com/OHF-Voice) organization on GitHub. The integrations themselves, like `conversation` and `assist_pipeline`, live in core.
 - Proposals to change how core works start as a discussion in the [architecture repository](https://github.com/home-assistant/architecture/discussions).

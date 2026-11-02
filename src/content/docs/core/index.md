@@ -42,7 +42,7 @@ Then use the rest of this area as your reference: the [development workflow](/co
 
 ## Who to talk to
 
-- The **#core** channel on the [Home Assistant Discord](https://www.home-assistant.io/join-chat/) is the place for questions about Core and integrations. General development questions fit **#developers**. For a longer question, start a thread in **#support**. Can't see the channels? Under **Channels & Roles**, choose **I want to contribute dev skills to Home Assistant**.
+- On the [Home Assistant Discord](https://www.home-assistant.io/join-chat/), general development questions, like whether an integration belongs in core, fit **#developers**. For a technical question, start a thread in **#support**. The **#core** channel is where the core team discusses Core itself, not the place for questions. Can't see the channels? Under **Channels & Roles**, choose **I want to contribute dev skills to Home Assistant**.
 - Bugs and pull requests live in the [core repository](https://github.com/home-assistant/core). Feature ideas go to [GitHub discussions](https://github.com/orgs/home-assistant/discussions).
 - Bigger changes to how core works are discussed in the [architecture repository](https://github.com/home-assistant/architecture/discussions) first.
 
