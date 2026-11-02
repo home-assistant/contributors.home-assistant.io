@@ -9,7 +9,8 @@
 //   out: they pass the classic variables on to the old Material components.
 // - The design tokens the Foundations pages of the Design area do not
 //   render already: everything in the token files except the spacing,
-//   radius, and font size scales, and the color palettes.
+//   radius, and font size scales, and the color palettes. Also the variables
+//   of main.globals.ts meant for themes, like the header height.
 // - The component variables listed in scripts/theme-variables/components.yaml,
 //   with the default each component falls back to. Which component variables
 //   are meant for themes is kept by hand, in that file. An entry whose file no
@@ -49,9 +50,23 @@ const OUTPUT = fileURLToPath(
 const THEME_DIR = "src/resources/theme";
 const CLASSIC_FILE = `${THEME_DIR}/color/color.globals.ts`;
 
-// The token files, as sync-tokens.ts reads them.
-const TOKEN_SOURCES = [
+// The token files, as sync-tokens.ts reads them, and main.globals.ts, which
+// theme.ts adds to the variables a theme can set. Its layout internals, like
+// the safe areas, text direction, and opacities, are left out with `skip`.
+const TOKEN_SOURCES: {
+  file: string;
+  title: string;
+  light: string;
+  dark?: string;
+  skip?: RegExp;
+}[] = [
   { file: "core.globals.ts", title: "Borders, radii, and motion", light: "coreStyles" },
+  {
+    file: "main.globals.ts",
+    title: "Header and dialogs",
+    light: "mainStyles",
+    skip: /^--(safe-area-|safe-width$|safe-height$|direction$|float-|margin-title-|(dark|light)-[a-z]+-opacity$)/,
+  },
   { file: "typography.globals.ts", title: "Typography", light: "typographyStyles" },
   { file: "semantic.globals.ts", title: "Shadows", light: "semanticStyles", dark: "darkSemanticStyles" },
   { file: "color/core.globals.ts", title: "Pure colors", light: "coreColorStyles" },
@@ -316,7 +331,7 @@ const classicRows = readRows(CLASSIC_FILE, "colorStyles", "darkColorStyles").fil
 const tokenSections = TOKEN_SOURCES.map((source) => ({
   ...source,
   rows: readRows(`${THEME_DIR}/${source.file}`, source.light, source.dark).filter(
-    (row) => !FOUNDATIONS.test(row.name),
+    (row) => !FOUNDATIONS.test(row.name) && !source.skip?.test(row.name),
   ),
 }));
 

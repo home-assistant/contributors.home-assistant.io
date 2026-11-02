@@ -22,7 +22,7 @@ Newer components use [design tokens](/glossary/design-token/), with names that s
 - [Spacing](/design/foundations/spacing/): the spacing scale, `ha-space-1` to `ha-space-20`, and the corner radius scale, `ha-border-radius-*`.
 - [Typography](/design/foundations/typography/): the font sizes, `ha-font-size-*`.
 
-The other tokens are below, by the file of the frontend that defines them.
+The other tokens are below, by the file of the frontend that defines them, together with a few older variables set in the same files, like `header-height`.
 
 {{tokens}}
 

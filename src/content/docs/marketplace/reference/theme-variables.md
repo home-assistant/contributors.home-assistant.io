@@ -8,7 +8,7 @@ order: 4
 
 A [theme](/glossary/theme/) sets variables of the frontend. This page lists the ones a theme can set, with the default value of each. For how to write a theme, and which variables most themes set, start with [Publish a theme](/marketplace/guides/themes/).
 
-The tables on this page are generated from the frontend source, at [`27489f188e`](https://github.com/home-assistant/frontend/commit/27489f188eb85f21a428a44242879c8c038b2448) of the `dev` branch. Variables can be renamed or removed in any release, so test your theme with every beta.
+The tables on this page are generated from the frontend source, at [`4a455cd883`](https://github.com/home-assistant/frontend/commit/4a455cd8833e056ab2641d248de50efbcaf90c64) of the `dev` branch. Variables can be renamed or removed in any release, so test your theme with every beta.
 
 In a theme file, a variable has no `--` in front, the way this page shows them. In the frontend source, and in CSS, it does: `primary-color` in your theme is `--primary-color` in the code.
 
@@ -24,7 +24,7 @@ Newer components use [design tokens](/glossary/design-token/), with names that s
 - [Spacing](/design/foundations/spacing/): the spacing scale, `ha-space-1` to `ha-space-20`, and the corner radius scale, `ha-border-radius-*`.
 - [Typography](/design/foundations/typography/): the font sizes, `ha-font-size-*`.
 
-The other tokens are below, by the file of the frontend that defines them.
+The other tokens are below, by the file of the frontend that defines them, together with a few older variables set in the same files, like `header-height`.
 
 ### Borders, radii, and motion
 
@@ -42,6 +42,15 @@ From [`src/resources/theme/core.globals.ts`](https://github.com/home-assistant/f
 | `ha-animation-duration-fast` | `150ms` |
 | `ha-animation-duration-normal` | `250ms` |
 | `ha-animation-duration-slow` | `350ms` |
+
+### Header and dialogs
+
+From [`src/resources/theme/main.globals.ts`](https://github.com/home-assistant/frontend/blob/dev/src/resources/theme/main.globals.ts).
+
+| Variable | Default |
+| --- | --- |
+| `header-height` | `56px` |
+| `ha-dialog-scrim-backdrop-filter` | `brightness(68%)` |
 
 ### Typography
 
@@ -304,6 +313,8 @@ Some components read a variable of their own, with a default in the component it
 The older variables, from `src/resources/theme/color/color.globals.ts`. Most themes still set them, and many components still use them.
 
 The variables starting with `mdc-` in the same file are left out: they pass these variables on to older components, and follow them by themselves.
+
+You don't need to set the `rgb-` variables. When a theme sets a variable to a hex color, like `primary-color: "#03a9f4"`, the frontend sets `rgb-primary-color` from it. Only set an `rgb-` variable yourself when its color isn't a hex value, like `rgb()` or `var()`.
 
 ### Main colors
 
