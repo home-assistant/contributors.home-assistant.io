@@ -89,6 +89,6 @@ This part of the site walks through all of it, task by task. It is written for p
 
 ## Who to talk to
 
-- Ask in the **#core** channel on the [Home Assistant Discord](https://www.home-assistant.io/join-chat/). Share a link to your branch, so people can see the code you are asking about.
+- Have a technical question? Start a thread in **#coding-support** on the [Home Assistant Discord](https://www.home-assistant.io/join-chat/). Share a link to your branch, so people can see the code you are asking about.
 - Look at a well maintained integration that does something similar. Many integrations at the Platinum tier of the quality scale, like `airgradient`, are good examples of current patterns.
 - Not sure if your idea fits Home Assistant? Open a discussion in the [architecture repository](https://github.com/home-assistant/architecture/discussions) before you write a lot of code.

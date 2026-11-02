@@ -13,7 +13,7 @@ This page is the reference for the scaffold and the parts of an integration. Wan
 
 Check this before you write any code.
 
-For a new integration, the project recommends that you publish it in the [Marketplace](/marketplace/) first, as a [custom integration](/glossary/custom-integration/). You gain experience, and you can iterate faster. Once it has matured and has a user base, reach out to the maintainers, for example in the **#core** channel on [Discord](https://www.home-assistant.io/join-chat/), to see whether it should ship built in. [Publish a custom integration](/marketplace/guides/integrations/) explains what is different outside core.
+For a new integration, the project recommends that you publish it in the [Marketplace](/marketplace/) first, as a [custom integration](/glossary/custom-integration/). You gain experience, and you can iterate faster. Once it has matured and has a user base, ask in the **#developers** channel on [Discord](https://www.home-assistant.io/join-chat/) whether it should ship built in. [Publish a custom integration](/marketplace/guides/integrations/) explains what is different outside core.
 
 To ship built in, an integration has to meet these requirements:
 
@@ -21,7 +21,7 @@ To ship built in, an integration has to meet these requirements:
 - It must be established, with an actual user base. Home Assistant is not a marketing platform for new products.
 - All communication goes through a Python library on PyPI that meets the [dependency-transparency](/core/quality-scale/dependency-transparency/) rule. See [build a Python library](/core/integrations/api-library/).
 
-Not sure where yours fits? Ask in **#core** before you start.
+Not sure where yours fits? Ask in **#developers** before you start.
 
 ## Keep the first pull request small
 
