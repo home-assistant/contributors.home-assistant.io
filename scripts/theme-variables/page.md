@@ -38,4 +38,6 @@ The older variables, from `src/resources/theme/color/color.globals.ts`. Most the
 
 The variables starting with `mdc-` in the same file are left out: they pass these variables on to older components, and follow them by themselves.
 
+You don't need to set the `rgb-` variables. When a theme sets a variable to a hex color, like `primary-color: "#03a9f4"`, the frontend sets `rgb-primary-color` from it. Only set an `rgb-` variable yourself when its color isn't a hex value, like `rgb()` or `var()`.
+
 {{classic}}
