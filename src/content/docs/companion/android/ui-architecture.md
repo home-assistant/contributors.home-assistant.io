@@ -68,7 +68,7 @@ The ViewModel owns the outputs and wires the blocks together:
 
 ```kotlin
 val viewState: StateFlow<UiState> // what to render
-val events: SharedFlow<UiEvent>   // one-shot effects
+val events: Flow<UiEvent>         // one-shot effects, from a Channel
 val actions: Flow<UiAction>       // only if the view owns a handle
 ```
 
@@ -118,7 +118,7 @@ sealed interface UiEvent {
 }
 ```
 
-Emit them on a `Flow` and consume each one once, usually in the navigation layer. Never replay an event: replaying "navigate back" after a recomposition navigates twice. If the UI must show something again after rotation, it is state, not an event.
+Send them through a `Channel`, exposed as a `Flow` with `receiveAsFlow()`, and consume each one once, usually in the navigation layer. The buffered `Channel` holds events for its single consumer, so an event sent before the collector starts still arrives, where a `SharedFlow` without replay drops it. See [picking a flow type](/companion/android/architecture/#picking-a-flow-type). Never replay an event: replaying "navigate back" after a recomposition navigates twice. If the UI must show something again after rotation, it is state, not an event.
 
 ### Actions
 
@@ -141,7 +141,7 @@ LaunchedEffect(webView) {
 }
 ```
 
-The flow is a buffered `SharedFlow`, consumed once, so commands are not lost while the view is briefly gone. An action that needs a result can carry a `CompletableDeferred`.
+The flow is a `SharedFlow` with a small extra buffer, consumed once. It doesn't replay: an action sent while the view is gone is dropped, which suits commands that only mean something for the object the view holds right now. When an action must not be dropped, wait for a collector first, like `FrontendViewModel` does with `subscriptionCount` before it emits. An action that needs a result can carry a `CompletableDeferred`.
 
 An action is not state: a command held as state would run again on every recomposition. It is not an event either: an event is a signal the host reacts to, like navigating, while an action drives one object this screen owns.
 
