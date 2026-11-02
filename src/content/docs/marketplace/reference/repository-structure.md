@@ -12,11 +12,33 @@ Every type needs a public GitHub repository with a `hacs.json` and a README in t
 | --- | --- |
 | Public repository on GitHub | The Marketplace and HACS only read public GitHub repositories. |
 | `hacs.json` in the root | The Marketplace can not install or update a repository without it. See [hacs.json](/marketplace/reference/hacs-json/). |
-| `README.md` | What users read before they install. The Marketplace shows it on the page of your repository. |
+| `README.md` | What users read before they install. The Marketplace shows it on the page of your repository, without the parts you [leave out](#leave-part-of-your-readme-out-of-the-marketplace). |
 | A description on GitHub | Shown in the list of the Marketplace. Required for the catalog. |
 | Topics on GitHub | Help users find your repository. Required for the catalog. |
 | Issues turned on | Where users report problems. Required for the catalog. |
 | GitHub releases | Recommended for every type, required for templates and for the catalog. See [releases and updates](/marketplace/guides/releases/). |
+
+## Leave part of your README out of the Marketplace
+
+Your README is read in two places: on GitHub, where people find your repository, and in the Marketplace, on the page of your repository. Installation instructions, a [My link](/glossary/my-link/) badge, or an install badge help on GitHub, but the page in the Marketplace already has an install button, so there they are in the way. Put the parts that are only for GitHub between two HTML comments, and the Marketplace leaves them out:
+
+```markdown title="README.md"
+# Awesome card
+
+<!-- ha-marketplace:exclude-start -->
+## Installation
+
+Add this repository in the Marketplace, or install it through HACS.
+<!-- ha-marketplace:exclude-end -->
+
+## Configuration
+```
+
+GitHub does not show HTML comments, so there the README reads as before.
+
+- A section runs from the start marker to the next end marker. Without an end marker, it runs to the end of the README.
+- The spaces inside the markers are optional.
+- Markers inside a code block or inline code are text, not markers, so a README can show them as an example.
 
 ## Integrations
 
