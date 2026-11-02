@@ -51,7 +51,7 @@ export const DISCORD_CHANNELS: DiscordChannel[] = [
     purpose: "Longer running projects, and bigger topics the team is sprinting on",
   },
   { id: "developers", name: "#developers", url: `${SERVER}/554842238073700352`, purpose: "General development" },
-  { id: "core", name: "#core", url: `${SERVER}/1475552721515053268`, purpose: "Discussions of the core team about Core" },
+  { id: "core", name: "#core", url: `${SERVER}/1475552721515053268`, purpose: "Core and integrations" },
   { id: "frontend", name: "#frontend", url: `${SERVER}/1475552784278360176`, purpose: "The frontend" },
   {
     id: "operating-system",

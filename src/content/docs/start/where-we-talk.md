@@ -54,7 +54,7 @@ The channels for contributors:
 | Channel | For |
 | --- | --- |
 | **#developers** | General development |
-| **#core** | Discussions of the core team about Core, not for questions |
+| **#core** | Core and integrations |
 | **#frontend** | The frontend |
 | **#operating-system** | Home Assistant OS, and the Supervisor |
 | **#apple-apps** | The Apple apps |
