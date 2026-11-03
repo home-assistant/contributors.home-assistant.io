@@ -471,9 +471,13 @@ function embedDemo(attributes: Attributes): string {
   ]
     .map((declaration) => `\n    ${declaration}`)
     .join("");
-  const markup = `<ha-embed-provider\n  style="${section}\n  "\n>\n  <script type="application/json">\n    ${json(propValue(attributes.entities), "    ")}\n  </script>\n${cards}\n</ha-embed-provider>`;
+  const provider = attributes.home
+    ? ""
+    : `\n  <script type="application/json">\n    ${json(propValue(attributes.entities), "    ")}\n  </script>`;
+  const markup = `<ha-embed-provider\n  style="${section}\n  "\n>${provider}\n${cards}\n</ha-embed-provider>`;
+  const home = attributes.home ? ", connected to the sample home of this site" : "";
   const caption = propValue(attributes.caption);
-  const note = `Live demo of dashboard cards, from the embed of the Home Assistant demo.${caption ? ` ${caption}` : ""}`;
+  const note = `Live demo of dashboard cards, from the embed of the Home Assistant demo${home}.${caption ? ` ${caption}` : ""}`;
 
   return `${note}\n\n${codeBlock(markup)}`;
 }
