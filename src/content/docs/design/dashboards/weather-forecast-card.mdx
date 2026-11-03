@@ -51,7 +51,15 @@ The card adapts to its width. As it gets narrower, the current weather gets a sm
 
 <EmbedDemo
   home
-  cards={[{ type: "weather-forecast", entity: "weather.home", forecast_type: "daily", forecast_slots: 3 }]}
+  cards={[
+    {
+      type: "weather-forecast",
+      entity: "weather.home",
+      forecast_type: "daily",
+      forecast_slots: 3,
+      grid_options: { columns: 6 },
+    },
+  ]}
 />
 
 ### Content
