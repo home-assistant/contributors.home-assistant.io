@@ -152,7 +152,7 @@ calendars:
       end: "2026-11-02T16:15:00+00:00"
 ```
 
-Calendar cards only show the events in the dates they display, so change these dates to ones near the day of your demo. To always have events, leave the calendar out of `calendars` and use the sample events, which move with today.
+Calendar cards only show the events in the dates they display, so change these dates to ones near the day of your demo. To always have events, leave the calendar out of `calendars` and use the sample events. They are set around the day the script of the demo loads, and loading the page again sets them again.
 
 Weather entities get a forecast made up from their condition and temperature, or from their `forecast` attribute when they have one. Set `supported_features` to show forecasts.
 
@@ -187,7 +187,7 @@ The mocked backend only knows a part of the Home Assistant API. Keep these limit
 
 - The actions of lights, switches, climate, covers, fans, locks, media players, and more change the state of the entity.
 - Actions only reach entities that they target by entity ID. An action that targets an area or a device does nothing.
-- History and statistics are made up from the current state of each entity. A few energy sensors of the demo, like `sensor.solar_production`, always have the same sample statistics instead.
+- History and statistics are made up from the current state of each entity. A few energy sensors of the demo, like `sensor.solar_production`, get made-up statistics of their own instead, so their state does not change their graph.
 - Templates are not rendered. Template subscriptions fill in simple `{{ variable }}` references from the variables you pass and return the rest as it is. The REST `template` endpoint returns an error.
 - The logbook is empty.
 - Actions that open a dialog, like `more-info`, do nothing.
