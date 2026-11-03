@@ -4,12 +4,20 @@ description: The clock card shows the current time, as a digital or an analog cl
 sidebarGroup: Information
 ---
 
-import Demo from "../../../../components/docs/Demo.astro";
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
 
-<Demo hass>
-  <hui-card style="width: 340px" data-props='{"config": {"type": "clock", "clock_size": "large", "date_format": ["weekday-long", "day-numeric", "month-long"]}}'></hui-card>
-  <hui-card style="width: 200px" data-props='{"config": {"type": "clock", "clock_style": "analog", "clock_size": "medium"}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    {
+      type: "clock",
+      clock_size: "large",
+      date_format: ["weekday-long", "day-numeric", "month-long"],
+      grid_options: { columns: 8 },
+    },
+    { type: "clock", clock_style: "analog", clock_size: "medium", grid_options: { columns: 4 } },
+  ]}
+/>
 
 ## Usage
 
@@ -23,10 +31,27 @@ The time follows the time format of the user, 12 or 24 hours, and the time zone 
 
 The default is a digital clock. With `clock_style: analog`, the card shows a clock face with hands. A digital clock is quicker to read from a distance. An analog clock fits a calmer, more decorative dashboard. Pick one style and use it everywhere on the dashboard.
 
-<Demo hass>
-  <hui-card style="width: 200px" data-props='{"config": {"type": "clock", "clock_style": "analog", "clock_size": "medium", "face_style": "numbers_upright", "border": true, "show_seconds": true}}'></hui-card>
-  <hui-card style="width: 200px" data-props='{"config": {"type": "clock", "clock_style": "analog", "clock_size": "medium", "ticks": "minute"}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    {
+      type: "clock",
+      clock_style: "analog",
+      clock_size: "medium",
+      face_style: "numbers_upright",
+      border: true,
+      show_seconds: true,
+      grid_options: { columns: 4 },
+    },
+    {
+      type: "clock",
+      clock_style: "analog",
+      clock_size: "medium",
+      ticks: "minute",
+      grid_options: { columns: 4 },
+    },
+  ]}
+/>
 
 An analog clock has its own options: `face_style` shows markers, numbers, or Roman numerals, `ticks` sets how many tick marks the face has, and `border` draws a circle around it.
 
@@ -34,18 +59,19 @@ An analog clock has its own options: `face_style` shows markers, numbers, or Rom
 
 `clock_size` makes the clock `small`, `medium`, or `large`. The card grows with it in the sections view. Use the large size when the clock is the main thing on the screen, and the small one when it sits in a corner.
 
-<Demo hass layout="stack">
-  <hui-card style="width: 340px" data-props='{"config": {"type": "clock"}}'></hui-card>
-  <hui-card style="width: 340px" data-props='{"config": {"type": "clock", "clock_size": "medium"}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[{ type: "clock" }, { type: "clock", clock_size: "medium" }]}
+/>
 
 ### Date and title
 
 `date_format` adds the date below the time. It is a list of parts, like the day of the week, the day, and the month, so it can follow any local order. `title` adds a line of text above the time, like the name of a city when the card shows another time zone.
 
-<Demo hass>
-  <hui-card style="width: 340px" data-props='{"config": {"type": "clock", "title": "Tokyo", "time_zone": "Asia/Tokyo", "clock_size": "medium"}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[{ type: "clock", title: "Tokyo", time_zone: "Asia/Tokyo", clock_size: "medium" }]}
+/>
 
 ### No background
 

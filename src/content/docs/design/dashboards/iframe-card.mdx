@@ -4,11 +4,12 @@ description: The webpage card embeds another web page in the dashboard, in an if
 sidebarGroup: Media and pictures
 ---
 
-import Demo from "../../../../components/docs/Demo.astro";
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
 
-<Demo hass>
-  <hui-card style="width: 100%" data-props='{"config": {"type": "iframe", "url": "https://www.home-assistant.io", "aspect_ratio": "50%"}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[{ type: "iframe", url: "https://www.home-assistant.io", aspect_ratio: "50%" }]}
+/>
 
 ## Usage
 
@@ -22,9 +23,17 @@ The card has no padding and no title by default. The page fills it from edge to 
 
 With `title`, the card gets a header above the page. Use it when the page itself does not make clear what it is.
 
-<Demo hass>
-  <hui-card style="width: 420px" data-props='{"config": {"type": "iframe", "title": "Home Assistant", "url": "https://www.home-assistant.io", "aspect_ratio": "75%"}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    {
+      type: "iframe",
+      title: "Home Assistant",
+      url: "https://www.home-assistant.io",
+      aspect_ratio: "75%",
+    },
+  ]}
+/>
 
 ### Aspect ratio
 

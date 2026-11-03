@@ -4,12 +4,21 @@ description: The area card sums up one area of the home, with its picture, its s
 sidebarGroup: Grouping and layout
 ---
 
-import Demo from "../../../../components/docs/Demo.astro";
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
 
-<Demo hass>
-  <hui-card style="width: 360px" data-props='{"config": {"type": "area", "area": "living_room", "sensor_classes": ["temperature", "humidity"]}}'></hui-card>
-  <hui-card style="width: 360px" data-props='{"config": {"type": "area", "area": "living_room", "display_type": "compact", "sensor_classes": ["temperature", "humidity"], "features": [{"type": "area-controls"}]}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    { type: "area", area: "living_room", sensor_classes: ["temperature", "humidity"] },
+    {
+      type: "area",
+      area: "living_room",
+      display_type: "compact",
+      sensor_classes: ["temperature", "humidity"],
+      features: [{ type: "area-controls" }],
+    },
+  ]}
+/>
 
 ## Usage
 
@@ -26,10 +35,13 @@ The `display_type` decides how much room the card takes:
 - `icon`: shows the icon of the area on a plain background, the same size as a picture.
 - `compact`: no picture at all. The card is as small as a tile, with the icon in front of the name.
 
-<Demo hass>
-  <hui-card style="width: 340px" data-props='{"config": {"type": "area", "area": "hallway", "display_type": "icon"}}'></hui-card>
-  <hui-card style="width: 340px" data-props='{"config": {"type": "area", "area": "hallway", "display_type": "compact"}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    { type: "area", area: "hallway", display_type: "icon" },
+    { type: "area", area: "hallway", display_type: "compact" },
+  ]}
+/>
 
 Use the picture when people recognize their rooms from it, like on a wall tablet. Use the compact type when the overview has many areas, so they fit on one screen. A compact card can be `vertical`, like a vertical tile.
 
@@ -41,10 +53,24 @@ With `sensor_classes`, the card shows the readings of the sensors of the area, b
 
 With `alert_classes`, the card shows an icon for each class that has a binary sensor on in the area, like motion, an open window, or a leak. On the larger types, the alerts sit in a column on the picture. On the compact type, only the first alert shows, as a badge on the icon. Alerts only appear when something is going on, so an empty spot is good news.
 
-<Demo hass>
-  <hui-card style="width: 340px" data-props='{"config": {"type": "area", "area": "kitchen", "display_type": "compact", "alert_classes": ["window", "moisture"]}}'></hui-card>
-  <hui-card style="width: 340px" data-props='{"config": {"type": "area", "area": "hallway", "display_type": "compact", "sensor_classes": ["illuminance"], "alert_classes": ["motion", "door"]}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    {
+      type: "area",
+      area: "kitchen",
+      display_type: "compact",
+      alert_classes: ["window", "moisture"],
+    },
+    {
+      type: "area",
+      area: "hallway",
+      display_type: "compact",
+      sensor_classes: ["illuminance"],
+      alert_classes: ["motion", "door"],
+    },
+  ]}
+/>
 
 Without `sensor_classes` or `alert_classes`, the card shows no readings or alerts. Pick the few classes that matter for the overview, like temperature and humidity, and motion and leaks.
 
@@ -52,9 +78,17 @@ Without `sensor_classes` or `alert_classes`, the card shows no readings or alert
 
 The area card takes features, like the tile card. The `area-controls` feature adds buttons to turn the lights, fans, and covers of the area on or off together. By default, it shows up to four buttons, for the kinds of devices the area has. With `controls`, you pick them.
 
-<Demo hass>
-  <hui-card style="width: 360px" data-props='{"config": {"type": "area", "area": "bedroom", "display_type": "compact", "features": [{"type": "area-controls", "controls": ["fan", "cover-blind"]}]}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    {
+      type: "area",
+      area: "bedroom",
+      display_type: "compact",
+      features: [{ type: "area-controls", controls: ["fan", "cover-blind"] }],
+    },
+  ]}
+/>
 
 ### Content
 

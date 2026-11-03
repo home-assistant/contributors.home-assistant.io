@@ -4,12 +4,27 @@ description: The conditional card shows another card only when its conditions ar
 sidebarGroup: Grouping and layout
 ---
 
-import Demo from "../../../../components/docs/Demo.astro";
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
 
-<Demo hass>
-  <hui-card style="width: 360px" data-props='{"config": {"type": "conditional", "conditions": [{"condition": "screen", "media_query": "(min-width: 768px)"}], "card": {"type": "tile", "entity": "media_player.living_room_speaker", "features": [{"type": "media-player-playback"}]}}}'></hui-card>
-  <hui-card style="width: 360px" data-props='{"config": {"type": "conditional", "conditions": [{"condition": "screen", "media_query": "(max-width: 767px)"}], "card": {"type": "tile", "entity": "media_player.living_room_speaker"}}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    {
+      type: "conditional",
+      conditions: [{ condition: "screen", media_query: "(min-width: 768px)" }],
+      card: {
+        type: "tile",
+        entity: "media_player.living_room_speaker",
+        features: [{ type: "media-player-playback" }],
+      },
+    },
+    {
+      type: "conditional",
+      conditions: [{ condition: "screen", media_query: "(max-width: 767px)" }],
+      card: { type: "tile", entity: "media_player.living_room_speaker" },
+    },
+  ]}
+/>
 
 ## Usage
 
