@@ -461,9 +461,16 @@ function embedDemo(attributes: Attributes): string {
         `  <ha-embed-card style="grid-column: span ${span(card)}">\n    <script type="application/json">\n      ${json(card, "      ")}\n    </script>\n  </ha-embed-card>`,
     )
     .join("\n");
-  const section =
-    "display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 8px; align-items: start; max-width: 500px";
-  const markup = `<ha-embed-provider style="${section}">\n  <script type="application/json">\n    ${json(propValue(attributes.entities), "    ")}\n  </script>\n${cards}\n</ha-embed-provider>`;
+  const section = [
+    "display: grid;",
+    "grid-template-columns: repeat(12, minmax(0, 1fr));",
+    "gap: 8px;",
+    "align-items: start;",
+    "max-width: 500px;",
+  ]
+    .map((declaration) => `\n    ${declaration}`)
+    .join("");
+  const markup = `<ha-embed-provider\n  style="${section}\n  "\n>\n  <script type="application/json">\n    ${json(propValue(attributes.entities), "    ")}\n  </script>\n${cards}\n</ha-embed-provider>`;
 
   return `Live demo of dashboard cards, from the embed of the Home Assistant demo.\n\n${codeBlock(markup)}`;
 }
