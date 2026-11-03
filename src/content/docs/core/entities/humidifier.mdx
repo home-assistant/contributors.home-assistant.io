@@ -5,11 +5,47 @@ sidebarLabel: Humidifier
 sidebarGroup: Lights and climate
 ---
 
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
+
 A humidifier entity controls a device that adds moisture to the air (a humidifier) or removes it (a dehumidifier), toward a target humidity. Inherit from `HumidifierEntity` in `homeassistant.components.humidifier`. It builds on the toggle entity, so it has `is_on`, `turn_on`, and `turn_off`.
 
 If the device also heats or cools, use a [climate entity](/core/entities/climate/) with the `TARGET_HUMIDITY` feature instead.
 
 For how the frontend shows a humidifier, see the [humidifier more-info view](/design/more-info/humidifier/).
+
+<EmbedDemo
+  entities={[
+    {
+      entity_id: "humidifier.bedroom",
+      state: "on",
+      attributes: {
+        friendly_name: "Bedroom humidifier",
+        device_class: "humidifier",
+        action: "humidifying",
+        current_humidity: 38,
+        humidity: 45,
+        min_humidity: 30,
+        max_humidity: 70,
+        available_modes: ["normal", "eco", "sleep"],
+        mode: "normal",
+        supported_features: 1,
+      },
+    },
+  ]}
+  cards={[
+    {
+      type: "tile",
+      entity: "humidifier.bedroom",
+      features: [{ type: "target-humidity" }, { type: "humidifier-modes" }],
+    },
+    {
+      type: "humidifier",
+      entity: "humidifier.bedroom",
+      features: [{ type: "humidifier-toggle" }],
+    },
+  ]}
+  caption="A humidifier with a target humidity and modes, in a tile card and a humidifier card. The cards are live: change the target, the mode, or turn it off."
+/>
 
 ## Properties
 

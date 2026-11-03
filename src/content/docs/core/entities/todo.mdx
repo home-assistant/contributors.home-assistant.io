@@ -5,9 +5,34 @@ sidebarLabel: To-do list
 sidebarGroup: Inputs and helpers
 ---
 
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
+
 A to-do list entity represents a list of items, each with a status: open or done. Think of a shopping list, the tasks in a task manager, or the chores a robot vacuum app keeps track of. Inherit from `TodoListEntity` in `homeassistant.components.todo`.
 
 People see the list in the to-do panel, and automations, scripts, and Assist can read it and add to it. What they can change depends on the [supported features](#supported-features) you set.
+
+<EmbedDemo
+  entities={[
+    {
+      entity_id: "todo.shopping_list",
+      state: "3",
+      attributes: {
+        friendly_name: "Shopping list",
+      },
+    },
+  ]}
+  cards={[
+    {
+      type: "tile",
+      entity: "todo.shopping_list",
+    },
+    {
+      type: "todo-list",
+      entity: "todo.shopping_list",
+    },
+  ]}
+  caption="A read-only shopping list in a tile card and a to-do list card. The state is the number of open items. The items are sample items of the demo."
+/>
 
 ## Properties
 

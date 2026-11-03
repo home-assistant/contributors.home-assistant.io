@@ -5,9 +5,45 @@ sidebarLabel: Binary sensor
 sidebarGroup: Sensors and status
 ---
 
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
+
 A binary sensor reports one of two states: on or off. What on and off mean depends on its device class: a door is open or closed, a smoke detector sees smoke or is clear, a battery is low or normal. Inherit from `BinarySensorEntity`, imported from `homeassistant.components.binary_sensor`.
 
 Use a binary sensor when the value has exactly two states and the user cannot change it. If the user can turn it on and off, use a [switch](/core/entities/switch/). If it has more than two states, use a [sensor](/core/entities/sensor/) with the `enum` device class.
+
+<EmbedDemo
+  entities={[
+    {
+      entity_id: "binary_sensor.front_door",
+      state: "on",
+      attributes: {
+        friendly_name: "Front door",
+        device_class: "door",
+      },
+    },
+    {
+      entity_id: "binary_sensor.hallway_motion",
+      state: "off",
+      attributes: {
+        friendly_name: "Hallway motion",
+        device_class: "motion",
+      },
+    },
+  ]}
+  cards={[
+    {
+      type: "tile",
+      entity: "binary_sensor.front_door",
+      grid_options: { columns: 6 },
+    },
+    {
+      type: "tile",
+      entity: "binary_sensor.hallway_motion",
+      grid_options: { columns: 6 },
+    },
+  ]}
+  caption="A door sensor that is on and a motion sensor that is off, in tile cards. The device class turns on and off into Open and Clear."
+/>
 
 ## Properties
 

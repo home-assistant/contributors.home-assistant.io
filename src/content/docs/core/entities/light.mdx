@@ -5,9 +5,41 @@ sidebarLabel: Light
 sidebarGroup: Lights and climate
 ---
 
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
+
 A light entity controls a light source: turning it on and off, and where the hardware allows it, its brightness, color, color temperature, and effects. Inherit from `LightEntity` in `homeassistant.components.light`. Use it for anything that is a light to the person in the room, like a bulb, an LED strip, or a dimmer that drives a lamp. A plain relay that happens to power a lamp is often still a light, but a relay that powers anything else is a [switch](/core/entities/switch/).
 
 For how the frontend shows a light, see the [light more-info view](/design/more-info/light/).
+
+<EmbedDemo
+  entities={[
+    {
+      entity_id: "light.living_room",
+      state: "on",
+      attributes: {
+        friendly_name: "Living room",
+        supported_color_modes: ["color_temp"],
+        color_mode: "color_temp",
+        brightness: 180,
+        color_temp_kelvin: 3000,
+        min_color_temp_kelvin: 2000,
+        max_color_temp_kelvin: 6500,
+      },
+    },
+  ]}
+  cards={[
+    {
+      type: "tile",
+      entity: "light.living_room",
+      features: [{ type: "light-brightness" }, { type: "light-color-temp" }],
+    },
+    {
+      type: "light",
+      entity: "light.living_room",
+    },
+  ]}
+  caption="A light with brightness and color temperature, in a tile card and a light card. The cards are live: dim it, change its color temperature, or turn it off."
+/>
 
 ## Properties
 

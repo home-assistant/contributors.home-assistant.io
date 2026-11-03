@@ -5,9 +5,35 @@ sidebarLabel: Calendar
 sidebarGroup: Sensors and status
 ---
 
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
+
 A calendar entity represents a set of events, each with a start and an end date or time. Its state shows whether an event is going on right now, which makes it useful in automations. Inherit from `CalendarEntity`, imported from `homeassistant.components.calendar`.
 
 Calendar integrations follow the iCalendar standard, [RFC 5545](https://www.rfc-editor.org/rfc/rfc5545). If your integration supports recurring events, it expands them itself: return every occurrence in a series as its own event.
+
+<EmbedDemo
+  entities={[
+    {
+      entity_id: "calendar.family",
+      state: "off",
+      attributes: {
+        friendly_name: "Family",
+      },
+    },
+  ]}
+  cards={[
+    {
+      type: "tile",
+      entity: "calendar.family",
+    },
+    {
+      type: "calendar",
+      entities: ["calendar.family"],
+      initial_view: "listWeek",
+    },
+  ]}
+  caption="A calendar in a tile card and a calendar card. The state is off while no event is going on. The events are sample events of the demo, around today."
+/>
 
 ## Properties
 
