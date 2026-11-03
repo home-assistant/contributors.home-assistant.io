@@ -98,10 +98,10 @@ const COMPONENTS = [
   "ha-state-icon",
 ];
 
-// Elements for dashboards and dialogs, outside src/components. Their paths
-// are relative to the root of the frontend.
+// Elements outside the list above, by their path relative to the root of the
+// frontend. Dashboard cards are not bundled here: their demos load them from
+// the embed of the frontend demo (EmbedDemo).
 const EXTRA_ELEMENTS = {
-  "hui-card": "src/panels/lovelace/cards/hui-card",
   "ha-card": "src/components/ha-card",
 };
 
@@ -263,8 +263,9 @@ function frontendFixes(frontend: string, applied: Set<string>): Plugin {
 //    Assistant would normally provide.
 // 3. Loads the fake Home Assistant, when a demo on the page needs it.
 // 4. Loads the components a demo uses when that demo comes near the
-//    viewport, and nothing else. Some elements, like hui-card, pull in a big
-//    part of the app, so a demo far down the page does not slow down the top.
+//    viewport, and nothing else. Some elements, like the more-info wrapper,
+//    pull in a big part of the app, so a demo far down the page does not
+//    slow down the top.
 function loaderSource(frontend: string) {
   const theme = `${frontend}/src/resources/theme`;
 
