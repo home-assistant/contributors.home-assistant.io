@@ -252,7 +252,9 @@ const columns = (card: Record<string, unknown>) => {
 
   /* The size and gaps of a section in the sections view of a dashboard.
      When all cards fit in one row, the section is only as wide as that row,
-     so the row sits in the middle of the stage. */
+     so the row sits in the middle of the stage. The row is measured against
+     the full section, at most 500px or the stage when that is narrower, so
+     a card keeps its width when a card next to it is hidden. */
   .section {
     --gap: var(--ha-space-2);
     --columns: 12;
@@ -260,7 +262,9 @@ const columns = (card: Record<string, unknown>) => {
     grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
     gap: var(--gap);
     align-items: start;
-    max-width: calc((500px - 11 * var(--gap)) / 12 * var(--columns) + (var(--columns) - 1) * var(--gap));
+    max-width: calc(
+      (min(500px, 100%) - 11 * var(--gap)) / 12 * var(--columns) + (var(--columns) - 1) * var(--gap)
+    );
     margin: 0 auto;
   }
 
