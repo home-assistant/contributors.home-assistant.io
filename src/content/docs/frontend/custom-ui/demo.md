@@ -4,7 +4,7 @@ description: Embed working dashboard cards, including your own custom card, on a
 sidebarLabel: Live demos
 order: 9
 source: https://github.com/home-assistant/frontend/tree/dev/demo/src/embed
-lastVerified: 2026-11-02
+lastVerified: 2026-11-03
 ---
 
 Screenshots show what a card looks like. A live demo shows how it works: people can turn on a light, move a slider, and see the other cards follow. The [Home Assistant demo](https://demo.home-assistant.io/) publishes two elements that put real dashboard cards on any web page, like your README site or your blog. They run against a mocked backend in the browser, so no Home Assistant server is needed.
@@ -56,6 +56,8 @@ Put the entities in a script tag inside the provider, and the card configuration
 
 Each entity has an `entity_id`, a `state`, and `attributes`. The optional keys `area_id`, `device_id`, and `platform` set its entry in the entity registry.
 
+Entities of a domain whose actions the demo handles, like lights, climate, or covers, only keep the attributes Home Assistant defines for that domain. An attribute that only your integration sets comes back as `undefined` in the demo. Entities of other domains, like sensors or weather, keep all their attributes.
+
 YAML needs its indentation. If your site minifies HTML, make sure the minifier keeps the whitespace in script tags, or use JSON. The `entities` attribute of the provider and the `config` attribute of the card take JSON too.
 
 ## Show your custom card
@@ -84,7 +86,7 @@ Your card gets the same mocked `hass` object as the built-in cards, and `window.
 
 ## Load the demo when it comes into view
 
-On a page with several demos, or with a demo far down the page, you can wait to load the script of the demo until a demo comes near, so the rest of the page loads first. The elements read their script tags when they are set up, so the cards still find their entities and configuration when the script comes later. Watch every provider and card on the page, then import the script of the demo first, and the script of your card after it:
+On a page with several demos, or with a demo far down the page, you can wait to load the script of the demo until a demo comes near, so the rest of the page loads first. The elements read their script tags when they are set up, so the cards still find their entities and configuration when the script comes later. Watch every card on the page, then import the script of the demo first, and the script of your card after it:
 
 ```js
 const loadDemo = async () => {
@@ -101,15 +103,12 @@ const observer = new IntersectionObserver(
   },
   { rootMargin: "400px 0px" },
 );
-const demos = document.querySelectorAll(
-  "ha-embed-provider, ha-embed-card",
-);
-for (const demo of demos) {
-  observer.observe(demo);
+for (const card of document.querySelectorAll("ha-embed-card")) {
+  observer.observe(card);
 }
 ```
 
-Run it from a module script, so the elements of the page are there when it looks for them. Leave out the script tags of the demo and your card when you load them this way.
+Cards inside a provider count too, so this works for every layout. It does not watch providers: a provider at the top of the page would load the demo right away, even when its cards are far below. Run it from a module script, so the elements of the page are there when it looks for them. Leave out the script tags of the demo and your card when you load them this way.
 
 ## Place cards anywhere on the page
 
@@ -157,33 +156,26 @@ Weather entities get a forecast made up from their condition and temperature, or
 
 ## Change and watch entities from your page
 
-The `entities` property of the provider replaces all entities. To change one entity, start from the current states in `provider.hass.states`, and keep the area, device, and platform of each entity from `provider.hass.entities`. Run it from a module script, after the provider has set up its entities:
+To change one entity, update it in `provider.hass.mockEntities`. The other entities stay as they are, and so does what the entity remembers, like the brightness of a light that is off. Run it from a module script, after the provider has set up its entities. This turns off the kitchen light from [Add a card](#add-a-card):
 
 ```js
 await customElements.whenDefined("ha-embed-provider");
 const provider = document.querySelector("ha-embed-provider");
 await provider.updateComplete;
 
-provider.entities = Object.values(provider.hass.states).map((entity) => {
-  const { area_id, device_id, platform } =
-    provider.hass.entities[entity.entity_id];
-  return {
-    ...entity,
-    area_id,
-    device_id,
-    platform,
-    ...(entity.entity_id === "sensor.outside_temperature" && { state: "18.1" }),
-  };
-});
+provider.hass.mockEntities["light.kitchen"].update({ state: "off" });
 ```
 
-To use an action of an entity, call it. The provider updates the state and the cards:
+To use an action of an entity, call it in the same module script. The provider updates the state and the cards:
 
 ```js
-provider.hass.callService("switch", "toggle", {
-  entity_id: "switch.coffee_maker",
+provider.hass.callService("light", "turn_on", {
+  entity_id: "light.kitchen",
+  brightness_pct: 50,
 });
 ```
+
+Setting the `entities` property of the provider replaces all entities, and they start again from what you set.
 
 The provider fires a `states-changed` event when the state of one or more entities changes. Its detail has `states`, the states of all entities by entity ID.
 
@@ -197,6 +189,7 @@ The mocked backend only knows a part of the Home Assistant API. Keep these limit
 - The logbook is empty.
 - Actions that open a dialog, like `more-info`, do nothing.
 - Map cards only work on the demo site itself, not embedded on another site.
-- Other requests get an error.
+- Actions the backend does not handle, or for entities it does not have, do nothing. They do not return an error.
+- Other requests that wait for an answer, over WebSocket or REST, get an error.
 
 The mocks live in `demo/src/stubs/` of the [frontend repository](https://github.com/home-assistant/frontend). If your card needs a request they do not know, see [the gallery and the demo](/frontend/development/gallery-and-demo/#embed-cards-on-other-sites) for where to add it.
