@@ -5,11 +5,47 @@ sidebarLabel: Climate
 sidebarGroup: Lights and climate
 ---
 
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
+
 A climate entity controls the climate of a space: a thermostat, an air conditioner, a heat pump, or a radiator valve with a target temperature. It can also control humidity and the fan of the unit. Inherit from `ClimateEntity` in `homeassistant.components.climate`.
 
 If the device only dries or humidifies the air, use a [humidifier](/core/entities/humidifier/). If it heats water, use a [water heater](/core/entities/water-heater/). A standalone fan is a [fan](/core/entities/fan/).
 
 For how the frontend shows a climate entity, see the [climate more-info view](/design/more-info/climate/).
+
+<EmbedDemo
+  entities={[
+    {
+      entity_id: "climate.living_room",
+      state: "heat",
+      attributes: {
+        friendly_name: "Living room",
+        current_temperature: 19.5,
+        temperature: 21,
+        min_temp: 7,
+        max_temp: 30,
+        target_temp_step: 0.5,
+        hvac_modes: ["heat", "cool", "auto", "off"],
+        preset_modes: ["home", "away", "eco"],
+        preset_mode: "home",
+        supported_features: 401,
+      },
+    },
+  ]}
+  cards={[
+    {
+      type: "tile",
+      entity: "climate.living_room",
+      features: [{ type: "target-temperature" }, { type: "climate-preset-modes" }],
+    },
+    {
+      type: "thermostat",
+      entity: "climate.living_room",
+      features: [{ type: "climate-hvac-modes" }],
+    },
+  ]}
+  caption="A climate entity with a target temperature, HVAC modes, and presets, in a tile card and a thermostat card. The cards are live: change the temperature, the mode, or the preset."
+/>
 
 ## Properties
 

@@ -5,11 +5,39 @@ sidebarLabel: Alarm control panel
 sidebarGroup: Openings and security
 ---
 
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
+
 An alarm control panel entity controls a security system: it arms the system in one or more modes, disarms it, and can trigger the alarm. It can ask for a code. Inherit from `AlarmControlPanelEntity` in `homeassistant.components.alarm_control_panel`.
 
 The sensors of the system, like door contacts and motion detectors, are [binary sensors](/core/entities/binary-sensor/). A siren that is part of the system is a [siren](/core/entities/siren/).
 
 For how the frontend shows an alarm control panel, see the [alarm control panel more-info view](/design/more-info/alarm-control-panel/).
+
+<EmbedDemo
+  entities={[
+    {
+      entity_id: "alarm_control_panel.home_alarm",
+      state: "disarmed",
+      attributes: {
+        friendly_name: "Home alarm",
+        code_arm_required: false,
+        supported_features: 15,
+      },
+    },
+  ]}
+  cards={[
+    {
+      type: "tile",
+      entity: "alarm_control_panel.home_alarm",
+      features: [{ type: "alarm-modes" }],
+    },
+    {
+      type: "alarm-panel",
+      entity: "alarm_control_panel.home_alarm",
+    },
+  ]}
+  caption="An alarm control panel that arms home, away, and night, in a tile card and an alarm panel card. The cards are live: arm or disarm it in either one."
+/>
 
 ## Properties
 

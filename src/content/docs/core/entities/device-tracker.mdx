@@ -5,6 +5,8 @@ sidebarLabel: Device tracker
 sidebarGroup: Sensors and status
 ---
 
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
+
 A device tracker reports presence: whether a phone, a tag, or a car is home, away, or in a [zone](/glossary/zone/). It is read-only. There are three base classes, all imported from `homeassistant.components.device_tracker`, and you pick one by how your device knows where it is:
 
 - `TrackerEntity`: the device reports its position, as GPS coordinates or as the zones it is in. Like a phone app or a car.
@@ -12,6 +14,43 @@ A device tracker reports presence: whether a phone, a tag, or a car is home, awa
 - `BaseScannerEntity`: the device is connected or not, without the MAC address assumptions of `ScannerEntity`. Like a Bluetooth beacon.
 
 All three get the `diagnostic` [entity category](/glossary/entity-category/) by default, and set the `tracking_type` capability attribute: `position` for `TrackerEntity`, `connection` for the scanners.
+
+<EmbedDemo
+  entities={[
+    {
+      entity_id: "device_tracker.phone",
+      state: "home",
+      attributes: {
+        friendly_name: "Phone",
+        source_type: "gps",
+        latitude: 52.3731,
+        longitude: 4.8922,
+        gps_accuracy: 12,
+      },
+    },
+    {
+      entity_id: "device_tracker.laptop",
+      state: "not_home",
+      attributes: {
+        friendly_name: "Laptop",
+        source_type: "router",
+      },
+    },
+  ]}
+  cards={[
+    {
+      type: "tile",
+      entity: "device_tracker.phone",
+      grid_options: { columns: 6 },
+    },
+    {
+      type: "tile",
+      entity: "device_tracker.laptop",
+      grid_options: { columns: 6 },
+    },
+  ]}
+  caption="A phone tracked by GPS that is home, and a laptop tracked by a router that is away, in tile cards."
+/>
 
 ## Properties
 

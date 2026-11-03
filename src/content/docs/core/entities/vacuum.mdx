@@ -5,9 +5,34 @@ sidebarLabel: Vacuum
 sidebarGroup: Appliances
 ---
 
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
+
 A vacuum entity controls a robot vacuum cleaner: start and pause cleaning, send it back to its dock, and, where the robot supports it, set the suction power, find it, or clean specific rooms. Inherit from `StateVacuumEntity` in `homeassistant.components.vacuum`. Robot mops and combined vacuum and mop robots use the same entity.
 
 For how the frontend shows a vacuum, see the [vacuum more-info view](/design/more-info/vacuum/).
+
+<EmbedDemo
+  entities={[
+    {
+      entity_id: "vacuum.downstairs",
+      state: "docked",
+      attributes: {
+        friendly_name: "Downstairs vacuum",
+        fan_speed_list: ["quiet", "standard", "max"],
+        fan_speed: "standard",
+        supported_features: 12348,
+      },
+    },
+  ]}
+  cards={[
+    {
+      type: "tile",
+      entity: "vacuum.downstairs",
+      features: [{ type: "vacuum-commands" }, { type: "vacuum-fan-speed" }],
+    },
+  ]}
+  caption="A robot vacuum that starts, pauses, stops, returns to its dock, and has fan speeds, in a tile card. The card is live: start cleaning, or change the fan speed."
+/>
 
 ## Properties
 
