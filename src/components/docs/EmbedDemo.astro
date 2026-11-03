@@ -18,19 +18,43 @@
 //       { type: "tile", entity: "light.kitchen", grid_options: { columns: 6 } },
 //     ]}
 //   />
-interface Props {
-  // The entities of the provider, or an object with `entities`, `areas`,
-  // `calendars`, and `energy`, as the provider takes them.
-  entities: unknown[] | Record<string, unknown>;
+//
+// With `home`, the cards get the sample home of the site instead, the same
+// one as <Demo hass> (see demo-runtime/demo-home.ts).
+//   <EmbedDemo home cards={[{ type: "light", entity: "light.kitchen_ceiling" }]} />
+import { AREAS, DEVICES, ENTITIES } from "../../../demo-runtime/demo-home";
+
+type Props = {
   // The configuration of each card, the same as in a dashboard.
   cards: Record<string, unknown>[];
   caption?: string;
-}
+} & (
+  | {
+      // The entities of the provider, or an object with `entities`, `areas`,
+      // `calendars`, and `energy`, as the provider takes them.
+      entities: unknown[] | Record<string, unknown>;
+      home?: never;
+    }
+  | { home: true; entities?: never }
+);
 
 const EMBED_SCRIPT_URL = "https://demo.home-assistant.io/embed.js";
 const SECTION_COLUMNS = 12;
 
-const { entities, cards, caption } = Astro.props;
+const { cards, caption } = Astro.props;
+
+// The embed has no device registry, so an entity of a device gets the area
+// of its device.
+const sampleHome = () => ({
+  areas: AREAS,
+  entities: ENTITIES.map(({ device_id, area_id, ...entity }) => ({
+    ...entity,
+    ...(device_id && { device_id }),
+    area_id: area_id ?? DEVICES.find((item) => item.id === device_id)?.area_id ?? undefined,
+  })),
+});
+
+const entities = Astro.props.home ? sampleHome() : Astro.props.entities;
 
 // Keeps a "</script>" in the data from closing the script element.
 const toScriptJson = (value: unknown) => JSON.stringify(value).replaceAll("<", "\\u003c");
