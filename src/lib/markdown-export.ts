@@ -448,7 +448,7 @@ function demo(attributes: Attributes, children: string): string {
 // The cards of an <EmbedDemo> as the HTML that shows them on any page.
 function embedDemo(attributes: Attributes): string {
   const json = (value: unknown, indent: string) =>
-    JSON.stringify(value, null, 2).replaceAll("\n", `\n${indent}`);
+    JSON.stringify(value, null, 2).replaceAll("<", "\\u003c").replaceAll("\n", `\n${indent}`);
   const cards = (propValue(attributes.cards) as unknown[])
     .map(
       (card) =>
