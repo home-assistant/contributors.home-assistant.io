@@ -114,9 +114,12 @@ const columns = (card: Record<string, unknown>) => {
     }
   }
 
-  // The sample home is serialized at build time, so a timer that finishes
-  // some minutes "from now" would have finished long ago. Shift it by the
-  // time since the build, before the provider reads it.
+  // The sample home is serialized at build time, so its times, like a timer
+  // that finishes some minutes "from now" or the position of a song, would
+  // be long past. Shift every time in it by the time since the build, before
+  // the provider reads it. All of them come from fromNow in demo-home.ts.
+  const ISO_TIME = /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}Z$/;
+
   function rebaseTimes(provider: HTMLElement) {
     const builtAt = Number(provider.dataset.builtAt);
     const data = provider.querySelector(":scope > script[type='application/json']");
@@ -126,13 +129,19 @@ const columns = (card: Record<string, unknown>) => {
     }
 
     const shift = Date.now() - builtAt;
+    const rebase = (value: unknown) =>
+      typeof value === "string" && ISO_TIME.test(value)
+        ? new Date(Date.parse(value) + shift).toISOString()
+        : value;
     const home = JSON.parse(data.textContent) as {
-      entities: { attributes: Record<string, unknown> }[];
+      entities: { state: unknown; attributes?: Record<string, unknown> }[];
     };
 
-    for (const { attributes } of home.entities) {
-      if (typeof attributes.finishes_at === "string") {
-        attributes.finishes_at = new Date(Date.parse(attributes.finishes_at) + shift).toISOString();
+    for (const entity of home.entities) {
+      const { attributes = {} } = entity;
+      entity.state = rebase(entity.state);
+      for (const [key, value] of Object.entries(attributes)) {
+        attributes[key] = rebase(value);
       }
     }
     data.textContent = JSON.stringify(home);
