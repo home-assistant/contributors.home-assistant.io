@@ -4,12 +4,15 @@ description: The tile card shows one entity with its icon, name, and state, and 
 sidebarGroup: Entity cards
 ---
 
-import Demo from "../../../../components/docs/Demo.astro";
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
 
-<Demo hass>
-  <hui-card style="width: 340px" data-props='{"config": {"type": "tile", "entity": "light.living_room_lamp", "features": [{"type": "light-brightness"}]}}'></hui-card>
-  <hui-card style="width: 340px" data-props='{"config": {"type": "tile", "entity": "climate.thermostat"}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    { type: "tile", entity: "light.living_room_lamp", features: [{ type: "light-brightness" }] },
+    { type: "tile", entity: "climate.thermostat" },
+  ]}
+/>
 
 ## Usage
 
@@ -23,10 +26,17 @@ The tile card follows the state of the entity. The icon and its background take 
 
 Features add controls to the tile: a brightness slider, buttons to open and close a cover, the target temperature, a set of modes. A feature only shows up for an entity that supports it. Add the features people use most, not every feature the entity has. One or two is plenty for most tiles.
 
-<Demo hass>
-  <hui-card style="width: 340px" data-props='{"config": {"type": "tile", "entity": "cover.bedroom_blinds", "features": [{"type": "cover-open-close"}, {"type": "cover-position"}]}}'></hui-card>
-  <hui-card style="width: 340px" data-props='{"config": {"type": "tile", "entity": "climate.thermostat", "features": [{"type": "target-temperature"}]}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    {
+      type: "tile",
+      entity: "cover.bedroom_blinds",
+      features: [{ type: "cover-open-close" }, { type: "cover-position" }],
+    },
+    { type: "tile", entity: "climate.thermostat", features: [{ type: "target-temperature" }] },
+  ]}
+/>
 
 The same features work in the [area card](/design/dashboards/area-card/), the [thermostat card](/design/dashboards/thermostat-card/), and the [humidifier card](/design/dashboards/humidifier-card/). A feature is built once, and every card that supports features can use it.
 
@@ -34,28 +44,42 @@ The same features work in the [area card](/design/dashboards/area-card/), the [t
 
 With `features_position: inline`, the feature sits next to the name instead of below it. The tile keeps the height of a single row, but needs the full width of the section. It works best with a single, compact feature, like a slider.
 
-<Demo hass>
-  <hui-card style="width: 400px" data-props='{"config": {"type": "tile", "entity": "fan.bedroom_fan", "features": [{"type": "fan-speed"}], "features_position": "inline"}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    {
+      type: "tile",
+      entity: "fan.bedroom_fan",
+      features: [{ type: "fan-speed" }],
+      features_position: "inline",
+    },
+  ]}
+/>
 
 ### Vertical
 
 With `vertical: true`, the icon sits above the name and the state. A vertical tile can be narrower, down to a quarter of a section. Use it for a row of small tiles that people mostly toggle.
 
-<Demo hass>
-  <hui-card style="width: 160px" data-props='{"config": {"type": "tile", "entity": "light.living_room_lamp", "vertical": true}}'></hui-card>
-  <hui-card style="width: 160px" data-props='{"config": {"type": "tile", "entity": "light.hallway", "vertical": true}}'></hui-card>
-  <hui-card style="width: 160px" data-props='{"config": {"type": "tile", "entity": "light.kitchen_ceiling", "vertical": true}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    { type: "tile", entity: "light.living_room_lamp", vertical: true, grid_options: { columns: 4 } },
+    { type: "tile", entity: "light.hallway", vertical: true, grid_options: { columns: 4 } },
+    { type: "tile", entity: "light.kitchen_ceiling", vertical: true, grid_options: { columns: 4 } },
+  ]}
+/>
 
 ### State content
 
 By default, the tile shows the state of the entity. With `state_content`, you pick what it shows instead, like an attribute, or the time since the last change. A list shows several, separated by a dot. Use `hide_state` to show only the name.
 
-<Demo hass>
-  <hui-card style="width: 340px" data-props='{"config": {"type": "tile", "entity": "climate.thermostat", "state_content": ["state", "current_temperature"]}}'></hui-card>
-  <hui-card style="width: 340px" data-props='{"config": {"type": "tile", "entity": "lock.front_door", "hide_state": true}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    { type: "tile", entity: "climate.thermostat", state_content: ["state", "current_temperature"] },
+    { type: "tile", entity: "lock.front_door", hide_state: true },
+  ]}
+/>
 
 ### Content
 

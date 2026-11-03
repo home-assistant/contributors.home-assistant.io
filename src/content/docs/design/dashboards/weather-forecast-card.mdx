@@ -4,11 +4,12 @@ description: The weather forecast card shows the current weather and the forecas
 sidebarGroup: Information
 ---
 
-import Demo from "../../../../components/docs/Demo.astro";
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
 
-<Demo hass>
-  <hui-card style="width: 400px" data-props='{"config": {"type": "weather-forecast", "entity": "weather.home", "forecast_type": "daily"}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[{ type: "weather-forecast", entity: "weather.home", forecast_type: "daily" }]}
+/>
 
 ## Usage
 
@@ -20,9 +21,10 @@ Use it once on a dashboard, where people look for the weather. For the outdoor t
 
 `forecast_type` sets which forecast the card shows: `daily`, `hourly`, or `twice_daily` (day and night). Which ones are available depends on the weather service. The card editor only offers the types the entity supports.
 
-<Demo hass>
-  <hui-card style="width: 400px" data-props='{"config": {"type": "weather-forecast", "entity": "weather.home", "forecast_type": "hourly"}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[{ type: "weather-forecast", entity: "weather.home", forecast_type: "hourly" }]}
+/>
 
 `forecast_slots` sets how many days or hours the card shows, 5 by default.
 
@@ -30,18 +32,27 @@ Use it once on a dashboard, where people look for the weather. For the outdoor t
 
 `show_current: false` leaves out the current weather, and `show_forecast: false` leaves out the forecast. A card with one of the two is shorter. Use the forecast only version next to a card that already shows the current temperature.
 
-<Demo hass>
-  <hui-card style="width: 400px" data-props='{"config": {"type": "weather-forecast", "entity": "weather.home", "forecast_type": "daily", "show_current": false}}'></hui-card>
-  <hui-card style="width: 400px" data-props='{"config": {"type": "weather-forecast", "entity": "weather.home", "show_forecast": false}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    {
+      type: "weather-forecast",
+      entity: "weather.home",
+      forecast_type: "daily",
+      show_current: false,
+    },
+    { type: "weather-forecast", entity: "weather.home", show_forecast: false },
+  ]}
+/>
 
 ### Narrow cards
 
 The card adapts to its width. As it gets narrower, the current weather gets a smaller icon and smaller type, and at the narrowest sizes the name and the extra value disappear. When the card is short, the forecast becomes compact too. So the card works in half a section, but shows more at full width.
 
-<Demo hass>
-  <hui-card style="width: 260px" data-props='{"config": {"type": "weather-forecast", "entity": "weather.home", "forecast_type": "daily", "forecast_slots": 3}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[{ type: "weather-forecast", entity: "weather.home", forecast_type: "daily", forecast_slots: 3 }]}
+/>
 
 ### Content
 

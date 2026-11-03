@@ -4,11 +4,24 @@ description: The grid, horizontal stack, and vertical stack cards hold other car
 sidebarGroup: Grouping and layout
 ---
 
-import Demo from "../../../../components/docs/Demo.astro";
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
 
-<Demo hass>
-  <hui-card style="width: 380px" data-props='{"config": {"type": "grid", "columns": 2, "square": false, "cards": [{"type": "button", "entity": "light.living_room_lamp"}, {"type": "button", "entity": "light.hallway"}, {"type": "button", "entity": "switch.desk_plug"}, {"type": "button", "entity": "lock.front_door"}]}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    {
+      type: "grid",
+      columns: 2,
+      square: false,
+      cards: [
+        { type: "button", entity: "light.living_room_lamp" },
+        { type: "button", entity: "light.hallway" },
+        { type: "button", entity: "switch.desk_plug" },
+        { type: "button", entity: "lock.front_door" },
+      ],
+    },
+  ]}
+/>
 
 ## Usage
 
@@ -26,26 +39,70 @@ In the sections view, you rarely need them. A section is already a grid of 12 co
 
 The grid card has three columns by default. Set `columns` to change that. By default, every cell is square, which suits small cards like the [button card](/design/dashboards/button-card/). Set `square: false` to let each row take the height of its tallest card.
 
-<Demo hass>
-  <hui-card style="width: 380px" data-props='{"config": {"type": "grid", "cards": [{"type": "button", "entity": "light.living_room_lamp"}, {"type": "button", "entity": "light.hallway"}, {"type": "button", "entity": "light.kitchen_ceiling"}]}}'></hui-card>
-  <hui-card style="width: 380px" data-props='{"config": {"type": "grid", "columns": 2, "square": false, "cards": [{"type": "tile", "entity": "binary_sensor.front_door"}, {"type": "tile", "entity": "lock.front_door"}, {"type": "tile", "entity": "binary_sensor.kitchen_window"}, {"type": "tile", "entity": "binary_sensor.bathroom_leak"}]}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    {
+      type: "grid",
+      cards: [
+        { type: "button", entity: "light.living_room_lamp" },
+        { type: "button", entity: "light.hallway" },
+        { type: "button", entity: "light.kitchen_ceiling" },
+      ],
+    },
+    {
+      type: "grid",
+      columns: 2,
+      square: false,
+      cards: [
+        { type: "tile", entity: "binary_sensor.front_door" },
+        { type: "tile", entity: "lock.front_door" },
+        { type: "tile", entity: "binary_sensor.kitchen_window" },
+        { type: "tile", entity: "binary_sensor.bathroom_leak" },
+      ],
+    },
+  ]}
+/>
 
 ### Horizontal stack
 
 The horizontal stack divides its width evenly over its cards. Keep it to two or three cards. On a narrow screen, every card in the stack gets narrower too, because a stack never wraps.
 
-<Demo hass>
-  <hui-card style="width: 380px" data-props='{"config": {"type": "horizontal-stack", "cards": [{"type": "gauge", "entity": "sensor.living_room_humidity", "name": "Inside"}, {"type": "gauge", "entity": "sensor.outdoor_humidity", "name": "Outside"}]}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    {
+      type: "horizontal-stack",
+      cards: [
+        { type: "gauge", entity: "sensor.living_room_humidity", name: "Inside" },
+        { type: "gauge", entity: "sensor.outdoor_humidity", name: "Outside" },
+      ],
+    },
+  ]}
+/>
 
 ### Vertical stack
 
 The vertical stack puts cards below each other, as one card. Combine it with a horizontal stack to build a small layout of its own.
 
-<Demo hass>
-  <hui-card style="width: 380px" data-props='{"config": {"type": "vertical-stack", "cards": [{"type": "tile", "entity": "media_player.living_room_speaker"}, {"type": "horizontal-stack", "cards": [{"type": "tile", "entity": "light.living_room_lamp"}, {"type": "tile", "entity": "climate.thermostat"}]}]}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    {
+      type: "vertical-stack",
+      cards: [
+        { type: "tile", entity: "media_player.living_room_speaker" },
+        {
+          type: "horizontal-stack",
+          cards: [
+            { type: "tile", entity: "light.living_room_lamp" },
+            { type: "tile", entity: "climate.thermostat" },
+          ],
+        },
+      ],
+    },
+  ]}
+/>
 
 ### Title
 

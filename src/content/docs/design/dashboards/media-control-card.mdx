@@ -4,11 +4,12 @@ description: The media control card shows what a media player is playing, with t
 sidebarGroup: Controls
 ---
 
-import Demo from "../../../../components/docs/Demo.astro";
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
 
-<Demo hass>
-  <hui-card style="width: 400px" data-props='{"config": {"type": "media-control", "entity": "media_player.living_room_speaker"}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[{ type: "media-control", entity: "media_player.living_room_speaker" }]}
+/>
 
 ## Usage
 
@@ -16,24 +17,35 @@ The media control card shows one media player. At the top are the icon and the n
 
 The card takes its colors from the artwork. The image sits on the right, and the background picks up the main color of the image, with the text in a color that stays readable on it. Without artwork, the card uses the primary color. When the player is off, the card is gray, and only the power button stays.
 
-<Demo hass>
-  <hui-card style="width: 400px" data-props='{"config": {"type": "media-control", "entity": "media_player.living_room_tv"}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[{ type: "media-control", entity: "media_player.living_room_tv" }]}
+/>
 
 Use the media control card when what is playing is worth the room, like for the speaker in the living room. For a player that people mostly turn on and off, or only change the volume of, a [tile card](/design/dashboards/tile-card/) with the playback or the volume feature is smaller.
 
-<Demo hass>
-  <hui-card style="width: 340px" data-props='{"config": {"type": "tile", "entity": "media_player.living_room_speaker", "features": [{"type": "media-player-playback"}]}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    {
+      type: "tile",
+      entity: "media_player.living_room_speaker",
+      features: [{ type: "media-player-playback" }],
+    },
+  ]}
+/>
 
 ### Narrow cards
 
 The card measures its own width, and drops what does not fit. Below 350 pixels, the progress bar goes. Below 300 pixels, the controls go too, while something is playing. Keep this in mind when you put the card in a narrow column or in a grid.
 
-<Demo hass>
-  <hui-card style="width: 320px" data-props='{"config": {"type": "media-control", "entity": "media_player.living_room_speaker"}}'></hui-card>
-  <hui-card style="width: 280px" data-props='{"config": {"type": "media-control", "entity": "media_player.living_room_speaker"}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    { type: "media-control", entity: "media_player.living_room_speaker" },
+    { type: "media-control", entity: "media_player.living_room_speaker" },
+  ]}
+/>
 
 ### Content
 

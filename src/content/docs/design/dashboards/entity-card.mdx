@@ -4,12 +4,15 @@ description: The entity card shows the state of one entity as a big value, with 
 sidebarGroup: Entity cards
 ---
 
-import Demo from "../../../../components/docs/Demo.astro";
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
 
-<Demo hass>
-  <hui-card style="width: 300px" data-props='{"config": {"type": "entity", "entity": "sensor.outdoor_temperature"}}'></hui-card>
-  <hui-card style="width: 300px" data-props='{"config": {"type": "entity", "entity": "sensor.desk_plug_power"}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    { type: "entity", entity: "sensor.outdoor_temperature" },
+    { type: "entity", entity: "sensor.desk_plug_power" },
+  ]}
+/>
 
 ## Usage
 
@@ -21,26 +24,45 @@ The entity card only shows. It has no controls, and selecting it opens the more-
 
 With `attribute`, the card shows an attribute instead of the state. Add a `unit` when the attribute has none of its own. A custom unit always comes after the value.
 
-<Demo hass>
-  <hui-card style="width: 300px" data-props='{"config": {"type": "entity", "entity": "climate.thermostat", "attribute": "current_temperature", "name": "Living room", "unit": "°C"}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    {
+      type: "entity",
+      entity: "climate.thermostat",
+      attribute: "current_temperature",
+      name: "Living room",
+      unit: "°C",
+    },
+  ]}
+/>
 
 ### State color
 
 For lights, the icon takes the color of the state, like amber when the light is on, or the color of the light itself. For other entities, the icon stays in the default icon color. Set `state_color: true` to color the icon by state for those too, or `state_color: false` to turn it off for a light.
 
-<Demo hass>
-  <hui-card style="width: 300px" data-props='{"config": {"type": "entity", "entity": "light.living_room_lamp"}}'></hui-card>
-  <hui-card style="width: 300px" data-props='{"config": {"type": "entity", "entity": "lock.front_door", "state_color": true}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    { type: "entity", entity: "light.living_room_lamp" },
+    { type: "entity", entity: "lock.front_door", state_color: true },
+  ]}
+/>
 
 ### Footer
 
 The card can have a footer, like a graph of the entity or a row of buttons. With a graph, the card turns into a small sensor card, so prefer the [sensor card](/design/dashboards/sensor-card/) for that.
 
-<Demo hass>
-  <hui-card style="width: 300px" data-props='{"config": {"type": "entity", "entity": "sensor.living_room_temperature", "footer": {"type": "graph", "entity": "sensor.living_room_temperature"}}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    {
+      type: "entity",
+      entity: "sensor.living_room_temperature",
+      footer: { type: "graph", entity: "sensor.living_room_temperature" },
+    },
+  ]}
+/>
 
 ### Content
 

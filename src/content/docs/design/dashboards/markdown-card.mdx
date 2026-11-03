@@ -4,11 +4,18 @@ description: The Markdown card shows text written in Markdown, rendered as a tem
 sidebarGroup: Information
 ---
 
-import Demo from "../../../../components/docs/Demo.astro";
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
 
-<Demo hass>
-  <hui-card style="width: 380px" data-props='{"config": {"type": "markdown", "title": "Welcome home", "content": "The **laundry** is almost done.\nDinner is at **seven**, and the shopping list is on the fridge."}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    {
+      type: "markdown",
+      title: "Welcome home",
+      content: "The **laundry** is almost done.\nDinner is at **seven**, and the shopping list is on the fridge.",
+    },
+  ]}
+/>
 
 ## Usage
 
@@ -32,9 +39,15 @@ The demos on this site have no Home Assistant behind them to render a template, 
 
 The card renders Markdown the way the rest of Home Assistant does. A single line break in the content is a line break on the card. Next to the usual Markdown, a few elements of the frontend work, like `<ha-icon>`, `<ha-alert>`, and `<ha-qr-code>`. A blockquote in the GitHub alert style becomes an alert.
 
-<Demo hass>
-  <hui-card style="width: 380px" data-props='{"config": {"type": "markdown", "content": "> [!TIP]\n> The guest Wi-Fi password is on the back of the router."}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    {
+      type: "markdown",
+      content: "> [!TIP]\n> The guest Wi-Fi password is on the back of the router.",
+    },
+  ]}
+/>
 
 Only a safe set of HTML is allowed. Scripts, styles, and most other tags are stripped.
 
@@ -42,9 +55,16 @@ Only a safe set of HTML is allowed. Scripts, styles, and most other tags are str
 
 With `text_only: true`, the card has no background, border, or shadow. The text sits on the dashboard itself. Use it for a line of text between cards, like a short explanation in a section. A title is not shown in this mode.
 
-<Demo hass>
-  <hui-card style="width: 380px" data-props='{"config": {"type": "markdown", "text_only": true, "content": "Lights in the garden turn on at sunset, and off at midnight."}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    {
+      type: "markdown",
+      text_only: true,
+      content: "Lights in the garden turn on at sunset, and off at midnight.",
+    },
+  ]}
+/>
 
 ### Actions
 
