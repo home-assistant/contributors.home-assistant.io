@@ -22,7 +22,7 @@
 // With `home`, the cards get the sample home of the site instead, the same
 // one as <Demo hass> (see demo-runtime/demo-home.ts).
 //   <EmbedDemo home cards={[{ type: "light", entity: "light.kitchen_ceiling" }]} />
-import { AREAS, DEVICES, ENTITIES } from "../../../demo-runtime/demo-home";
+import { AREAS, DEVICES, ENTITIES, LOADED_AT } from "../../../demo-runtime/demo-home";
 
 type Props = {
   // The configuration of each card, the same as in a dashboard.
@@ -72,6 +72,7 @@ const columns = (card: Record<string, unknown>) => {
     <ha-embed-provider
       class="section"
       data-embed-src={EMBED_SCRIPT_URL}
+      data-built-at={Astro.props.home ? LOADED_AT : undefined}
       style={`--columns: ${Math.min(
         cards.reduce((sum, card) => sum + columns(card), 0),
         SECTION_COLUMNS,
@@ -111,6 +112,30 @@ const columns = (card: Record<string, unknown>) => {
     for (const provider of providers) {
       provider.setAttribute("color-scheme", scheme);
     }
+  }
+
+  // The sample home is serialized at build time, so a timer that finishes
+  // some minutes "from now" would have finished long ago. Shift it by the
+  // time since the build, before the provider reads it.
+  function rebaseTimes(provider: HTMLElement) {
+    const builtAt = Number(provider.dataset.builtAt);
+    const data = provider.querySelector(":scope > script[type='application/json']");
+
+    if (!builtAt || !data?.textContent) {
+      return;
+    }
+
+    const shift = Date.now() - builtAt;
+    const home = JSON.parse(data.textContent) as {
+      entities: { attributes: Record<string, unknown> }[];
+    };
+
+    for (const { attributes } of home.entities) {
+      if (typeof attributes.finishes_at === "string") {
+        attributes.finishes_at = new Date(Date.parse(attributes.finishes_at) + shift).toISOString();
+      }
+    }
+    data.textContent = JSON.stringify(home);
   }
 
   type GridOptions = {
@@ -197,6 +222,7 @@ const columns = (card: Record<string, unknown>) => {
     );
 
     for (const provider of providers) {
+      rebaseTimes(provider);
       observer.observe(provider);
     }
   }
