@@ -82,7 +82,7 @@ Load the script of your card on the page, after the script of the demo, and use 
 </ha-embed-card>
 ```
 
-Your card gets the same mocked `hass` object as the built-in cards, and `window.loadCardHelpers()` works for the [card helpers](/frontend/custom-ui/card/#card-helpers). The card helpers and the built-in elements only exist once the script of the demo has run. Module scripts run in the order they are on the page, so keep the script of your card after it, in case your card uses them as soon as its script loads. When the script of your card is on another site than your page, that site needs to send CORS headers for it.
+Your card gets the same mocked `hass` object as the built-in cards, and `window.loadCardHelpers()` works for the [card helpers](/frontend/custom-ui/card/#card-helpers). The card helpers only exist once the script of the demo has run. Module scripts run in the order they are on the page, so keep the script of your card after it, in case your card uses them as soon as its script loads. Many built-in cards, like the map card, only load when a card first needs them, so create built-in cards through the card helpers instead of by their element name. When the script of your card is on another site than your page, that site needs to send CORS headers for it.
 
 ## Load the demo when it comes into view
 
@@ -126,14 +126,14 @@ Set `provider` before the card is added to the page. The card picks its provider
 
 ## Light and dark
 
-The cards follow the light or dark mode of the browser. When your site has its own switch for dark mode, set the `color-scheme` attribute of the provider to `light` or `dark`. The cards keep their styles inside, and do not change the styles of your page.
+The cards follow the light or dark mode of the browser. When your site has its own switch for dark mode, set the `color-scheme` attribute of the provider to `light` or `dark`. The cards keep their styles inside, and do not change the styles of your page. The one exception is the Roboto font: the script adds its font faces to the page, so text of your page that uses Roboto can look different once the script has loaded.
 
 ## Areas, calendars, and energy
 
 Some cards need data that is not an entity. To set it, put an object in the script tag of the provider instead of the list. The object has the list in `entities`, and any of these keys:
 
 - `areas`: a list of areas, each with an `area_id` and a `name`. Without it, each `area_id` of the entities becomes an area.
-- `calendars`: the events of calendar entities, by entity ID. Each event has a `summary`, a `start`, and an `end`. Calendars without events here get sample events around today.
+- `calendars`: the events of calendar entities, by entity ID. Each event has a `summary`, a `start`, and an `end`. Calendars that are not listed here get sample events around today. A calendar with an empty list has no events.
 - `energy`: the energy settings, the same as the `energy/get_prefs` response. Without it, energy is not set up.
 
 ```yaml
@@ -151,6 +151,8 @@ calendars:
       start: "2026-11-02T15:30:00+00:00"
       end: "2026-11-02T16:15:00+00:00"
 ```
+
+Calendar cards only show the events in the dates they display, so change these dates to ones near the day of your demo. To always have events, leave the calendar out of `calendars` and use the sample events, which move with today.
 
 Weather entities get a forecast made up from their condition and temperature, or from their `forecast` attribute when they have one. Set `supported_features` to show forecasts.
 
@@ -184,7 +186,8 @@ The provider fires a `states-changed` event when the state of one or more entiti
 The mocked backend only knows a part of the Home Assistant API. Keep these limits in mind when you pick what to show:
 
 - The actions of lights, switches, climate, covers, fans, locks, media players, and more change the state of the entity.
-- History and statistics are made up from the current state of each entity.
+- Actions only reach entities that they target by entity ID. An action that targets an area or a device does nothing.
+- History and statistics are made up from the current state of each entity. A few energy sensors of the demo, like `sensor.solar_production`, always have the same sample statistics instead.
 - Templates are not rendered. Template subscriptions fill in simple `{{ variable }}` references from the variables you pass and return the rest as it is. The REST `template` endpoint returns an error.
 - The logbook is empty.
 - Actions that open a dialog, like `more-info`, do nothing.

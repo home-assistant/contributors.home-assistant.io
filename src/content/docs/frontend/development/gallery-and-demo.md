@@ -54,9 +54,9 @@ Some demo data is generated from Core: the action descriptions in `src/fake_data
 
 The demo also builds `embed.js`, which puts dashboard cards on any web page with the `<ha-embed-provider>` and `<ha-embed-card>` elements. Card authors use it for [live demos of their cards](/frontend/custom-ui/demo/). Its code is in `demo/src/embed/`, and `demo/src/html/components.html.template` is the page that documents it, at `/components.html` of the demo.
 
-The provider registers its own set of mocks. Most come from the stubs in `demo/src/stubs/`, and a few, like energy, are defined in `ha-embed-provider.ts`. A fix to a stub the provider imports reaches the demo, the embed, and the gallery pages that import it. For a new stub, import it in `ha-embed-provider.ts` and call it in the constructor too.
+The provider registers its own set of mocks. Most come from the stubs in `demo/src/stubs/`, and a few, like energy, are defined in `ha-embed-provider.ts`. A fix to a stub reaches each of the demo, the embed, and the gallery pages that import that stub, and they don't all import the same ones. The calendar stub, for example, is used by the embed and the gallery, but not by the demo. For a new stub, import it in `ha-embed-provider.ts` and call it in the constructor too.
 
-The script loads its other files from the site it came from, so it works on other sites too. Map cards are the exception: they only work on the demo site itself for now.
+The production build of the script loads its other files from the site it came from, so it works on other sites too. The development build loads them from the site of the page instead, so try changes that need to work on other sites with a production build. Map cards are the exception: they only work on the demo site itself for now.
 
 ## Translations in the gallery and the demo
 
