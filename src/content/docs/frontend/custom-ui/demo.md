@@ -56,7 +56,7 @@ Put the entities in a script tag inside the provider, and the card configuration
 
 Each entity has an `entity_id`, a `state`, and `attributes`. The optional keys `area_id`, `device_id`, and `platform` set its entry in the entity registry.
 
-Entities of a domain whose actions the demo handles, like lights, climate, or covers, only keep the attributes Home Assistant defines for that domain. An attribute that only your integration sets comes back as `undefined` in the demo. Entities of other domains, like sensors or weather, keep all their attributes.
+Entities with a specialized mock, including lights, climate, covers, people, and device trackers, keep only a subset of attributes. An attribute that only your integration sets can come back as `undefined` in the demo. Entities without a specialized mock, like sensors or weather, keep all their attributes.
 
 YAML needs its indentation. If your site minifies HTML, make sure the minifier keeps the whitespace in script tags, or use JSON. The `entities` attribute of the provider and the `config` attribute of the card take JSON too.
 
