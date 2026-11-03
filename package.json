@@ -17,6 +17,7 @@
     "structure": "node scripts/check-structure.ts",
     "clean": "node -e \"for (const dir of ['dist', '.astro', 'node_modules/.astro']) require('node:fs').rmSync(dir, { recursive: true, force: true })\"",
     "tokens": "node scripts/sync-tokens.ts",
+    "theme-variables": "node scripts/generate-theme-variables.ts",
     "redirects": "node scripts/generate-redirects.ts",
     "fragments": "node scripts/generate-fragments.ts",
     "bashio": "node scripts/generate-bashio.ts",

@@ -192,6 +192,7 @@ Some pages are generated. Do not edit them by hand, edit their source and run th
 - `src/styles/tokens.css`: run `pnpm tokens`.
 - `public/_redirects`: edit the maps in `redirects/`. The build generates the file.
 - `src/data/source-paths.json`, the repository paths inline code links to: run `pnpm source-paths`.
+- `src/content/docs/marketplace/reference/theme-variables.md`: edit `scripts/theme-variables/`, then run `pnpm theme-variables`.
 
 ### Design tokens
 

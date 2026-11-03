@@ -10,3 +10,4 @@ The pages in this section are for looking things up. For how to use them, start 
 - [hacs.json](/marketplace/reference/hacs-json/): every key of the file, and what the Marketplace does with it.
 - [Repository structure](/marketplace/reference/repository-structure/): where the files go, per type.
 - [Validation checks](/marketplace/reference/validation/): what the HACS action checks, and what the Marketplace refuses to install.
+- [Theme variables](/marketplace/reference/theme-variables/): every variable a theme can set, with its defaults.
