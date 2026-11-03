@@ -9,9 +9,9 @@ import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
 <EmbedDemo
   home
   cards={[
-    { type: "button", entity: "light.living_room_lamp", grid_options: { columns: 4 } },
-    { type: "button", entity: "scene.movie_night", grid_options: { columns: 4 } },
-    { type: "button", entity: "lock.front_door", grid_options: { columns: 4 } },
+    { type: "button", entity: "light.living_room_lamp" },
+    { type: "button", entity: "scene.movie_night" },
+    { type: "button", entity: "lock.front_door" },
   ]}
 />
 
@@ -30,14 +30,13 @@ The button shows the name and the icon. Add `show_state: true` to show the state
 <EmbedDemo
   home
   cards={[
-    { type: "button", entity: "light.hallway", show_state: true, grid_options: { columns: 4 } },
-    { type: "button", entity: "switch.desk_plug", show_name: false, grid_options: { columns: 4 } },
+    { type: "button", entity: "light.hallway", show_state: true },
+    { type: "button", entity: "switch.desk_plug", show_name: false },
     {
       type: "button",
       entity: "light.kitchen_ceiling",
       show_icon: false,
       show_state: true,
-      grid_options: { columns: 4 },
     },
   ]}
 />
@@ -53,9 +52,8 @@ By default, the icon scales with the card: it takes 40% of the width of the card
       type: "button",
       entity: "light.living_room_lamp",
       icon_height: "40px",
-      grid_options: { columns: 4 },
     },
-    { type: "button", entity: "light.hallway", icon_height: "40px", grid_options: { columns: 4 } },
+    { type: "button", entity: "light.hallway", icon_height: "40px" },
   ]}
 />
 

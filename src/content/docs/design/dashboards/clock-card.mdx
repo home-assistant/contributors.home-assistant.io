@@ -13,9 +13,8 @@ import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
       type: "clock",
       clock_size: "large",
       date_format: ["weekday-long", "day-numeric", "month-long"],
-      grid_options: { columns: 8 },
     },
-    { type: "clock", clock_style: "analog", clock_size: "medium", grid_options: { columns: 4 } },
+    { type: "clock", clock_style: "analog", clock_size: "medium" },
   ]}
 />
 
@@ -41,14 +40,12 @@ The default is a digital clock. With `clock_style: analog`, the card shows a clo
       face_style: "numbers_upright",
       border: true,
       show_seconds: true,
-      grid_options: { columns: 4 },
     },
     {
       type: "clock",
       clock_style: "analog",
       clock_size: "medium",
       ticks: "minute",
-      grid_options: { columns: 4 },
     },
   ]}
 />
