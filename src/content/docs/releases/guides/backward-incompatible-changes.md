@@ -13,9 +13,23 @@ Before you write a backward-incompatible change, check if you can avoid it:
 - Can the old way keep working next to the new way for a while? Then it is a [deprecation](/releases/guides/deprecations/), not a backward-incompatible change yet.
 - Can Home Assistant migrate the old configuration automatically? Then nobody has to do anything.
 
+## When it is backward-incompatible
+
+The question to ask is: can this change affect someone right after they update? Mark your pull request as a backward-incompatible change, with the **Breaking change** section and the `breaking-change` label, when:
+
+- It breaks something right away, without a [deprecation](/releases/guides/deprecations/) first. Users were not told in advance, and had no chance to act before they updated.
+- It removes something from an integration after its deprecation period. Users were warned with a [repair](/glossary/repair/), but some of them may not have acted on it, and the removal still affects them.
+
+Do not mark it when:
+
+- Nothing breaks.
+- It removes a deprecated [core API](/core/development/deprecating/#developer-facing-deprecations), like a helper or a constant, after its deprecation period, and no integration or other code in Home Assistant Core uses it anymore. Only custom integrations can still be affected, and their developers were told on the [developer blog](/blog/) when the deprecation started.
+
+The minimum deprecation periods, 6 months for what users see and 12 months for core APIs, are in [Deprecate something](/releases/guides/deprecations/#how-long).
+
 ## Mark the pull request
 
-The pull request template of the [core repository](https://github.com/home-assistant/core) has a type of change checklist. Check **Breaking change** when existing functionality breaks, or **Deprecation** when the break happens in a future release. The pull request then gets the `breaking-change` label, which is what puts your text in the release notes.
+The pull request template of the [core repository](https://github.com/home-assistant/core) has a type of change checklist. Check **Breaking change** when existing functionality breaks for users, as described above, or **Deprecation** when the break happens in a future release. The pull request then gets the `breaking-change` label, which is what puts your text in the release notes.
 
 ## Write the backward-incompatible change section
 
