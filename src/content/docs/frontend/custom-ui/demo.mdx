@@ -319,6 +319,77 @@ view: overview
 </ha-embed-dashboard>
 ```
 
+Try it here: a dashboard with two tabs. Switch between them, or select the hallway tile on the first tab to go to the second.
+
+<EmbedDemo
+  entities={[
+    {
+      entity_id: "light.living_room",
+      state: "off",
+      attributes: {
+        friendly_name: "Living room",
+        supported_color_modes: ["brightness"],
+        color_mode: "brightness",
+        brightness: 255,
+      },
+    },
+    {
+      entity_id: "switch.coffee_maker",
+      state: "on",
+      attributes: { friendly_name: "Coffee maker", device_class: "outlet" },
+    },
+    {
+      entity_id: "climate.hallway",
+      state: "heat",
+      attributes: {
+        friendly_name: "Hallway",
+        current_temperature: 19.5,
+        temperature: 21,
+        min_temp: 7,
+        max_temp: 30,
+        target_temp_step: 0.5,
+        hvac_modes: ["heat", "off"],
+        supported_features: 1,
+      },
+    },
+  ]}
+  dashboard={{
+    views: [
+      {
+        title: "Home",
+        path: "home",
+        type: "sections",
+        max_columns: 2,
+        sections: [
+          {
+            cards: [
+              { type: "heading", heading: "Living room" },
+              { type: "tile", entity: "light.living_room", tap_action: { action: "toggle" } },
+              { type: "tile", entity: "switch.coffee_maker", tap_action: { action: "toggle" } },
+            ],
+          },
+          {
+            cards: [
+              { type: "heading", heading: "Hallway" },
+              {
+                type: "tile",
+                entity: "climate.hallway",
+                tap_action: { action: "navigate", navigation_path: "climate" },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        title: "Climate",
+        path: "climate",
+        type: "sections",
+        sections: [{ cards: [{ type: "thermostat", entity: "climate.hallway" }] }],
+      },
+    ],
+  }}
+/>
+
 The toolbar only shows the tabs, or the title of the dashboard, and the back button of a subview. There is no edit mode. Each dashboard keeps its own view, so the address of your page stays the same, and two dashboards on one page don't follow each other.
 
 Links in the dashboard work like this:
