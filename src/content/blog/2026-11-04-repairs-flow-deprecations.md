@@ -26,9 +26,10 @@ Most integrations will not manually initiate a repairs flow.  Any integration do
 from homeassistant.components.repairs import repairs_flow_manager, RepairsFlowContext
 
 from .const import DOMAIN
-  flow_manager = repairs_flow_manager(hass)
-  flow_result = await flow_manager.async_init(
-    DOMAIN,
-    context=RepairsFlowContext(issue_id="issue_id")
-  )
+
+flow_manager = repairs_flow_manager(hass)
+flow_result = await flow_manager.async_init(
+  DOMAIN,
+  context=RepairsFlowContext(issue_id="issue_id")
+)
 ```
