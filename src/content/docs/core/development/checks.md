@@ -67,7 +67,7 @@ The scaffold script does the same for a new integration. Before you open your pu
 
 ## Pylint
 
-Next to the standard checks, core has its own pylint plugin, in `pylint/plugins/`. Its checks cover patterns Ruff cannot see, because they need type inference or read other files, like `manifest.json` and `quality_scale.yaml`. Many of them check the rules reviewers used to point out by hand. The [README of the plugin](https://github.com/home-assistant/core/blob/dev/pylint/plugins/README.md) explains every check.
+Next to the standard checks, core has its own pylint plugin, in `packages/pylint-home-assistant/`. Its checks cover patterns Ruff cannot see, because they need type inference or read other files, like `manifest.json` and `quality_scale.yaml`. Many of them check the rules reviewers used to point out by hand. The [README of the plugin](https://github.com/home-assistant/core/blob/dev/packages/pylint-home-assistant/README.md) explains every check.
 
 If pylint is wrong about your code, and only then, disable the check for that one line, with the name of the check rather than its code:
 
