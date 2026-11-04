@@ -50,7 +50,7 @@ Test your integration the way Home Assistant uses it: through its public interfa
 - Call actions through `hass.services.async_call()`.
 - Check devices and entities in the device and entity registries.
 - Check the state of a config entry with its `state` attribute.
-- Create config entries with `MockConfigEntry` from `tests/common.py`.
+- Create config entries with `MockConfigEntry` from `pytest_homeassistant.common`.
 
 Focused unit tests for a helper function or pure logic can call that code directly. That is fine, as long as the behavior of the integration is tested through Home Assistant.
 
@@ -75,7 +75,7 @@ def mock_example_client() -> Generator[MagicMock]:
 
 Mocking the coordinator, `hass` helpers, or entity internals makes tests brittle, and skips the code you actually want to test.
 
-Put sample data, like a JSON response of the device, in the `fixtures/` folder of your tests, and load it with the helpers in `tests/common.py`. `load_fixture("status.json", DOMAIN)` returns the text of `tests/components/<domain>/fixtures/status.json`. `load_json_object_fixture` and `load_json_array_fixture` parse it as JSON. In async code, use the `async_` versions, like `await async_load_json_object_fixture(hass, "status.json", DOMAIN)`: they read the file outside the event loop.
+Put sample data, like a JSON response of the device, in the `fixtures/` folder of your tests, and load it with the helpers in `pytest_homeassistant.common`. `load_fixture("status.json", DOMAIN)` returns the text of `tests/components/<domain>/fixtures/status.json`. `load_json_object_fixture` and `load_json_array_fixture` parse it as JSON. In async code, use the `async_` versions, like `await async_load_json_object_fixture(hass, "status.json", DOMAIN)`: they read the file outside the event loop.
 
 Core also has fixtures for the things you need often, like `hass`, `entity_registry`, `device_registry`, `hass_ws_client` for the WebSocket API, and `issue_registry`. Some more conventions:
 
