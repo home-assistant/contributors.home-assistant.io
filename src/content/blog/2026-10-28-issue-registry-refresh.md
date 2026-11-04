@@ -40,6 +40,21 @@ A few things to keep in mind:
 
 This is implemented in core [PR #186197](https://github.com/home-assistant/core/pull/186197) and [PR #186369](https://github.com/home-assistant/core/pull/186369). For the details, see [issues that belong to a config entry](/core/integrations/repairs/#issues-that-belong-to-a-config-entry).
 
+An issue about one [subentry](/core/integrations/subentries/), like a station or an AI agent, can also pass `config_subentry_id`, so it is deleted when the subentry is removed. It requires `config_entry_id`, and the subentry must belong to that entry. This is implemented in core [PR #190351](https://github.com/home-assistant/core/pull/190351). For the details, see [issues that belong to a config subentry](/core/integrations/repairs/#issues-that-belong-to-a-config-subentry).
+
+```python
+ir.async_create_issue(
+    hass,
+    DOMAIN,
+    f"station_offline_{subentry.subentry_id}",
+    config_entry_id=entry.entry_id,
+    config_subentry_id=subentry.subentry_id,
+    is_fixable=False,
+    severity=ir.IssueSeverity.WARNING,
+    translation_key="station_offline",
+)
+```
+
 ## Refresh a set of issues
 
 A common pattern is to delete all issues of a kind, and then create the ones that are still valid. It is simple, but every issue that is still valid is deleted and created again: users see it disappear and come back, and an issue they ignored shows up again. The same happens to issues that an integration deletes when its config entry unloads, because a reload unloads the entry too. Set their `config_entry_id` instead.

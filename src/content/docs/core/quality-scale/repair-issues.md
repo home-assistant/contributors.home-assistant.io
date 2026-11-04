@@ -73,6 +73,8 @@ Delete the issue once the problem is solved, like the example does on a successf
 
 The issue is about one config entry, so its `issue_id` contains the entry ID, or the entries of an integration that is set up more than once overwrite each other's issue. `config_entry_id` links the issue to the entry, so Home Assistant hides it while the entry is disabled and deletes it when the entry is removed: see [issues that belong to a config entry](/core/integrations/repairs/#issues-that-belong-to-a-config-entry).
 
+When an issue is about a single subentry, also pass `config_subentry_id`, so the issue is removed together with the subentry: see [issues that belong to a config subentry](/core/integrations/repairs/#issues-that-belong-to-a-config-subentry).
+
 ## How it is checked
 
 - The tests fail when an issue is raised whose translation is missing in `strings.json`.
