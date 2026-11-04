@@ -421,12 +421,6 @@
       "type": "folder"
     },
     {
-      "path": "packages/pylint-home-assistant/",
-      "repository": "home-assistant/core",
-      "branch": "dev",
-      "type": "folder"
-    },
-    {
       "path": "script/",
       "repository": "home-assistant/core",
       "branch": "dev",
@@ -461,6 +455,12 @@
       "repository": "home-assistant/core",
       "branch": "dev",
       "type": "folder"
+    },
+    {
+      "path": "tests/common.py",
+      "repository": "home-assistant/core",
+      "branch": "dev",
+      "type": "file"
     },
     {
       "path": "tests/components/conftest.py",
@@ -614,12 +614,6 @@
     },
     {
       "path": "src/components/",
-      "repository": "home-assistant/frontend",
-      "branch": "dev",
-      "type": "folder"
-    },
-    {
-      "path": "src/components/animation/",
       "repository": "home-assistant/frontend",
       "branch": "dev",
       "type": "folder"
@@ -2031,14 +2025,13 @@
   ],
   "missing": [
     {
-      "path": "tests/common.py",
+      "path": "pylint/plugins/",
       "repositories": [
         "home-assistant/core"
       ],
       "pages": [
-        "src/content/docs/core/development/deprecating.md:327",
-        "src/content/docs/core/development/tests.md:53",
-        "src/content/docs/core/development/tests.md:78"
+        "src/content/docs/core/development/checks.md:70",
+        "src/content/docs/core/quality-scale/quality-scale-file.md:70"
       ]
     }
   ]
