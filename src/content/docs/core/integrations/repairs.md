@@ -206,7 +206,7 @@ When the current repair flow requires different repair flow the flow can continu
 from homeassistant.components.repairs import FlowType, repairs_flow_manager
 
 if user_input is not None:
-    flow_manager = repairs_flow_manager(hass)
+    flow_manager = repairs_flow_manager(self.hass)
     result = await flow_manager.async_init(
         DOMAIN, 
         context={"issue_id": "next_repair_issue_id"}
