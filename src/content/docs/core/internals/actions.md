@@ -15,7 +15,7 @@ An [action](/glossary/action/) is something Home Assistant can do on request, li
 
 ## The registry
 
-`hass.services.async_register(domain, service, handler)` adds an action to the registry. It takes an optional `schema`, and `supports_response` for actions that return data. Integrations register their actions in `async_setup`, see [register actions in async_setup](/core/integrations/actions/#register-actions-in-async_setup).
+`hass.services.async_register(domain, service, handler)` adds an action to the registry. It takes an optional `schema`, and `supports_response` for actions that return data. Integrations register their actions from `async_setup`, through `async_setup_services` in their `services.py`. See [register actions in async_setup](/core/integrations/actions/#register-actions-in-async_setup).
 
 Home Assistant uses `probatio` for schemas. Import it as `probatio`, without an alias. When you register a schema, it runs before your handler, so invalid data never reaches you. Without a schema, `call.data` is whatever the caller sent.
 

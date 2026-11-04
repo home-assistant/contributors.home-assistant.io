@@ -19,6 +19,8 @@ Add an action to your own integration first, rather than changing a shared one. 
 
 Register actions in `async_setup` of your integration, not in `async_setup_entry` and not in a platform. That way they exist even when no config entry is loaded, so automations that use them can be edited and validated, and users get a clear error instead of an unknown action. That is a rule of the Bronze tier of the [quality scale](/core/quality-scale/).
 
+Put the registration in `services.py`, in a function called `async_setup_services`, and call that function from `async_setup`. It is a synchronous function, decorated with `@callback`, that takes only `hass`. Pylint warns about actions registered anywhere else (`home-assistant-action-registered-outside-services-module`), and about an `async_setup_services` with another shape (`home-assistant-invalid-setup-services`).
+
 Since your integration now has an `async_setup`, it needs a `CONFIG_SCHEMA`. See [integrations without YAML](/core/integrations/yaml/#integrations-without-yaml).
 
 ## Choose the right target
@@ -33,7 +35,7 @@ When an action needs a target, make it required. Do not fall back to a default t
 
 ## Actions for a config entry
 
-```python
+```python title="services.py"
 import probatio
 
 from homeassistant.const import ATTR_CONFIG_ENTRY_ID
@@ -42,11 +44,9 @@ from homeassistant.core import (
     ServiceCall,
     ServiceResponse,
     SupportsResponse,
+    callback,
 )
 from homeassistant.helpers import config_validation as cv, service
-from homeassistant.helpers.typing import ConfigType
-
-CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 
 GET_FORECAST_SCHEMA = probatio.Schema(
     {
@@ -56,8 +56,9 @@ GET_FORECAST_SCHEMA = probatio.Schema(
 )
 
 
-async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
-    """Set up the Example integration."""
+@callback
+def async_setup_services(hass: HomeAssistant) -> None:
+    """Register the actions of the Example integration."""
 
     async def async_get_forecast(call: ServiceCall) -> ServiceResponse:
         """Return the forecast for the coming days."""
@@ -77,7 +78,21 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
         schema=GET_FORECAST_SCHEMA,
         supports_response=SupportsResponse.ONLY,
     )
+```
 
+```python title="__init__.py"
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers import config_validation as cv
+from homeassistant.helpers.typing import ConfigType
+
+from .services import async_setup_services
+
+CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
+
+
+async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
+    """Set up the Example integration."""
+    async_setup_services(hass)
     return True
 ```
 
@@ -87,17 +102,19 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 
 Entity actions run on the entities the user targets. Users can target them by entity, device, area, floor, or label, and Home Assistant resolves that to your entities. Register them with `async_register_platform_entity_service`, under your own domain (like `sonos`), not under the entity domain (like `media_player`):
 
-```python
+```python title="services.py"
 import probatio
 
 from homeassistant.components.media_player import (
     DOMAIN as MEDIA_PLAYER_DOMAIN,
 )
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers import config_validation as cv, service
 
 
-async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
-    """Set up the Sonos integration."""
+@callback
+def async_setup_services(hass: HomeAssistant) -> None:
+    """Register the actions of the Sonos integration."""
     service.async_register_platform_entity_service(
         hass,
         DOMAIN,
@@ -106,8 +123,6 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
         schema={probatio.Required("sleep_time"): cv.positive_int},
         func="set_sleep_timer",
     )
-
-    return True
 ```
 
 This calls the `set_sleep_timer` method of every targeted entity with `sleep_time` as keyword argument. Instead of a method name, `func` can be an async function that receives the entity and the `ServiceCall`. The schema can be a dictionary, which is turned into an entity action schema for you. To only allow entities with certain features, pass `required_features`.
