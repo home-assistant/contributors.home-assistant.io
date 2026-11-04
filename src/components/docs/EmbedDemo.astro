@@ -23,14 +23,15 @@
 // one as <Demo hass> (see demo-runtime/demo-home.ts).
 //   <EmbedDemo home cards={[{ type: "light", entity: "light.kitchen_ceiling" }]} />
 //
-// Instead of cards, `section` renders one section, with its configuration
-// the same as in a dashboard.
+// Instead of cards, `section` renders one section, and `view` one view, with
+// their configuration the same as in a dashboard.
 //   <EmbedDemo home section={{ cards: [{ type: "heading", heading: "Kitchen" }] }} />
 import { AREAS, DEVICES, ENTITIES, LOADED_AT } from "../../../demo-runtime/demo-home";
 
 // The embed element of each kind of dashboard content besides cards.
 const ELEMENTS = {
   section: "ha-embed-section",
+  view: "ha-embed-view",
 } as const;
 
 type Kind = keyof typeof ELEMENTS;

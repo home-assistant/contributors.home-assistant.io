@@ -225,6 +225,72 @@ A section strategy that groups entities by device or area needs those in the pro
 </ha-embed-view>
 ```
 
+Try it here: a sections view with a badge for the outside temperature, and two sections side by side when there is room.
+
+<EmbedDemo
+  entities={[
+    {
+      entity_id: "light.living_room",
+      state: "off",
+      attributes: {
+        friendly_name: "Living room",
+        supported_color_modes: ["brightness"],
+        color_mode: "brightness",
+        brightness: 255,
+      },
+    },
+    {
+      entity_id: "switch.coffee_maker",
+      state: "on",
+      attributes: { friendly_name: "Coffee maker", device_class: "outlet" },
+    },
+    {
+      entity_id: "climate.hallway",
+      state: "heat",
+      attributes: {
+        friendly_name: "Hallway",
+        current_temperature: 19.5,
+        temperature: 21,
+        min_temp: 7,
+        max_temp: 30,
+        target_temp_step: 0.5,
+        hvac_modes: ["heat", "off"],
+        supported_features: 1,
+      },
+    },
+    {
+      entity_id: "sensor.outside_temperature",
+      state: "12.3",
+      attributes: {
+        friendly_name: "Outside",
+        device_class: "temperature",
+        state_class: "measurement",
+        unit_of_measurement: "°C",
+      },
+    },
+  ]}
+  view={{
+    type: "sections",
+    max_columns: 2,
+    badges: [{ entity: "sensor.outside_temperature" }],
+    sections: [
+      {
+        cards: [
+          { type: "heading", heading: "Living room" },
+          { type: "tile", entity: "light.living_room", tap_action: { action: "toggle" } },
+          { type: "tile", entity: "switch.coffee_maker", tap_action: { action: "toggle" } },
+        ],
+      },
+      {
+        cards: [
+          { type: "heading", heading: "Hallway" },
+          { type: "thermostat", entity: "climate.hallway" },
+        ],
+      },
+    ],
+  }}
+/>
+
 A view strategy and a dashboard strategy both use the `strategy` key. To show one view of a dashboard, or of a dashboard strategy, put the dashboard in `dashboard` and the path or index of the view in `view`. Without `view`, the first view shows.
 
 ```yaml
