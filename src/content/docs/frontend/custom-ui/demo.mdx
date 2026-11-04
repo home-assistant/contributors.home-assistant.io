@@ -157,6 +157,53 @@ A custom strategy loads the same way. Load its script after the script of the de
 </ha-embed-section>
 ```
 
+Try it here: a section with a heading, two tiles you can turn on and off, and a wide tile below them. The ceiling light belongs to a device in `devices`.
+
+<EmbedDemo
+  entities={{
+    entities: [
+      {
+        entity_id: "light.kitchen_ceiling",
+        state: "on",
+        device_id: "kitchen_ceiling",
+        attributes: {
+          friendly_name: "Ceiling",
+          supported_color_modes: ["brightness"],
+          color_mode: "brightness",
+          brightness: 200,
+        },
+      },
+      {
+        entity_id: "switch.kettle",
+        state: "off",
+        area_id: "kitchen",
+        attributes: { friendly_name: "Kettle", device_class: "outlet" },
+      },
+      {
+        entity_id: "sensor.kitchen_temperature",
+        state: "21.4",
+        area_id: "kitchen",
+        attributes: {
+          friendly_name: "Kitchen temperature",
+          device_class: "temperature",
+          state_class: "measurement",
+          unit_of_measurement: "°C",
+        },
+      },
+    ],
+    areas: [{ area_id: "kitchen", name: "Kitchen" }],
+    devices: [{ id: "kitchen_ceiling", name: "Kitchen ceiling light", area_id: "kitchen" }],
+  }}
+  section={{
+    cards: [
+      { type: "heading", heading: "Kitchen" },
+      { type: "tile", entity: "light.kitchen_ceiling", tap_action: { action: "toggle" } },
+      { type: "tile", entity: "switch.kettle", tap_action: { action: "toggle" } },
+      { type: "tile", entity: "sensor.kitchen_temperature", grid_options: { columns: 12 } },
+    ],
+  }}
+/>
+
 A section strategy that groups entities by device or area needs those in the provider. See [Areas, devices, calendars, and energy](#areas-devices-calendars-and-energy).
 
 ## Load the demo when it comes into view
