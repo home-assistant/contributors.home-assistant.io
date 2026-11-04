@@ -445,23 +445,31 @@ function demo(attributes: Attributes, children: string): string {
   return `${note}\n\n${codeBlock(children)}`;
 }
 
-// The cards of an <EmbedDemo> as the HTML that shows them on any page. The
-// markup sets the same 12-column section as EmbedDemo.astro. Each card's span
-// matches the one the embed works out from its `grid_options`, so the layout
-// holds before the script of the demo loads.
+// The dashboard content an <EmbedDemo> can show instead of cards, with its
+// embed element and what the note calls it.
+const EMBED_CONTENTS = {
+  section: { element: "ha-embed-section", name: "a dashboard section" },
+} as const;
+
+// The cards, or other content, of an <EmbedDemo> as the HTML that shows them
+// on any page. For cards, the markup sets the same 12-column section as
+// EmbedDemo.astro. Each card's span matches the one the embed works out from
+// its `grid_options`, so the layout holds before the script of the demo loads.
 function embedDemo(attributes: Attributes): string {
   const json = (value: unknown, indent: string) =>
     JSON.stringify(value, null, 2).replaceAll("<", "\\u003c").replaceAll("\n", `\n${indent}`);
+  const element = (tag: string, config: unknown, style = "") =>
+    `  <${tag}${style}>\n    <script type="application/json">\n      ${json(config, "      ")}\n    </script>\n  </${tag}>`;
   const span = (card: Record<string, unknown>) => {
     const options = card.grid_options as { columns?: unknown } | undefined;
     return typeof options?.columns === "number" ? Math.min(options.columns, 12) : 12;
   };
-  const cards = (propValue(attributes.cards) as Record<string, unknown>[])
-    .map(
-      (card) =>
-        `  <ha-embed-card style="grid-column: span ${span(card)}">\n    <script type="application/json">\n      ${json(card, "      ")}\n    </script>\n  </ha-embed-card>`,
-    )
-    .join("\n");
+  const content = Object.entries(EMBED_CONTENTS).find(([key]) => attributes[key]);
+  const cards = content
+    ? element(content[1].element, propValue(attributes[content[0]]))
+    : (propValue(attributes.cards) as Record<string, unknown>[])
+        .map((card) => element("ha-embed-card", card, ` style="grid-column: span ${span(card)}"`))
+        .join("\n");
   const section = [
     "display: grid;",
     "grid-template-columns: repeat(12, minmax(0, 1fr));",
@@ -474,10 +482,11 @@ function embedDemo(attributes: Attributes): string {
   const provider = attributes.home
     ? ""
     : `\n  <script type="application/json">\n    ${json(propValue(attributes.entities), "    ")}\n  </script>`;
-  const markup = `<ha-embed-provider\n  style="${section}\n  "\n>${provider}\n${cards}\n</ha-embed-provider>`;
+  const opening = content ? "<ha-embed-provider>" : `<ha-embed-provider\n  style="${section}\n  "\n>`;
+  const markup = `${opening}${provider}\n${cards}\n</ha-embed-provider>`;
   const home = attributes.home ? ", connected to the sample home of this site" : "";
   const caption = propValue(attributes.caption);
-  const note = `Live demo of dashboard cards, from the embed of the Home Assistant demo${home}.${caption ? ` ${caption}` : ""}`;
+  const note = `Live demo of ${content ? content[1].name : "dashboard cards"}, from the embed of the Home Assistant demo${home}.${caption ? ` ${caption}` : ""}`;
 
   return `${note}\n\n${codeBlock(markup)}`;
 }

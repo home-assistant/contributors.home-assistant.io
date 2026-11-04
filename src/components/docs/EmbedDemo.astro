@@ -22,11 +22,26 @@
 // With `home`, the cards get the sample home of the site instead, the same
 // one as <Demo hass> (see demo-runtime/demo-home.ts).
 //   <EmbedDemo home cards={[{ type: "light", entity: "light.kitchen_ceiling" }]} />
+//
+// Instead of cards, `section` renders one section, with its configuration
+// the same as in a dashboard.
+//   <EmbedDemo home section={{ cards: [{ type: "heading", heading: "Kitchen" }] }} />
 import { AREAS, DEVICES, ENTITIES, LOADED_AT } from "../../../demo-runtime/demo-home";
 
-type Props = {
-  // The configuration of each card, the same as in a dashboard.
-  cards: Record<string, unknown>[];
+// The embed element of each kind of dashboard content besides cards.
+const ELEMENTS = {
+  section: "ha-embed-section",
+} as const;
+
+type Kind = keyof typeof ELEMENTS;
+
+type Props = (
+  | ({
+      // The configuration of each card, the same as in a dashboard.
+      cards: Record<string, unknown>[];
+    } & { [K in Kind]?: never })
+  | ({ cards?: never } & { [K in Kind]?: Record<string, unknown> })
+) & {
   caption?: string;
 } & (
   | {
@@ -41,7 +56,13 @@ type Props = {
 const EMBED_SCRIPT_URL = "https://demo.home-assistant.io/embed.js";
 const SECTION_COLUMNS = 12;
 
-const { cards, caption } = Astro.props;
+const { cards = [], caption } = Astro.props;
+
+// The section, or other content, to render instead of cards.
+const contents: Partial<Record<Kind, Record<string, unknown>>> = Astro.props;
+const kind = (Object.keys(ELEMENTS) as Kind[]).find((key) => contents[key]);
+const Element = kind && ELEMENTS[kind];
+const config = kind && contents[kind];
 
 // The embed has no device registry, so an entity of a device gets the area
 // of its device.
@@ -68,15 +89,24 @@ const columns = (card: Record<string, unknown>) => {
 <figure class="embed-demo" data-pagefind-ignore>
   <div class="stage">
     <ha-embed-provider
-      class="section"
+      class={Element ? `content ${kind}-content` : "section"}
       data-embed-src={EMBED_SCRIPT_URL}
       data-built-at={Astro.props.home ? LOADED_AT : undefined}
-      style={`--columns: ${Math.min(
-        cards.reduce((sum, card) => sum + columns(card), 0),
-        SECTION_COLUMNS,
-      )}`}
+      style={Element
+        ? undefined
+        : `--columns: ${Math.min(
+            cards.reduce((sum, card) => sum + columns(card), 0),
+            SECTION_COLUMNS,
+          )}`}
     >
       <script is:inline type="application/json" set:html={toScriptJson(entities)} />
+      {
+        Element && (
+          <Element>
+            <script is:inline type="application/json" set:html={toScriptJson(config)} />
+          </Element>
+        )
+      }
       {
         cards.map((card) => (
           <ha-embed-card style={`--span: ${columns(card)}`}>
@@ -272,6 +302,16 @@ const columns = (card: Record<string, unknown>) => {
 
   .section > ha-embed-card[hidden] {
     display: none;
+  }
+
+  .content {
+    display: block;
+    margin: 0 auto;
+  }
+
+  /* As wide as a section in a sections view. */
+  .section-content {
+    max-width: 500px;
   }
 
   figcaption {
