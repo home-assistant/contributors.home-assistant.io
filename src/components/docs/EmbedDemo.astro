@@ -38,9 +38,7 @@ type Props = {
   | { home: true; entities?: never }
 );
 
-// The dev build of the demo, until a frontend release puts the embed on
-// https://demo.home-assistant.io/embed.js. Switch before this merges.
-const EMBED_SCRIPT_URL = "https://home-assistant-demo-dev.netlify.app/embed.js";
+const EMBED_SCRIPT_URL = "https://demo.home-assistant.io/embed.js";
 const SECTION_COLUMNS = 12;
 
 const { cards, caption } = Astro.props;
