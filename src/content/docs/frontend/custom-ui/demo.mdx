@@ -14,6 +14,7 @@ Screenshots show what a card looks like. A live demo shows how it works: people 
 - `<ha-embed-provider>` holds the mocked backend and its entities.
 - `<ha-embed-card>` renders one card, with the backend of a provider.
 - `<ha-embed-section>` renders one section, or a [section strategy](/frontend/custom-ui/strategy/#a-section-strategy), the same way.
+- `<ha-embed-view>` renders one view, a [view strategy](/frontend/custom-ui/strategy/#a-view-strategy), or one view of a dashboard.
 
 All cards in the same provider share their entities. When you change an entity in one card, the other cards show the change.
 
@@ -137,7 +138,7 @@ Load the script of your card on the page, after the script of the demo, and use 
 
 Your card gets the same mocked `hass` object as the built-in cards, and `window.loadCardHelpers()` works for the [card helpers](/frontend/custom-ui/card/#card-helpers). The card helpers only exist once the script of the demo has run. Module scripts run in the order they are on the page, so keep the script of your card after it, in case your card uses them as soon as its script loads. Many built-in cards, like the map card, only load when a card first needs them, so create built-in cards through the card helpers instead of by their element name. When the script of your card is on another site than your page, that site needs to send CORS headers for it.
 
-A custom strategy loads the same way. Load its script after the script of the demo, and use its `custom:` type in the `strategy` of a section.
+A custom strategy loads the same way. Load its script after the script of the demo, and use its `custom:` type in the `strategy` of a section or view.
 
 ## Show a section
 
@@ -206,6 +207,33 @@ Try it here: a section with a heading, two tiles you can turn on and off, and a 
 
 A section strategy that groups entities by device or area needs those in the provider. See [Areas, devices, calendars, and energy](#areas-devices-calendars-and-energy).
 
+## Show a view
+
+`<ha-embed-view>` renders a view, with its badges and layout, and a `strategy` generates the view. Give the element the width the view needs: masonry and sidebar views pick their number of columns from the width of the page, not of the element.
+
+```html
+<ha-embed-view>
+  <script type="text/yaml">
+    type: sections
+    badges:
+      - entity: sensor.outside_temperature
+    sections:
+      - cards:
+          - type: tile
+            entity: light.kitchen
+  </script>
+</ha-embed-view>
+```
+
+A view strategy and a dashboard strategy both use the `strategy` key. To show one view of a dashboard, or of a dashboard strategy, put the dashboard in `dashboard` and the path or index of the view in `view`. Without `view`, the first view shows.
+
+```yaml
+dashboard:
+  strategy:
+    type: custom:my-dashboard
+view: overview
+```
+
 ## Load the demo when it comes into view
 
 On a page with several demos, or with a demo far down the page, you can wait to load the script of the demo until a demo comes near, so the rest of the page loads first. The elements read their script tags when they are set up, so the cards still find their entities and configuration when the script comes later. Watch every card and section on the page, then import the script of the demo first, and the script of your card after it:
@@ -236,7 +264,7 @@ Cards and sections inside a provider count too. `querySelectorAll` does not look
 
 ## Place cards anywhere on the page
 
-A card does not have to be inside a provider. A card outside a provider uses the first provider on the page. A card inside one of your own components uses the provider around that component, even through its shadow root. Put one provider with all entities at the top of the page, and the cards anywhere below it, between your text. If the page has no provider, the card adds an empty one. Sections find their provider the same way, and take the same `provider` attribute.
+A card does not have to be inside a provider. A card outside a provider uses the first provider on the page. A card inside one of your own components uses the provider around that component, even through its shadow root. Put one provider with all entities at the top of the page, and the cards anywhere below it, between your text. If the page has no provider, the card adds an empty one. Sections and views find their provider the same way, and take the same `provider` attribute.
 
 To use another provider, set the `provider` attribute of the card to the ID of that provider:
 
