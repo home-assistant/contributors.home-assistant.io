@@ -193,35 +193,34 @@ With an `attribute` filter, the field is shown when the attribute of a selected 
 
 ### Show fields based on another field
 
-A field can show only while other fields of the same action have certain values, with a `visible` condition. It works like [fields that show based on another field](/core/integrations/flow-steps/#fields-that-show-based-on-another-field) in config flows, with the same operators:
+A `visible` condition shows a field only while other fields of the same action have certain values. It takes the same conditions and operators as [fields that show based on another field](/core/integrations/flow-steps/#fields-that-show-based-on-another-field) in config flows:
 
 ```yaml
-set_sleep_timer:
-  target:
-    entity:
-      domain: media_player
-  fields:
-    mode:
-      required: true
-      default: duration
-      selector:
-        select:
-          translation_key: sleep_timer_mode
-          options:
-            - duration
-            - end_of_track
+mode:
+  required: true
+  default: duration
+  selector:
+    select:
+      options:
+        - duration
+        - end_of_track
+duration:
+  required: true
+  visible:
+    field: mode
+    value: duration
+  selector:
     duration:
-      required: true
-      visible:
-        field: mode
-        value: duration
-      selector:
-        duration:
 ```
 
-**Duration** only shows while **Mode** is set to `duration`. A field without a value is evaluated with its default, so **Duration** also shows when **Mode** is left empty. `visible` also takes a list of conditions, which all have to match, or a plain `true` or `false`. Put it on a section to hide the whole section. Hassfest checks that a condition refers to another field of the same action, and that a section does not depend on its own fields.
+Here, **Duration** only shows while **Mode** is set to `duration`.
 
-A hidden field is not shown and not required, and the UI removes its value from the action data. This only happens in the UI: actions written in YAML can still pass any field. Your schema in Python still validates every call, so make it accept the data without the hidden field, and reject combinations that make no sense, like a duration with `end_of_track` above.
+- `visible` takes one condition, a list of conditions that all have to match, or a plain `true` or `false`.
+- A field without a value is evaluated with its default.
+- On a section, `visible` hides the whole section.
+- Hassfest checks that a condition refers to another field of the same action, and that a section does not depend on its own fields.
+
+A hidden field is not shown and not required, and the UI removes its value from the action data. This only happens in the UI: actions written in YAML can still pass any field. Your schema in Python still validates every call, so make it accept the data without the hidden field, and reject combinations that make no sense.
 
 ### Names and descriptions
 
