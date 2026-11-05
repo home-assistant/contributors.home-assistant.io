@@ -10,7 +10,7 @@ areas:
 
 Every app container today gets the full default capability set of Docker, no matter what its manifest declares. The Supervisor is moving to a smaller set: `NET_RAW`, `MKNOD`, `AUDIT_WRITE` and `SETFCAP` will no longer be granted implicitly. Capabilities listed in `privileged` are never dropped.
 
-If you develop or maintain an app, this is what we ask of you: check whether your app opens raw or packet sockets, or otherwise depends on one of these capabilities, and if so add it to `privileged` now. Plain `ping` is not affected. The change is already in Supervisor 2026.09.3 behind feature flags, so you can test your app today. Supervisor 2026.12 turns the new defaults on for new installations, and later on they apply to all installations.
+If you develop or maintain an app, this is what we ask of you: check whether your app opens raw or packet sockets, or otherwise depends on one of these capabilities, and if so add it to `privileged` now. The change is already in Supervisor 2026.09.3 behind feature flags, so you can test your app today. Supervisor 2026.12 turns the new defaults on for new installations, and later on they apply to all installations.
 
 ## Why
 
@@ -25,7 +25,7 @@ Docker's default capability set dates back to a time when containers were meant 
 | `AUDIT_WRITE` | Writing records to the kernel audit log | `sshd` and PAM built with libaudit |
 | `SETFCAP` | Setting file capabilities on executables | Package installs that run `setcap` in their post-install step |
 
-Most apps do nothing in the last column. If yours does not either, it is very likely that no change is necessary: of the roughly 90 apps in the core and community stores, a handful need `NET_RAW` and none needs the other three.
+Most apps need none of these. If your app does nothing listed under "Who needs it", it is very likely that no change is necessary: of the roughly 90 apps in the core and community stores, a handful need `NET_RAW` and none needs the other three.
 
 The Supervisor adds these capabilities to the container's `CapDrop`, unless the app lists them in `privileged`. This applies to all apps, including those with `full_access: true`: the Supervisor never runs an app in Docker's privileged mode, and `full_access` only widens device access.
 
