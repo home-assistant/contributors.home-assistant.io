@@ -92,6 +92,25 @@ grep CapBnd /proc/1/status
 
 With both flags on and nothing requested, the value is `00000000000405fb`, down from the Docker default `00000000a80425fb`. To go back, set the flags to `false` and restart the apps. `ha supervisor info` shows the current state of all flags.
 
+### Finding out which capabilities an app actually uses
+
+Testing with the flags shows what breaks. If you want to know what an app exercises before anything breaks, AppArmor can tell you. If your app ships an `apparmor.txt`, add audit rules for the four capabilities to its profile:
+
+```text
+audit capability net_raw,
+audit capability mknod,
+audit capability audit_write,
+audit capability setfcap,
+```
+
+Every time a process in the app passes one of these capability checks, the kernel writes a line to the host journal (`ha host logs`, or `journalctl -k` on the host) that names the app's profile, the process and the capability:
+
+```text
+audit: type=1400 audit(...): apparmor="AUDIT" operation="capable" profile="my_app" pid=1234 comm="tcpdump" capability=13 capname="net_raw"
+```
+
+Read the result with the process name in mind. Tools that try a raw socket first and fall back to an unprivileged one, like `ping`, show up as using `NET_RAW` even though they work fine without it. A capability check at socket creation is also not the same as a capability the app needs; it tells you where to look. Apps without a profile of their own run under Docker's default profile, which cannot be changed per app, so this only works for apps that ship an `apparmor.txt`.
+
 ## Rollout
 
 The change lands in three steps:
