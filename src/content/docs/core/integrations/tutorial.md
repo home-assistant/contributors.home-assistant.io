@@ -585,11 +585,10 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 from exampleair import Status
 import pytest
+from pytest_homeassistant.common import MockConfigEntry
 
 from homeassistant.components.example_air.const import DOMAIN
 from homeassistant.const import CONF_HOST
-
-from tests.common import MockConfigEntry
 
 
 @pytest.fixture
@@ -652,14 +651,13 @@ from unittest.mock import MagicMock
 
 from exampleair import ExampleAirConnectionError
 import pytest
+from pytest_homeassistant.common import MockConfigEntry
 
 from homeassistant.components.example_air.const import DOMAIN
 from homeassistant.config_entries import SOURCE_USER
 from homeassistant.const import CONF_HOST
 from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResultType
-
-from tests.common import MockConfigEntry
 
 
 @pytest.mark.usefixtures("mock_setup_entry", "mock_example_air_client")
@@ -755,11 +753,10 @@ from unittest.mock import MagicMock
 
 from exampleair import ExampleAirConnectionError
 import pytest
+from pytest_homeassistant.common import MockConfigEntry
 
 from homeassistant.config_entries import ConfigEntryState
 from homeassistant.core import HomeAssistant
-
-from tests.common import MockConfigEntry
 
 
 @pytest.mark.usefixtures("mock_example_air_client")
@@ -805,12 +802,11 @@ In `test_sensor.py`, a snapshot test checks every sensor at once: its state, uni
 """Test the Example Air sensors."""
 
 import pytest
+from pytest_homeassistant.common import MockConfigEntry, snapshot_platform
 from syrupy.assertion import SnapshotAssertion
 
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import entity_registry as er
-
-from tests.common import MockConfigEntry, snapshot_platform
 
 
 @pytest.mark.usefixtures("mock_example_air_client")

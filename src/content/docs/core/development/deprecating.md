@@ -337,4 +337,4 @@ The defaults are usually right: core code fails loudly in tests, integrations ge
 
 ### Tests
 
-`tests/common.py` has `import_and_test_deprecated_constant`, `import_and_test_deprecated_constant_enum`, `import_and_test_deprecated_alias`, and `help_test_all` for deprecated names. The `mock_integration_frame` fixture helps you test `report_usage()` warnings.
+`pytest_homeassistant.common` has `import_and_test_deprecated_constant`, `import_and_test_deprecated_constant_enum`, `import_and_test_deprecated_alias`, and `help_test_all` for deprecated names. The `mock_integration_frame` fixture helps you test `report_usage()` warnings.
