@@ -20,7 +20,7 @@ The writing rules are in `.github/copilot-instructions.md`. For an in-depth revi
 - An example that breaks across a lifecycle boundary: first update, unload, reload, reset, migration, downgrade, an entity that disappears and comes back, zero or 100%, an empty list.
 - Steps that fail when followed in order from a fresh setup: a missing `cd`, an unclear folder, a missing install or config step.
 - Code that does not match the current API on the default branch of its repository (`dev` for core and frontend), or fence lines over 80 characters, or a fence without a language.
-- When the pull request documents an open pull request in another repository, check the new feature against that pull request, not the default branch. Documentation merges after the code, so never flag that the feature is not merged yet. Do flag a release named for it while the code pull request is open. Once it is merged, accept any release evidence you can check, like the version in `homeassistant/const.py` at the merge commit for core, a release tag, or a milestone. A missing milestone alone is not a finding.
+- When the pull request documents an open pull request in another repository, check the new feature against that pull request, not the default branch. Documentation merges after the code, so never flag that the feature is not merged yet. If the page says which release ships the feature, flag that while the code pull request is still open. Once it is merged, accept any release evidence you can check, like the version in `homeassistant/const.py` at the merge commit for core, a release tag, or a milestone. A missing milestone alone is not a finding.
 - A Mermaid label that does not match the code it describes.
 
 ## Front matter and structure

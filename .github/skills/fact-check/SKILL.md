@@ -38,7 +38,7 @@ The old developer docs are a source of what was written, not of what is true. Ch
 
 Documentation for a new feature is often written while the code pull request in the other repository is still open. That is the normal order: the documentation merges after the code, and if the code never merges, the documentation does not either. For such a pull request, the source for the new feature is the head of the open code pull request, not the default branch. Do not flag that the feature is not merged yet, or that the default branch does not have it.
 
-A page or blog post that says which release ships the feature, like "available from 2026.12", still needs a source for that release. While the code pull request is open, there is none, so flag the release. Once it is merged, the source is something you can check, like:
+A page or blog post that says which release ships the feature, like "available from 2026.12", still needs a source for that release. While the code pull request is still open, there is no such source, so flag the statement. Once it is merged, the source is something you can check, like:
 
 - The version in `homeassistant/const.py` at the merge commit, for core. A merge into `dev` at `2026.12.0.dev0` ships in 2026.12.
 - A release tag that contains the merge commit.
