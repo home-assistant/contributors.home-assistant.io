@@ -50,7 +50,7 @@ privileged:
   - NET_RAW
 ```
 
-`NET_RAW` lowers the [security rating](/apps/reference/security-rating/) by one point, like `NET_ADMIN` does, and only once for any number of such capabilities. `AUDIT_WRITE`, `MKNOD` and `SETFCAP` can be listed as well and do not change the rating; the [configuration reference](/apps/reference/configuration/) lists all accepted values. Do not ask for a capability because something merely logs a warning, such as a failed `setcap` during a package install.
+The same works for `AUDIT_WRITE`, `MKNOD` and `SETFCAP`; the [configuration reference](/apps/reference/configuration/) lists all accepted values. Only request a capability for something that actually fails, not for something that merely logs a warning, such as a failed `setcap` during a package install.
 
 ## Ping keeps working
 
