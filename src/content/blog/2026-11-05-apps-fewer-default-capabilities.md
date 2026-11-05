@@ -10,7 +10,7 @@ areas:
 
 Every app container today gets the full default capability set of Docker, no matter what its manifest declares. The Supervisor is moving to a smaller set. Four capabilities that Docker grants by default will no longer be granted implicitly: `NET_RAW`, `MKNOD`, `AUDIT_WRITE` and `SETFCAP`. If your app needs one of them, list it in `privileged`. Capabilities listed there are never dropped.
 
-What we ask of you: check whether your app opens raw or packet sockets, or otherwise depends on one of these capabilities, and if so add it to `privileged` now. Plain `ping` is not affected. The change is already in Supervisor 2026.09.3 behind feature flags, so you can test your app today. An upcoming release turns the new defaults on for new installations, and later on they apply to all installations. Details on all of that below.
+If you develop or maintain an app, this is what we ask of you: check whether your app opens raw or packet sockets, or otherwise depends on one of these capabilities, and if so add it to `privileged` now. Plain `ping` is not affected. The change is already in Supervisor 2026.09.3 behind feature flags, so you can test your app today. Supervisor 2026.12 turns the new defaults on for new installations, and later on they apply to all installations. Details on all of that below.
 
 ## Why
 
