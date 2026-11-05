@@ -27,6 +27,8 @@ Apps already declare which extra capabilities they need in `privileged`. Droppin
 | `AUDIT_WRITE` | Writing records to the kernel audit log | `sshd` and PAM built with libaudit |
 | `SETFCAP` | Setting file capabilities on executables | Package installs that run `setcap` in their post-install step |
 
+Most apps do nothing in the last column. If yours does not either, it is very likely that no change is necessary: of the roughly 90 apps in the core and community stores, a handful need `NET_RAW` and none needs the other three.
+
 The Supervisor adds these capabilities to the container's `CapDrop`, unless the app lists them in `privileged`. Capabilities listed there are never dropped. This applies to all apps, including those with `full_access: true`: the Supervisor never runs an app in Docker's privileged mode, and `full_access` only widens device access.
 
 ## Ping keeps working
