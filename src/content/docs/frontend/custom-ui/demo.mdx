@@ -303,7 +303,7 @@ view: overview
 
 ## Show a dashboard
 
-`<ha-embed-dashboard>` renders a whole dashboard with its tabs, and a `strategy` generates the dashboard. The dashboard scrolls inside the element, under its toolbar. The element is 600 pixels high; set its `height` to change that. To start on another view than the first, set its `view` attribute to the path or index of that view.
+`<ha-embed-dashboard>` renders a whole dashboard with its tabs, and a `strategy` generates the dashboard. The dashboard scrolls inside the element, under its toolbar. The element is 600 pixels high; set its `height` to change that. To start on another view than the first, set its `view` attribute to the path or index of that view. This example uses the provider from [Add a card](#add-a-card):
 
 ```html
 <ha-embed-dashboard style="height: 480px">
@@ -313,12 +313,12 @@ view: overview
         path: home
         cards:
           - type: tile
-            entity: light.living_room
-      - title: Climate
-        path: climate
+            entity: light.kitchen
+      - title: Kitchen
+        path: kitchen
         cards:
-          - type: thermostat
-            entity: climate.hallway
+          - type: light
+            entity: light.kitchen
   </script>
 </ha-embed-dashboard>
 ```
@@ -526,7 +526,7 @@ The mocked backend only knows a part of the Home Assistant API. Keep these limit
 - Templates are not rendered. Template subscriptions fill in simple `{{ variable }}` references from the variables you pass and return the rest as it is. The REST `template` endpoint returns an error.
 - The logbook is empty.
 - The `toggle`, `perform-action`, and `url` actions of a card work. Actions that open a dialog, like `more-info`, do nothing. An action with a `confirmation` does nothing, because it waits for a dialog that does not open, unless the confirmation exempts the demo user.
-- A `navigate` action to an anchor on your page, like `#setup`, scrolls there. A dashboard also follows links to its own views, as [Show a dashboard](#show-a-dashboard) describes. Other `navigate` actions do nothing.
+- A `navigate` action to an anchor on your page, like `#setup`, scrolls there. A dashboard also follows links to its own views, as [Show a dashboard](#show-a-dashboard) describes, and so does a view given a `dashboard`, as in [Show a view](#show-a-view). Other `navigate` actions do nothing.
 - Actions the backend does not handle, or for entities it does not have, do nothing. They do not return an error.
 - Other requests that wait for an answer, over WebSocket or REST, get an error.
 
