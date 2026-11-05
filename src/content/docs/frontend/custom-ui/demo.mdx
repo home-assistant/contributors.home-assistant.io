@@ -445,6 +445,23 @@ To use another provider, set the `provider` attribute of the card to the ID of t
 
 Set `provider` before the card is added to the page. The card picks its provider when it is added, and does not follow a later change.
 
+## Show several projects on one site
+
+If you maintain several cards or strategies, you don't need a demo site for each. Give each project a demo config, with the entities in `entities` and what to show in `cards`, `sections`, `views`, or `dashboard`. The configs can all live in the host site, or each project can keep its own, like a `demo.yml` next to its code:
+
+```yaml
+entities:
+  - entity_id: light.kitchen
+    state: "on"
+    attributes:
+      friendly_name: Kitchen
+cards:
+  - type: custom:my-card
+    entity: light.kitchen
+```
+
+The site then renders each config: the entities go into a provider, and each card, section, view, or dashboard into its element, as YAML in their script tags. Give each project its own provider, so their entities stay apart, and load the script of each card after the script of the demo.
+
 ## Light and dark
 
 The cards follow the light or dark mode of the browser. When your site has its own switch for dark mode, set the `color-scheme` attribute of the provider to `light` or `dark`. The cards keep their styles inside, and do not change the styles of your page. The one exception is the Roboto font: the script adds its font faces to the page, so text of your page that uses Roboto can look different once the script has loaded.
