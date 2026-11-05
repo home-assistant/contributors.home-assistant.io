@@ -35,6 +35,7 @@ ir.async_create_issue(
 | `translation_key` | | The key of the title and description in `strings.json` |
 | `translation_placeholders` | `None` | Values for the placeholders in the text |
 | `config_entry_id` | `None` | The config entry the issue belongs to. The issue is hidden while that entry is disabled, and deleted when the entry is removed. See [issues that belong to a config entry](#issues-that-belong-to-a-config-entry). |
+| `config_subentry_id` | `None` | The subentry of `config_entry_id` the issue belongs to. The issue is deleted when the subentry is removed. See [issues that belong to a config subentry](#issues-that-belong-to-a-config-subentry). |
 | `breaks_in_ha_version` | `None` | The version in which something breaks, like `"2027.4.0"` |
 | `learn_more_url` | `None` | Where users find more information |
 | `is_persistent` | `False` | Whether the issue survives a restart. See [persistence](#persistence). |
@@ -122,6 +123,32 @@ A few things to keep in mind:
 - An issue created before your integration set `config_entry_id` belongs to no entry until it is created again. Most issues are created again on the next start. A [persistent](#persistence) issue that is never created again may still need to be deleted in `async_remove_entry` for a while.
 
 Leave `config_entry_id` out for issues that are not about a single config entry, like YAML configuration that is no longer supported.
+
+### Issues that belong to a config subentry
+
+When an issue is about one [subentry](/core/integrations/subentries/) of a config entry, like a weather station, a topic, or an AI agent, also set `config_subentry_id` to the ID of that subentry. The issue is then deleted when the subentry is removed, not only when the whole entry is.
+
+```python
+ir.async_create_issue(
+    hass,
+    DOMAIN,
+    f"station_offline_{subentry.subentry_id}",
+    config_entry_id=entry.entry_id,
+    config_subentry_id=subentry.subentry_id,
+    is_fixable=False,
+    severity=ir.IssueSeverity.WARNING,
+    translation_key="station_offline",
+    translation_placeholders={"station": subentry.title},
+)
+```
+
+The rules of `config_entry_id` apply here too, plus these:
+
+- `config_subentry_id` requires `config_entry_id`, and the subentry must belong to that config entry. Otherwise, `HomeAssistantError` is raised.
+- Put the subentry ID in the `issue_id`, so the subentries of an entry do not share one issue.
+- Creating an issue that already exists replaces its `config_subentry_id`, also when you leave it out. Pass it every time you create the issue.
+- Issues that belong to a subentry that no longer exists are deleted when Home Assistant starts.
+- Subentries cannot be disabled. The issue is only hidden while its config entry is disabled.
 
 ## Fix an issue with a repair flow
 
@@ -259,7 +286,7 @@ with ir.async_refresh_issues(
 | --- | --- |
 | `issue_id_pattern` | Issues whose ID matches the regular expression, from the start of the ID. Pass a string or a compiled `re.Pattern`. |
 | `issue_ids` | Exactly these issues. IDs of issues that do not exist are skipped. |
-| `config_entry_id` | Only issues that [belong to](#issues-that-belong-to-a-config-entry) this config entry. Combines with the other two. |
+| `config_entry_id` | Only issues that [belong to](#issues-that-belong-to-a-config-entry) this config entry. Combines with the other two. There is no filter for a subentry. To refresh the issues of one subentry, put its ID in their issue IDs, and select them with `issue_id_pattern` or `issue_ids`. |
 
 Pass `issue_id_pattern` or `issue_ids`, not both: that raises `ValueError`. Pass neither to refresh every issue of the domain.
 
@@ -479,7 +506,7 @@ Doing it all in one callback is simpler than calling `ir.create_issue` from the 
 
 ## Persistence
 
-An issue stays until the integration that created it deletes it, the user fixes it, or the [config entry it belongs to](#issues-that-belong-to-a-config-entry) is removed. What happens after a restart depends on `is_persistent`:
+An issue stays until the integration that created it deletes it, the user fixes it, or the [config entry](#issues-that-belong-to-a-config-entry) or [subentry](#issues-that-belong-to-a-config-subentry) it belongs to is removed. What happens after a restart depends on `is_persistent`:
 
 - **Not persistent** (the default): the issue is not shown after a restart, until your integration creates it again. Use this for problems you can check for, like an old firmware. Your integration checks again on the next start anyway.
 - **Persistent**: the issue is shown again after a restart. Use this for problems you can only see when they happen, like a failed update.
