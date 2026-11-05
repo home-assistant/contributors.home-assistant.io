@@ -90,7 +90,7 @@ The flow clears the app state first, so it always starts from a fresh onboarding
 
 ### Run the mTLS flow
 
-You also need Docker, and Home Assistant on port 8123 of your machine. From the emulator, your machine is `10.0.2.2`.
+To run a test with mTLS, you'll need a reverse proxy requiring mTLS in front of Home Assistant and the certificate installer dialog open for your certificate file. The easiest way to get to this state is using the steps described below which also run on GitHub Actions. You will need to use an emulator, Docker, and Home Assistant on port 8123 of your machine. From the emulator, your machine is `10.0.2.2`.
 
 1. Generate the certificates, with that address in the server certificate:
 
