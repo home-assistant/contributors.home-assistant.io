@@ -61,7 +61,6 @@ They share their steps through `.maestro/subflows`, and cover the most critical 
 - **Registration**: the app registers itself with `mobile_app`, which everything else depends on.
 - **The frontend renders**: reaching the overview dashboard proves the web view works on that API level.
 - **The external bus works both ways**: the frontend only shows the **Companion app** entry in its settings after the app announced itself over the [external bus](/frontend/reference/external-bus/), and selecting it makes the frontend ask the app to open its native settings.
-- **The client certificate**, in the mTLS flow: the web view and the app itself both present it.
 
 The flows take the instance to test against from three parameters: `HOME_ASSISTANT_URL`, `HOME_ASSISTANT_USERNAME`, and `HOME_ASSISTANT_PASSWORD`. The mTLS flow takes two more, `MTLS_P12_PASSWORD` and `MTLS_CERT_ALIAS`: the password of the certificate file, and the name to give the certificate.
 
