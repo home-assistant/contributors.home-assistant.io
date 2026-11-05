@@ -79,7 +79,9 @@ Do not ask for a capability because something merely logs a warning. A failed `s
 Supervisor 2026.09.3 and newer has the change behind two feature flags, off by default: `app_drop_net_raw` drops `NET_RAW`, and `app_reduced_capabilities` drops the other three. Turn on both with the `ha` CLI (5.1.0 or newer):
 
 ```shell
-ha supervisor options --feature-flag app_drop_net_raw=true --feature-flag app_reduced_capabilities=true
+ha supervisor options \
+  --feature-flag app_drop_net_raw=true \
+  --feature-flag app_reduced_capabilities=true
 ```
 
 Capabilities are fixed when a container is created. Restarting an app through the Supervisor recreates its container, so restart the apps you want to test, then exercise their network features.
@@ -94,7 +96,7 @@ With both flags on and nothing requested, the value is `00000000000405fb`, down 
 
 ### Finding out which capabilities an app actually uses
 
-Testing with the flags shows what breaks. If you want to know what an app exercises before anything breaks, AppArmor can tell you. If your app ships an `apparmor.txt`, add audit rules for the four capabilities to its profile:
+Testing with the flags shows what breaks. If you want to know what an app exercises before anything breaks, AppArmor can tell you. Do this with both flags off: a dropped capability fails the kernel's own check before AppArmor sees it, so nothing is logged. If your app ships an `apparmor.txt`, add audit rules for the four capabilities to its profile:
 
 ```text
 audit capability net_raw,
@@ -103,13 +105,14 @@ audit capability audit_write,
 audit capability setfcap,
 ```
 
-Every time a process in the app passes one of these capability checks, the kernel writes a line to the host journal (`ha host logs`, or `journalctl -k` on the host) that names the app's profile, the process and the capability:
+The Supervisor loads the profile when an app is installed or updated, not when it is restarted, so bump the version and update the app, or uninstall and reinstall it. When a process in the app then passes one of these capability checks, the kernel logs a line to the host journal (`ha host logs`, or `journalctl -k` on the host) that names the app's profile, the process and the capability:
 
 ```text
-audit: type=1400 audit(...): apparmor="AUDIT" operation="capable" profile="my_app" pid=1234 comm="tcpdump" capability=13 capname="net_raw"
+audit: type=1400 audit(...): apparmor="AUDIT" operation="capable"
+  profile="my_app" pid=1234 comm="tcpdump" capability=13 capname="net_raw"
 ```
 
-Read the result with the process name in mind. Tools that try a raw socket first and fall back to an unprivileged one, like `ping`, show up as using `NET_RAW` even though they work fine without it. A capability check at socket creation is also not the same as a capability the app needs; it tells you where to look. Apps without a profile of their own run under Docker's default profile, which cannot be changed per app, so this only works for apps that ship an `apparmor.txt`.
+Read the result with the process name in mind. Tools that try a raw socket first and fall back to an unprivileged one, like `ping`, show up as using `NET_RAW` even though they work fine without it. A capability check at socket creation is also not the same as a capability the app needs; it tells you where to look. The reverse holds too: the kernel skips auditing for some checks and rate-limits audit messages, so a missing line does not prove a capability is unused. Apps without a profile of their own run under Docker's default profile, which cannot be changed per app, so this only works for apps that ship an `apparmor.txt`.
 
 ## Rollout
 
