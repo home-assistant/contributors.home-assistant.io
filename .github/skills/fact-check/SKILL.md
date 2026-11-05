@@ -34,6 +34,19 @@ Code and files are true on the default branch of their repository, in the table 
 
 The old developer docs are a source of what was written, not of what is true. Check what they say against the code too.
 
+### Documentation for an open pull request
+
+Documentation for a new feature is often written while the code pull request in the other repository is still open. That is the normal order: the documentation merges after the code, and if the code never merges, the documentation does not either. For such a pull request, the source for the new feature is the head of the open code pull request, not the default branch. Do not flag that the feature is not merged yet, or that the default branch does not have it.
+
+The release that ships the feature is a claim like any other. Until the code pull request is merged and has a milestone, a page or blog post that names the release has no source.
+
+Find the code pull request in the description, under "This PR documents an open pull request". Read its changes with:
+
+```shell
+gh pr view <number> --repo home-assistant/<repository>
+gh pr diff <number> --repo home-assistant/<repository>
+```
+
 For anything about the organization (who owns, funds, employs, or decides), the source is an official page, like [the structure of the Open Home Foundation](https://www.openhomefoundation.org/structure/). For the community, it is [home-assistant.io/community](https://www.home-assistant.io/community/) and the [code of conduct](https://www.home-assistant.io/code_of_conduct/). For roles and processes, it is the page or repository of the team that runs them, like the [architecture repository](https://github.com/home-assistant/architecture) for architecture decisions.
 
 For a tool from outside the project, like Docker, VS Code, WSL, or uv, the source is the official documentation of that tool.
