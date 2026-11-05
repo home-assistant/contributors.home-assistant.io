@@ -397,11 +397,11 @@ Links in the dashboard work like this:
 - A link to one of the views of the dashboard, like `navigation_path: climate` or `/my-dashboard/climate`, shows that view.
 - The back button of a subview goes to its `back_path`, or else to the view before it.
 - A link to an anchor on your page, like `#setup`, scrolls the page to it.
-- Other links do nothing.
+- Other `navigate` actions do nothing. A `url` action opens its page, the same as in a dashboard.
 
 ## Load the demo when it comes into view
 
-On a page with several demos, or with a demo far down the page, you can wait to load the script of the demo until a demo comes near, so the rest of the page loads first. The elements read their script tags when they are set up, so the cards still find their entities and configuration when the script comes later. Watch every card, section, and view on the page, then import the script of the demo first, and the script of your card after it:
+On a page with several demos, or with a demo far down the page, you can wait to load the script of the demo until a demo comes near, so the rest of the page loads first. The elements read their script tags when they are set up, so the cards still find their entities and configuration when the script comes later. Watch every card, section, view, and dashboard on the page, then import the script of the demo first, and the script of your card after it:
 
 ```js
 const loadDemo = async () => {
@@ -419,13 +419,13 @@ const observer = new IntersectionObserver(
   { rootMargin: "400px 0px" },
 );
 for (const demo of document.querySelectorAll(
-  "ha-embed-card, ha-embed-section, ha-embed-view",
+  "ha-embed-card, ha-embed-section, ha-embed-view, ha-embed-dashboard",
 )) {
   observer.observe(demo);
 }
 ```
 
-Cards, sections, and views inside a provider count too. `querySelectorAll` does not look inside shadow roots, so for demos inside your own components, observe those components instead. It does not watch providers: a provider at the top of the page would load the demo right away, even when its cards are far below. Run it from a module script, so the elements of the page are there when it looks for them. Leave out the script tags of the demo and your card when you load them this way.
+Cards, sections, views, and dashboards inside a provider count too. `querySelectorAll` does not look inside shadow roots, so for demos inside your own components, observe those components instead. It does not watch providers: a provider at the top of the page would load the demo right away, even when its cards are far below. Run it from a module script, so the elements of the page are there when it looks for them. Leave out the script tags of the demo and your card when you load them this way.
 
 ## Place cards anywhere on the page
 
