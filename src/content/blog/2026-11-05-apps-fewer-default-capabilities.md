@@ -8,7 +8,7 @@ areas:
   - apps
 ---
 
-Every app container today gets the full default capability set of Docker, no matter what its manifest declares. The Supervisor is moving to a smaller set: `NET_RAW`, `MKNOD`, `AUDIT_WRITE` and `SETFCAP` will no longer be granted implicitly. Capabilities listed in `privileged` are never dropped.
+Every app container today gets the full default capability set of Docker, no matter what its manifest declares. The Supervisor is moving to a smaller set: `NET_RAW`, `MKNOD`, `AUDIT_WRITE`, and `SETFCAP` will no longer be granted implicitly. Capabilities listed in `privileged` are never dropped.
 
 If you develop or maintain an app, this is what we ask of you: check whether your app opens raw or packet sockets, or otherwise depends on one of these capabilities, and if so add it to `privileged` now. The change is already in Supervisor 2026.09.3 behind feature flags, so you can test your app today. Supervisor 2026.12 turns the new defaults on for new installations, and later on they apply to all installations.
 
@@ -20,7 +20,7 @@ Docker's default capability set dates back to a time when containers were meant 
 
 | Capability | What it allows | Who needs it |
 | --- | --- | --- |
-| `NET_RAW` | Raw and packet sockets (`SOCK_RAW`, `AF_PACKET`), binding to any address | Packet capture, port scanners, DHCP servers, ARP tools, raw Bluetooth HCI |
+| `NET_RAW` | Raw and packet sockets (`SOCK_RAW`, `AF_PACKET`), binding to any address | Packet capture, port scanners, DHCP servers, ARP tools, and raw Bluetooth HCI |
 | `MKNOD` | Creating device nodes with `mknod` | Nothing in an app: the Supervisor bind-mounts the device nodes an app declares |
 | `AUDIT_WRITE` | Writing records to the kernel audit log | `sshd` and PAM built with libaudit |
 | `SETFCAP` | Setting file capabilities on executables | Package installs that run `setcap` in their post-install step |
@@ -50,7 +50,7 @@ privileged:
   - NET_RAW
 ```
 
-The same works for `AUDIT_WRITE`, `MKNOD` and `SETFCAP`; the [configuration reference](/apps/reference/configuration/) lists all accepted values. Only request a capability for something that actually fails, not for something that merely logs a warning, such as a failed `setcap` during a package install.
+The same works for `AUDIT_WRITE`, `MKNOD`, and `SETFCAP`; the [configuration reference](/apps/reference/configuration/) lists all accepted values. Only request a capability for something that actually fails, not for something that merely logs a warning, such as a failed `setcap` during a package install.
 
 ## Ping keeps working
 
@@ -70,9 +70,9 @@ Tools that use raw or packet sockets may break, including `nmap` (as root it ass
 
 ## What we found in the existing apps
 
-We went through the core and community app stores before adding the flags. Apps that need `NET_RAW` either already declared it or are being updated to: OpenThread Border Router and Matter Server (Bluetooth commissioning through raw HCI sockets) in the core store, and AdGuard Home (its DHCP server uses packet sockets), Tailscale, Advanced SSH & Web Terminal and Studio Code Server (network tools such as `nmap`) in the community store. VPN apps such as WireGuard and ZeroTier only need `NET_ADMIN` and the `/dev/net/tun` device and work with all four dropped.
+We went through the core and community app stores before adding the flags. Apps that need `NET_RAW` either already declared it or are being updated to: OpenThread Border Router and Matter Server (Bluetooth commissioning through raw HCI sockets) in the core store, and AdGuard Home (its DHCP server uses packet sockets), Tailscale, Advanced SSH & Web Terminal, and Studio Code Server (network tools such as `nmap`) in the community store. VPN apps such as WireGuard and ZeroTier only need `NET_ADMIN` and the `/dev/net/tun` device and work with all four dropped.
 
-The other three capabilities have no consumer among the apps today. No app script calls `mknod`, no app runs an `sshd` built with libaudit, and `setcap` only shows up in post-install steps of packages such as `fping` or `mtr-tiny` installed at run time. Both `apt` and `apk` log a warning in that case and complete the install. This can show up in apps with a user-configurable package list, such as Advanced SSH & Web Terminal, Studio Code Server, JupyterLab and AppDaemon.
+The other three capabilities have no consumer among the apps today. No app script calls `mknod`, no app runs an `sshd` built with libaudit, and `setcap` only shows up in post-install steps of packages such as `fping` or `mtr-tiny` installed at run time. Both `apt` and `apk` log a warning in that case and complete the install. This can show up in apps with a user-configurable package list, such as Advanced SSH & Web Terminal, Studio Code Server, JupyterLab, and AppDaemon.
 
 ## Finding out which capabilities an app actually uses
 
@@ -96,7 +96,7 @@ Read the result with the process name in mind. Tools that try a raw socket first
 
 ## Rollout
 
-1. Supervisor 2026.09.3 added the two feature flags, off by default ([home-assistant/supervisor#7230](https://github.com/home-assistant/supervisor/pull/7230) and [home-assistant/supervisor#7233](https://github.com/home-assistant/supervisor/pull/7233)). `NET_RAW` has its own flag because it has a security implication of its own and known fallout in apps. The same release made `AUDIT_WRITE`, `MKNOD` and `SETFCAP` accepted values in `privileged`.
+1. Supervisor 2026.09.3 added the two feature flags, off by default ([home-assistant/supervisor#7230](https://github.com/home-assistant/supervisor/pull/7230) and [home-assistant/supervisor#7233](https://github.com/home-assistant/supervisor/pull/7233)). `NET_RAW` has its own flag because it has a security implication of its own and known fallout in apps. The same release made `AUDIT_WRITE`, `MKNOD`, and `SETFCAP` accepted values in `privileged`.
 2. Supervisor 2026.12 turns both flags on by default for new installations ([home-assistant/supervisor#7402](https://github.com/home-assistant/supervisor/pull/7402)). Existing installations keep their current behavior unless the flags are set. Restoring a backup does not carry feature flags over, so an app restored onto a new installation runs with the new defaults.
 3. No later than Supervisor 2027.05, the reduced capability set becomes the default for all installations. We may bring this step forward; if so, it is announced in the Supervisor release notes. The flags remain available for a while after the switch, so that a regression in an app can be confirmed by turning the old behavior back on, and will be removed in a later release.
 
