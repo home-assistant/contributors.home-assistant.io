@@ -131,8 +131,8 @@ def async_deprecate_entity(
     items = automations_with_entity(hass, entity_id) + scripts_with_entity(
         hass, entity_id
     )
-    entry = entity_registry.async_get(entity_id)
-    if entry.disabled and not items:
+    entity_entry = entity_registry.async_get(entity_id)
+    if entity_entry.disabled and not items:
         entity_registry.async_remove(entity_id)
         return False
 
@@ -148,6 +148,7 @@ def async_deprecate_entity(
         DOMAIN,
         f"deprecated_entity_{entity_id}",
         breaks_in_ha_version="2027.2.0",
+        config_entry_id=entity_entry.config_entry_id,
         is_fixable=False,
         severity=ir.IssueSeverity.WARNING,
         translation_key=(
@@ -157,6 +158,8 @@ def async_deprecate_entity(
     )
     return True
 ```
+
+`config_entry_id` links the issue to the config entry of the entity, so it is hidden while that entry is disabled and deleted when it is removed.
 
 Call it in `async_setup_entry` of the platform, and let its answer decide which entities are added. An entity that does not exist yet returns `False`, so new users never get the deprecated entity.
 
@@ -214,9 +217,19 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:
             "entries": f"/config/integrations/integration/{DOMAIN}",
         },
     )
+
+
+async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:
+    """Unload a config entry."""
+
+
+async def async_remove_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:
+    """Remove a config entry."""
+    if not hass.config_entries.async_loaded_entries(DOMAIN):
+        ir.async_delete_issue(hass, DOMAIN, DOMAIN)
 ```
 
-The `entries` placeholder links to the config entries of the user. Explain in the text why the integration was removed, and that they can remove the entries. Delete the issue again in `async_unload_entry`, once the last config entry of the domain is unloaded.
+The `entries` placeholder links to the config entries of the user. Explain in the text why the integration was removed, and that they can remove the entries. The issue is about the integration, not one config entry, so all entries share it and it has no `config_entry_id`. Keep an empty `async_unload_entry`, so the entries can still be unloaded and reloaded, and delete the issue in `async_remove_entry` once no loaded entry is left. Do not delete it on unload: a reload would bring back an issue the user ignored.
 
 When the integration is replaced by a successor, it is a deprecation instead: use `WARNING` with a `breaks_in_ha_version`, and abort the config flow with the reason `deprecated`, so nobody can add new entries.
 
@@ -224,7 +237,7 @@ When the integration is replaced by a successor, it is a deprecation instead: us
 
 The repair issue and the release notes announce the deprecation. Do not add a deprecation notice to the documentation on [home-assistant.io](https://www.home-assistant.io/): it only describes what works today.
 
-Test with the `issue_registry` fixture that the issue is created, and that it is deleted again when the last config entry unloads.
+Test with the `issue_registry` fixture that the issue is created, and that it is deleted again when the last config entry is removed, and that it is not deleted when an entry is reloaded.
 
 ## Developer facing deprecations
 
