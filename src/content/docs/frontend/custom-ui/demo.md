@@ -108,7 +108,7 @@ for (const card of document.querySelectorAll("ha-embed-card")) {
 }
 ```
 
-Cards inside a provider count too, so this works for every layout. It does not watch providers: a provider at the top of the page would load the demo right away, even when its cards are far below. Run it from a module script, so the elements of the page are there when it looks for them. Leave out the script tags of the demo and your card when you load them this way.
+Cards inside a provider count too. `querySelectorAll` does not look inside shadow roots, so for cards inside your own components, observe those components instead. It does not watch providers: a provider at the top of the page would load the demo right away, even when its cards are far below. Run it from a module script, so the elements of the page are there when it looks for them. Leave out the script tags of the demo and your card when you load them this way.
 
 ## Place cards anywhere on the page
 
