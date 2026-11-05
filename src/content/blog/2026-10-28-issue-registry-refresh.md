@@ -8,7 +8,7 @@ areas:
   - core
 ---
 
-Two additions to the issue registry make it easier to keep repair issues correct, without annoying users. Both land in Home Assistant Core 2026.11, and are documented in [repairs](/core/integrations/repairs/).
+Additions to the issue registry make it easier to keep repair issues correct, without annoying users. Linking issues to a config entry and the issue refresh helper land in Home Assistant Core 2026.11. Linking issues to a config subentry lands in 2026.12. All the additions are documented in [repairs](/core/integrations/repairs/).
 
 ## Issues that belong to a config entry
 
