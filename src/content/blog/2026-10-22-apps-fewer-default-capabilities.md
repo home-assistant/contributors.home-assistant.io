@@ -45,7 +45,7 @@ Linux has had ICMP datagram sockets since kernel 3.0 (IPv6 since 3.11). They sen
 
 The `ping` implementations in our base images use the fallback. We verified that busybox `ping` on the Alpine base and `iputils-ping` on the Debian base both work for IPv4 and IPv6 with `NET_RAW` dropped. That covers the ping monitor of Uptime Kuma, the ping node of Node-RED, and anything else that shells out to `ping`. An app that brings its own ICMP implementation, in a library or in its own code, needs to be tested: some use datagram sockets, some require raw sockets.
 
-Network tools that use raw or packet sockets may break, including `nmap` (as root it assumes raw sockets are available and quits when they are not, unless run with `--unprivileged`), `tcpdump`, `mtr`, `arping`, `arp-scan`, `fping`, `traceroute` in ICMP mode, DHCP servers, and libraries such as Python's `ping3` or Go ping libraries in privileged mode. Behavior depends on the tool, its options, and whether it can fall back to unprivileged sockets. A file capability like `cap_net_raw+ep` on a binary does not help either: file capabilities cannot grant what is missing from the container's bounding set.
+Network tools that use raw or packet sockets may break, including `nmap` (as root it assumes raw sockets are available and quits when they are not, unless run with `--unprivileged`), `tcpdump`, `mtr`, `arping`, `arp-scan`, `fping`, `traceroute` in ICMP mode, DHCP servers, and libraries such as Python's `ping3` or Go ping libraries in privileged mode. Behavior depends on the tool, its options, and whether it can fall back to unprivileged sockets. A file capability like `cap_net_raw+ep` on a binary makes things worse rather than better: file capabilities cannot grant what is missing from the container's bounding set, and with the effective bit set the kernel refuses to execute the binary at all, with `Operation not permitted` before it opens any socket. Some upstream images do this to `ping`. Check your image with `getcap -r /` and remove such file capabilities, or request the capability.
 
 ## What we found in the existing apps
 
@@ -84,10 +84,10 @@ ha supervisor options --feature-flag app_drop_net_raw=true --feature-flag app_re
 
 Capabilities are fixed when a container is created. Restarting an app through the Supervisor recreates its container, so restart the apps you want to test, then exercise their network features.
 
-When testing, watch the app log for `Operation not permitted` errors from tools or libraries that open sockets, such as `ping: socket: Operation not permitted` or nmap's `Couldn't open a raw socket`. Such an error is a starting point, not proof: confirm which capability the operation needs before adding it to the manifest. Inside the container you can confirm what is left in the bounding set; `NET_RAW` is bit 13, `MKNOD` bit 27, `AUDIT_WRITE` bit 29, and `SETFCAP` bit 31:
+When testing, watch the app log for `Operation not permitted` errors from tools or libraries that open sockets, such as `ping: socket: Operation not permitted` or nmap's `Couldn't open a raw socket`. Such an error is a starting point, not proof: confirm which capability the operation needs before adding it to the manifest. Inside the container you can confirm what is left in the bounding set of your own process (do not read PID 1, which is the host's init for apps with `host_pid: true`); `NET_RAW` is bit 13, `MKNOD` bit 27, `AUDIT_WRITE` bit 29, and `SETFCAP` bit 31:
 
 ```shell
-grep CapBnd /proc/1/status
+grep CapBnd /proc/self/status
 ```
 
 With both flags on and nothing requested, the value is `00000000000405fb`, down from the Docker default `00000000a80425fb`. To go back, set the flags to `false` and restart the apps. `ha supervisor info` shows the current state of all flags.
