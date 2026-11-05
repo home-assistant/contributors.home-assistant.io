@@ -214,13 +214,12 @@ set_sleep_timer:
       required: true
       visible:
         field: mode
-        operator: not_eq
-        value: end_of_track
+        value: duration
       selector:
         duration:
 ```
 
-**Duration** only shows while **Mode** is not set to `end_of_track`. `visible` also takes a list of conditions, which all have to match, or a plain `true` or `false`. Put it on a section to hide the whole section. Hassfest checks that a condition refers to another field of the same action, and that a section does not depend on its own fields.
+**Duration** only shows while **Mode** is set to `duration`. A field without a value is evaluated with its default, so **Duration** also shows when **Mode** is left empty. `visible` also takes a list of conditions, which all have to match, or a plain `true` or `false`. Put it on a section to hide the whole section. Hassfest checks that a condition refers to another field of the same action, and that a section does not depend on its own fields.
 
 A hidden field is not shown and not required, and the UI removes its value from the action data. This only happens in the UI: actions written in YAML can still pass any field. Your schema in Python still validates every call, so make it accept the data without the hidden field, and reject combinations that make no sense, like a duration with `end_of_track` above.
 
