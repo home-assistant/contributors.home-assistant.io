@@ -446,8 +446,9 @@ function demo(attributes: Attributes, children: string): string {
 }
 
 // The cards of an <EmbedDemo> as the HTML that shows them on any page. The
-// embed doesn't lay out cards by their `grid_options`, so the markup sets
-// the same 12-column section as EmbedDemo.astro.
+// markup sets the same 12-column section as EmbedDemo.astro. Each card's span
+// matches the one the embed works out from its `grid_options`, so the layout
+// holds before the script of the demo loads.
 function embedDemo(attributes: Attributes): string {
   const json = (value: unknown, indent: string) =>
     JSON.stringify(value, null, 2).replaceAll("<", "\\u003c").replaceAll("\n", `\n${indent}`);
