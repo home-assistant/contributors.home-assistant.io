@@ -29,9 +29,32 @@ Most apps do nothing in the last column. If yours does not either, it is very li
 
 The Supervisor adds these capabilities to the container's `CapDrop`, unless the app lists them in `privileged`. This applies to all apps, including those with `full_access: true`: the Supervisor never runs an app in Docker's privileged mode, and `full_access` only widens device access.
 
+## How to test your app today
+
+Supervisor 2026.09.3 and newer has the change behind two feature flags, off by default: `app_drop_net_raw` drops `NET_RAW`, and `app_reduced_capabilities` drops the other three. Turn on both with the `ha` CLI (5.1.0 or newer):
+
+```shell
+ha supervisor options \
+  --feature-flag app_drop_net_raw=true \
+  --feature-flag app_reduced_capabilities=true
+```
+
+Capabilities are fixed when a container is created. Restart the apps you want to test, which recreates their containers, then exercise their network features and watch the app log for `Operation not permitted` errors from tools or libraries that open sockets. Such an error is a starting point, not proof: confirm which capability the operation needs before adding it to the manifest. Inside the container, `grep CapBnd /proc/self/status` shows the bounding set of your own process: with both flags on and nothing requested it is `00000000000405fb`, down from the Docker default `00000000a80425fb`. To go back, set the flags to `false` and restart the apps. `ha supervisor info` shows the current state of all flags.
+
+## What to do
+
+If testing shows that your app opens raw or packet sockets, add `NET_RAW` to `privileged`:
+
+```yaml
+privileged:
+  - NET_RAW
+```
+
+`NET_RAW` lowers the [security rating](/apps/reference/security-rating/) by one point, like `NET_ADMIN` does, and only once for any number of such capabilities. `AUDIT_WRITE`, `MKNOD` and `SETFCAP` can be listed as well and do not change the rating; the [configuration reference](/apps/reference/configuration/) lists all accepted values. Do not ask for a capability because something merely logs a warning, such as a failed `setcap` during a package install.
+
 ## Ping keeps working
 
-The most common worry about dropping `NET_RAW` is `ping`, since ICMP echo classically needs a raw socket. It does not break. Linux has had ICMP datagram sockets since kernel 3.0 (IPv6 since 3.11), which work without `NET_RAW` as long as the process's group is within the `net.ipv4.ping_group_range` sysctl. That sysctl is per network namespace and already allows all groups on every supported installation:
+The most common worry about dropping `NET_RAW` is `ping`, since ICMP echo classically needs a raw socket. It does not break, and you do not need to test it. Linux has had ICMP datagram sockets since kernel 3.0 (IPv6 since 3.11), which work without `NET_RAW` as long as the process's group is within the `net.ipv4.ping_group_range` sysctl. That sysctl is per network namespace and already allows all groups on every supported installation:
 
 - For apps with their own network namespace, the Docker daemon sets it to `0 2147483647` when it creates the container ([since Docker 20.10](https://github.com/moby/moby/pull/41030), independent of the capability set).
 - For apps with `host_network: true`, the host's value applies. systemd sets the same value by default through its `50-default.conf` sysctl drop-in, which Home Assistant OS ships:
@@ -51,32 +74,9 @@ We went through the core and community app stores before adding the flags. Apps 
 
 The other three capabilities have no consumer among the apps today. No app script calls `mknod`, no app runs an `sshd` built with libaudit, and `setcap` only shows up in post-install steps of packages such as `fping` or `mtr-tiny` installed at run time. Both `apt` and `apk` log a warning in that case and complete the install. This can show up in apps with a user-configurable package list, such as Advanced SSH & Web Terminal, Studio Code Server, JupyterLab and AppDaemon.
 
-## What to do
+## Finding out which capabilities an app actually uses
 
-If your app opens raw or packet sockets, add `NET_RAW` to `privileged`:
-
-```yaml
-privileged:
-  - NET_RAW
-```
-
-`NET_RAW` lowers the [security rating](/apps/reference/security-rating/) by one point, like `NET_ADMIN` does, and only once for any number of such capabilities. `AUDIT_WRITE`, `MKNOD` and `SETFCAP` can be listed as well and do not change the rating; the [configuration reference](/apps/reference/configuration/) lists all accepted values. Do not ask for a capability because something merely logs a warning, such as a failed `setcap` during a package install.
-
-## How to test your app today
-
-Supervisor 2026.09.3 and newer has the change behind two feature flags, off by default: `app_drop_net_raw` drops `NET_RAW`, and `app_reduced_capabilities` drops the other three. Turn on both with the `ha` CLI (5.1.0 or newer):
-
-```shell
-ha supervisor options \
-  --feature-flag app_drop_net_raw=true \
-  --feature-flag app_reduced_capabilities=true
-```
-
-Capabilities are fixed when a container is created. Restart the apps you want to test, which recreates their containers, then exercise their network features and watch the app log for `Operation not permitted` errors from tools or libraries that open sockets. Such an error is a starting point, not proof: confirm which capability the operation needs before adding it to the manifest. Inside the container, `grep CapBnd /proc/self/status` shows the bounding set of your own process: with both flags on and nothing requested it is `00000000000405fb`, down from the Docker default `00000000a80425fb`. To go back, set the flags to `false` and restart the apps. `ha supervisor info` shows the current state of all flags.
-
-### Finding out which capabilities an app actually uses
-
-If your app ships an `apparmor.txt`, AppArmor can report which of these capabilities the app exercises before anything breaks. Do this with both flags off, since a dropped capability fails before AppArmor sees it. Add audit rules to the profile:
+Testing with the flags shows what breaks. If your app ships an `apparmor.txt`, AppArmor can also report which of these capabilities the app exercises before anything breaks. Do this with both flags off, since a dropped capability fails before AppArmor sees it. Add audit rules to the profile:
 
 ```text
 audit capability net_raw,
