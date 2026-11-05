@@ -40,7 +40,12 @@ type Props = (
       // The configuration of each card, the same as in a dashboard.
       cards: Record<string, unknown>[];
     } & { [K in Kind]?: never })
-  | ({ cards?: never } & { [K in Kind]?: Record<string, unknown> })
+  // Exactly one kind of content, such as `section`, instead of cards.
+  | {
+      [K in Kind]: { cards?: never } & { [P in K]: Record<string, unknown> } & {
+        [P in Exclude<Kind, K>]?: never;
+      };
+    }[Kind]
 ) & {
   caption?: string;
 } & (
