@@ -224,7 +224,7 @@ Here, **Duration** only shows while **Mode** is set to `duration`.
 - On a section, `visible` hides the whole section.
 - Hassfest checks that a condition refers to another field of the same action, and that a section does not depend on its own fields.
 
-A hidden field is not shown and not required, and the UI removes its value from the action data. This only happens in the UI: actions written in YAML can still pass any field. Your schema in Python still validates every call, so make it accept the data without the hidden field, and reject combinations that make no sense.
+A hidden field is not shown and not required. When a field gets hidden while the action is edited, the UI removes its value from the action data. Opening an existing action keeps its values. This only happens in the UI: actions written in YAML can still pass any field. Your schema in Python still validates every call, so make it accept the data without the hidden field, and reject combinations that make no sense.
 
 ### Names and descriptions
 
