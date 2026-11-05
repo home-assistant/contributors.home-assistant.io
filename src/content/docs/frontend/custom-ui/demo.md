@@ -193,7 +193,7 @@ The mocked backend only knows a part of the Home Assistant API. Keep these limit
 - Templates are not rendered. Template subscriptions fill in simple `{{ variable }}` references from the variables you pass and return the rest as it is. The REST `template` endpoint returns an error.
 - The logbook is empty.
 - The `toggle`, `perform-action`, and `url` actions of a card work. Actions that open a dialog, like `more-info`, do nothing.
-- A `navigate` action changes the address of your page, but nothing opens, so leave it out of your demos.
+- A `navigate` action with a path starting with `#` changes the hash of your page and can scroll to an anchor. Other navigation paths do nothing in an embedded card.
 - Actions the backend does not handle, or for entities it does not have, do nothing. They do not return an error.
 - Other requests that wait for an answer, over WebSocket or REST, get an error.
 
