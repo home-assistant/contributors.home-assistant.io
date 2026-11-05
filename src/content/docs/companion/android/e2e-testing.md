@@ -69,7 +69,7 @@ When you change a flow:
 - It drives the debug app, `io.homeassistant.companion.android.debug`. Don't change the `appId`.
 - It runs on every API level, so anything version specific must be conditional, like the existing steps for permission dialogs.
 - Steps match on text on screen. If you rename a label in the app, update the flow in the same pull request.
-- Put a step that both flows need in a subflow.
+- Put a step that multiple flows need in a subflow.
 
 The [Maestro documentation](https://docs.maestro.dev/api-reference/commands) lists all commands.
 
