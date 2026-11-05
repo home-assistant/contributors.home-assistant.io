@@ -4,7 +4,7 @@ description: Embed working dashboard cards, including your own custom card, on a
 sidebarLabel: Live demos
 order: 9
 source: https://github.com/home-assistant/frontend/tree/dev/demo/src/embed
-lastVerified: 2026-11-03
+lastVerified: 2026-11-05
 ---
 
 Screenshots show what a card looks like. A live demo shows how it works: people can turn on a light, move a slider, and see the other cards follow. The [Home Assistant demo](https://demo.home-assistant.io/) publishes two elements that put real dashboard cards on any web page, like your README site or your blog. They run against a mocked backend in the browser, so no Home Assistant server is needed.
@@ -29,7 +29,7 @@ Add the script of the demo to your page. It loads all its other files from the d
 
 ## Add a card
 
-Put the entities in a script tag inside the provider, and the card configuration in a script tag inside the card. Both take JSON with `type="application/json"`, or YAML with `type="text/yaml"`. The card configuration is the same as in a dashboard.
+Put the entities in a script tag directly inside the provider, and the card configuration in a script tag directly inside the card. Both take JSON with `type="application/json"`, or YAML with `type="text/yaml"`. The card configuration is the same as in a dashboard.
 
 ```html
 <ha-embed-provider>
@@ -192,7 +192,7 @@ The mocked backend only knows a part of the Home Assistant API. Keep these limit
 - History and statistics are made up from the current state of each entity. A few energy sensors of the demo, like `sensor.solar_production`, get made-up statistics of their own instead, so their state does not change their graph.
 - Templates are not rendered. Template subscriptions fill in simple `{{ variable }}` references from the variables you pass and return the rest as it is. The REST `template` endpoint returns an error.
 - The logbook is empty.
-- The `toggle`, `perform-action`, and `url` actions of a card work. Actions that open a dialog, like `more-info`, do nothing.
+- The `toggle`, `perform-action`, and `url` actions of a card work. Actions that open a dialog, like `more-info`, do nothing. An action with a `confirmation` never runs, because it waits for a dialog that does not open.
 - A `navigate` action with a path starting with `#` changes the hash of your page and can scroll to an anchor. Other navigation paths do nothing in an embedded card.
 - Actions the backend does not handle, or for entities it does not have, do nothing. They do not return an error.
 - Other requests that wait for an answer, over WebSocket or REST, get an error.
