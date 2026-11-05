@@ -68,9 +68,9 @@ privileged:
   - NET_RAW
 ```
 
-`NET_RAW` has been an accepted value since Supervisor 2023.04, so you can add it today without worrying about older installations. It lowers the [security rating](/apps/reference/security-rating/) by one point, like `NET_ADMIN` does, and only once for any number of such capabilities.
+`NET_RAW` lowers the [security rating](/apps/reference/security-rating/) by one point, like `NET_ADMIN` does, and only once for any number of such capabilities.
 
-`AUDIT_WRITE`, `MKNOD` and `SETFCAP` are accepted in `privileged` since Supervisor 2026.09.3. They do not change the security rating. An older Supervisor rejects a manifest that lists them, so only add one if your app really needs it, and in that case require Supervisor 2026.09.3 or newer. The [configuration reference](/apps/reference/configuration/) lists all accepted capabilities.
+`AUDIT_WRITE`, `MKNOD` and `SETFCAP` can be listed in `privileged` as well and do not change the security rating. The [configuration reference](/apps/reference/configuration/) lists all accepted capabilities.
 
 Do not ask for a capability because something merely logs a warning. A failed `setcap` during a package install or an audit message that could not be sent are harmless.
 
