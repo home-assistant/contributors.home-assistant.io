@@ -209,14 +209,14 @@ A section strategy that groups entities by device or area needs those in the pro
 
 ## Show a view
 
-`<ha-embed-view>` renders a view, with its badges and layout, and a `strategy` generates the view. Give the element the width the view needs: masonry and sidebar views pick their number of columns from the width of the page, not of the element.
+`<ha-embed-view>` renders a view, with its badges and layout, and a `strategy` generates the view. Give the element the width the view needs: masonry and sidebar views pick their number of columns from the width of the page, not of the element. This example uses the provider from [Add a card](#add-a-card):
 
 ```html
 <ha-embed-view>
   <script type="text/yaml">
     type: sections
     badges:
-      - entity: sensor.outside_temperature
+      - entity: light.kitchen
     sections:
       - cards:
           - type: tile
