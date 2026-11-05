@@ -191,6 +191,40 @@ color_temp:
 
 With an `attribute` filter, the field is shown when the attribute of a selected entity has one of the listed values. If the attribute is a list, one matching item is enough.
 
+### Show fields based on another field
+
+A field can show only while other fields of the same action have certain values, with a `visible` condition. It works like [fields that show based on another field](/core/integrations/flow-steps/#fields-that-show-based-on-another-field) in config flows, with the same operators:
+
+```yaml
+set_sleep_timer:
+  target:
+    entity:
+      integration: yoto
+      domain: media_player
+  fields:
+    mode:
+      required: true
+      default: duration
+      selector:
+        select:
+          translation_key: sleep_timer_mode
+          options:
+            - duration
+            - end_of_track
+    duration:
+      required: true
+      visible:
+        field: mode
+        operator: not_eq
+        value: end_of_track
+      selector:
+        duration:
+```
+
+**Duration** only shows while **Mode** is not set to `end_of_track`. `visible` also takes a list of conditions, which all have to match, or a plain `true` or `false`. Put it on a section to hide the whole section. Hassfest checks that a condition refers to another field of the same action, and that a section does not depend on its own fields.
+
+A hidden field is not shown and not required, and the UI removes its value from the action data. This only happens in the UI: actions written in YAML can still pass any field. Your schema in Python still validates every call, so make it accept the data without the hidden field, and reject combinations that make no sense, like a duration with `end_of_track` above.
+
 ### Names and descriptions
 
 The name and description of each action and each field are not in `services.yaml`: they are in `strings.json`, under `services`, and every action and field needs one. Keep URLs out of translations with description placeholders, which you pass when you register the action:
