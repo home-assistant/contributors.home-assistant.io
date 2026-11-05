@@ -71,6 +71,7 @@
 /companion/android/e2e-testing/	debugging-a-failure	debug-a-failure
 /companion/android/e2e-testing/	editing-a-flow	the-flows
 /companion/android/e2e-testing/	running-a-flow-locally	the-flows
+/companion/android/e2e-testing/	the-flow	the-flows
 /companion/android/flavors-and-targets/	-automotive	android-automotive
 /companion/android/flavors-and-targets/	-tv	android-tv
 /companion/android/flavors-and-targets/	-wear-os	wear-os
