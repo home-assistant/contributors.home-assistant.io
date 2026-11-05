@@ -198,9 +198,9 @@ Aborting does not remove the issue. Delete it yourself once the fix is done, for
 
 If the migration of a config entry failed and the user can fix the cause, call `hass.config_entries.async_retry_migration(entry_id)` from the repair flow once it is fixed. See [migrate a config entry](/core/integrations/config-entries/#migrate-a-config-entry).
 
-### Continue in separate repair flow
+### Continue in another repair flow
 
-When the current repair flow requires different repair flow the flow can continue in a separate repairs flow. An issue corresponding the next repair flow must exist in the issue registry.
+When the current repair flow requires another repair flow, it can continue in that flow using `next_flow`. An issue corresponding to the next repair flow must exist in the issue registry.
 
 ```python
 from homeassistant.components.repairs import FlowType, repairs_flow_manager
