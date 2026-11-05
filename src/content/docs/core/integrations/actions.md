@@ -19,7 +19,7 @@ Add an action to your own integration first, rather than changing a shared one. 
 
 Register actions in `async_setup` of your integration, not in `async_setup_entry` and not in a platform. That way they exist even when no config entry is loaded, so automations that use them can be edited and validated, and users get a clear error instead of an unknown action. That is a rule of the Bronze tier of the [quality scale](/core/quality-scale/).
 
-Put the registration in `services.py`, in a function called `async_setup_services`, and call that function from `async_setup`. It is a synchronous function, decorated with `@callback`, that takes only `hass`. Pylint warns about actions registered anywhere else (`home-assistant-action-registered-outside-services-module`), and about an `async_setup_services` with another shape (`home-assistant-invalid-setup-services`).
+Put the registration in `services.py`, in a function called `async_setup_services`, and call that function from `async_setup`. It is a synchronous function, decorated with `@callback`, that takes only `hass`. Pylint warns about actions registered outside `services.py` (`home-assistant-action-registered-outside-services-module`), and about an `async_setup_services` with another shape (`home-assistant-invalid-setup-services`).
 
 Since your integration now has an `async_setup`, it needs a `CONFIG_SCHEMA`. See [integrations without YAML](/core/integrations/yaml/#integrations-without-yaml).
 
@@ -47,6 +47,8 @@ from homeassistant.core import (
     callback,
 )
 from homeassistant.helpers import config_validation as cv, service
+
+from .const import DOMAIN
 
 GET_FORECAST_SCHEMA = probatio.Schema(
     {
@@ -85,6 +87,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers.typing import ConfigType
 
+from .const import DOMAIN
 from .services import async_setup_services
 
 CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
@@ -110,6 +113,8 @@ from homeassistant.components.media_player import (
 )
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers import config_validation as cv, service
+
+from .const import DOMAIN
 
 
 @callback

@@ -58,9 +58,9 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 
 ## How it is checked
 
-- Pylint warns when actions are registered in `async_setup_entry`, also through a helper function in the same module that `async_setup_entry` calls, or when `async_setup_entry` calls `async_setup_services` (`home-assistant-service-registered-in-setup-entry`).
-- Pylint warns when an action is registered outside `async_setup_services` in `services.py`, or the synchronous module-level functions in `services.py` it calls (`home-assistant-action-registered-outside-services-module`). An integration with a synchronous `setup` uses `setup_services` instead, which is not decorated with `@callback`.
-- Pylint warns when `async_setup_services` is a coroutine, takes more than `hass`, or is not decorated with `@callback` (`home-assistant-invalid-setup-services`).
+- Pylint warns when actions are registered in `async_setup_entry` (`home-assistant-service-registered-in-setup-entry`).
+- Pylint warns when actions are registered outside `services.py` (`home-assistant-action-registered-outside-services-module`).
+- Pylint warns when `async_setup_services` does not have the shape shown in the example (`home-assistant-invalid-setup-services`).
 - The checks inside the action are verified in review.
 
 ## Exceptions
