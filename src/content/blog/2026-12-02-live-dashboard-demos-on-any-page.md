@@ -90,7 +90,7 @@ A dashboard keeps its own current view, so the address of your page stays the sa
 
 ## Tip: one site for all your projects
 
-If you maintain several cards or strategies, you don't need a demo site for each. Keep a `demo.yml` next to each project, with the entities in `entities` and what to show in `cards`, `sections`, `views`, or `dashboard`:
+If you maintain several cards or strategies, you don't need a demo site for each. Give each project a demo config, with the entities in `entities` and what to show in `cards`, `sections`, `views`, or `dashboard`. The configs can all live in the host site, or each project can keep its own, like a `demo.yml` next to its code:
 
 ```yaml
 entities:
@@ -103,7 +103,7 @@ cards:
     entity: light.kitchen
 ```
 
-One site can then read the file of each project and render it: the entities go into a provider, and each card, section, view, or dashboard into its element, as YAML in their script tags. Load the script of each card after the script of the demo, and every project gets a live demo from the same file it ships with. See [Show several projects on one site](/frontend/custom-ui/demo/#show-several-projects-on-one-site) for more.
+The site then renders each config: the entities go into a provider, and each card, section, view, or dashboard into its element, as YAML in their script tags. Load the script of each card after the script of the demo, and every project gets a live demo from one site. See [Show several projects on one site](/frontend/custom-ui/demo/#show-several-projects-on-one-site) for more.
 
 ## How it works
 
