@@ -1,7 +1,7 @@
 ---
 title: "Apps will lose four default Linux capabilities"
 description: The Supervisor is moving to a smaller default capability set for app containers. This post outlines the change, affected apps, and how it can be tested.
-date: 2026-10-22
+date: 2026-11-05
 authors:
   - Stefan Agner
 areas:
@@ -116,7 +116,7 @@ Read the result with the process name in mind. Tools that try a raw socket first
 The change lands in three steps:
 
 1. Supervisor 2026.09.3 added the two feature flags, off by default. `NET_RAW` has its own flag because it has a security implication of its own and known fallout in apps; the other three were added as a group, following the reduced profile of containerd. See [home-assistant/supervisor#7230](https://github.com/home-assistant/supervisor/pull/7230) and [home-assistant/supervisor#7233](https://github.com/home-assistant/supervisor/pull/7233) for the implementation. The same release made `AUDIT_WRITE`, `MKNOD` and `SETFCAP` accepted values in `privileged`.
-2. An upcoming Supervisor release turns both flags on by default for new installations ([home-assistant/supervisor#7402](https://github.com/home-assistant/supervisor/pull/7402)). Existing installations keep their current behavior unless the flags are set. Restoring a backup does not carry feature flags over, so an app restored onto a new installation runs with the new defaults.
-3. Later, the reduced capability set becomes the default for all installations, and the flags go away.
+2. Supervisor 2026.12 turns both flags on by default for new installations ([home-assistant/supervisor#7402](https://github.com/home-assistant/supervisor/pull/7402)). Existing installations keep their current behavior unless the flags are set. Restoring a backup does not carry feature flags over, so an app restored onto a new installation runs with the new defaults.
+3. No later than Supervisor 2027.05, the reduced capability set becomes the default for all installations. We may bring this step forward; if so, it is announced in the Supervisor release notes. The flags remain available for a while after the switch, so that a regression in an app can be confirmed by turning the old behavior back on, and will be removed in a later release.
 
-If your app needs one of these capabilities, add it to `privileged` now. If you run into problems or have concerns with the change, let us know in the [Home Assistant Discord](https://www.home-assistant.io/join-chat/) or open an issue on the [Supervisor repository](https://github.com/home-assistant/supervisor/issues).
+Do not plan around the last date. If your app needs one of these capabilities, add it to `privileged` now. If you run into problems or have concerns with the change, let us know in the [Home Assistant Discord](https://www.home-assistant.io/join-chat/) or open an issue on the [Supervisor repository](https://github.com/home-assistant/supervisor/issues).
