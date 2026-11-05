@@ -199,7 +199,6 @@ A field can show only while other fields of the same action have certain values,
 set_sleep_timer:
   target:
     entity:
-      integration: yoto
       domain: media_player
   fields:
     mode:
