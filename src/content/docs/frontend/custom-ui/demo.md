@@ -54,7 +54,7 @@ Put the entities in a script tag inside the provider, and the card configuration
 </ha-embed-provider>
 ```
 
-Each entity has an `entity_id`, a `state`, and `attributes`. The optional keys `area_id`, `device_id`, and `platform` set its entry in the entity registry.
+Each entity has an `entity_id`, a `state`, and `attributes`. The optional keys `area_id`, `device_id`, and `platform` set its entry in the entity registry. Without `last_changed`, the entity changed at a random recent time.
 
 Entities keep all their attributes, like in Home Assistant, so attributes that only your integration sets are there too. Entities with a specialized mock, including lights, climate, covers, people, and device trackers, work out some attributes themselves, and those win over what you set: a light that is off has no brightness, for example.
 
@@ -112,7 +112,7 @@ Cards inside a provider count too, so this works for every layout. It does not w
 
 ## Place cards anywhere on the page
 
-A card does not have to be inside a provider. A card outside a provider uses the first provider on the page. Put one provider with all entities at the top of the page, and the cards anywhere below it, between your text. If the page has no provider, the card adds an empty one.
+A card does not have to be inside a provider. A card outside a provider uses the first provider on the page. A card inside one of your own components uses the provider around that component, even through its shadow root. Put one provider with all entities at the top of the page, and the cards anywhere below it, between your text. If the page has no provider, the card adds an empty one.
 
 To use another provider, set the `provider` attribute of the card to the ID of that provider:
 
@@ -134,7 +134,7 @@ Some cards need data that is not an entity. To set it, put an object in the scri
 
 - `areas`: a list of areas, each with an `area_id` and a `name`. Without it, each `area_id` of the entities becomes an area.
 - `calendars`: the events of calendar entities, by entity ID. Each event has a `summary`, a `start`, and an `end`. Calendars that are not listed here get sample events around today. A calendar with an empty list has no events.
-- `energy`: the energy settings, the same as the `energy/get_prefs` response. Without it, energy is not set up.
+- `energy`: the energy settings, the keys you need from the `energy/get_prefs` response. Without it, energy is not set up.
 
 ```yaml
 entities:
@@ -171,10 +171,12 @@ provider.hass.mockEntities["light.kitchen"].update({ state: "off" });
 To use an action of an entity, call it in the same module script. The provider updates the state and the cards:
 
 ```js
-provider.hass.callService("light", "turn_on", {
-  entity_id: "light.kitchen",
-  brightness_pct: 50,
-});
+provider.hass.callService(
+  "light",
+  "turn_on",
+  { brightness_pct: 50 },
+  { entity_id: "light.kitchen" },
+);
 ```
 
 Setting the `entities` property of the provider replaces all entities, and they start again from what you set.
@@ -190,7 +192,8 @@ The mocked backend only knows a part of the Home Assistant API. Keep these limit
 - History and statistics are made up from the current state of each entity. A few energy sensors of the demo, like `sensor.solar_production`, get made-up statistics of their own instead, so their state does not change their graph.
 - Templates are not rendered. Template subscriptions fill in simple `{{ variable }}` references from the variables you pass and return the rest as it is. The REST `template` endpoint returns an error.
 - The logbook is empty.
-- Actions that open a dialog, like `more-info`, do nothing.
+- The `toggle`, `perform-action`, and `url` actions of a card work. Actions that open a dialog, like `more-info`, do nothing.
+- A `navigate` action changes the address of your page, but nothing opens, so leave it out of your demos.
 - Actions the backend does not handle, or for entities it does not have, do nothing. They do not return an error.
 - Other requests that wait for an answer, over WebSocket or REST, get an error.
 
