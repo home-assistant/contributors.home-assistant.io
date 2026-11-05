@@ -109,19 +109,29 @@ The site then renders each config: the entities go into a provider, and each car
 
 The embed is built from the same code as the demo, in `demo/src/embed/` of the [frontend repository](https://github.com/home-assistant/frontend/tree/dev/demo/src/embed).
 
-**One script, loaded from anywhere.** `embed.js` sets the public path of the bundle from its own URL, so its chunks, translations, and icons all load from the demo site, not from your page. Browsers only start workers from the page's own origin, so workers from the demo site, like the one of the markdown card, start from a small blob that imports the real script. The demo serves its files with CORS.
+### One script, loaded from anywhere
 
-**A mocked `hass` per provider.** `<ha-embed-provider>` creates the same mocked `hass` object as the demo and the gallery, and registers the stubs of `demo/src/stubs/` on it: actions, history and statistics made up from the current states, weather forecasts, to-do lists, calendar events, energy, and the area, device, and entity registries. Lights, climate, covers, and other domains have specialized mocks, so their actions change their state the way Home Assistant would. The provider passes `hass` to its elements through a Lit context.
+`embed.js` sets the public path of the bundle from its own URL, so its chunks, translations, and icons all load from the demo site, not from your page. Browsers only start workers from the page's own origin, so workers from the demo site, like the one of the markdown card, start from a small blob that imports the real script. The demo serves its files with CORS.
 
-**Elements find their provider.** A card, section, view, or dashboard uses the provider around it, looking through shadow roots, so it works inside your own components. Outside a provider, it uses the first one on the page, or the `provider` attribute picks one by ID. That means one provider at the top of a page can feed cards anywhere in the text below it.
+### A mocked `hass` per provider
 
-**Real dashboard code.** Cards render through `hui-card`, sections through `hui-section`, views through `hui-view`, and dashboards through `hui-root`, the same elements and strategy code as the dashboard panel. Cards take the width they would have in a section, so a 12 column grid lays out like a dashboard. The cards keep their styles in their shadow roots and follow the light or dark mode of the browser, or the `color-scheme` attribute of the provider.
+`<ha-embed-provider>` creates the same mocked `hass` object as the demo and the gallery, and registers the stubs of `demo/src/stubs/` on it: actions, history and statistics made up from the current states (a few energy sensors of the demo get statistics of their own), weather forecasts, to-do lists, calendar events, energy, and the area, device, and entity registries. Lights, climate, covers, and other domains have specialized mocks, so their actions change their state the way Home Assistant would. The provider passes `hass` to its elements through a Lit context.
 
-**Your page stays in charge.** The provider has a `hass.mockEntities` API to change entities from your page, and fires `states-changed` when they change. The elements read their script tags when they are set up, so you can also wait to load the script until a demo scrolls into view.
+### Elements find their provider
+
+A card, section, view, or dashboard uses the provider around it, looking through shadow roots, so it works inside your own components. Outside a provider, it uses the first one on the page, or the `provider` attribute picks one by ID. That means one provider at the top of a page can feed cards anywhere in the text below it.
+
+### Real dashboard code
+
+Cards render through `hui-card`, sections through `hui-section`, views through `hui-view`, and dashboards through `hui-root`, the same elements and strategy code as the dashboard panel. Cards take the width they would have in a section, so a 12 column grid lays out like a dashboard. The cards keep their styles in their shadow roots and follow the light or dark mode of the browser, or the `color-scheme` attribute of the provider.
+
+### Your page stays in charge
+
+The provider has a `hass.mockEntities` API to change entities from your page, and fires `states-changed` when they change. The elements read their script tags when they are set up, so you can also wait to load the script until a demo scrolls into view.
 
 ## Where you see it
 
-These docs use the embed already. The [entity pages](/core/entities/light/) show cards for each entity type, the [dashboard card pages](/design/dashboards/tile-card/) show each card live, and the docs for live demos show sections, views, and a dashboard you can click through.
+These docs use the embed already. Many [entity pages](/core/entities/light/) show cards for their entity type, most [dashboard card pages](/design/dashboards/tile-card/) show their card live, and the docs for live demos show sections, views, and a dashboard you can explore.
 
 ## Read more
 
