@@ -174,6 +174,10 @@ set_speed:
 
 ### Show fields only when they apply
 
+Fields that only make sense in some cases can be hidden in the action editor, based on the selected entities or on the values of other fields. Hiding a field only changes the UI.
+
+#### Based on the selected entities
+
 A `filter` on a field shows it only when at least one selected entity supports it. Filters only work in actions with a `target`, because they look at the selected entities: hassfest refuses them in other actions. Use either `supported_features` or `attribute`, not both:
 
 ```yaml
@@ -191,7 +195,7 @@ color_temp:
 
 With an `attribute` filter, the field is shown when the attribute of a selected entity has one of the listed values. If the attribute is a list, one matching item is enough.
 
-### Show fields based on another field
+#### Based on another field
 
 A `visible` condition shows a field only while other fields of the same action have certain values. It takes the same conditions and operators as [fields that show based on another field](/core/integrations/flow-steps/#fields-that-show-based-on-another-field) in config flows:
 
