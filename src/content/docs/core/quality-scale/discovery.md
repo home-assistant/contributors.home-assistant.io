@@ -41,8 +41,7 @@ class MyConfigFlow(ConfigFlow, domain=DOMAIN):
         self.host = discovery_info.host
         serial = discovery_info.properties["serialno"]
 
-        await self.async_set_unique_id(serial)
-        self._abort_if_unique_id_configured(updates={CONF_HOST: self.host})
+        await self.async_set_unique_id_or_abort(serial, updates={CONF_HOST: self.host})
 
         try:
             await MyClient(self.host).get_data()
@@ -67,7 +66,7 @@ class MyConfigFlow(ConfigFlow, domain=DOMAIN):
 
 `ZeroconfServiceInfo` comes from `homeassistant.helpers.service_info.zeroconf`. The other discovery methods have their own service info classes in `homeassistant.helpers.service_info`, and their own steps, like `async_step_dhcp` or `async_step_bluetooth`.
 
-If the user step sets the same unique ID, pass `raise_on_progress=False` to `async_set_unique_id` there. Otherwise, a user who sets up the device by hand while a discovery flow for it is open gets an abort.
+If the user step sets the same unique ID, it must not abort on a discovery flow in progress. Otherwise, a user who sets up the device by hand while a discovery flow for it is open gets an abort. `async_set_unique_id_or_abort` takes care of this in the user step. With `async_set_unique_id`, pass `raise_on_progress=False` there.
 
 ## How it is checked
 

@@ -35,8 +35,7 @@ async def async_step_user(
         except MyConnectionError:
             errors["base"] = "cannot_connect"
         else:
-            await self.async_set_unique_id(info.serial_number)
-            self._abort_if_unique_id_configured()
+            await self.async_set_unique_id_or_abort(info.serial_number)
             return self.async_create_entry(title=info.name, data=user_input)
 
     return self.async_show_form(
@@ -61,7 +60,7 @@ The flow aborts with `already_configured` when an entry with the same host exist
 
 ## How it is checked
 
-- Hassfest, when the rule is `done`: the config flow must call `_async_abort_entries_match`, or both `async_set_unique_id` and `_abort_if_unique_id_configured`. Integrations with `single_config_entry` in their manifest pass this check.
+- Hassfest, when the rule is `done`: the config flow must call `_async_abort_entries_match`, `async_set_unique_id_or_abort`, or both `async_set_unique_id` and `_abort_if_unique_id_configured`. Integrations with `single_config_entry` in their manifest pass this check.
 - Pylint, for every integration: `home-assistant-unique-id-ip-based` warns when `async_set_unique_id` gets an IP address or hostname.
 - Pylint: `home-assistant-tests-config-flow-unique-id` warns when a config flow test creates an entry without checking its unique ID.
 - The test of the duplicate case is part of [config-flow-test-coverage](/core/quality-scale/config-flow-test-coverage/).

@@ -222,8 +222,7 @@ class ExampleAirConfigFlow(ConfigFlow, domain=DOMAIN):
                 _LOGGER.exception("Unexpected exception")
                 errors["base"] = "unknown"
             else:
-                await self.async_set_unique_id(status.serial_number)
-                self._abort_if_unique_id_configured()
+                await self.async_set_unique_id_or_abort(status.serial_number)
 
                 return self.async_create_entry(
                     title=status.name, data=user_input
@@ -240,7 +239,7 @@ What happens here:
 
 - The first time, `user_input` is `None`, and the step shows the form.
 - When the user submits, the flow connects to the monitor. If that fails, it shows the form again with an error. That is the [test-before-configure](/core/quality-scale/test-before-configure/) rule.
-- The serial number becomes the unique ID of the config entry. `_abort_if_unique_id_configured` stops the flow when that monitor is already set up. That is the [unique-config-entry](/core/quality-scale/unique-config-entry/) rule. Never use the IP address as unique ID: it changes.
+- The serial number becomes the unique ID of the config entry. `async_set_unique_id_or_abort` stops the flow when that monitor is already set up. That is the [unique-config-entry](/core/quality-scale/unique-config-entry/) rule. Never use the IP address as unique ID: it changes.
 - `async_get_clientsession` gives you the shared web session of Home Assistant.
 - `@override` tells the type checker that this method replaces one of the parent class. Core's mypy configuration asks for it.
 
