@@ -20,6 +20,7 @@ Update entities have these properties on top of the [generic entity properties](
 | `title` | `str \| None` | `None` | The name of the software, like `Tasmota`, when that differs from the device or entity name. |
 | `release_summary` | `str \| None` | `None` | A short excerpt of the release notes. Cut off at 255 characters. |
 | `release_url` | `str \| None` | `None` | A link to the full release notes. |
+| `release_notes_messages` | `tuple[UpdateReleaseNotesMessage, ...]` | `()` | Translated messages shown before the release notes. See [Release notes messages](#release-notes-messages). |
 | `auto_update` | `bool` | `False` | The device or service updates itself. Users cannot skip versions of such an entity. |
 | `in_progress` | `bool \| None` | `False` | Whether an install is running. Requires `UpdateEntityFeature.PROGRESS`. |
 | `update_percentage` | `int \| float \| None` | `None` | How far the install is, from 0 to 100. Requires `UpdateEntityFeature.PROGRESS`, and is only shown while `in_progress` is `True`. |
@@ -81,6 +82,71 @@ Requires `UpdateEntityFeature.RELEASE_NOTES`. Implement `release_notes` or `asyn
 async def async_release_notes(self) -> str | None:
     """Return the release notes."""
 ```
+
+#### Release notes messages
+
+Some updates need the same guidance every time, like a warning not to unplug the device while it installs. Put that in `release_notes_messages`, not in your release notes. Home Assistant translates each message and shows it as an alert above the release notes. Your `release_notes` method then only returns the release notes of the device or service.
+
+The messages are shown together with the release notes, so the entity needs `UpdateEntityFeature.RELEASE_NOTES` too.
+
+The update platform has two shared messages:
+
+| Message | What it tells the user |
+| ------- | ---------------------- |
+| `RELEASE_NOTES_MESSAGE_BATTERY_POWERED` | Battery-powered devices can take hours to update, and may need to be woken up before the update starts. |
+| `RELEASE_NOTES_MESSAGE_DO_NOT_INTERRUPT` | Do not restart, unplug, or otherwise interrupt the device while it updates. Shown as a warning. |
+
+```python
+from homeassistant.components.update import (
+    RELEASE_NOTES_MESSAGE_BATTERY_POWERED,
+    RELEASE_NOTES_MESSAGE_DO_NOT_INTERRUPT,
+    UpdateEntity,
+)
+
+
+class MyUpdate(UpdateEntity):
+    """Updates for a battery-powered device."""
+
+    _attr_release_notes_messages = (
+        RELEASE_NOTES_MESSAGE_BATTERY_POWERED,
+        RELEASE_NOTES_MESSAGE_DO_NOT_INTERRUPT,
+    )
+```
+
+You can also set them on the entity description, with `UpdateEntityDescription(release_notes_messages=...)`.
+
+For guidance that only fits your integration, define your own message with `UpdateReleaseNotesMessage`:
+
+```python
+from homeassistant.components.update import (
+    UpdateReleaseNotesMessage,
+    UpdateReleaseNotesMessageSeverity,
+)
+
+from .const import DOMAIN
+
+RELEASE_NOTES_MESSAGE_TRUSTED_SOURCE = UpdateReleaseNotesMessage(
+    translation_domain=DOMAIN,
+    translation_key="trusted_source",
+    severity=UpdateReleaseNotesMessageSeverity.WARNING,
+)
+```
+
+Add the text to the `strings.json` of your integration, under `entity.update.release_notes_messages`:
+
+```json title="strings.json"
+{
+  "entity": {
+    "update": {
+      "release_notes_messages": {
+        "trusted_source": "Only install this update if you trust its source."
+      }
+    }
+  }
+}
+```
+
+The `severity` is `INFO` by default. Use `WARNING` or `ERROR` when the message needs more attention. To fill placeholders in the text, like a link to your documentation, pass `translation_placeholders`.
 
 ### Compare versions
 
