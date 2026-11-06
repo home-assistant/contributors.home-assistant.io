@@ -18,9 +18,9 @@ Registered in `async_setup`, the action is always there. When the entry is not l
 
 ## Example
 
-Most integrations keep their actions in a `services.py` module, with one function that registers them all:
+Register the actions in `services.py`, in one function called `async_setup_services`. It is a synchronous function, decorated with `@callback`, that takes only `hass`:
 
-```python
+```python title="services.py"
 @callback
 def async_setup_services(hass: HomeAssistant) -> None:
     """Register the actions of My integration."""
@@ -46,7 +46,7 @@ def async_setup_services(hass: HomeAssistant) -> None:
 
 Call the function from `async_setup` in `__init__.py`. An integration that is only set up from the UI also needs a `CONFIG_SCHEMA` that says so:
 
-```python
+```python title="__init__.py"
 CONFIG_SCHEMA = cv.config_entry_only_config_schema(DOMAIN)
 
 
@@ -58,7 +58,9 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 
 ## How it is checked
 
-- Pylint warns when actions are registered in `async_setup_entry`, also through a helper function in the same module that `async_setup_entry` calls (`home-assistant-service-registered-in-setup-entry`). A helper imported from another module, like `services.py`, is not followed.
+- Pylint warns when actions are registered in `async_setup_entry` (`home-assistant-service-registered-in-setup-entry`).
+- Pylint warns when actions are registered outside `services.py` (`home-assistant-action-registered-outside-services-module`).
+- Pylint warns when `async_setup_services` does not have the shape shown in the example (`home-assistant-invalid-setup-services`).
 - The checks inside the action are verified in review.
 
 ## Exceptions
