@@ -8,8 +8,8 @@
 // light or dark mode of the site.
 //
 // The cards are laid out like one section of a dashboard: 12 columns, at
-// most 500px wide. A card spans all 12, or the `columns` of its
-// `grid_options`, the same option as in a dashboard.
+// most 500px wide. A card gets the width it has by default in a dashboard,
+// or the `columns` of its `grid_options`, the same option as in a dashboard.
 //
 // In MDX:
 //   <EmbedDemo
@@ -18,19 +18,43 @@
 //       { type: "tile", entity: "light.kitchen", grid_options: { columns: 6 } },
 //     ]}
 //   />
-interface Props {
-  // The entities of the provider, or an object with `entities`, `areas`,
-  // `calendars`, and `energy`, as the provider takes them.
-  entities: unknown[] | Record<string, unknown>;
+//
+// With `home`, the cards get the sample home of the site instead, the same
+// one as <Demo hass> (see demo-runtime/demo-home.ts).
+//   <EmbedDemo home cards={[{ type: "light", entity: "light.kitchen_ceiling" }]} />
+import { AREAS, DEVICES, ENTITIES, LOADED_AT } from "../../../demo-runtime/demo-home";
+
+type Props = {
   // The configuration of each card, the same as in a dashboard.
   cards: Record<string, unknown>[];
   caption?: string;
-}
+} & (
+  | {
+      // The entities of the provider, or an object with `entities`, `areas`,
+      // `calendars`, and `energy`, as the provider takes them.
+      entities: unknown[] | Record<string, unknown>;
+      home?: never;
+    }
+  | { home: true; entities?: never }
+);
 
 const EMBED_SCRIPT_URL = "https://demo.home-assistant.io/embed.js";
 const SECTION_COLUMNS = 12;
 
-const { entities, cards, caption } = Astro.props;
+const { cards, caption } = Astro.props;
+
+// The embed has no device registry, so an entity of a device gets the area
+// of its device.
+const sampleHome = () => ({
+  areas: AREAS,
+  entities: ENTITIES.map(({ device_id, area_id, ...entity }) => ({
+    ...entity,
+    ...(device_id && { device_id }),
+    area_id: area_id ?? DEVICES.find((item) => item.id === device_id)?.area_id ?? undefined,
+  })),
+});
+
+const entities = Astro.props.home ? sampleHome() : Astro.props.entities;
 
 // Keeps a "</script>" in the data from closing the script element.
 const toScriptJson = (value: unknown) => JSON.stringify(value).replaceAll("<", "\\u003c");
@@ -43,11 +67,19 @@ const columns = (card: Record<string, unknown>) => {
 
 <figure class="embed-demo" data-pagefind-ignore>
   <div class="stage">
-    <ha-embed-provider class="section" data-embed-src={EMBED_SCRIPT_URL}>
+    <ha-embed-provider
+      class="section"
+      data-embed-src={EMBED_SCRIPT_URL}
+      data-built-at={Astro.props.home ? LOADED_AT : undefined}
+      style={`--columns: ${Math.min(
+        cards.reduce((sum, card) => sum + columns(card), 0),
+        SECTION_COLUMNS,
+      )}`}
+    >
       <script is:inline type="application/json" set:html={toScriptJson(entities)} />
       {
         cards.map((card) => (
-          <ha-embed-card style={`grid-column: span ${columns(card)}`}>
+          <ha-embed-card style={`--span: ${columns(card)}`}>
             <script is:inline type="application/json" set:html={toScriptJson(card)} />
           </ha-embed-card>
         ))
@@ -80,6 +112,98 @@ const columns = (card: Record<string, unknown>) => {
     }
   }
 
+  // The sample home is serialized at build time, so its times, like a timer
+  // that finishes some minutes "from now" or the position of a song, would
+  // be long past. Shift every time in it by the time since the build, before
+  // the provider reads it. All of them come from fromNow in demo-home.ts.
+  const ISO_TIME = /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\.\d{3}Z$/;
+
+  function rebaseTimes(provider: HTMLElement) {
+    const builtAt = Number(provider.dataset.builtAt);
+    const data = provider.querySelector(":scope > script[type='application/json']");
+
+    if (!builtAt || !data?.textContent) {
+      return;
+    }
+
+    const shift = Date.now() - builtAt;
+    const rebase = (value: unknown) =>
+      typeof value === "string" && ISO_TIME.test(value)
+        ? new Date(Date.parse(value) + shift).toISOString()
+        : value;
+    const home = JSON.parse(data.textContent) as {
+      entities: { state: unknown; attributes?: Record<string, unknown> }[];
+    };
+
+    for (const entity of home.entities) {
+      const { attributes = {} } = entity;
+      entity.state = rebase(entity.state);
+      for (const [key, value] of Object.entries(attributes)) {
+        attributes[key] = rebase(value);
+      }
+    }
+    data.textContent = JSON.stringify(home);
+  }
+
+  type GridOptions = {
+    columns?: number | "full";
+    min_columns?: number;
+    max_columns?: number;
+  };
+
+  // The width a dashboard gives the card: its own default, or the
+  // `grid_options` of its config, read from the `hui-card` inside the embed.
+  // The same as computeCardGridSize in the frontend.
+  function sizeCard(embedCard: Element) {
+    const card = embedCard.shadowRoot?.querySelector("hui-card") as
+      | (HTMLElement & { getGridOptions?: () => GridOptions })
+      | null;
+    const options = card?.getGridOptions?.();
+
+    if (!card || !options || !(embedCard instanceof HTMLElement)) {
+      return;
+    }
+
+    // A hidden card takes no room, like in a section.
+    embedCard.hidden = card.hidden;
+
+    const { columns = 12, min_columns: min = 1, max_columns: max = 12 } = options;
+    const span = columns === "full" ? 12 : Math.min(Math.max(columns, min), max, 12);
+    embedCard.style.setProperty("--span", String(span));
+    fitSection(embedCard.parentElement);
+  }
+
+  // Narrows the section to its cards when they all fit in one row.
+  function fitSection(section: HTMLElement | null) {
+    if (!section) {
+      return;
+    }
+
+    const spans = [...section.querySelectorAll<HTMLElement>(":scope > ha-embed-card:not([hidden])")].map(
+      (card) => Number(card.style.getPropertyValue("--span")) || 12,
+    );
+    const total = spans.reduce((sum, span) => sum + span, 0);
+    section.style.setProperty("--columns", String(Math.min(Math.max(total, 1), 12)));
+  }
+
+  async function followCardSizes() {
+    await customElements.whenDefined("ha-embed-card");
+
+    for (const embedCard of document.querySelectorAll(".embed-demo ha-embed-card")) {
+      // The card renders once the provider has its data, and a card that is
+      // not loaded yet renders a placeholder until its element is ready.
+      embedCard.addEventListener("card-updated", () => sizeCard(embedCard));
+      embedCard.addEventListener("card-visibility-changed", () => sizeCard(embedCard));
+      if (embedCard.shadowRoot) {
+        new MutationObserver(() => sizeCard(embedCard)).observe(embedCard.shadowRoot, {
+          childList: true,
+          subtree: true,
+        });
+      }
+      sizeCard(embedCard);
+    }
+  }
+
   if (providers.length > 0) {
     followSite();
     new MutationObserver(followSite).observe(document.documentElement, {
@@ -95,14 +219,17 @@ const columns = (card: Record<string, unknown>) => {
         }
 
         observer.disconnect();
-        import(/* @vite-ignore */ near.target.dataset.embedSrc!).catch((error) => {
-          console.error("Loading the card demo failed", error);
-        });
+        import(/* @vite-ignore */ near.target.dataset.embedSrc!)
+          .then(followCardSizes)
+          .catch((error) => {
+            console.error("Loading the card demo failed", error);
+          });
       },
       { rootMargin: "400px 0px" },
     );
 
     for (const provider of providers) {
+      rebaseTimes(provider);
       observer.observe(provider);
     }
   }
@@ -121,14 +248,30 @@ const columns = (card: Record<string, unknown>) => {
     background: var(--site-bg);
   }
 
-  /* The size and gaps of a section in the sections view of a dashboard. */
+  /* The size and gaps of a section in the sections view of a dashboard.
+     When all cards fit in one row, the section is only as wide as that row,
+     so the row sits in the middle of the stage. The row is measured against
+     the full section, at most 500px or the stage when that is narrower, so
+     a card keeps its width when a card next to it is hidden. */
   .section {
+    --gap: var(--ha-space-2);
+    --columns: 12;
     display: grid;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    gap: var(--ha-space-2);
+    grid-template-columns: repeat(var(--columns), minmax(0, 1fr));
+    gap: var(--gap);
     align-items: start;
-    max-width: 500px;
+    max-width: calc(
+      (min(500px, 100%) - 11 * var(--gap)) / 12 * var(--columns) + (var(--columns) - 1) * var(--gap)
+    );
     margin: 0 auto;
+  }
+
+  .section > ha-embed-card {
+    grid-column: span var(--span);
+  }
+
+  .section > ha-embed-card[hidden] {
+    display: none;
   }
 
   figcaption {

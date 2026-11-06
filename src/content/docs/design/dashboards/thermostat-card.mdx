@@ -4,11 +4,12 @@ description: The thermostat card shows a climate or water heater entity as a dia
 sidebarGroup: Controls
 ---
 
-import Demo from "../../../../components/docs/Demo.astro";
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
 
-<Demo hass>
-  <hui-card style="width: 340px" data-props='{"config": {"type": "thermostat", "entity": "climate.thermostat"}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[{ type: "thermostat", entity: "climate.thermostat" }]}
+/>
 
 ## Usage
 
@@ -16,10 +17,13 @@ The thermostat card is a big dial for one climate or water heater entity. The ri
 
 The dial takes the color of what the device does: orange when it heats, blue when it cools. When the device is off, the dial is gray and the controls step back.
 
-<Demo hass>
-  <hui-card style="width: 340px" data-props='{"config": {"type": "thermostat", "entity": "climate.bedroom_air_conditioner"}}'></hui-card>
-  <hui-card style="width: 340px" data-props='{"config": {"type": "thermostat", "entity": "water_heater.water_heater"}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    { type: "thermostat", entity: "climate.bedroom_air_conditioner" },
+    { type: "thermostat", entity: "water_heater.water_heater" },
+  ]}
+/>
 
 Use the thermostat card when changing the temperature is the reason people open the dashboard, like on a climate view or on a tablet in the hallway. The card is tall: in the sections view it takes five rows. When the temperature is one of many things in a room, a [tile card](/design/dashboards/tile-card/) with the target temperature feature takes one row and does the same job.
 
@@ -27,18 +31,30 @@ Use the thermostat card when changing the temperature is the reason people open 
 
 With `show_current_as_primary: true`, the big number is the current temperature, and the target moves to the smaller line. Use it when people mostly want to know how warm it is, and only sometimes change the target.
 
-<Demo hass>
-  <hui-card style="width: 340px" data-props='{"config": {"type": "thermostat", "entity": "climate.thermostat", "show_current_as_primary": true}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[{ type: "thermostat", entity: "climate.thermostat", show_current_as_primary: true }]}
+/>
 
 ### Features
 
 Like the tile card, the thermostat card takes features below the dial. The modes of the device are a good fit: the HVAC modes, the presets, or the fan modes. Each feature adds rows to the card in the sections view, so add only what people change often. The rest is one tap away in the more-info dialog.
 
-<Demo hass>
-  <hui-card style="width: 340px" data-props='{"config": {"type": "thermostat", "entity": "climate.thermostat", "features": [{"type": "climate-hvac-modes", "hvac_modes": ["off", "heat", "cool", "auto"]}]}}'></hui-card>
-  <hui-card style="width: 340px" data-props='{"config": {"type": "thermostat", "entity": "climate.bedroom_air_conditioner", "features": [{"type": "climate-fan-modes", "style": "icons"}]}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    {
+      type: "thermostat",
+      entity: "climate.thermostat",
+      features: [{ type: "climate-hvac-modes", hvac_modes: ["off", "heat", "cool", "auto"] }],
+    },
+    {
+      type: "thermostat",
+      entity: "climate.bedroom_air_conditioner",
+      features: [{ type: "climate-fan-modes", style: "icons" }],
+    },
+  ]}
+/>
 
 ### Content
 
