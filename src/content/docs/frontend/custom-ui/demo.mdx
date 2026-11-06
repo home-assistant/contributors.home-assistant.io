@@ -15,6 +15,7 @@ Screenshots show what a card looks like. A live demo shows how it works: people 
 - `<ha-embed-card>` renders one card, with the backend of a provider.
 - `<ha-embed-section>` renders one section, or a [section strategy](/frontend/custom-ui/strategy/#a-section-strategy), the same way.
 - `<ha-embed-view>` renders one view, a [view strategy](/frontend/custom-ui/strategy/#a-view-strategy), or one view of a dashboard.
+- `<ha-embed-dashboard>` renders a dashboard, or a [dashboard strategy](/frontend/custom-ui/strategy/#a-dashboard-strategy), with its tabs.
 
 All cards in the same provider share their entities. When you change an entity in one card, the other cards show the change.
 
@@ -138,7 +139,7 @@ Load the script of your card on the page, after the script of the demo, and use 
 
 Your card gets the same mocked `hass` object as the built-in cards, and `window.loadCardHelpers()` works for the [card helpers](/frontend/custom-ui/card/#card-helpers). The card helpers only exist once the script of the demo has run. Module scripts run in the order they are on the page, so keep the script of your card after it, in case your card uses them as soon as its script loads. Many built-in cards, like the map card, only load when a card first needs them, so create built-in cards through the card helpers instead of by their element name. When the script of your card is on another site than your page, that site needs to send CORS headers for it.
 
-A custom strategy loads the same way. Load its script after the script of the demo, and use its `custom:` type in the `strategy` of a section or view.
+A custom strategy loads the same way. Load its script after the script of the demo, and use its `custom:` type in the `strategy` of a section, view, or dashboard.
 
 ## Show a section
 
@@ -300,9 +301,111 @@ dashboard:
 view: overview
 ```
 
+## Show a dashboard
+
+`<ha-embed-dashboard>` renders a whole dashboard with its tabs, and a `strategy` generates the dashboard. The dashboard scrolls inside the element, under its toolbar. The element is 600 pixels high; set its `height` to change that. To start on another view than the first, set its `view` attribute to the path or index of that view. This example uses the provider from [Add a card](#add-a-card):
+
+```html
+<ha-embed-dashboard style="height: 480px">
+  <script type="text/yaml">
+    views:
+      - title: Home
+        path: home
+        cards:
+          - type: tile
+            entity: light.kitchen
+      - title: Kitchen
+        path: kitchen
+        cards:
+          - type: light
+            entity: light.kitchen
+  </script>
+</ha-embed-dashboard>
+```
+
+Try it here: a dashboard with two tabs. Switch between them, or select the hallway tile on the first tab to go to the second.
+
+<EmbedDemo
+  entities={[
+    {
+      entity_id: "light.living_room",
+      state: "off",
+      attributes: {
+        friendly_name: "Living room",
+        supported_color_modes: ["brightness"],
+        color_mode: "brightness",
+        brightness: 255,
+      },
+    },
+    {
+      entity_id: "switch.coffee_maker",
+      state: "on",
+      attributes: { friendly_name: "Coffee maker", device_class: "outlet" },
+    },
+    {
+      entity_id: "climate.hallway",
+      state: "heat",
+      attributes: {
+        friendly_name: "Hallway",
+        current_temperature: 19.5,
+        temperature: 21,
+        min_temp: 7,
+        max_temp: 30,
+        target_temp_step: 0.5,
+        hvac_modes: ["heat", "off"],
+        supported_features: 1,
+      },
+    },
+  ]}
+  dashboard={{
+    views: [
+      {
+        title: "Home",
+        path: "home",
+        type: "sections",
+        max_columns: 2,
+        sections: [
+          {
+            cards: [
+              { type: "heading", heading: "Living room" },
+              { type: "tile", entity: "light.living_room", tap_action: { action: "toggle" } },
+              { type: "tile", entity: "switch.coffee_maker", tap_action: { action: "toggle" } },
+            ],
+          },
+          {
+            cards: [
+              { type: "heading", heading: "Hallway" },
+              {
+                type: "tile",
+                entity: "climate.hallway",
+                tap_action: { action: "navigate", navigation_path: "climate" },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        title: "Climate",
+        path: "climate",
+        type: "sections",
+        sections: [{ cards: [{ type: "thermostat", entity: "climate.hallway" }] }],
+      },
+    ],
+  }}
+/>
+
+The toolbar only shows the tabs, or the title of the view, and the back button of a subview. There is no edit mode. Each dashboard keeps its own view, so the address of your page stays the same, and two dashboards on one page don't follow each other.
+
+Links in the dashboard work like this:
+
+- A link to one of the views of the dashboard, like `navigation_path: climate` or `/my-dashboard/climate`, shows that view.
+- The back button of a subview goes to its `back_path` when that is a view of this dashboard. Otherwise it goes to the view before it, or the first view when there is none, so a `back_path` to another page does not leave the demo.
+- A link to an anchor on your page, like `#setup`, scrolls the page to it.
+- Other `navigate` actions do nothing. A `url` action opens its page, the same as in a dashboard.
+
 ## Load the demo when it comes into view
 
-On a page with several demos, or with a demo far down the page, you can wait to load the script of the demo until a demo comes near, so the rest of the page loads first. The elements read their script tags when they are set up, so the cards still find their entities and configuration when the script comes later. Watch every card, section, and view on the page, then import the script of the demo first, and the script of your card after it:
+On a page with several demos, or with a demo far down the page, you can wait to load the script of the demo until a demo comes near, so the rest of the page loads first. The elements read their script tags when they are set up, so the cards still find their entities and configuration when the script comes later. Watch every card, section, view, and dashboard on the page, then import the script of the demo first, and the script of your card after it:
 
 ```js
 const loadDemo = async () => {
@@ -320,17 +423,17 @@ const observer = new IntersectionObserver(
   { rootMargin: "400px 0px" },
 );
 for (const demo of document.querySelectorAll(
-  "ha-embed-card, ha-embed-section, ha-embed-view",
+  "ha-embed-card, ha-embed-section, ha-embed-view, ha-embed-dashboard",
 )) {
   observer.observe(demo);
 }
 ```
 
-Cards, sections, and views inside a provider count too. `querySelectorAll` does not look inside shadow roots, so for demos inside your own components, observe those components instead. It does not watch providers: a provider at the top of the page would load the demo right away, even when its cards are far below. Run it from a module script, so the elements of the page are there when it looks for them. Leave out the script tags of the demo and your card when you load them this way.
+Cards, sections, views, and dashboards inside a provider count too. `querySelectorAll` does not look inside shadow roots, so for demos inside your own components, observe those components instead. It does not watch providers: a provider at the top of the page would load the demo right away, even when its cards are far below. Run it from a module script, so the elements of the page are there when it looks for them. Leave out the script tags of the demo and your card when you load them this way.
 
 ## Place cards anywhere on the page
 
-A card does not have to be inside a provider. A card outside a provider uses the first provider on the page. A card inside one of your own components uses the provider around that component, even through its shadow root. Put one provider with all entities at the top of the page, and the cards anywhere below it, between your text. If the page has no provider, the card adds an empty one. Sections and views find their provider the same way, and take the same `provider` attribute.
+A card does not have to be inside a provider. A card outside a provider uses the first provider on the page. A card inside one of your own components uses the provider around that component, even through its shadow root. Put one provider with all entities at the top of the page, and the cards anywhere below it, between your text. If the page has no provider, the card adds an empty one. Sections, views, and dashboards find their provider the same way, and take the same `provider` attribute.
 
 To use another provider, set the `provider` attribute of the card to the ID of that provider:
 
@@ -423,7 +526,7 @@ The mocked backend only knows a part of the Home Assistant API. Keep these limit
 - Templates are not rendered. Template subscriptions fill in simple `{{ variable }}` references from the variables you pass and return the rest as it is. The REST `template` endpoint returns an error.
 - The logbook is empty.
 - The `toggle`, `perform-action`, and `url` actions of a card work. Actions that open a dialog, like `more-info`, do nothing. An action with a `confirmation` does nothing, because it waits for a dialog that does not open, unless the confirmation exempts the demo user.
-- A `navigate` action with a path starting with `#` changes the hash of your page and can scroll to an anchor. Other navigation paths do nothing in an embedded card.
+- A `navigate` action to an anchor on your page, like `#setup`, scrolls there. A dashboard also follows links to its own views, as [Show a dashboard](#show-a-dashboard) describes, and so does a view given a `dashboard`, as in [Show a view](#show-a-view). Other `navigate` actions do nothing.
 - Actions the backend does not handle, or for entities it does not have, do nothing. They do not return an error.
 - Other requests that wait for an answer, over WebSocket or REST, get an error.
 

@@ -450,6 +450,7 @@ function demo(attributes: Attributes, children: string): string {
 const EMBED_CONTENTS = {
   section: { element: "ha-embed-section", name: "a dashboard section" },
   view: { element: "ha-embed-view", name: "a dashboard view" },
+  dashboard: { element: "ha-embed-dashboard", name: "a dashboard with its tabs" },
 } as const;
 
 // The cards, or other content, of an <EmbedDemo> as the HTML that shows them
