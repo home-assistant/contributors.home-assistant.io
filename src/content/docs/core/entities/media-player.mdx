@@ -5,9 +5,40 @@ sidebarLabel: Media player
 sidebarGroup: Media
 ---
 
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
+
 A media player entity controls something that plays media: a smart speaker, a TV, a streaming stick, an AV receiver, or a projector. It reports what is playing, with artwork and position, and takes commands like play, pause, volume, source, and play this URL. It is one of the richest entity types in Home Assistant, but you only implement what your device can do: the [supported features](/glossary/supported-features/) decide which actions and controls exist.
 
 Inherit from `MediaPlayerEntity`, imported from `homeassistant.components.media_player`. For how the frontend shows a media player, see the [media player more-info view](/design/more-info/media-player/).
+
+<EmbedDemo
+  entities={[
+    {
+      entity_id: "media_player.living_room_speaker",
+      state: "playing",
+      attributes: {
+        friendly_name: "Living room speaker",
+        media_content_type: "music",
+        media_title: "Clair de lune",
+        media_artist: "Claude Debussy",
+        volume_level: 0.4,
+        supported_features: 16437,
+      },
+    },
+  ]}
+  cards={[
+    {
+      type: "tile",
+      entity: "media_player.living_room_speaker",
+      features: [{ type: "media-player-playback" }, { type: "media-player-volume-slider" }],
+    },
+    {
+      type: "media-control",
+      entity: "media_player.living_room_speaker",
+    },
+  ]}
+  caption="A speaker that plays, pauses, skips tracks, and sets its volume, in a tile card and a media control card."
+/>
 
 ## Properties
 

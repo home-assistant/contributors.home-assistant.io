@@ -5,6 +5,8 @@ sidebarLabel: Switch
 sidebarGroup: Inputs and helpers
 ---
 
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
+
 A switch entity turns something on or off: a relay, a smart plug, or a setting on a device like "child lock" or "LED indicator". Inherit from `SwitchEntity` in `homeassistant.components.switch`.
 
 Pick the platform that matches what the thing really is:
@@ -15,6 +17,27 @@ Pick the platform that matches what the thing really is:
 - It is a light, a fan, or a valve: use that platform. It gives users the right controls, voice assistants the right device type, and you the right features.
 
 For how the frontend shows a switch, see the [switch more-info view](/design/more-info/switch/).
+
+<EmbedDemo
+  entities={[
+    {
+      entity_id: "switch.coffee_machine",
+      state: "on",
+      attributes: {
+        friendly_name: "Coffee machine",
+        device_class: "outlet",
+      },
+    },
+  ]}
+  cards={[
+    {
+      type: "tile",
+      entity: "switch.coffee_machine",
+      features: [{ type: "toggle" }],
+    },
+  ]}
+  caption="A smart plug in a tile card. The card is live: turn it off and on."
+/>
 
 ## Properties
 

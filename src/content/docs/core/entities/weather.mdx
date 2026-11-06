@@ -5,9 +5,42 @@ sidebarLabel: Weather
 sidebarGroup: Sensors and status
 ---
 
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
+
 A weather entity reports the current weather at a location: the condition, the temperature, and readings like humidity and wind. It can also serve forecasts. Inherit from `WeatherEntity`, imported from `homeassistant.components.weather`. If you use a [coordinator](/glossary/coordinator/), inherit from `CoordinatorWeatherEntity` or `SingleCoordinatorWeatherEntity` instead (see [using coordinators](#using-coordinators)).
 
 To see how the frontend shows a weather entity, see the [weather more-info view](/design/more-info/weather/).
+
+<EmbedDemo
+  entities={[
+    {
+      entity_id: "weather.home",
+      state: "partlycloudy",
+      attributes: {
+        friendly_name: "Home",
+        temperature: 14,
+        temperature_unit: "°C",
+        humidity: 72,
+        wind_speed: 12,
+        wind_speed_unit: "km/h",
+        supported_features: 3,
+      },
+    },
+  ]}
+  cards={[
+    {
+      type: "tile",
+      entity: "weather.home",
+      features: [{ type: "temperature-forecast" }],
+    },
+    {
+      type: "weather-forecast",
+      entity: "weather.home",
+      forecast_type: "daily",
+    },
+  ]}
+  caption="A weather entity with daily and hourly forecasts, in a tile card and a weather forecast card. The forecasts are made up by the demo from the current condition and temperature."
+/>
 
 ## Properties
 

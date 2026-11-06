@@ -472,8 +472,10 @@ function embedDemo(attributes: Attributes): string {
     .map((declaration) => `\n    ${declaration}`)
     .join("");
   const markup = `<ha-embed-provider\n  style="${section}\n  "\n>\n  <script type="application/json">\n    ${json(propValue(attributes.entities), "    ")}\n  </script>\n${cards}\n</ha-embed-provider>`;
+  const caption = propValue(attributes.caption);
+  const note = `Live demo of dashboard cards, from the embed of the Home Assistant demo.${caption ? ` ${caption}` : ""}`;
 
-  return `Live demo of dashboard cards, from the embed of the Home Assistant demo.\n\n${codeBlock(markup)}`;
+  return `${note}\n\n${codeBlock(markup)}`;
 }
 
 // The top level elements of a piece of HTML, as written.

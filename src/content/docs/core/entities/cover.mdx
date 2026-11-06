@@ -5,11 +5,36 @@ sidebarLabel: Cover
 sidebarGroup: Openings and security
 ---
 
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
+
 A cover entity controls something that opens and closes over an opening: blinds, shades, curtains, awnings, garage doors, gates, and motorized windows. It can report and set a position, and a tilt for blinds with slats. Inherit from `CoverEntity` in `homeassistant.components.cover`.
 
 Only use a cover for something that covers an opening. A device that controls the flow of water or gas is a [valve](/core/entities/valve/). A door you lock and unlock is a [lock](/core/entities/lock/). For anything else, use another entity type, like a [number](/core/entities/number/), even where older integrations used a cover.
 
 For how the frontend shows a cover, see the [cover more-info view](/design/more-info/cover/).
+
+<EmbedDemo
+  entities={[
+    {
+      entity_id: "cover.living_room_blinds",
+      state: "open",
+      attributes: {
+        friendly_name: "Living room blinds",
+        device_class: "blind",
+        current_position: 70,
+        supported_features: 15,
+      },
+    },
+  ]}
+  cards={[
+    {
+      type: "tile",
+      entity: "cover.living_room_blinds",
+      features: [{ type: "cover-open-close" }, { type: "cover-position" }],
+    },
+  ]}
+  caption="A cover that opens, closes, stops, and sets a position, in a tile card. The card is live: open, close, or move the blinds."
+/>
 
 ## Properties
 

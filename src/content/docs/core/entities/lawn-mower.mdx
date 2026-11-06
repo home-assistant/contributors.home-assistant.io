@@ -5,9 +5,32 @@ sidebarLabel: Lawn mower
 sidebarGroup: Appliances
 ---
 
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
+
 A lawn mower entity controls a robotic lawn mower: start mowing, pause, stop, and send it back to its dock. Inherit from `LawnMowerEntity` in `homeassistant.components.lawn_mower`. The entity only covers these commands. Settings like the cutting height go in other entities of the same device, such as a [number](/core/entities/number/) or a [select](/core/entities/select/).
 
 For how the frontend shows a lawn mower, see the [lawn mower more-info view](/design/more-info/lawn-mower/).
+
+<EmbedDemo
+  entities={[
+    {
+      entity_id: "lawn_mower.garden",
+      state: "docked",
+      attributes: {
+        friendly_name: "Garden mower",
+        supported_features: 7,
+      },
+    },
+  ]}
+  cards={[
+    {
+      type: "tile",
+      entity: "lawn_mower.garden",
+      features: [{ type: "lawn-mower-commands" }],
+    },
+  ]}
+  caption="A lawn mower that starts, pauses, and docks, in a tile card. The card is live: send it out to mow, or back to its dock."
+/>
 
 ## Properties
 

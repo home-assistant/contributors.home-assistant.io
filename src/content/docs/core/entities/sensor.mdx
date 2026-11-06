@@ -5,9 +5,51 @@ sidebarLabel: Sensor
 sidebarGroup: Sensors and status
 ---
 
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
+
 A sensor is a read-only entity that reports a value: a temperature, the power a plug draws, the time a device last booted, or one of a fixed list of text states. It can carry a unit of measurement, and Home Assistant converts that unit to what the user prefers. Inherit from `SensorEntity`, imported from `homeassistant.components.sensor`.
 
 Use a sensor when the value has more than two states and the user cannot change it. Two states is a [binary sensor](/core/entities/binary-sensor/). A value the user sets is a [number](/core/entities/number/), [select](/core/entities/select/), or [text](/core/entities/text/) entity.
+
+<EmbedDemo
+  entities={[
+    {
+      entity_id: "sensor.living_room_temperature",
+      state: "21.4",
+      attributes: {
+        friendly_name: "Living room temperature",
+        device_class: "temperature",
+        state_class: "measurement",
+        unit_of_measurement: "°C",
+      },
+    },
+    {
+      entity_id: "sensor.washing_machine_power",
+      state: "1850",
+      attributes: {
+        friendly_name: "Washing machine power",
+        device_class: "power",
+        state_class: "measurement",
+        unit_of_measurement: "W",
+      },
+    },
+  ]}
+  cards={[
+    {
+      type: "tile",
+      entity: "sensor.living_room_temperature",
+      features: [{ type: "trend-graph" }],
+      grid_options: { columns: 6 },
+    },
+    {
+      type: "tile",
+      entity: "sensor.washing_machine_power",
+      features: [{ type: "trend-graph" }],
+      grid_options: { columns: 6 },
+    },
+  ]}
+  caption="A temperature and a power sensor in tile cards. The trend graphs are made up by the demo from the current state of each sensor."
+/>
 
 ## Properties
 
