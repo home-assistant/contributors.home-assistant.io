@@ -285,7 +285,7 @@ return self.async_create_entry(
 )
 ```
 
-Both must be JSON serializable. Put what is needed to connect in `data`, and what users can tweak in `options`. Changing credentials is [reauthentication](/core/integrations/reauth-reconfigure/), which updates `data`.
+Both must be JSON serializable. Put the settings the integration needs to work in `data`, and the optional settings users can adjust in `options`. [Reconfiguration and reauthentication](/core/integrations/reauth-reconfigure/) update `data`.
 
 ## Abort
 

@@ -1,6 +1,6 @@
 ---
 title: "Options flow"
-description: "The steps in the UI that change the options of an existing config entry, like how often it polls."
+description: "The steps in the UI that change the optional settings of an existing config entry, like which devices to include."
 sidebarGroup: "Core and integrations"
 term:
   code:
@@ -16,4 +16,4 @@ term:
     - "options flows"
 ---
 
-Options are settings that users can change at any time without setting up the integration again. Settings that are needed to connect, like a host, belong in the config entry itself, and change with a [reconfigure flow](/glossary/reconfigure-flow/).
+Options are optional settings that adjust how an integration behaves, like which devices to include. Users can change them at any time, and the integration works fine if they never do. What the integration needs to work is not an option: it changes with a [reconfigure flow](/glossary/reconfigure-flow/).

@@ -47,7 +47,7 @@ Reliability: errors, offline devices, reauthentication, and ownership. 10 rules.
 | [integration-owner](/core/quality-scale/integration-owner/) | The integration has at least one integration owner. |
 | [log-when-unavailable](/core/quality-scale/log-when-unavailable/) | The integration logs a lost connection once, and once when it comes back. |
 | [parallel-updates](/core/quality-scale/parallel-updates/) | Every entity platform sets PARALLEL_UPDATES. |
-| [reauthentication-flow](/core/quality-scale/reauthentication-flow/) | Users can enter new credentials without removing the integration. |
+| [reauthentication-flow](/core/quality-scale/reauthentication-flow/) | The integration asks for new credentials when the old ones stop working. |
 | [test-coverage](/core/quality-scale/test-coverage/) | The tests cover more than 95% of every module of the integration. |
 
 ## Gold

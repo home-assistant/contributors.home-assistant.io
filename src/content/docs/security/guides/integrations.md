@@ -53,7 +53,7 @@ Certificate checks matter. An advisory from 2025 was about [SSL validation of ou
 
 ### Store credentials in the config entry
 
-Credentials and connection details belong in the `data` of the [config entry](/glossary/config-entry/), not in its `options`. Options are for settings the user changes later, in the [options flow](/glossary/options-flow/).
+Credentials and connection details belong in the `data` of the [config entry](/glossary/config-entry/), not in its `options`. Options are for optional settings, which users change in the [options flow](/glossary/options-flow/).
 
 When credentials stop working, ask the user for new ones with a [reauthentication flow](/glossary/reauthentication/), without setting up the integration again.
 
