@@ -20,6 +20,8 @@ gh pr view <number> --repo home-assistant/contributors.home-assistant.io
 gh pr diff <number> --repo home-assistant/contributors.home-assistant.io
 ```
 
+When the description links an open pull request in another repository that this pull request documents, the new feature is checked against that pull request, not the default branch. See [documentation for an open pull request](../fact-check/SKILL.md#documentation-for-an-open-pull-request).
+
 For local changes, review the diff against `main`:
 
 ```shell
@@ -67,7 +69,7 @@ This is the part that matters most. Earlier reviews of this site found the same 
 
 For each statement about how something works, what a command does, a name, a number, a date, a person, a team, or a process:
 
-1. Find the source. Code and repository files are true on the default branch of their repository, like `dev` for core and frontend. The table is in the [`fact-check` skill](../fact-check/SKILL.md#where-the-truth-lives), with the commands to read a file without a local clone.
+1. Find the source. For code and repository files, the source is the default branch of their repository, like `dev` for core and frontend, not a release or your local copy. The table is in the [`fact-check` skill](../fact-check/SKILL.md#where-the-truth-lives), with the commands to read a file without a local clone. When the pull request documents a feature from an open code pull request, check claims about that feature against the code pull request instead.
 2. Read the source yourself. Do not trust the old developers site, the pull request description, or another page of this site as proof.
 3. Compare word by word. Quote the source verbatim in your evidence. A summary from a tool that fetches a page can garble it: read the page yourself before you rely on a detail. Pay most attention to:
    - **Absolute words**: "every", "all", "always", "only", "never", "nothing", "any", "cannot". Look for the exception: a second code path, an outer validation, a fallback, a feature flag. A rule like "never do X" is guidance, and fine.
@@ -82,7 +84,7 @@ For each statement about how something works, what a command does, a name, a num
 
 - **Lifecycle boundaries.** For every code example, ask what happens at the first update, on unload and reload, on reset, on a migration, after a downgrade, when an entity disappears and comes back, at zero or 100%, and with an empty list. Run small snippets when you can.
 - **Steps in order.** Follow a sequence of steps from a fresh setup, as the reader would. Look for a missing `cd`, an unclear working folder, a missing install, a config step that a later step depends on.
-- **Current API.** Check names, signatures, and imports against the default branch of the repository, not your memory.
+- **Current API.** Check names, signatures, and imports against the default branch of the repository, not your memory. For a feature from an open code pull request, check them against that pull request. Its open state is not a finding.
 - **Mermaid.** Every label must match the code it describes.
 
 ## 5. Check structure, links, and glossary

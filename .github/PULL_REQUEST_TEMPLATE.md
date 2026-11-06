@@ -44,6 +44,7 @@ Moved or renamed pages:
 
 - This PR fixes or closes issue: fixes #
 - This PR is related to issue or pull request: 
+- This PR documents an open pull request (merge this PR after it): 
 - Sources for new claims (code, pull requests, or architecture decisions): 
 
 ## Checklist
