@@ -1,7 +1,7 @@
 ---
 title: "Apps will lose four default Linux capabilities"
 description: The Supervisor is moving to a smaller default capability set for app containers. This post outlines the change, affected apps, and how it can be tested.
-date: 2026-11-05
+date: 2026-11-06
 authors:
   - Stefan Agner
 areas:
