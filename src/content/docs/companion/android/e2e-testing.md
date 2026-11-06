@@ -123,6 +123,8 @@ To run a test with mTLS, you'll need a reverse proxy requiring mTLS in front of 
    .github/e2e/mtls/open-cert-installer.sh emulator-5554 "$OUT/client.p12"
    ```
 
+   On API 32 and below, the script installs `client_legacy.p12` from the same folder instead, because the certificate installer of those versions can't read `client.p12`. To use another legacy file, pass its path as an optional third argument.
+
 5. Run the flow, with the default password and name of `generate-certs.sh`:
 
    ```bash
