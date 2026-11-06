@@ -10,14 +10,10 @@ areas:
 
 Screenshots show what a card looks like. A live demo shows how it works: people can turn on a light, move a slider, and watch the other cards follow. The [Home Assistant demo](https://demo.home-assistant.io/) now publishes a script that does this on any web page, like the README site of your custom card, your blog, or these docs. Everything runs against a mocked backend in the browser, so no Home Assistant server is needed.
 
-## Released with Home Assistant 2026.11
+## The elements
 
-- `<ha-embed-provider>` holds the mocked backend and its entities.
+- `<ha-embed-provider>` holds the mocked backend, with its entities and devices.
 - `<ha-embed-card>` renders one card, built-in or custom.
-
-## Released with Home Assistant 2026.12
-
-- `<ha-embed-provider>` holds devices too.
 - `<ha-embed-section>` renders one section, or a [section strategy](/frontend/custom-ui/strategy/#a-section-strategy).
 - `<ha-embed-view>` renders one view with its badges, a [view strategy](/frontend/custom-ui/strategy/#a-view-strategy), or one view of a dashboard.
 - `<ha-embed-dashboard>` renders a whole dashboard with its tabs, or a [dashboard strategy](/frontend/custom-ui/strategy/#a-dashboard-strategy).
