@@ -92,9 +92,9 @@ These are the commands you will use most. They are the same ones CI runs:
 ./gradlew lint --continue
 
 # Screenshot tests, per module
-./gradlew :app:validateFullDebugScreenshotTest
-./gradlew :wear:validateDebugScreenshotTest
-./gradlew :common:validateDebugScreenshotTest
+./gradlew :app:testFullDebugScreenshotTestDefaultTestSuite
+./gradlew :wear:testDebugScreenshotTestDefaultTestSuite
+./gradlew :common:testDebugScreenshotTestDefaultTestSuite
 
 # After changing a dependency
 ./gradlew alldependencies --write-locks
