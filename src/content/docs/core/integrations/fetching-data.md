@@ -92,6 +92,7 @@ What the parts do:
 And what the exceptions do:
 
 - `UpdateFailed`: the update failed. The coordinator logs it once (not on every failed poll), marks the entities unavailable, and tries again at the next interval. With `retry_after`, it waits that many seconds instead. During the first refresh, `retry_after` is passed on to the `ConfigEntryNotReady` that fails the setup, so the [setup retry](/core/integrations/setup-failures/) honors it.
+- `DeviceUnavailable`: a subclass of `UpdateFailed` for when the device is unavailable and that is expected, like a device that is turned off. It behaves the same as `UpdateFailed`, but the coordinator logs it at `info` level instead of `error`, as `<name> is unavailable: <message>`. Use `UpdateFailed` for everything that is an actual error.
 - `ConfigEntryAuthFailed`: the credentials no longer work. The coordinator stops polling and starts [reauthentication](/core/integrations/reauth-reconfigure/#reauthentication).
 - Timeouts and `aiohttp` client errors are handled by the coordinator itself, and so are the [OAuth 2.0 token errors](/core/integrations/oauth2/#errors).
 
