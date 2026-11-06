@@ -9,10 +9,11 @@ lastVerified: 2026-11-05
 
 import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
 
-Screenshots show what a card looks like. A live demo shows how it works: people can turn on a light, move a slider, and see the other cards follow. The [Home Assistant demo](https://demo.home-assistant.io/) publishes two elements that put real dashboard cards on any web page, like your README site or your blog. They run against a mocked backend in the browser, so no Home Assistant server is needed.
+Screenshots show what a card looks like. A live demo shows how it works: people can turn on a light, move a slider, and see the other cards follow. The [Home Assistant demo](https://demo.home-assistant.io/) publishes elements that put real dashboard cards on any web page, like your README site or your blog. They run against a mocked backend in the browser, so no Home Assistant server is needed.
 
 - `<ha-embed-provider>` holds the mocked backend and its entities.
 - `<ha-embed-card>` renders one card, with the backend of a provider.
+- `<ha-embed-section>` renders one section, or a [section strategy](/frontend/custom-ui/strategy/#a-section-strategy), the same way.
 
 All cards in the same provider share their entities. When you change an entity in one card, the other cards show the change.
 
@@ -136,9 +137,78 @@ Load the script of your card on the page, after the script of the demo, and use 
 
 Your card gets the same mocked `hass` object as the built-in cards, and `window.loadCardHelpers()` works for the [card helpers](/frontend/custom-ui/card/#card-helpers). The card helpers only exist once the script of the demo has run. Module scripts run in the order they are on the page, so keep the script of your card after it, in case your card uses them as soon as its script loads. Many built-in cards, like the map card, only load when a card first needs them, so create built-in cards through the card helpers instead of by their element name. When the script of your card is on another site than your page, that site needs to send CORS headers for it.
 
+A custom strategy loads the same way. Load its script after the script of the demo, and use its `custom:` type in the `strategy` of a section.
+
+## Show a section
+
+`<ha-embed-section>` renders a section the same way as in a sections view. Its configuration is the same as in a dashboard: a `title` becomes a heading card when there is no `strategy`, headings span the top, and a `strategy` generates the section. The section takes the width of the element. This example uses the provider from [Add a card](#add-a-card), with a `switch.kettle` added to it:
+
+```html
+<ha-embed-section>
+  <script type="text/yaml">
+    cards:
+      - type: heading
+        heading: Kitchen
+      - type: tile
+        entity: light.kitchen
+      - type: tile
+        entity: switch.kettle
+  </script>
+</ha-embed-section>
+```
+
+Try it here: a section with a heading, two tiles you can turn on and off, and a wide tile below them. The ceiling light belongs to a device in `devices`.
+
+<EmbedDemo
+  entities={{
+    entities: [
+      {
+        entity_id: "light.kitchen_ceiling",
+        state: "on",
+        device_id: "kitchen_ceiling",
+        attributes: {
+          friendly_name: "Ceiling",
+          supported_color_modes: ["brightness"],
+          color_mode: "brightness",
+          brightness: 200,
+        },
+      },
+      {
+        entity_id: "switch.kettle",
+        state: "off",
+        area_id: "kitchen",
+        attributes: { friendly_name: "Kettle", device_class: "outlet" },
+      },
+      {
+        entity_id: "sensor.kitchen_temperature",
+        state: "21.4",
+        area_id: "kitchen",
+        attributes: {
+          friendly_name: "Kitchen temperature",
+          device_class: "temperature",
+          state_class: "measurement",
+          unit_of_measurement: "°C",
+        },
+      },
+    ],
+    areas: [{ area_id: "kitchen", name: "Kitchen" }],
+    devices: [{ id: "kitchen_ceiling", name: "Kitchen ceiling light", area_id: "kitchen" }],
+  }}
+  section={{
+    cards: [
+      { type: "heading", heading: "Kitchen" },
+      { type: "tile", entity: "light.kitchen_ceiling", tap_action: { action: "toggle" } },
+      { type: "tile", entity: "switch.kettle", tap_action: { action: "toggle" } },
+      { type: "tile", entity: "sensor.kitchen_temperature", grid_options: { columns: 12 } },
+    ],
+  }}
+/>
+
+A section strategy that groups entities by device or area needs those in the provider. See [Areas, devices, calendars, and energy](#areas-devices-calendars-and-energy).
+
 ## Load the demo when it comes into view
 
-On a page with several demos, or with a demo far down the page, you can wait to load the script of the demo until a demo comes near, so the rest of the page loads first. The elements read their script tags when they are set up, so the cards still find their entities and configuration when the script comes later. Watch every card on the page, then import the script of the demo first, and the script of your card after it:
+On a page with several demos, or with a demo far down the page, you can wait to load the script of the demo until a demo comes near, so the rest of the page loads first. The elements read their script tags when they are set up, so the cards still find their entities and configuration when the script comes later. Watch every card and section on the page, then import the script of the demo first, and the script of your card after it:
 
 ```js
 const loadDemo = async () => {
@@ -155,16 +225,18 @@ const observer = new IntersectionObserver(
   },
   { rootMargin: "400px 0px" },
 );
-for (const card of document.querySelectorAll("ha-embed-card")) {
-  observer.observe(card);
+for (const demo of document.querySelectorAll(
+  "ha-embed-card, ha-embed-section",
+)) {
+  observer.observe(demo);
 }
 ```
 
-Cards inside a provider count too. `querySelectorAll` does not look inside shadow roots, so for cards inside your own components, observe those components instead. It does not watch providers: a provider at the top of the page would load the demo right away, even when its cards are far below. Run it from a module script, so the elements of the page are there when it looks for them. Leave out the script tags of the demo and your card when you load them this way.
+Cards and sections inside a provider count too. `querySelectorAll` does not look inside shadow roots, so for demos inside your own components, observe those components instead. It does not watch providers: a provider at the top of the page would load the demo right away, even when its cards are far below. Run it from a module script, so the elements of the page are there when it looks for them. Leave out the script tags of the demo and your card when you load them this way.
 
 ## Place cards anywhere on the page
 
-A card does not have to be inside a provider. A card outside a provider uses the first provider on the page. A card inside one of your own components uses the provider around that component, even through its shadow root. Put one provider with all entities at the top of the page, and the cards anywhere below it, between your text. If the page has no provider, the card adds an empty one.
+A card does not have to be inside a provider. A card outside a provider uses the first provider on the page. A card inside one of your own components uses the provider around that component, even through its shadow root. Put one provider with all entities at the top of the page, and the cards anywhere below it, between your text. If the page has no provider, the card adds an empty one. Sections find their provider the same way, and take the same `provider` attribute.
 
 To use another provider, set the `provider` attribute of the card to the ID of that provider:
 
@@ -180,11 +252,12 @@ Set `provider` before the card is added to the page. The card picks its provider
 
 The cards follow the light or dark mode of the browser. When your site has its own switch for dark mode, set the `color-scheme` attribute of the provider to `light` or `dark`. The cards keep their styles inside, and do not change the styles of your page. The one exception is the Roboto font: the script adds its font faces to the page, so text of your page that uses Roboto can look different once the script has loaded.
 
-## Areas, calendars, and energy
+## Areas, devices, calendars, and energy
 
 Some cards need data that is not an entity. To set it, put an object in the script tag of the provider instead of the list. The object has the list in `entities`, and any of these keys:
 
-- `areas`: a list of areas, each with an `area_id` and a `name`. Without it, each `area_id` of the entities becomes an area.
+- `areas`: a list of areas, each with an `area_id` and a `name`. Without it, each `area_id` of the entities and devices becomes an area.
+- `devices`: a list of devices, each with an `id` and a `name`, and optionally a `manufacturer`, a `model`, and an `area_id`. An entity belongs to a device through its `device_id`, so cards and strategies find the device and its name.
 - `calendars`: the events of calendar entities, by entity ID. Each event has a `summary`, a `start`, and an `end`. Calendars that are not listed here get sample events around today. A calendar with an empty list has no events.
 - `energy`: the energy settings, the keys you need from the `energy/get_prefs` response. Without it, energy is not set up.
 
@@ -194,9 +267,20 @@ entities:
     state: "off"
     attributes:
       friendly_name: Family
+  - entity_id: light.kitchen_ceiling
+    state: "on"
+    device_id: kitchen_ceiling
+    attributes:
+      friendly_name: Ceiling
 areas:
   - area_id: kitchen
     name: Kitchen
+devices:
+  - id: kitchen_ceiling
+    name: Kitchen ceiling light
+    manufacturer: Acme
+    model: Smart bulb
+    area_id: kitchen
 calendars:
   calendar.family:
     - summary: Dentist
