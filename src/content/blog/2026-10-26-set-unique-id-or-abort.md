@@ -24,7 +24,7 @@ await self.async_set_unique_id_or_abort(device.serial, updates={CONF_HOST: host}
 
 A step that is shared by the user flow and the reconfiguration flow no longer needs to check `self.source` to pick the right check.
 
-A flow started by the user does not abort when another flow for the same unique ID is in progress, so the user takes over from a discovery flow for the same device. Other flows do abort in that case. Pass `raise_on_progress` to change this, and `reason` to use another abort reason.
+A flow started by the user does not abort when another flow for the same unique ID is in progress, so the user takes over from a discovery flow for the same device. Reauthentication and reconfiguration flows don't abort either, as they can't create a second entry. Other flows, such as discovery, do abort in that case. Pass `raise_on_progress` to change this, and `reason` to use another abort reason.
 
 The existing methods stay. Keep using `async_set_unique_id` with a separate check when the flow sets the unique ID and aborts at different moments, or when a reauthentication or reconfiguration flow allows the unique ID to change.
 

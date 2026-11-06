@@ -97,9 +97,9 @@ await self.async_set_unique_id_or_abort(device.serial_number)
 `async_set_unique_id_or_abort` sets the unique ID, and then runs the check that fits the source of the flow:
 
 - In a reauthentication or reconfiguration flow, it aborts with `unique_id_mismatch` when the unique ID differs from the one of the entry. See [reauthentication and reconfiguration](/core/integrations/reauth-reconfigure/).
-- In any other flow, it aborts with `already_configured` when an entry with this unique ID exists. Pass `updates` and `reload_on_update` to update that entry, as shown below.
+- In any other flow, it aborts with `already_configured` when an entry with this unique ID exists. Pass `updates` and `reload_on_update` to update that entry, as shown below. An entry the user ignored doesn't count in a flow started by the user, so the user can still set up a device they ignored earlier.
 
-A flow started by the user does not abort when another flow for the same device is in progress, so the user takes over from a discovery flow. Other flows do abort in that case. Pass `raise_on_progress` to change this, and `reason` to use another abort reason, like `reason="wrong_account"`.
+A flow started by the user does not abort when another flow for the same device is in progress, so the user takes over from a discovery flow. Reauthentication and reconfiguration flows don't abort either, as they can't create a second entry. Other flows, such as discovery, do abort in that case. Pass `raise_on_progress` to change this, and `reason` to use another abort reason, like `reason="wrong_account"`.
 
 When the flow aborts because the entry exists, users see the `already_configured` abort reason from your `strings.json`. Use the shared string for it:
 
