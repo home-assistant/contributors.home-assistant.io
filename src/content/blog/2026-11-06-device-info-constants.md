@@ -8,7 +8,7 @@ areas:
   - core
 ---
 
-The device info constants in `homeassistant.const` are deprecated and will be removed in Home Assistant Core 2027.12. Until then, using one of them logs a warning. If your custom integration doesn't import any of these constants, you don't need to do anything:
+As of Home Assistant Core 2026.12, the device info constants in `homeassistant.const` are deprecated. They will be removed in Home Assistant Core 2027.12. Until then, using one of them logs a warning. If your custom integration doesn't import any of these constants, you don't need to do anything:
 
 - `ATTR_CONFIGURATION_URL`
 - `ATTR_CONNECTIONS`
