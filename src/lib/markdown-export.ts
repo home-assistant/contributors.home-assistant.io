@@ -449,6 +449,7 @@ function demo(attributes: Attributes, children: string): string {
 // embed element and what the note calls it.
 const EMBED_CONTENTS = {
   section: { element: "ha-embed-section", name: "a dashboard section" },
+  view: { element: "ha-embed-view", name: "a dashboard view" },
 } as const;
 
 // The cards, or other content, of an <EmbedDemo> as the HTML that shows them
