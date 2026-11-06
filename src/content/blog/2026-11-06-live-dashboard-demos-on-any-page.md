@@ -1,7 +1,7 @@
 ---
 title: Live dashboard demos on any web page
 description: The Home Assistant demo now publishes elements that put real cards, sections, views, and whole dashboards on any web page, running against a mocked backend in the browser.
-date: 2026-12-02
+date: 2026-11-06
 authors:
   - Aidan Timson
 areas:
