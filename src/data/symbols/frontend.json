@@ -1,6 +1,6 @@
 {
   "repository": "home-assistant/frontend",
-  "commit": "5cfaf7ed40e4df459fa65dc5722101eef631f40e",
+  "commit": "95c75bdd5b80ccc0d9aa88cf6b407737debdd1e2",
   "symbols": [
     {
       "id": "src/common/decorators/consume-context-entry.ts:consumeEntityStates",
@@ -161,7 +161,7 @@
       "kind": "context",
       "module": "src/data/context/index.ts",
       "path": "src/data/context/index.ts",
-      "line": 151,
+      "line": 160,
       "signature": "const conditionDescriptionsContext = createContext<ConditionDescriptions>(\n  \"conditionDescriptions\"\n);",
       "doc": "Lazy loaded condition platform descriptions, keyed by condition key.",
       "bare": true
@@ -185,7 +185,7 @@
       "kind": "context",
       "module": "src/data/context/index.ts",
       "path": "src/data/context/index.ts",
-      "line": 132,
+      "line": 141,
       "signature": "const configEntriesContext = createContext<ConfigEntry[]>(\n  \"configEntries\"\n);",
       "doc": "Lazy loaded config entries array",
       "bare": true
@@ -257,7 +257,7 @@
       "kind": "context",
       "module": "src/data/context/index.ts",
       "path": "src/data/context/index.ts",
-      "line": 126,
+      "line": 135,
       "signature": "const fullEntitiesContext = createContext<EntityRegistryEntry[]>(\n  \"extendedEntities\"\n);",
       "doc": "Lazy loaded entity registry array",
       "bare": true
@@ -281,7 +281,7 @@
       "kind": "context",
       "module": "src/data/context/index.ts",
       "path": "src/data/context/index.ts",
-      "line": 121,
+      "line": 130,
       "signature": "const labelsContext = createContext<LabelRegistryEntry[]>(\n  \"labels\"\n);",
       "doc": "Lazy loaded labels registry, keyed by label ID.",
       "bare": true
@@ -293,7 +293,7 @@
       "kind": "context",
       "module": "src/data/context/index.ts",
       "path": "src/data/context/index.ts",
-      "line": 163,
+      "line": 172,
       "signature": "const localizeContext = createContext<HomeAssistant[\"localize\"]>(\n  \"localize\"\n);",
       "doc": null,
       "bare": true
@@ -305,7 +305,7 @@
       "kind": "context",
       "module": "src/data/context/index.ts",
       "path": "src/data/context/index.ts",
-      "line": 138,
+      "line": 147,
       "signature": "const manifestsContext = createContext<DomainManifestLookup>(\n  \"manifests\"\n);",
       "doc": "Lazy loaded integration manifests, keyed by domain.",
       "bare": true
@@ -377,7 +377,7 @@
       "kind": "context",
       "module": "src/data/context/index.ts",
       "path": "src/data/context/index.ts",
-      "line": 173,
+      "line": 182,
       "signature": "const themesContext = createContext<HomeAssistant[\"themes\"]>(\n  \"themes\"\n);",
       "doc": null,
       "bare": true
@@ -389,7 +389,7 @@
       "kind": "context",
       "module": "src/data/context/index.ts",
       "path": "src/data/context/index.ts",
-      "line": 144,
+      "line": 153,
       "signature": "const triggerDescriptionsContext = createContext<TriggerDescriptions>(\n  \"triggerDescriptions\"\n);",
       "doc": "Lazy loaded trigger platform descriptions, keyed by trigger key.",
       "bare": true
@@ -413,7 +413,7 @@
       "kind": "context",
       "module": "src/data/context/index.ts",
       "path": "src/data/context/index.ts",
-      "line": 180,
+      "line": 189,
       "signature": "const userContext = createContext<HomeAssistant[\"user\"]>(\n  \"user\"\n);",
       "doc": null,
       "bare": true
@@ -533,8 +533,8 @@
       "kind": "function",
       "module": "src/data/lock.ts",
       "path": "src/data/lock.ts",
-      "line": 81,
-      "signature": "callProtectedLockService(\n  element: HTMLElement,\n  hass: Pick<\n    HomeAssistant, \"callService\" | \"localize\" | \"callWS\"\n  >,\n  stateObj: LockEntity,\n  service: ProtectedLockService\n)",
+      "line": 82,
+      "signature": "callProtectedLockService(\n  element: HTMLElement,\n  callService: HomeAssistant[\"callService\"],\n  callWS: HomeAssistant[\"callWS\"],\n  localize: LocalizeFunc,\n  stateObj: LockEntity,\n  service: ProtectedLockService\n)",
       "doc": null,
       "bare": true
     },
@@ -545,7 +545,7 @@
       "kind": "enum",
       "module": "src/data/lock.ts",
       "path": "src/data/lock.ts",
-      "line": 10,
+      "line": 11,
       "signature": "enum LockEntityFeature {\n  OPEN,\n}",
       "doc": null,
       "bare": true,
@@ -596,8 +596,8 @@
       "kind": "function",
       "module": "src/data/todo.ts",
       "path": "src/data/todo.ts",
-      "line": 76,
-      "signature": "subscribeItems(\n  hass: HomeAssistant,\n  entity_id: string,\n  callback: (update: TodoItems) => void\n)",
+      "line": 84,
+      "signature": "subscribeItems(\n  connection: Connection,\n  entity_id: string,\n  callback: (update: TodoItems) => void\n)",
       "doc": null,
       "bare": true
     },
@@ -608,7 +608,7 @@
       "kind": "enum",
       "module": "src/data/update.ts",
       "path": "src/data/update.ts",
-      "line": 18,
+      "line": 20,
       "signature": "enum UpdateEntityFeature {\n  INSTALL,\n  SPECIFIC_VERSION,\n  PROGRESS,\n  BACKUP,\n  RELEASE_NOTES,\n}",
       "doc": null,
       "bare": true,
@@ -627,7 +627,7 @@
       "kind": "function",
       "module": "src/data/update.ts",
       "path": "src/data/update.ts",
-      "line": 77,
+      "line": 79,
       "signature": "updateIsInstalling(entity: UpdateEntity): boolean",
       "doc": null,
       "bare": true
@@ -716,7 +716,7 @@
       "module": "src/data/weather.ts",
       "path": "src/data/weather.ts",
       "line": 295,
-      "signature": "getSecondaryWeatherAttribute(\n  hass: Pick<\n    HomeAssistant, \"formatEntityAttributeValue\" | \"localize\"\n  >,\n  stateObj: WeatherEntity,\n  forecast: ForecastAttribute[],\n  temperatureFractionDigits?: number\n): TemplateResult | undefined",
+      "signature": "getSecondaryWeatherAttribute(\n  formatEntityAttributeValue: HomeAssistantFormatters[\n    \"formatEntityAttributeValue\"\n  ],\n  localize: LocalizeFunc,\n  stateObj: WeatherEntity,\n  forecast: ForecastAttribute[],\n  temperatureFractionDigits?: number\n): TemplateResult | undefined",
       "doc": null,
       "bare": true
     },
@@ -763,7 +763,7 @@
       "kind": "function",
       "module": "src/dialogs/generic/show-dialog-box.ts",
       "path": "src/dialogs/generic/show-dialog-box.ts",
-      "line": 86,
+      "line": 89,
       "signature": "showAlertDialog(\n  element: HTMLElement,\n  dialogParams: AlertDialogParams\n)",
       "doc": null,
       "bare": true
@@ -775,7 +775,7 @@
       "kind": "function",
       "module": "src/dialogs/generic/show-dialog-box.ts",
       "path": "src/dialogs/generic/show-dialog-box.ts",
-      "line": 91,
+      "line": 94,
       "signature": "showConfirmationDialog(\n  element: HTMLElement,\n  dialogParams: ConfirmationDialogParams\n)",
       "doc": null,
       "bare": true
@@ -787,7 +787,7 @@
       "kind": "function",
       "module": "src/dialogs/generic/show-dialog-box.ts",
       "path": "src/dialogs/generic/show-dialog-box.ts",
-      "line": 99,
+      "line": 102,
       "signature": "showPromptDialog(\n  element: HTMLElement,\n  dialogParams: PromptDialogParams\n)",
       "doc": null,
       "bare": true
@@ -799,7 +799,7 @@
       "kind": "function",
       "module": "src/dialogs/more-info/state_more_info_control.ts",
       "path": "src/dialogs/more-info/state_more_info_control.ts",
-      "line": 59,
+      "line": 60,
       "signature": "importMoreInfoControl(type: string)",
       "doc": null,
       "bare": true
@@ -811,7 +811,7 @@
       "kind": "method",
       "module": "src/external_app/external_messaging.ts",
       "path": "src/external_app/external_messaging.ts",
-      "line": 491,
+      "line": 560,
       "signature": "ExternalMessaging.receiveMessage(msg: EMIncomingMessage)",
       "doc": null,
       "bare": true
@@ -871,7 +871,7 @@
       "kind": "mixin",
       "module": "src/mixins/conditional-listener-mixin.ts",
       "path": "src/mixins/conditional-listener-mixin.ts",
-      "line": 35,
+      "line": 36,
       "signature": "ConditionalListenerMixin<TConfig extends ConditionalConfig = ConditionalConfig>(\n  superClass: Constructor<ReactiveElement>\n)",
       "doc": "Mixin for dashboard visibility.",
       "bare": true
@@ -883,7 +883,7 @@
       "kind": "function",
       "module": "src/mixins/dirty-state-provider-mixin.ts",
       "path": "src/mixins/dirty-state-provider-mixin.ts",
-      "line": 85,
+      "line": 89,
       "signature": "DirtyStateProviderMixin<State = unknown, Key extends string = DefaultDirtyStateKey>()",
       "doc": "Mixin that provides dirty-state tracking via Lit context.",
       "bare": true
@@ -955,8 +955,8 @@
       "kind": "function",
       "module": "src/panels/lovelace/common/validate-condition.ts",
       "path": "src/panels/lovelace/common/validate-condition.ts",
-      "line": 495,
-      "signature": "checkConditionsMet(\n  conditions: (Condition | LegacyCondition)[],\n  hass: HomeAssistant,\n  context: ConditionContext\n): boolean",
+      "line": 511,
+      "signature": "checkConditionsMet(\n  conditions: (Condition | LegacyCondition)[],\n  hass: ConditionHass,\n  context: ConditionContext\n): boolean",
       "doc": "Return the result of applying conditions",
       "bare": true
     },
@@ -979,7 +979,7 @@
       "kind": "function",
       "module": "src/panels/lovelace/create-element/create-badge-element.ts",
       "path": "src/panels/lovelace/create-element/create-badge-element.ts",
-      "line": 31,
+      "line": 32,
       "signature": "createBadgeElement(config: LovelaceBadgeConfig)",
       "doc": null,
       "bare": true
@@ -991,7 +991,7 @@
       "kind": "function",
       "module": "src/panels/lovelace/create-element/create-card-element.ts",
       "path": "src/panels/lovelace/create-element/create-card-element.ts",
-      "line": 122,
+      "line": 123,
       "signature": "createCardElement(config: LovelaceCardConfig)",
       "doc": null,
       "bare": true
@@ -1051,7 +1051,7 @@
       "kind": "method",
       "module": "src/panels/lovelace/types.ts",
       "path": "src/panels/lovelace/types.ts",
-      "line": 77,
+      "line": 81,
       "signature": "LovelaceCard.getGridOptions(): LovelaceGridOptions",
       "doc": null,
       "bare": true
@@ -1063,7 +1063,7 @@
       "kind": "interface",
       "module": "src/types.ts",
       "path": "src/types.ts",
-      "line": 328,
+      "line": 335,
       "signature": "interface HomeAssistant\n  extends\n    HomeAssistantRegistries,\n    HomeAssistantInternationalization,\n    HomeAssistantApi,\n    HomeAssistantFormatters,\n    HomeAssistantConnection,\n    HomeAssistantUI,\n    HomeAssistantConfig {\n  states: HassEntities;\n  services: HassServices;\n}",
       "doc": null,
       "bare": true
@@ -1075,7 +1075,7 @@
       "kind": "property",
       "module": "src/types.ts",
       "path": "src/types.ts",
-      "line": 220,
+      "line": 227,
       "signature": "HomeAssistant.areas: Record<string, AreaRegistryEntry>",
       "doc": null,
       "bare": false
@@ -1087,7 +1087,7 @@
       "kind": "property",
       "module": "src/types.ts",
       "path": "src/types.ts",
-      "line": 321,
+      "line": 328,
       "signature": "HomeAssistant.auth: Auth & { external?: ExternalMessaging }",
       "doc": null,
       "bare": false
@@ -1099,7 +1099,7 @@
       "kind": "method",
       "module": "src/types.ts",
       "path": "src/types.ts",
-      "line": 256,
+      "line": 263,
       "signature": "HomeAssistant.callApi<T>(\n  method: \"GET\" | \"POST\" | \"PUT\" | \"DELETE\",\n  path: string,\n  parameters?: Record<string, any>,\n  headers?: Record<string, string>\n): Promise<T>",
       "doc": null,
       "bare": false
@@ -1111,7 +1111,7 @@
       "kind": "method",
       "module": "src/types.ts",
       "path": "src/types.ts",
-      "line": 248,
+      "line": 255,
       "signature": "HomeAssistant.callService<T = any>(\n  domain: ServiceCallRequest[\"domain\"],\n  service: ServiceCallRequest[\"service\"],\n  serviceData?: ServiceCallRequest[\"serviceData\"],\n  target?: ServiceCallRequest[\"target\"],\n  notifyOnError?: boolean,\n  returnResponse?: boolean\n): Promise<ServiceCallResponse<T>>",
       "doc": null,
       "bare": false
@@ -1123,7 +1123,7 @@
       "kind": "property",
       "module": "src/types.ts",
       "path": "src/types.ts",
-      "line": 271,
+      "line": 278,
       "signature": "HomeAssistant.callWS: CallWS",
       "doc": null,
       "bare": false
@@ -1135,7 +1135,7 @@
       "kind": "property",
       "module": "src/types.ts",
       "path": "src/types.ts",
-      "line": 322,
+      "line": 329,
       "signature": "HomeAssistant.config: HassConfig & { logging?: HassLoggingConfig }",
       "doc": null,
       "bare": false
@@ -1147,7 +1147,7 @@
       "kind": "property",
       "module": "src/types.ts",
       "path": "src/types.ts",
-      "line": 297,
+      "line": 304,
       "signature": "HomeAssistant.connected: boolean",
       "doc": null,
       "bare": false
@@ -1159,7 +1159,7 @@
       "kind": "property",
       "module": "src/types.ts",
       "path": "src/types.ts",
-      "line": 296,
+      "line": 303,
       "signature": "HomeAssistant.connection: Connection",
       "doc": null,
       "bare": false
@@ -1171,7 +1171,7 @@
       "kind": "property",
       "module": "src/types.ts",
       "path": "src/types.ts",
-      "line": 219,
+      "line": 226,
       "signature": "HomeAssistant.devices: Record<string, DeviceRegistryEntry>",
       "doc": null,
       "bare": false
@@ -1183,7 +1183,7 @@
       "kind": "property",
       "module": "src/types.ts",
       "path": "src/types.ts",
-      "line": 218,
+      "line": 225,
       "signature": "HomeAssistant.entities: Record<string, EntityRegistryDisplayEntry>",
       "doc": null,
       "bare": false
@@ -1195,7 +1195,7 @@
       "kind": "property",
       "module": "src/types.ts",
       "path": "src/types.ts",
-      "line": 221,
+      "line": 228,
       "signature": "HomeAssistant.floors: Record<string, FloorRegistryEntry>",
       "doc": null,
       "bare": false
@@ -1207,7 +1207,7 @@
       "kind": "method",
       "module": "src/types.ts",
       "path": "src/types.ts",
-      "line": 288,
+      "line": 295,
       "signature": "HomeAssistant.formatEntityName(\n  stateObj: HassEntity,\n  name?: string | EntityNameItem | EntityNameItem[],\n  options?: EntityNameOptions\n): string",
       "doc": null,
       "bare": false
@@ -1219,7 +1219,7 @@
       "kind": "method",
       "module": "src/types.ts",
       "path": "src/types.ts",
-      "line": 275,
+      "line": 282,
       "signature": "HomeAssistant.formatEntityState(\n  stateObj: HassEntity,\n  state?: string\n): string",
       "doc": null,
       "bare": false
@@ -1231,7 +1231,7 @@
       "kind": "property",
       "module": "src/types.ts",
       "path": "src/types.ts",
-      "line": 231,
+      "line": 238,
       "signature": "HomeAssistant.language: string",
       "doc": null,
       "bare": false
@@ -1243,7 +1243,7 @@
       "kind": "method",
       "module": "src/types.ts",
       "path": "src/types.ts",
-      "line": 242,
+      "line": 249,
       "signature": "HomeAssistant.loadFragmentTranslation(\n  fragment: string\n): Promise<LocalizeFunc | undefined>",
       "doc": null,
       "bare": false
@@ -1255,7 +1255,7 @@
       "kind": "property",
       "module": "src/types.ts",
       "path": "src/types.ts",
-      "line": 234,
+      "line": 241,
       "signature": "HomeAssistant.locale: FrontendLocaleData",
       "doc": null,
       "bare": false
@@ -1267,7 +1267,7 @@
       "kind": "property",
       "module": "src/types.ts",
       "path": "src/types.ts",
-      "line": 235,
+      "line": 242,
       "signature": "HomeAssistant.localize: LocalizeFunc",
       "doc": null,
       "bare": false
@@ -1279,7 +1279,7 @@
       "kind": "property",
       "module": "src/types.ts",
       "path": "src/types.ts",
-      "line": 305,
+      "line": 312,
       "signature": "HomeAssistant.panels: Panels",
       "doc": null,
       "bare": false
@@ -1291,7 +1291,7 @@
       "kind": "property",
       "module": "src/types.ts",
       "path": "src/types.ts",
-      "line": 338,
+      "line": 345,
       "signature": "HomeAssistant.services: HassServices",
       "doc": null,
       "bare": false
@@ -1303,7 +1303,7 @@
       "kind": "property",
       "module": "src/types.ts",
       "path": "src/types.ts",
-      "line": 337,
+      "line": 344,
       "signature": "HomeAssistant.states: HassEntities",
       "doc": null,
       "bare": false
@@ -1315,7 +1315,7 @@
       "kind": "property",
       "module": "src/types.ts",
       "path": "src/types.ts",
-      "line": 303,
+      "line": 310,
       "signature": "HomeAssistant.themes: Themes",
       "doc": null,
       "bare": false
@@ -1327,7 +1327,7 @@
       "kind": "property",
       "module": "src/types.ts",
       "path": "src/types.ts",
-      "line": 323,
+      "line": 330,
       "signature": "HomeAssistant.user?: CurrentUser",
       "doc": null,
       "bare": false
@@ -1339,7 +1339,7 @@
       "kind": "property",
       "module": "src/types.ts",
       "path": "src/types.ts",
-      "line": 324,
+      "line": 331,
       "signature": "HomeAssistant.userData?: CoreFrontendUserData",
       "doc": null,
       "bare": false
@@ -1351,7 +1351,7 @@
       "kind": "method",
       "module": "src/types.ts",
       "path": "src/types.ts",
-      "line": 256,
+      "line": 263,
       "signature": "HomeAssistantApi.callApi<T>(\n  method: \"GET\" | \"POST\" | \"PUT\" | \"DELETE\",\n  path: string,\n  parameters?: Record<string, any>,\n  headers?: Record<string, string>\n): Promise<T>",
       "doc": null,
       "bare": true
@@ -1363,7 +1363,7 @@
       "kind": "method",
       "module": "src/types.ts",
       "path": "src/types.ts",
-      "line": 262,
+      "line": 269,
       "signature": "HomeAssistantApi.callApiRaw(\n  method: \"GET\" | \"POST\" | \"PUT\" | \"DELETE\",\n  path: string,\n  parameters?: Record<string, any>,\n  headers?: Record<string, string>,\n  signal?: AbortSignal\n): Promise<Response>",
       "doc": null,
       "bare": true
