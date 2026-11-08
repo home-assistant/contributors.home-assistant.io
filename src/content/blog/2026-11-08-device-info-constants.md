@@ -1,7 +1,7 @@
 ---
 title: "Device info constants are deprecated"
 description: "The device info constants in homeassistant.const are deprecated and will be removed in Home Assistant Core 2027.12. Use the DeviceInfo fields or keyword arguments instead."
-date: 2026-11-06
+date: 2026-11-08
 authors:
   - epenet
 areas:
