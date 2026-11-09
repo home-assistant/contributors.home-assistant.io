@@ -187,8 +187,8 @@ A troubleshooting topic helps the reader recognize a problem and recover from it
 
 Keep the troubleshooting for a page in one place, so the reader knows where to look when something goes wrong:
 
-- **In a section of the page:** put the problems in a `## Troubleshooting` section at the end of the page. On an integration page, the section goes in its place in the [section order](/writing/reference/integration-page/#sections).
-- **On a page of its own:** when a feature has many problems, move them to a separate troubleshooting page. Link to it from the page of the feature.
+- In a section of the page: put the problems in a `## Troubleshooting` section at the end of the page. On an integration page, the section goes in its place in the [section order](/writing/reference/integration-page/#sections).
+- On a page of its own: when a feature has many problems, move them to a separate troubleshooting page. Link to it from the page of the feature.
 
 Do not put troubleshooting next to the part of the page it relates to, like a troubleshooting subsection under one feature or setting.
 Put the problem in the troubleshooting section of the page instead.
