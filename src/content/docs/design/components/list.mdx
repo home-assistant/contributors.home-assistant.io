@@ -8,34 +8,30 @@ import Demo from "../../../../components/docs/Demo.astro";
 import DoDont from "../../../../components/docs/DoDont.astro";
 
 <Demo layout="stack">
-  <ha-list style="width: 100%">
-    <ha-list-item graphic="icon" twoline hasMeta>
-      <ha-svg-icon slot="graphic" path="M12,21L15.6,16.2C14.6,15.45 13.35,15 12,15C10.65,15 9.4,15.45 8.4,16.2L12,21M12,3C7.95,3 4.21,4.34 1.2,6.6L3,9C5.5,7.12 8.62,6 12,6C15.38,6 18.5,7.12 21,9L22.8,6.6C19.79,4.34 16.05,3 12,3M12,9C9.3,9 6.81,9.89 4.8,11.4L6.6,13.8C8.1,12.67 9.97,12 12,12C14.03,12 15.9,12.67 17.4,13.8L19.2,11.4C17.19,9.89 14.7,9 12,9Z"></ha-svg-icon>
-      Network
-      <span slot="secondary">Connected over Wi-Fi</span>
-      <ha-svg-icon slot="meta" path="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"></ha-svg-icon>
-    </ha-list-item>
-    <ha-list-item graphic="icon" twoline hasMeta>
-      <ha-svg-icon slot="graphic" path="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z"></ha-svg-icon>
-      Location
-      <span slot="secondary">Home</span>
-      <ha-svg-icon slot="meta" path="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"></ha-svg-icon>
-    </ha-list-item>
-    <ha-list-item graphic="icon" twoline hasMeta>
-      <ha-svg-icon slot="graphic" path="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"></ha-svg-icon>
-      System
-      <span slot="secondary">Updates, backups, and logs</span>
-      <ha-svg-icon slot="meta" path="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"></ha-svg-icon>
-    </ha-list-item>
-  </ha-list>
+  <ha-list-base aria-label="Settings" style="width: 100%">
+    <ha-list-item-button headline="Network" supporting-text="Connected over Wi-Fi">
+      <ha-svg-icon slot="start" path="M12,21L15.6,16.2C14.6,15.45 13.35,15 12,15C10.65,15 9.4,15.45 8.4,16.2L12,21M12,3C7.95,3 4.21,4.34 1.2,6.6L3,9C5.5,7.12 8.62,6 12,6C15.38,6 18.5,7.12 21,9L22.8,6.6C19.79,4.34 16.05,3 12,3M12,9C9.3,9 6.81,9.89 4.8,11.4L6.6,13.8C8.1,12.67 9.97,12 12,12C14.03,12 15.9,12.67 17.4,13.8L19.2,11.4C17.19,9.89 14.7,9 12,9Z"></ha-svg-icon>
+      <ha-svg-icon slot="end" path="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"></ha-svg-icon>
+    </ha-list-item-button>
+    <ha-list-item-button headline="Location" supporting-text="Home">
+      <ha-svg-icon slot="start" path="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z"></ha-svg-icon>
+      <ha-svg-icon slot="end" path="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"></ha-svg-icon>
+    </ha-list-item-button>
+    <ha-list-item-button headline="System" supporting-text="Updates, backups, and logs">
+      <ha-svg-icon slot="start" path="M12,15.5A3.5,3.5 0 0,1 8.5,12A3.5,3.5 0 0,1 12,8.5A3.5,3.5 0 0,1 15.5,12A3.5,3.5 0 0,1 12,15.5M19.43,12.97C19.47,12.65 19.5,12.33 19.5,12C19.5,11.67 19.47,11.34 19.43,11L21.54,9.37C21.73,9.22 21.78,8.95 21.66,8.73L19.66,5.27C19.54,5.05 19.27,4.96 19.05,5.05L16.56,6.05C16.04,5.66 15.5,5.32 14.87,5.07L14.5,2.42C14.46,2.18 14.25,2 14,2H10C9.75,2 9.54,2.18 9.5,2.42L9.13,5.07C8.5,5.32 7.96,5.66 7.44,6.05L4.95,5.05C4.73,4.96 4.46,5.05 4.34,5.27L2.34,8.73C2.21,8.95 2.27,9.22 2.46,9.37L4.57,11C4.53,11.34 4.5,11.67 4.5,12C4.5,12.33 4.53,12.65 4.57,12.97L2.46,14.63C2.27,14.78 2.21,15.05 2.34,15.27L4.34,18.73C4.46,18.95 4.73,19.03 4.95,18.95L7.44,17.94C7.96,18.34 8.5,18.68 9.13,18.93L9.5,21.58C9.54,21.82 9.75,22 10,22H14C14.25,22 14.46,21.82 14.5,21.58L14.87,18.93C15.5,18.67 16.04,18.34 16.56,17.94L19.05,18.95C19.27,19.03 19.54,18.95 19.66,18.73L21.66,15.27C21.78,15.05 21.73,14.78 21.54,14.63L19.43,12.97Z"></ha-svg-icon>
+      <ha-svg-icon slot="end" path="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"></ha-svg-icon>
+    </ha-list-item-button>
+  </ha-list-base>
 </Demo>
 
 ## Overview
 
 A list shows a set of similar things people scan, pick from, or open: providers to log in with, menu options, the devices in an area. Every row has the same structure, so the eye can run down the left edge and find what it needs.
 
-> [!NOTE]
-> `ha-list` and `ha-list-item` are the older lists, built on Material Web Components. The frontend is moving to a newer list family: `ha-list-base`, `ha-list-item-base`, `ha-list-item-button`, `ha-list-selectable`, and `ha-list-nav`. Many lists in the frontend already use it. For new code, use the new family: see [the new list family](#the-new-list-family) at the end of this page. Most of this page covers the older list, since a good number of screens still use it.
+A list is built from two parts. Pick the container by what the list means, then the row by what it does:
+
+- **Containers**: `ha-list-base` for a plain list, `ha-list-selectable` for a list people pick from, and `ha-list-nav` for a list of links.
+- **Rows**: `ha-list-item-base` for a row that only shows information, `ha-list-item-button` for a row that does something, and `ha-list-item-option` for a row people pick.
 
 ## When to use
 
@@ -53,12 +49,12 @@ Don't use a list for:
 
 ## Anatomy
 
-1. **List**: the container, with 8px of padding at the top and bottom
+1. **List**: the container. It has no padding of its own.
 2. **Row**: one item of the list
-3. **Graphic**: optional, an icon, avatar, or control at the start of the row
-4. **First line**: the main text of the row
-5. **Second line**: optional, a short detail below the first line
-6. **Meta**: optional, content at the end, like a chevron or a short value
+3. **Start**: optional, an icon, image, or avatar at the start of the row
+4. **Headline**: the main text of the row
+5. **Supporting text**: optional, a short detail below the headline
+6. **End**: optional, content at the end, like a chevron, a short value, or a button
 
 ## Variants
 
@@ -67,74 +63,92 @@ Don't use a list for:
 Start with the text, then add only what helps people recognize a row:
 
 - An **icon** at the start.
-- A **second line**, for a short detail, like a state or a description.
+- A **supporting text**, for a short detail, like a state or a description.
 - Something at the **end**, like a chevron when the row opens something, or a short value.
 
 <Demo layout="stack">
-  <ha-list style="width: 100%">
-    <ha-list-item>Just text</ha-list-item>
-    <ha-list-item twoline>
-      Two lines
-      <span slot="secondary">With a second line of detail</span>
-    </ha-list-item>
-    <ha-list-item graphic="icon">
-      <ha-svg-icon slot="graphic" path="M12,2A7,7 0 0,0 5,9C5,11.38 6.19,13.47 8,14.74V17A1,1 0 0,0 9,18H15A1,1 0 0,0 16,17V14.74C17.81,13.47 19,11.38 19,9A7,7 0 0,0 12,2M9,21A1,1 0 0,0 10,22H14A1,1 0 0,0 15,21V20H9V21Z"></ha-svg-icon>
-      With an icon
-    </ha-list-item>
-    <ha-list-item hasMeta>
-      With something at the end
-      <span slot="meta">3</span>
-    </ha-list-item>
-    <ha-list-item disabled>Disabled</ha-list-item>
-  </ha-list>
+  <ha-list-base aria-label="Rows" style="width: 100%">
+    <ha-list-item-base headline="Just text"></ha-list-item-base>
+    <ha-list-item-base headline="Two lines" supporting-text="With a second line of detail"></ha-list-item-base>
+    <ha-list-item-base headline="With an icon">
+      <ha-svg-icon slot="start" path="M12,2A7,7 0 0,0 5,9C5,11.38 6.19,13.47 8,14.74V17A1,1 0 0,0 9,18H15A1,1 0 0,0 16,17V14.74C17.81,13.47 19,11.38 19,9A7,7 0 0,0 12,2M9,21A1,1 0 0,0 10,22H14A1,1 0 0,0 15,21V20H9V21Z"></ha-svg-icon>
+    </ha-list-item-base>
+    <ha-list-item-base headline="With something at the end">
+      <span slot="end">3</span>
+    </ha-list-item-base>
+    <ha-list-item-base headline="Disabled" disabled></ha-list-item-base>
+  </ha-list-base>
 </Demo>
-
-### Graphic size
-
-A row reserves room at the start for its graphic, in one of these sizes: an icon, an avatar (a round image), a medium or large image, or a control like a checkbox.
 
 ### Rows that only show information
 
-A row that does nothing when selected, like a row that only shows a value or a message, can be made non-interactive. It then has no ripple and no keyboard focus.
+`ha-list-item-base` is a row that does nothing when selected, like a row that only shows a value or a message. It has no ripple and no keyboard focus. Set `interactive` to put it in the keyboard navigation of the list anyway, like for a row people can sort.
+
+### Rows that do something
+
+`ha-list-item-button` opens something or runs an action. With an `href`, it renders a link, otherwise a button. The whole row is the target.
+
+### Lists people pick from
+
+In `ha-list-selectable`, the rows are `ha-list-item-option`. The list owns the selection: people pick one option, or several with `multi`.
+
+The default appearance, `line`, highlights the selected row. With `appearance="checkbox"`, the row shows a checkbox, at the start or, with `selection-position="end"`, at the end.
+
+<Demo layout="stack">
+  <ha-list-selectable aria-label="Days" multi style="width: 100%">
+    <ha-list-item-option appearance="checkbox" selection-position="end" headline="Monday" selected></ha-list-item-option>
+    <ha-list-item-option appearance="checkbox" selection-position="end" headline="Tuesday"></ha-list-item-option>
+    <ha-list-item-option appearance="checkbox" selection-position="end" headline="Wednesday" selected></ha-list-item-option>
+  </ha-list-selectable>
+</Demo>
+
+<Demo layout="stack">
+  <ha-list-selectable aria-label="View" style="width: 100%">
+    <ha-list-item-option headline="Overview" selected></ha-list-item-option>
+    <ha-list-item-option headline="Energy"></ha-list-item-option>
+    <ha-list-item-option headline="Map"></ha-list-item-option>
+  </ha-list-selectable>
+</Demo>
+
+### Lists of links
+
+`ha-list-nav` wraps the list in a `<nav>` landmark, for a list of places people go to. Its rows are `ha-list-item-button` with an `href`. Give it a name with `aria-label`, so people can tell the landmarks of a page apart.
 
 ## Behavior
 
-- **Hover and pressed**: an interactive row shows a ripple. It is black unless the theme sets another color. The dark theme sets it to a light gray. An activated row uses the primary color for its ripple.
-- **Focus**: one row at a time is in the tab order. Arrow keys move focus between the rows.
-- **Activated**: in a list where a row can be activated, the selected row gets a primary tint at 12% opacity, and its graphic turns to the primary color.
-- **Disabled**: the text turns to the disabled text color, and the row can't be selected.
-- **Long text**: the first line is cut off with an ellipsis when it doesn't fit. The second line is cut off too, unless the row lets it wrap. Then the row grows with it.
+- **Hover and pressed**: a row that does something, or that people pick, shows a ripple.
+- **Focus**: one row at a time is in the tab order. The arrow keys move focus between the rows. The focused row gets an outline in the focus color and a light background.
+- **Selected**: in `line` appearance, the selected row gets a primary tint, and its text turns to the primary color. In `checkbox` appearance, the checkbox shows the state.
+- **Disabled**: the text turns to the disabled text color, and the row can't be selected or focused.
+- **Long text**: the headline and the supporting text are cut off with an ellipsis when they don't fit.
+- **Focus outside the list**: with `virtual-focus`, focus stays in another element, like the search field of a picker. The list marks the row the keyboard points at with `active`, and scrolls it into view.
 
 ## Specs
 
 | Property | Value | Token |
 | --- | --- | --- |
-| Row height, one line | 48px | None |
-| Row height, one line with an icon or avatar | 48px | None |
-| Row height, two lines | 72px | None |
-| Row height, one line with a medium or large graphic | 72px | None |
-| Padding left and right | 20px | `--mdc-list-side-padding` |
-| List padding top and bottom | 8px | `--mdc-list-vertical-padding` |
-| Icon size | 24px | `--mdc-list-item-graphic-size` |
-| Avatar size | 40px | `--mdc-list-item-graphic-size` |
-| Medium and large graphic size | 56px | `--mdc-list-item-graphic-size` |
-| Space between icon and text, one line | 20px | `--mdc-list-item-graphic-margin` |
-| Space between icon and text, two lines | 32px | `--mdc-list-item-graphic-margin` |
-| Meta size | 24px | `--mdc-list-item-meta-size` |
-| First line font size | 1rem | `--mdc-typography-subtitle1-font-size` |
-| Second line font size | 0.875rem | `--mdc-typography-body2-font-size` |
+| Row height, minimum | 48px | `--ha-row-item-min-height` |
+| Padding top and bottom of a row | 12px | `--ha-row-item-padding-block` |
+| Padding left and right of a row | 16px | `--ha-row-item-padding-inline` |
+| Space between start, text, and end | 16px | `--ha-row-item-gap` |
+| List padding | 0 | `--ha-list-padding` |
+| Space between rows | 0 | `--ha-list-gap` |
+| Headline font size | 14px | `--ha-font-size-m` |
+| Supporting text font size | 12px | `--ha-font-size-s` |
+| Supporting text color | Secondary text color | `--secondary-text-color` |
 | Disabled text color | `#bdbdbd` in the light theme, `#6f6f6f` in the dark theme | `--disabled-text-color` |
-| Activated tint | 12% opacity | `--mdc-ripple-activated-opacity` |
+| Focus outline | 2px, in the focus color | `--ha-list-item-focus-width` |
+| Selected background, `line` appearance | Primary tint | `--ha-list-item-selected-background` |
 
 ## Guidelines
 
-<DoDont doText="Keep the first line short, and put details on the second line." dontText="Put everything in a first line that gets cut off.">
-  <ha-list slot="do" style="width: 100%">
-    <ha-list-item twoline>Network<span slot="secondary">Connected over Wi-Fi</span></ha-list-item>
-  </ha-list>
-  <ha-list slot="dont" style="width: 100%">
-    <ha-list-item>Network settings, connected over Wi-Fi to your home network</ha-list-item>
-  </ha-list>
+<DoDont doText="Keep the headline short, and put details in the supporting text." dontText="Put everything in a headline that gets cut off.">
+  <ha-list-base slot="do" aria-label="Do" style="width: 100%">
+    <ha-list-item-base headline="Network" supporting-text="Connected over Wi-Fi"></ha-list-item-base>
+  </ha-list-base>
+  <ha-list-base slot="dont" aria-label="Don't" style="width: 100%">
+    <ha-list-item-base headline="Network settings, connected over Wi-Fi to your home network"></ha-list-item-base>
+  </ha-list-base>
 </DoDont>
 
 See [UI text](/design/ui-text/) for how to write labels.
@@ -146,13 +160,14 @@ See [UI text](/design/ui-text/) for how to write labels.
 | Key | Action |
 | --- | --- |
 | <kbd>Tab</kbd> | Moves focus into the list, to one row, and out of it again. |
-| <kbd>Arrow down</kbd> and <kbd>Arrow up</kbd> | Move focus to the next or previous row. A list can let focus wrap from the last row to the first, and back. |
+| <kbd>Arrow down</kbd> and <kbd>Arrow up</kbd> | Move focus to the next or previous row. With `wrap-focus`, focus wraps from the last row to the first, and back. |
 | <kbd>Home</kbd> and <kbd>End</kbd> | Move focus to the first or last row. |
-| <kbd>Enter</kbd> or <kbd>Space</kbd> | Activates the focused row. |
+| <kbd>Page down</kbd> and <kbd>Page up</kbd> | Move focus a page down or up. |
+| <kbd>Enter</kbd> or <kbd>Space</kbd> | Activates the focused row, or picks the focused option. |
 
 ### Focus
 
-One row at a time is in the tab order. Arrow keys move focus between the rows.
+One row at a time is in the tab order. The arrow keys move focus between the rows. Rows that only show information are skipped, unless they are `interactive`.
 
 ### Target size
 
@@ -160,14 +175,15 @@ A row is at least 48px high, and as wide as the list.
 
 ### Screen readers
 
-By default, a screen reader gets no list structure: the list and its rows have no role, so it hears the text of the rows. Disabled rows are announced as disabled. The list can get a role and a name in code, see below.
+- `ha-list-base` has the role `list`, and its rows the role `listitem`.
+- `ha-list-selectable` has the role `listbox`, with `aria-multiselectable` when `multi` is set. Its options have the role `option`, and `aria-selected`.
+- `ha-list-nav` is a navigation landmark, with a list inside.
+- A disabled row has `aria-disabled="true"`.
 
 ### In the code
 
-- The list and its rows have no role by default. Set `innerRole` on the list and `itemRoles` for the rows, like `listbox` and `option`, and `innerAriaLabel` for the name of the list.
-- A disabled row has `aria-disabled="true"`.
-- With the role `option`, a selected row has `aria-selected="true"`.
-- A row with `noninteractive` can't take focus.
+- Give every list a name with `aria-label`, unless a visible heading already names it.
+- Use `ha-list-item-option` only in `ha-list-selectable`, and `ha-list-item-button` with an `href` for links.
 
 ## Related
 
@@ -177,109 +193,111 @@ By default, a screen reader gets no list structure: the list and its rows have n
 
 ## In code
 
-The element is `<ha-list>`, with `<ha-list-item>` rows. Both extend the [Material Web Components list](https://github.com/material-components/material-web/tree/mwc/packages/list).
+The elements are `<ha-list-base>`, `<ha-list-selectable>`, and `<ha-list-nav>`, with `<ha-list-item-base>`, `<ha-list-item-button>`, and `<ha-list-item-option>` rows.
 
 ```html
-<ha-list>
-  <ha-list-item graphic="icon" twoline hasMeta>
-    <ha-svg-icon slot="graphic" path="..."></ha-svg-icon>
-    Network
-    <span slot="secondary">Connected over Wi-Fi</span>
-    <ha-svg-icon slot="meta" path="..."></ha-svg-icon>
-  </ha-list-item>
-</ha-list>
+<ha-list-base aria-label="Settings">
+  <ha-list-item-button headline="Network" supporting-text="Connected over Wi-Fi">
+    <ha-svg-icon slot="start" path="..."></ha-svg-icon>
+    <ha-icon-next slot="end"></ha-icon-next>
+  </ha-list-item-button>
+</ha-list-base>
 ```
 
-Attribute names are case-insensitive in HTML, so `hasMeta` and `hasmeta` are the same.
+```html
+<ha-list-selectable multi aria-label="Days">
+  <ha-list-item-option appearance="checkbox" value="monday" headline="Monday"></ha-list-item-option>
+  <ha-list-item-option appearance="checkbox" value="tuesday" headline="Tuesday"></ha-list-item-option>
+</ha-list-selectable>
+```
 
-### Attributes of ha-list
-
-- `activatable`: shows the selected row as activated.
-- `multi`: allows selecting more than one row.
-- `wrapFocus`: arrow keys wrap from the last row to the first, and back.
-- `rootTabbable`: makes the list itself focusable, instead of the first row.
-- `noninteractive`: turns off selection and keyboard navigation for the whole list.
-- `innerRole` and `innerAriaLabel`: the role and the accessible name of the inner list element.
-- `itemRoles`: the role given to every row, like `option`.
-
-### Attributes of ha-list-item
-
-- `graphic`: reserves room for content in the `graphic` slot. `icon`, `avatar`, `medium`, `large`, or `control`.
-- `twoline`: shows the `secondary` slot as a second line.
-- `multiline-secondary`: lets the second line wrap, instead of cutting it off.
-- `hasMeta`: shows the `meta` slot at the end.
-- `noninteractive`: the row can't be selected or focused.
-- `disabled`: disables the row.
-- `selected` and `activated`: the selection state.
-- `value`: a value that identifies the row.
-
-### Slots of ha-list-item
-
-- Default: the first line of text.
-- `secondary`: the second line, when `twoline` is set.
-- `graphic`: an icon, avatar, or control at the start, when `graphic` is set.
-- `meta`: content at the end, when `hasMeta` is set.
-
-### Events
-
-- `action` on `ha-list`: a row was activated. `detail.index` is the index of the row.
-- `selected` on `ha-list`: the selection changed. `detail.index` is the selected index, or a set of indexes with `multi`.
-- `request-selected` on `ha-list-item`: the row asks to be selected or deselected. `detail.selected` is the new state, and `detail.source` says whether it came from an `interaction` or a `property` change.
-
-### Styling
-
-- `--mdc-list-side-padding`: the padding on both sides of a row. Defaults to `20px`.
-- `--mdc-list-side-padding-left` and `--mdc-list-side-padding-right`: the padding of one side.
-- `--mdc-list-item-graphic-margin`: the space between the graphic and the text.
-- `--mdc-list-item-meta-display`: the display of the meta slot.
-
-Source: [`src/components/ha-list.ts`](https://github.com/home-assistant/frontend/blob/dev/src/components/ha-list.ts) and [`src/components/ha-list-item.ts`](https://github.com/home-assistant/frontend/blob/dev/src/components/ha-list-item.ts)
-
-## The new list family
-
-The new lists are accessible and keyboard friendly from the start. Pick the container by what the list means, then the item by what a row does. They are not part of the live components on this site yet, so there is no demo.
-
-### Containers
-
-- `<ha-list-base>`: a plain list, with the role `list`. The arrow keys move focus between rows, <kbd>Home</kbd> and <kbd>End</kbd> jump to the first and last enabled row, <kbd>Page up</kbd> and <kbd>Page down</kbd> move a page, and <kbd>Enter</kbd> or <kbd>Space</kbd> activates the focused row. Only one row is in the tab order at a time.
-- `<ha-list-selectable>`: a list people pick from, with the role `listbox`. Its rows are `<ha-list-item-option>`. Set `multi` to allow picking more than one.
-- `<ha-list-nav>`: a list of links, wrapped in a `<nav>` landmark. Its rows are `<ha-list-item-button>` with an `href`. Name the landmark with `aria-label`.
-
-Attributes of the containers:
+### Attributes of ha-list-base
 
 - `wrap-focus`: the arrow keys wrap around at the ends.
-- `virtual-focus`: focus stays outside the list, like in the search field of a picker. The list marks the row the keyboard points at with `active`, and scrolls it into view. The element that has focus moves it with `moveActiveItem()`.
-- `aria-label`: the accessible name.
-- `multi`: on `ha-list-selectable` only, allows picking more than one option.
+- `virtual-focus`: focus stays outside the list. The list marks the row the keyboard points at with `active`, instead of focusing it.
+- `aria-label`: the accessible name of the list.
 
-Events:
+### Slots of ha-list-base
 
-- `ha-list-activated`: <kbd>Enter</kbd> or <kbd>Space</kbd> on a focused row. `detail` has the `index` and the `item`.
-- `ha-list-item-selected` and `ha-list-item-deselected`: on `ha-list-selectable`, an option was picked or unpicked. `detail` is the index of the option. Deselected only fires with `multi`.
+- Default: the rows.
 
-Styling: `--ha-list-gap` sets the space between rows, `--ha-list-padding` the padding around the list. Both default to `0`.
+### Events of ha-list-base
 
-### Items
+- `ha-list-activated`: <kbd>Enter</kbd> or <kbd>Space</kbd> on the focused row. `detail` has the `index` and the `item`.
 
-Every item has the same row layout, with these slots and attributes:
+### Methods of ha-list-base
 
-- `start`: the leading part, like an icon or an avatar.
-- `end`: the trailing part, like a value or a chevron.
-- `headline` and `supporting-text`: the first and second line, as an attribute or a slot.
-- `content`: replaces the whole middle part.
-- `disabled`: dims the row and blocks the pointer.
+- `moveActiveItem()`: moves the active row to `next`, `previous`, `first`, `last`, `next-page`, or `previous-page`. Use it with `virtual-focus`.
+- `getActiveItemIndex()`: the index of the active row.
+- `focusItemAtIndex()`: focuses the row at an index.
 
-The items:
+### Styling of ha-list-base
 
-- `<ha-list-item-base>`: a row that only shows information, with the role `listitem`. Set `interactive` to put it in the keyboard navigation of the list without an action, like a row people can sort.
-- `<ha-list-item-button>`: a row that does something. It renders a link when it has an `href`, and a button otherwise. The whole row is the target.
-- `<ha-list-item-option>`: a row people can pick, with the role `option` and `aria-selected`. The list owns the selection. With `appearance="checkbox"` it shows a checkbox, at the `start` or the `end` with `selection-position`. The default appearance, `line`, highlights the selected row.
+- `--ha-list-gap`: the space between rows. Defaults to `0`.
+- `--ha-list-padding`: the padding around the rows. Defaults to `0`.
 
-Styling of the rows:
+### Attributes of ha-list-selectable
+
+- `multi`: people can pick more than one option.
+- `controlled`: a click only fires the events, and does not change `selected`. Set it when the selection comes from your own state.
+
+`ha-list-selectable` also has the attributes of `ha-list-base`.
+
+### Events of ha-list-selectable
+
+- `ha-list-item-selected`: an option was picked. `detail` is the index of the option.
+- `ha-list-item-deselected`: an option was unpicked, with `multi` only. `detail` is the index of the option.
+
+### Methods of ha-list-selectable
+
+- `clearSelection()`: unpicks every option.
+
+### Attributes of ha-list-nav
+
+- `aria-label`: the name of the `<nav>` landmark.
+
+### Slots of ha-list-item-base
+
+- `start`: an icon, image, or avatar at the start.
+- `end`: content at the end, like a chevron, a value, or a button.
+- `headline`: the first line. Overrides the `headline` attribute.
+- `supporting-text`: the second line. Overrides the `supporting-text` attribute.
+- `content`: replaces the headline and the supporting text.
+
+`ha-list-item-button` and `ha-list-item-option` have the same slots.
+
+### Attributes of ha-list-item-base
+
+- `headline`: the first line.
+- `supporting-text`: the second line.
+- `disabled`: disables the row.
+- `interactive`: puts the row in the keyboard navigation of the list, without an action.
+- `active`: set by a list with `virtual-focus` on the row the keyboard points at.
+
+### Styling of ha-list-item-base
 
 - `--ha-row-item-min-height`: the minimum height of a row. Defaults to `48px`.
-- `--ha-row-item-padding-block`, `--ha-row-item-padding-inline`, and `--ha-row-item-gap`: the padding of a row, and the space between its parts.
-- `--ha-list-item-focus-background` and `--ha-list-item-active-background`: the background on keyboard focus, and of the `active` row.
-- `--ha-list-item-selected-background`: the background of a selected option, with `appearance="line"`.
+- `--ha-row-item-padding-block` and `--ha-row-item-padding-inline`: the padding of a row. Default to `12px` and `16px`.
+- `--ha-row-item-gap`: the space between the start, the text, and the end. Defaults to `16px`.
+- `--ha-list-item-focus-background`: the background on keyboard focus.
+- `--ha-list-item-active-background`: the background of the `active` row.
+- `--ha-list-item-focus-radius`, `--ha-list-item-focus-width`, `--ha-list-item-focus-width-start`, and `--ha-list-item-focus-offset`: the focus outline.
 
-Source: [`src/components/list/`](https://github.com/home-assistant/frontend/tree/dev/src/components/list) and [`src/components/item/`](https://github.com/home-assistant/frontend/tree/dev/src/components/item)
+### Attributes of ha-list-item-button
+
+- `href`: the row renders a link to this URL.
+- `target`, `rel`, and `download`: the attributes of the link, with `href`.
+
+### Attributes of ha-list-item-option
+
+- `selected`: the option is picked. Set by the list, or by you with `controlled`.
+- `indeterminate`: the checkbox shows a partly picked state, like for a group.
+- `value`: a value that identifies the option.
+- `appearance`: `line` highlights the selected row, `checkbox` shows a checkbox. Defaults to `line`.
+- `selection-position`: `start` or `end`, where the checkbox goes. Defaults to `start`.
+
+### Styling of ha-list-item-option
+
+- `--ha-list-item-selected-background`: the background of a selected option, in `line` appearance.
+
+Source: [`src/components/list/ha-list-base.ts`](https://github.com/home-assistant/frontend/blob/dev/src/components/list/ha-list-base.ts), [`src/components/list/ha-list-selectable.ts`](https://github.com/home-assistant/frontend/blob/dev/src/components/list/ha-list-selectable.ts), [`src/components/list/ha-list-nav.ts`](https://github.com/home-assistant/frontend/blob/dev/src/components/list/ha-list-nav.ts), [`src/components/item/ha-list-item-base.ts`](https://github.com/home-assistant/frontend/blob/dev/src/components/item/ha-list-item-base.ts), [`src/components/item/ha-list-item-button.ts`](https://github.com/home-assistant/frontend/blob/dev/src/components/item/ha-list-item-button.ts), and [`src/components/item/ha-list-item-option.ts`](https://github.com/home-assistant/frontend/blob/dev/src/components/item/ha-list-item-option.ts)
