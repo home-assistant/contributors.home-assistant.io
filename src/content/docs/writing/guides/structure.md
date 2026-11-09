@@ -181,13 +181,24 @@ State what the reader will build and learn, and what they need before they start
 
 ## Troubleshooting
 
-A troubleshooting topic helps the reader recognize a problem and recover from it. It can be a section on a feature page, or a page of its own that covers related problems.
+A troubleshooting topic helps the reader recognize a problem and recover from it.
+
+### Where troubleshooting goes
+
+Keep the troubleshooting for a page in one place, so the reader knows where to look when something goes wrong:
+
+- **In a section of the page:** put the problems in a `## Troubleshooting` section at the end of the page. On an integration page, the section goes in its place in the [section order](/writing/reference/integration-page/#sections).
+- **On a page of its own:** when a feature has many problems, move them to a separate troubleshooting page. Link to it from the page of the feature.
+
+Do not put troubleshooting next to the part of the page it relates to, like a troubleshooting subsection under one feature or setting.
+Put the problem in the troubleshooting section of the page instead.
+When it helps, link to the troubleshooting section from the part of the page it relates to.
 
 ### Headings for troubleshooting
 
 - Put each problem in its own [collapsible details block](/writing/reference/liquid/#collapsible-details).
 - Use the symptom or the exact error message as the title of the block, like `Can't access Home Assistant in my browser` or `Stuck at "Preparing Home Assistant"`.
-- For a page with several problems, use "Troubleshooting" followed by the subject: "Troubleshooting Assist".
+- For a separate troubleshooting page, use "Troubleshooting" followed by the subject: "Troubleshooting Assist".
 - Avoid titles that only make sense once you know the cause. The reader searches for what they see, not for what is wrong.
 
 ### Content for troubleshooting
