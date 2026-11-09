@@ -40,16 +40,29 @@ A `DOORBELL` entity must support `DoorbellEventType.RING`. Home Assistant logs a
 
 A `BUTTON` entity can use these `ButtonEventType` values. None of them are mandatory: only use the ones your hardware can produce.
 
-| Event type | Meaning |
-| --- | --- |
-| `PRESS_START` | The button was pressed down. |
-| `PRESS_END` | The button was released after a short press. |
-| `LONG_PRESS_START` | The button was held past a threshold. |
-| `LONG_PRESS_END` | The button was released after a long press. |
-| `MULTI_PRESS_ONGOING` | A press in a series of presses was detected, and the series is not done. |
-| `MULTI_PRESS_END` | A series of presses is done. |
+The types come in two layers. The physical types, `PRESS_START` and `PRESS_END`, describe the button going down and up. The gesture types describe what the device concluded from the presses.
 
-Both multi press types include a `multi_press_count` attribute (the `ATTR_MULTI_PRESS_COUNT` constant) with the number of presses. If a device sends only one event per interaction, without a separate press and release, use the matching end type, like `PRESS_END` for a short press. For a button that reports a direction from one source, like an up and down rocker, prefer one entity per direction. A non-standard `direction` attribute is acceptable when separate entities are not practical. Other, non-standard event types are allowed too.
+| Event type | Layer | Meaning |
+| --- | --- | --- |
+| `PRESS_START` | Physical | The button went down. Only use it if the device reports it for every press. |
+| `PRESS_END` | Physical | The button was released after a press the device did not classify as long. |
+| `LONG_PRESS_START` | Gesture | The button reached the hold threshold and is still down. Fired once per hold. |
+| `LONG_PRESS_END` | Gesture | The button was released after a press the device classified as long. |
+| `SINGLE_PRESS` | Gesture | The device concluded that exactly one short press happened. |
+| `MULTI_PRESS` | Gesture | The device finished counting a series of two or more presses. A long press never counts. |
+
+`MULTI_PRESS` includes a `press_count` attribute (the `ATTR_PRESS_COUNT` constant) with the number of presses. Only list `MULTI_PRESS` in `event_types` if you also list `SINGLE_PRESS`. A device that reports a double press, but never a resolved single press, keeps its double press as a non-standard event type.
+
+When mapping the events of your device:
+
+- Map one event of the device to one standard event. Do not suppress, delay, or synthesize events, and do not run timers.
+- Only list a type in `event_types` if its meaning holds for every event you fire under that name.
+- A device that reports both the release and the resolved single press fires both, as `PRESS_END` and `SINGLE_PRESS`.
+- A device that sends one event per press maps it by what that event is. Sent when the button goes down, it is `PRESS_START`. Sent when the button is released, it is `PRESS_END`. Reported as a completed press, like after a debounce or through a cloud service, it is `SINGLE_PRESS`. When in doubt, use `SINGLE_PRESS`.
+- A hold reported when the threshold is reached is `LONG_PRESS_START`. A hold reported after the release is `LONG_PRESS_END`.
+- Only keep local state to classify a release as `PRESS_END` or `LONG_PRESS_END` after a `LONG_PRESS_START`, or to fire `LONG_PRESS_START` once when the device repeats it.
+
+For a button that reports a direction from one source, like an up and down rocker, prefer one entity per direction. A non-standard `direction` attribute is acceptable when separate entities are not practical. Other, non-standard event types are allowed too.
 
 ## Methods
 
