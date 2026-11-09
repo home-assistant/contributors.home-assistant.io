@@ -8,7 +8,7 @@ order: 4
 
 A [theme](/glossary/theme/) sets variables of the frontend. This page lists the ones a theme can set, with the default value of each. For how to write a theme, and which variables most themes set, start with [Publish a theme](/marketplace/guides/themes/).
 
-The tables on this page are generated from the frontend source, at [`4a455cd883`](https://github.com/home-assistant/frontend/commit/4a455cd8833e056ab2641d248de50efbcaf90c64) of the `dev` branch. Variables can be renamed or removed in any release, so test your theme with every beta.
+The tables on this page are generated from the frontend source, at [`afcf7d4e08`](https://github.com/home-assistant/frontend/commit/afcf7d4e080b86bc2bf01e32070099e60dc74dab) of the `dev` branch. Variables can be renamed or removed in any release, so test your theme with every beta.
 
 In a theme file, a variable has no `--` in front, the way this page shows them. In the frontend source, and in CSS, it does: `primary-color` in your theme is `--primary-color` in the code.
 
@@ -37,6 +37,9 @@ From [`src/resources/theme/core.globals.ts`](https://github.com/home-assistant/f
 | `ha-border-width-lg` | `3px` |
 | `ha-picture-border-radius` | `var(--ha-border-radius-lg)` |
 | `ha-picture-border-radius-sm` | `var(--ha-border-radius-sm)` |
+| `ha-content-width-narrow` | `720px` |
+| `ha-content-width-wide` | `1280px` |
+| `ha-content-gutter` | `var(--ha-space-4)` |
 | `ha-animation-duration-none` | `1ms` |
 | `ha-animation-duration-instant` | `75ms` |
 | `ha-animation-duration-fast` | `150ms` |
