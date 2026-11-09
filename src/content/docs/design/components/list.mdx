@@ -178,7 +178,7 @@ A row is at least 48px high, and as wide as the list.
 - `ha-list-base` has the role `list`, and its rows the role `listitem`.
 - `ha-list-selectable` has the role `listbox`, with `aria-multiselectable` when `multi` is set. Its options have the role `option`, and `aria-selected`.
 - `ha-list-nav` is a navigation landmark, with a list inside.
-- A disabled row has `aria-disabled="true"`.
+- A disabled option has `aria-disabled="true"`. A disabled link row sets `aria-disabled="true"` on its link, and a disabled button row uses a disabled native button. A plain `ha-list-item-base` row does not tell screen readers that it is disabled.
 
 ### In the code
 
@@ -197,7 +197,10 @@ The elements are `<ha-list-base>`, `<ha-list-selectable>`, and `<ha-list-nav>`, 
 
 ```html
 <ha-list-base aria-label="Settings">
-  <ha-list-item-button headline="Network" supporting-text="Connected over Wi-Fi">
+  <ha-list-item-button
+    headline="Network"
+    supporting-text="Connected over Wi-Fi"
+  >
     <ha-svg-icon slot="start" path="..."></ha-svg-icon>
     <ha-icon-next slot="end"></ha-icon-next>
   </ha-list-item-button>
@@ -206,8 +209,16 @@ The elements are `<ha-list-base>`, `<ha-list-selectable>`, and `<ha-list-nav>`, 
 
 ```html
 <ha-list-selectable multi aria-label="Days">
-  <ha-list-item-option appearance="checkbox" value="monday" headline="Monday"></ha-list-item-option>
-  <ha-list-item-option appearance="checkbox" value="tuesday" headline="Tuesday"></ha-list-item-option>
+  <ha-list-item-option
+    appearance="checkbox"
+    value="monday"
+    headline="Monday"
+  ></ha-list-item-option>
+  <ha-list-item-option
+    appearance="checkbox"
+    value="tuesday"
+    headline="Tuesday"
+  ></ha-list-item-option>
 </ha-list-selectable>
 ```
 
