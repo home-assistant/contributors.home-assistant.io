@@ -47,7 +47,7 @@ The Git hooks run when you commit, and can change files outside the folder of yo
 
 On GitHub, open a pull request from your branch against the `dev` branch of [home-assistant/core](https://github.com/home-assistant/core). Then fill in the template. Do not remove anything from it, including the boxes you do not check.
 
-- **Breaking change**: if your change breaks something for existing users, explain what breaks, how to fix it, and why. This text goes into the release notes, so write it for users, not for developers. Remove the section if nothing breaks.
+- **Breaking change**: if your change breaks something for existing users, explain what breaks, how to fix it, and why. This text goes into the release notes, so write it for users, not for developers. Remove the section if nothing breaks. [When it is backward-incompatible](/releases/guides/backward-incompatible-changes/#when-it-is-backward-incompatible) helps you decide, also for the removal at the end of a deprecation.
 - **Proposed change**: explain *why*, not only what. Reviewers need the reason to judge the solution.
 - **Type of change**: check exactly one box. If more than one fits, your pull request does too much: split it. A bot uses this box to label your pull request.
 - **Additional information**: link the issue you fix with `fixes #12345`, and the pull requests for the documentation or frontend.
