@@ -11,29 +11,29 @@ areas:
 As of Home Assistant Core 2026.12, fields and sections in `services.yaml` take the same `visible` condition as [config flows, options flows, and blueprints](/blog/2026/10/21/form-fields-visible). A field then only shows in the action editor while other fields of the action have certain values.
 
 ```yaml
-set_sleep_timer:
+record:
   target:
     entity:
-      domain: media_player
+      domain: camera
   fields:
     mode:
       required: true
-      default: duration
+      default: snapshot
       selector:
         select:
           options:
-            - duration
-            - end_of_track
+            - snapshot
+            - clip
     duration:
       required: true
       visible:
         field: mode
-        value: duration
+        value: clip
       selector:
         duration:
 ```
 
-**Duration** only shows while **Mode** is set to `duration`, or left to its default. Put `visible` on a section to hide the whole section. A hidden field is not required, and when it gets hidden while the action is edited, its value is removed from the action data.
+**Duration** only shows while **Mode** is set to `clip`, so it stays hidden with the default `snapshot`. Put `visible` on a section to hide the whole section. A hidden field is not required, and when it gets hidden while the action is edited, its value is removed from the action data.
 
 Unlike config flows and blueprints, this only changes the action editor: actions written in YAML can still pass a hidden field. Keep validating every call in the schema of your action, and reject combinations that make no sense.
 

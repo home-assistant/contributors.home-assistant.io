@@ -202,22 +202,22 @@ A `visible` condition shows a field only while other fields of the same action h
 ```yaml
 mode:
   required: true
-  default: duration
+  default: snapshot
   selector:
     select:
       options:
-        - duration
-        - end_of_track
+        - snapshot
+        - clip
 duration:
   required: true
   visible:
     field: mode
-    value: duration
+    value: clip
   selector:
     duration:
 ```
 
-Here, **Duration** only shows while **Mode** is set to `duration`.
+Here, **Duration** only shows while **Mode** is set to `clip`.
 
 - `visible` takes one condition, a list of conditions that all have to match, or a plain `true` or `false`.
 - A field without a value is evaluated with its default.
