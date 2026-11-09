@@ -1,7 +1,7 @@
 ---
 title: Revised standard event types for button event entities
 description: Button event entities get SINGLE_PRESS and MULTI_PRESS, PRESS_END now only means the release, and the old multi-press types are deprecated.
-date: 2026-10-23
+date: 2026-11-09
 authors:
   - Abílio Costa
 areas:
