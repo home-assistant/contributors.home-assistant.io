@@ -18,7 +18,7 @@ term:
     - "backward-incompatible changes"
 ---
 
-Pull requests with a backward-incompatible change that can affect users get the `breaking-change` label, and explain in their description what changes and what to do about it. That text ends up in the **Backward-incompatible changes** section of the release notes. Removing a deprecated core API that only custom integrations can still use does not get the label: those developers hear about it on the developer blog instead. [Document a backward-incompatible change](/releases/guides/backward-incompatible-changes/#when-it-is-backward-incompatible) has the details.
+Pull requests with a backward-incompatible change that can affect users get the `breaking-change` label, and explain in their description what changes and what to do about it. That text ends up in the **Backward-incompatible changes** section of the release notes. Removing a deprecated core API after its deprecation period, when only custom integrations can still use it, does not get the label: those developers hear about it on the developer blog instead. [Document a backward-incompatible change](/releases/guides/backward-incompatible-changes/#when-it-is-backward-incompatible) has the details.
 
 The pull request template of Home Assistant Core and the label call it a "breaking change". Both mean the same thing. The release notes call it a backward-incompatible change, and so should everything you write.
 
