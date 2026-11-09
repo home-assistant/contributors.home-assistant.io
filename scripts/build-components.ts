@@ -70,8 +70,6 @@ const COMPONENTS = [
   "ha-expansion-panel",
   "ha-gauge",
   "ha-label-badge",
-  "ha-list",
-  "ha-list-item",
   "ha-marquee-text",
   "ha-select-box",
   "ha-slider",
