@@ -48,7 +48,7 @@ def sensor_update_to_bluetooth_data_update(
                 "model": parsed.model,
             }
         },
-        ...
+        # The other fields of the update
     )
 
 
@@ -63,7 +63,7 @@ def sensor_update_to_bluetooth_data_update(
 ) -> PassiveBluetoothDataUpdate:
     return PassiveBluetoothDataUpdate(
         devices={None: _device_info(parsed.name, parsed.model)},
-        ...
+        # The other fields of the update
     )
 ```
 
@@ -107,14 +107,20 @@ device_info.sw_version = parsed.sw_version
 # New
 @lru_cache(maxsize=64)
 def _device_info(
-    name: str, manufacturer: str, model: str, sw_version: str
+    name: str | None,
+    manufacturer: str | None,
+    model: str | None,
+    sw_version: str,
 ) -> DeviceInfo:
-    return DeviceInfo(
-        name=name,
-        manufacturer=manufacturer,
-        model=model,
-        sw_version=sw_version,
-    )
+    # Leave the fields without a value unset, like the helper does
+    device_info = DeviceInfo(sw_version=sw_version)
+    if name is not None:
+        device_info.name = name
+    if manufacturer is not None:
+        device_info.manufacturer = manufacturer
+    if model is not None:
+        device_info.model = model
+    return device_info
 
 
 device_info = _device_info(
