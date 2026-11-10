@@ -1,7 +1,7 @@
 ---
 title: "Plain device info dicts are deprecated in Bluetooth data updates"
 description: "Passing a plain dict as a device info in PassiveBluetoothDataUpdate will stop working in Home Assistant Core 2027.12. Here is what to change, and how to keep advertisements fast."
-date: 2026-11-06
+date: 2026-11-10
 authors:
   - epenet
 areas:
