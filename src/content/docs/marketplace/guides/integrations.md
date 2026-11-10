@@ -102,6 +102,8 @@ Run two GitHub Actions on every push and pull request:
 
 Both have to pass to [get into the catalog](/marketplace/guides/catalog/).
 
+Run your own tests there too. The `pytest-homeassistant` package gives you the same test fixtures and helpers as core. See [test a custom integration](/marketplace/guides/testing/).
+
 ## Keep up with Home Assistant
 
 Changes in core can break a custom integration. Changes to what custom integrations use from core, like helpers, constants, and entity properties, are deprecated for 12 months first, and announced on the [blog](/blog/). The [deprecation policy](/core/development/deprecating/#developer-facing-deprecations) has the details. Test your integration against the [beta](/releases/), and set `homeassistant` in `hacs.json` when a release needs a newer Home Assistant. See [releases and updates](/marketplace/guides/releases/).
