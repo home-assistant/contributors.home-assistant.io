@@ -48,7 +48,7 @@ The Marketplace does not offer that release to users on an older Home Assistant.
 
 ## Ship a ZIP file
 
-An integration can ship as a ZIP file attached to each release, instead of the files in the repository. Set `zip_release` to `true`, and `filename` to the name of the asset:
+An integration or a dashboard card can ship as a ZIP file attached to each release, instead of the files in the repository. Set `zip_release` to `true`, and `filename` to the name of the asset:
 
 ```json title="hacs.json"
 {
@@ -58,7 +58,13 @@ An integration can ship as a ZIP file attached to each release, instead of the f
 }
 ```
 
-The Marketplace downloads that asset and extracts it into the integration folder. Use this when you build or generate files in your release workflow. HACS supports this for integrations only, and the Marketplace refuses it for templates.
+The Marketplace downloads that asset and extracts it into the folder of the integration or card. Use this when you build or generate files in your release workflow.
+
+For a dashboard card, the JavaScript file has to be in the root of the ZIP file. Name it like the ZIP file, so `my-card.zip` holds `my-card.js`, or after your repository, like a [card without a ZIP file](/marketplace/guides/dashboard/#name-your-file-after-your-repository). Without one, the install fails and the installed version stays.
+
+Dashboard cards from a ZIP file need Home Assistant 2026.12 or later. Earlier versions refuse to install them. Set `"homeassistant": "2026.12.0"` in `hacs.json`, so the Marketplace does not offer the release on an earlier version, and shows users the versions that work instead. See [require a Home Assistant version](#require-a-home-assistant-version).
+
+HACS supports ZIP files for integrations only. The Marketplace refuses them for templates.
 
 ## Older versions
 
