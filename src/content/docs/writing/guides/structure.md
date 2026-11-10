@@ -93,13 +93,13 @@ A task helps the reader reach a specific goal. The reader wants to get something
 
 - Name the action and its object: "Creating an area", not "Task".
 - An `-ing` phrase, like "Creating an area" or "Updating Home Assistant", matches what most existing pages use.
-- An imperative works well for the stages of a longer procedure: "Write the image to your SD card".
+- An imperative works well for the stages of a longer procedure: "Write the image to your SD card". Number the stages when their order matters.
 - Keep sibling headings parallel. If one starts with an `-ing` verb, they all do.
 - Avoid vague headings like "Usage", "Configuration", or "Working with areas" when the task has a more specific outcome.
 
 ### Content for tasks
 
-1. If the heading does not make it clear, say in one sentence when or why you would do this.
+1. If the heading does not make it clear, say in a few sentences when or why you would do this, and link to relevant information.
 2. List the prerequisites directly before the steps, under a `Prerequisites:` lead-in, like hardware, permissions, or setup that must be done first. Use a separate `## Prerequisites` section only when the requirements apply to the whole page. No prerequisites worth mentioning? Leave the list out.
 3. Write the steps as a numbered list. Start each step with the instruction. Put explanations or the expected result below it.
 4. End with the outcome and, when useful, a way to check that it worked.
