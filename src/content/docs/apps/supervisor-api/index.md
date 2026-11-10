@@ -143,10 +143,23 @@ The log endpoints take these query parameters and headers:
 | Parameter | Description |
 | --- | --- |
 | `lines` | Query parameter. The number of lines to return. The default is 100, the minimum is 2 |
-| `verbose` | Query parameter, no value needed. Adds the timestamp, host name, and process to each line |
+| `format` | Query parameter. The log format: `plain`, `timestamp`, or `verbose`. See the formats below |
+| `verbose` | Query parameter, no value needed. Selects the `verbose` format, unless you also set `format` |
 | `no_colors` | Query parameter, no value needed. Strips ANSI color codes |
-| `Accept` | Header. `text/plain` (the default) or `text/x-log`. `text/x-log` gives the same output as `verbose` |
+| `Accept` | Header. `text/plain` (the default) or `text/x-log`. `text/x-log` selects the `verbose` format, unless you also set `format` |
 | `Range` | Header. A [systemd-journal-gatewayd](https://www.freedesktop.org/software/systemd/man/latest/systemd-journal-gatewayd.service.html) range like `entries=cursor[[:num_skip]:num_entries]`. Ignored when you set `lines` |
+
+The `format` parameter sets what each line shows:
+
+| Format | Example line |
+| --- | --- |
+| `plain` | `Hello, world!` |
+| `timestamp` | `2026-10-13 07:32:51.123 Hello, world!` |
+| `verbose` | `2026-10-13 07:32:51.123 homeassistant python[666]: Hello, world!` |
+
+The timestamp is in the time zone of the Supervisor, with milliseconds. `verbose` adds the host name and the process, with its ID when the journal has one. An unknown `format` returns an error.
+
+When you set `format`, it wins over `verbose` and `Accept: text/x-log`. Without any of them, most endpoints use `plain`. The host logs without an identifier and the DNS, audio, and multicast plugins use `verbose`.
 
 The response has an `X-First-Cursor` header with the journal cursor of the first line. Pass it in a `Range` header to page back through older lines.
 
