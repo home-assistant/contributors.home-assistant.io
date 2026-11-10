@@ -1,7 +1,7 @@
 ---
 title: "Repairs flows now require use of context for initiation"
 description: As of Home Assistant Core 2026.12, setting `issue_id` in a `RepairsFlow` and the use of `data` to supply the `issue_id` to the `RepairsFlowManager` are deprecated. 
-date: 2026-11-04
+date: 2026-11-10
 authors:
   - iluvdata
 areas:
