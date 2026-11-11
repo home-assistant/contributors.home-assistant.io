@@ -31,17 +31,17 @@ Documenting a new feature from a core pull request? Open one documentation pull 
 
 ## Parent pull requests
 
-A documentation pull request that documents a code change has a _parent_: the pull request with that code change, in a repository like core or frontend. Link them both ways: the parent in the **Additional information** section of your documentation pull request, and your documentation pull request in the description of the parent.
+A documentation pull request that documents a code change has a _parent_: the pull request with that code change, in a repository like core or frontend. Link them both ways: list the parent under **This PR belongs together with** in your documentation pull request, and your documentation pull request on the same line of the parent.
 
 A bot follows those links, and labels your documentation pull request:
 
-- `has-parent`: your pull request links a parent. The bot then expects it to target `next`. A pull request without a parent is expected to target `current`.
+- `has-parent`: your pull request and its parent list each other. A pull request that lists a code pull request is expected to target `next`, and one without is expected to target `current`.
 - `parent-merged`: the parent is merged, so the documentation can follow.
 - `needs-rebase`: the pull request targets the wrong branch. Change the base branch, and rebase if needed.
 
 You may also see `awaits-parent`, which means the pull request awaits the merge of its parent.
 
-The bot keeps both pull requests in step, too. When the parent is closed without being merged, your documentation pull request is closed as well. When the parent is reopened, so is yours.
+The bot keeps both pull requests in step, too. When your pull request has a single parent and the parent is closed without being merged, your documentation pull request is closed as well. When the parent is reopened, so is yours.
 
 So a documentation pull request on `next` waits for its parent. That can take a while, and that is fine: pull requests with the `has-parent` label are never marked as stale.
 
