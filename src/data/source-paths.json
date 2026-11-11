@@ -43,6 +43,12 @@
       "type": "file"
     },
     {
+      "path": ".github/e2e/mtls/network_security_config.xml",
+      "repository": "home-assistant/android",
+      "branch": "main",
+      "type": "file"
+    },
+    {
       "path": ".github/mock-google-services.json",
       "repository": "home-assistant/android",
       "branch": "main",
@@ -80,6 +86,12 @@
     },
     {
       "path": "app/src/main/kotlin/io/homeassistant/companion/android/util/IgnoreViolationRules.kt",
+      "repository": "home-assistant/android",
+      "branch": "main",
+      "type": "file"
+    },
+    {
+      "path": "app/src/main/res/xml/network_security_config.xml",
       "repository": "home-assistant/android",
       "branch": "main",
       "type": "file"
@@ -421,6 +433,12 @@
       "type": "folder"
     },
     {
+      "path": "packages/pylint-home-assistant/",
+      "repository": "home-assistant/core",
+      "branch": "dev",
+      "type": "folder"
+    },
+    {
       "path": "script/",
       "repository": "home-assistant/core",
       "branch": "dev",
@@ -455,12 +473,6 @@
       "repository": "home-assistant/core",
       "branch": "dev",
       "type": "folder"
-    },
-    {
-      "path": "tests/common.py",
-      "repository": "home-assistant/core",
-      "branch": "dev",
-      "type": "file"
     },
     {
       "path": "tests/components/conftest.py",
@@ -614,6 +626,12 @@
     },
     {
       "path": "src/components/",
+      "repository": "home-assistant/frontend",
+      "branch": "dev",
+      "type": "folder"
+    },
+    {
+      "path": "src/components/animation/",
       "repository": "home-assistant/frontend",
       "branch": "dev",
       "type": "folder"
@@ -2023,16 +2041,5 @@
       "type": "file"
     }
   ],
-  "missing": [
-    {
-      "path": "pylint/plugins/",
-      "repositories": [
-        "home-assistant/core"
-      ],
-      "pages": [
-        "src/content/docs/core/development/checks.md:70",
-        "src/content/docs/core/quality-scale/quality-scale-file.md:70"
-      ]
-    }
-  ]
+  "missing": []
 }

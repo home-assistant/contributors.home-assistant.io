@@ -21,7 +21,7 @@ The app uses [calendar versioning](https://calver.org/), like Home Assistant Cor
 | `zizmor.yml` | On every pull request, and Mondays at 05:30 UTC | Scan the workflows and local actions themselves with [zizmor](https://docs.zizmor.sh/) and upload the findings to Code Scanning |
 | `onPush.yml` | On every push to `main` | Build release versions and publish them to the internal track of the Play Store |
 | `weekly.yml` | Sundays at 04:00 UTC | Tag a new version and run `onPush.yml` with the `beta` flag, which creates a GitHub pre-release and promotes the build to the beta track |
-| `e2e.yml` | Daily at 05:00 UTC | Run the [end-to-end test](/companion/android/e2e-testing/) against a real Home Assistant. When it fails, it starts `e2e-triage`, an agentic workflow that looks into the failure and reports it in an issue |
+| `e2e.yml` | Daily at 05:00 UTC | Run the [end-to-end tests](/companion/android/e2e-testing/) against a real Home Assistant. When it fails, it starts `e2e-triage`, an agentic workflow that looks into the failure and reports it in an issue |
 | `monthly.yml` | The first day of each month | Create the first version tag of the month, `YYYY.MM.0` |
 | `release.yml` | When a pre-release becomes a release, or manually | Promote the beta to production on the Play Store |
 | `updateScreenshot.yml` | Manually, by a maintainer | Regenerate [screenshot](/companion/android/screenshot-testing/) references |

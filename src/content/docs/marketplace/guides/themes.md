@@ -40,7 +40,7 @@ The frontend has two layers of variables, and a good theme sets both.
 
 ### The classic variables
 
-Most themes set the variables below. They are defined in the frontend in `src/resources/theme/color/color.globals.ts`, and many components use them. The [default values](https://github.com/home-assistant/frontend/blob/dev/src/resources/theme/color/color.globals.ts) are a good start: copy the ones you want to change.
+Most themes set the variables below. They are defined in the frontend in `src/resources/theme/color/color.globals.ts`, and many components use them. [Theme variables](/marketplace/reference/theme-variables/) lists all of them, with their default values in light and dark mode: copy the ones you want to change.
 
 | Variable | What it is for |
 | --- | --- |
@@ -58,7 +58,7 @@ Most themes set the variables below. They are defined in the frontend in `src/re
 | `app-header-background-color`, `app-header-text-color` | The header at the top of dashboards and other pages |
 | `state-icon-color` | Icons of entities |
 
-Cards have variables of their own, from `ha-card`, the container of the built-in cards:
+Cards have variables of their own, from `ha-card`, the container of the built-in cards. Other components have some too, like the gaps of the sections view: they are under [component variables](/marketplace/reference/theme-variables/#component-variables).
 
 | Variable | What it changes |
 | --- | --- |
@@ -68,7 +68,7 @@ Cards have variables of their own, from `ha-card`, the container of the built-in
 | `ha-card-box-shadow` | The shadow. None by default. |
 | `ha-card-header-color`, `ha-card-header-font-size` | The title of a card |
 
-The colors of entity states have variables too, like `state-light-active-color` or `state-lock-locked-color`. The full list is in the same file.
+The colors of entity states have variables too, like `state-light-active-color` or `state-lock-locked-color`. They are all under [entity states](/marketplace/reference/theme-variables/#entity-states).
 
 ### The design tokens
 

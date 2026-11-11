@@ -29,12 +29,14 @@ async def async_setup_entry(
     """Set up My integration from a config entry."""
     client = MyClient(entry.data[CONF_HOST])
     version = await client.get_version()
+    issue_id = f"outdated_version_{entry.entry_id}"
 
     if version < MINIMUM_VERSION:
         ir.async_create_issue(
             hass,
             DOMAIN,
-            "outdated_version",
+            issue_id,
+            config_entry_id=entry.entry_id,
             is_fixable=False,
             severity=ir.IssueSeverity.ERROR,
             translation_key="outdated_version",
@@ -45,7 +47,7 @@ async def async_setup_entry(
             translation_key="outdated_version",
         )
 
-    ir.async_delete_issue(hass, DOMAIN, "outdated_version")
+    ir.async_delete_issue(hass, DOMAIN, issue_id)
     ...
 ```
 
@@ -67,7 +69,11 @@ async def async_setup_entry(
 }
 ```
 
-Delete the issue once the problem is solved, like the example does on a successful setup.
+Delete the issue once the problem is solved, like the example does on a successful setup. Do not delete it when the entry unloads: that throws away the choice of a user who ignored the issue, every time the entry reloads.
+
+The issue is about one config entry, so its `issue_id` contains the entry ID, or the entries of an integration that is set up more than once overwrite each other's issue. `config_entry_id` links the issue to the entry, so Home Assistant hides it while the entry is disabled and deletes it when the entry is removed: see [issues that belong to a config entry](/core/integrations/repairs/#issues-that-belong-to-a-config-entry).
+
+When an issue is about a single subentry, also pass `config_subentry_id`, so the issue is removed together with the subentry: see [issues that belong to a config subentry](/core/integrations/repairs/#issues-that-belong-to-a-config-subentry).
 
 ## How it is checked
 

@@ -23,7 +23,7 @@ The [Foundations](/design/foundations/) section of the Design area shows every t
 
 ## Theme variables
 
-Older variables without the `--ha-` prefix, like `--primary-color`, `--primary-text-color`, and `--card-background-color`, are still everywhere. They are defined in `src/resources/theme/color/color.globals.ts`, mostly on top of the tokens, and they are what most user themes set. Keep them working when you change a component that uses them.
+Older variables without the `--ha-` prefix, like `--primary-color`, `--primary-text-color`, and `--card-background-color`, are still everywhere. They are defined in `src/resources/theme/color/color.globals.ts`, mostly on top of the tokens, and they are what most user themes set. Keep them working when you change a component that uses them. [Theme variables](/marketplace/reference/theme-variables/) in the Marketplace area lists them for theme authors, together with the component variables meant for themes.
 
 The Web Awesome components have their own variables, like `--wa-color-brand-fill-loud`. `src/resources/theme/color/wa.globals.ts` maps those to the Home Assistant tokens, so the `ha-*` wrappers follow the theme too.
 

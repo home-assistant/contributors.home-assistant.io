@@ -5,7 +5,7 @@ sidebarLabel: Screenshot tests
 sidebarGroup: Test
 order: 2
 source: https://github.com/home-assistant/android/blob/main/.github/workflows/pr.yml
-lastVerified: 2026-10-14
+lastVerified: 2026-11-06
 ---
 
 Screenshot tests compare the UI against reference images in the repository. When the rendered UI no longer matches its reference, the test fails, so every UI change is a deliberate one. They test looks only, never logic.
@@ -14,14 +14,14 @@ They are especially useful when a UI library updates. They have proven their wor
 
 ## How they work
 
-The app uses [Compose Preview Screenshot Testing](https://developer.android.com/studio/preview/compose-screenshot-testing). It renders composables on the JVM, so no emulator is needed. That makes them much faster and cheaper than instrumentation tests.
+The app uses [Compose Preview Screenshot Testing](https://developer.android.com/studio/preview/compose-screenshot-testing-with-testsuites), set up as a test suite of the Android Gradle Plugin. It renders composables on the JVM, so no emulator is needed. That makes them much faster and cheaper than instrumentation tests.
 
-Tests live in the `screenshotTest` source set. Reference images are stored per module:
+Tests live in `src/screenshotTest` of each module. That is the only source set the suite compiles: there is no flavor or build type variation of it. The suite runs against one variant per module, and the reference images are stored next to it:
 
-| Module | Reference images |
-| --- | --- |
-| `:app` | `src/screenshotTestFullDebug/reference` |
-| `:common` and `:wear` | `src/screenshotTestDebug/reference` |
+| Module | Variant | Reference images |
+| --- | --- | --- |
+| `:app` | `fullDebug` | `src/screenshotTestDefaultFullDebug/reference` |
+| `:common` and `:wear` | `debug` | `src/screenshotTestDefaultDebug/reference` |
 
 ## Write a screenshot test
 
@@ -34,18 +34,24 @@ Tests live in the `screenshotTest` source set. Reference images are stored per m
 Check that nothing changed:
 
 ```bash
-./gradlew validateDebugScreenshotTest validateFullDebugScreenshotTest
+./gradlew \
+  testDebugScreenshotTestDefaultTestSuite \
+  testFullDebugScreenshotTestDefaultTestSuite
 ```
 
-The first task covers `:common` and `:wear`, the second `:app`, which has flavors. CI runs the same validation on every pull request, in the **Screenshot Tests** job, and a difference fails the check until it is resolved.
+The first task covers `:common` and `:wear`, the second `:app`, which has flavors. Android Studio has the same two tasks in the **Screenshot tests verification** run configuration. When a test fails, the report in `build/reports/tests/<task name>/index.html` of the module shows the reference, the new image, and their difference.
+
+CI runs the same validation on every pull request, in the **Screenshot Tests** job, and a difference fails the check until it is resolved.
 
 After an intentional UI change, update the reference images:
 
 ```bash
-./gradlew updateDebugScreenshotTest updateFullDebugScreenshotTest
+./gradlew \
+  updateDebugScreenshotTestDefaultTestSuite \
+  updateFullDebugScreenshotTestDefaultTestSuite
 ```
 
-Don't run the validate task right after an update: it compares against images you just generated from the same code. Look at the updated images instead, and check that only what you meant to change has changed. Explain the changes in your pull request.
+Don't run the test task right after an update: it compares against images you just generated from the same code. Look at the updated images instead, and check that only what you meant to change has changed. Explain the changes in your pull request.
 
 ## When CI disagrees with your machine
 

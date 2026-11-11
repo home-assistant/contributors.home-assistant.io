@@ -93,13 +93,13 @@ A task helps the reader reach a specific goal. The reader wants to get something
 
 - Name the action and its object: "Creating an area", not "Task".
 - An `-ing` phrase, like "Creating an area" or "Updating Home Assistant", matches what most existing pages use.
-- An imperative works well for the stages of a longer procedure: "Write the image to your SD card".
+- An imperative works well for the stages of a longer procedure: "Write the image to your SD card". Number the stages when their order matters.
 - Keep sibling headings parallel. If one starts with an `-ing` verb, they all do.
 - Avoid vague headings like "Usage", "Configuration", or "Working with areas" when the task has a more specific outcome.
 
 ### Content for tasks
 
-1. If the heading does not make it clear, say in one sentence when or why you would do this.
+1. If the heading does not make it clear, say in a few sentences when or why you would do this, and link to relevant information.
 2. List the prerequisites directly before the steps, under a `Prerequisites:` lead-in, like hardware, permissions, or setup that must be done first. Use a separate `## Prerequisites` section only when the requirements apply to the whole page. No prerequisites worth mentioning? Leave the list out.
 3. Write the steps as a numbered list. Start each step with the instruction. Put explanations or the expected result below it.
 4. End with the outcome and, when useful, a way to check that it worked.
@@ -181,13 +181,24 @@ State what the reader will build and learn, and what they need before they start
 
 ## Troubleshooting
 
-A troubleshooting topic helps the reader recognize a problem and recover from it. It can be a section on a feature page, or a page of its own that covers related problems.
+A troubleshooting topic helps the reader recognize a problem and recover from it.
+
+### Where troubleshooting goes
+
+Keep the troubleshooting for a page in one place, so the reader knows where to look when something goes wrong:
+
+- In a section of the page: put the problems in a `## Troubleshooting` section at the end of the page. On an integration page, the section goes in its place in the [section order](/writing/reference/integration-page/#sections).
+- On a page of its own: when a feature has many problems, move them to a separate troubleshooting page. Link to it from the page of the feature.
+
+Do not put troubleshooting next to the part of the page it relates to, like a troubleshooting subsection under one feature or setting.
+Put the problem in the troubleshooting section of the page instead.
+When it helps, link to the troubleshooting section from the part of the page it relates to.
 
 ### Headings for troubleshooting
 
 - Put each problem in its own [collapsible details block](/writing/reference/liquid/#collapsible-details).
 - Use the symptom or the exact error message as the title of the block, like `Can't access Home Assistant in my browser` or `Stuck at "Preparing Home Assistant"`.
-- For a page with several problems, use "Troubleshooting" followed by the subject: "Troubleshooting Assist".
+- For a separate troubleshooting page, use "Troubleshooting" followed by the subject: "Troubleshooting Assist".
 - Avoid titles that only make sense once you know the cause. The reader searches for what they see, not for what is wrong.
 
 ### Content for troubleshooting

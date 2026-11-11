@@ -8,7 +8,7 @@ areas:
   - core
 ---
 
-Two additions to the issue registry make it easier to keep repair issues correct, without annoying users. Both land in Home Assistant Core 2026.11, and are documented in [repairs](/core/integrations/repairs/).
+Additions to the issue registry make it easier to keep repair issues correct, without annoying users. Linking issues to a config entry and the issue refresh helper land in Home Assistant Core 2026.11. Linking issues to a config subentry lands in 2026.12. All the additions are documented in [repairs](/core/integrations/repairs/).
 
 ## Issues that belong to a config entry
 
@@ -39,6 +39,21 @@ A few things to keep in mind:
 - While the config entry is disabled, its issues are hidden from **Repairs** and from the `issues()` template function.
 
 This is implemented in core [PR #186197](https://github.com/home-assistant/core/pull/186197) and [PR #186369](https://github.com/home-assistant/core/pull/186369). For the details, see [issues that belong to a config entry](/core/integrations/repairs/#issues-that-belong-to-a-config-entry).
+
+An issue about one [subentry](/core/integrations/subentries/), like a station or an AI agent, can also pass `config_subentry_id`, so it is deleted when the subentry is removed. It requires `config_entry_id`, and the subentry must belong to that entry. This is implemented in core [PR #190351](https://github.com/home-assistant/core/pull/190351). For the details, see [issues that belong to a config subentry](/core/integrations/repairs/#issues-that-belong-to-a-config-subentry).
+
+```python
+ir.async_create_issue(
+    hass,
+    DOMAIN,
+    f"station_offline_{subentry.subentry_id}",
+    config_entry_id=entry.entry_id,
+    config_subentry_id=subentry.subentry_id,
+    is_fixable=False,
+    severity=ir.IssueSeverity.WARNING,
+    translation_key="station_offline",
+)
+```
 
 ## Refresh a set of issues
 

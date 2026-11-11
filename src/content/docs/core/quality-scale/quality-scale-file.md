@@ -67,7 +67,7 @@ When such a check fails, the error names the rule in brackets, like `[runtime-da
 
 ## What pylint checks
 
-Core has its own pylint plugin, in `pylint/plugins/` of the [core repository](https://github.com/home-assistant/core). Some of its checks only run for integrations that mark a rule as `done`. This keeps a claim honest after it was made, also when other people change the code later:
+Core has its own pylint plugin, in `packages/pylint-home-assistant/` of the [core repository](https://github.com/home-assistant/core). Some of its checks only run for integrations that mark a rule as `done`. This keeps a claim honest after it was made, also when other people change the code later:
 
 | Rule | Check |
 | ---- | ----- |
@@ -80,7 +80,7 @@ Core has its own pylint plugin, in `pylint/plugins/` of the [core repository](ht
 | [reauthentication-flow](/core/quality-scale/reauthentication-flow/) | `home-assistant-missing-reauthentication-flow` |
 | [test-before-configure](/core/quality-scale/test-before-configure/) | `home-assistant-missing-test-before-configure` |
 
-Other checks of the plugin run for every integration, and many of them enforce a rule too, like `home-assistant-use-runtime-data` or `home-assistant-service-registered-in-setup-entry`. The rule pages list them under "How it is checked". The [pylint plugin README](https://github.com/home-assistant/core/blob/dev/pylint/plugins/README.md) describes every check.
+Other checks of the plugin run for every integration, and many of them enforce a rule too, like `home-assistant-use-runtime-data` or `home-assistant-service-registered-in-setup-entry`. The rule pages list them under "How it is checked". The [pylint plugin README](https://github.com/home-assistant/core/blob/dev/packages/pylint-home-assistant/README.md) describes every check.
 
 ## What review checks
 

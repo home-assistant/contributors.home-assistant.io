@@ -13,7 +13,7 @@ Never invent anything. Every statement on this site needs a source someone can r
 
 ## Where the truth lives
 
-Code and files are true on the default branch of their repository, in the table below. Never use a local working copy as the source: it can be weeks old.
+For code and repository files, the source is the default branch of their repository, in the table below. Never use a local working copy as the source: it can be weeks old.
 
 | Topic | Repository | Branch |
 | --- | --- | --- |
@@ -33,6 +33,23 @@ Code and files are true on the default branch of their repository, in the table 
 | Bashio | [hassio-addons/bashio](https://github.com/hassio-addons/bashio) | `main` |
 
 The old developer docs are a source of what was written, not of what is true. Check what they say against the code too.
+
+### Documentation for an open pull request
+
+Documentation for a new feature is often written while the code pull request in the other repository is still open. That is the normal order: the documentation merges after the code, and if the code never merges, the documentation does not either. For such a pull request, the source for the new feature is the head of the open code pull request, not the default branch. Do not flag that the feature is not merged yet, or that the default branch does not have it.
+
+The open code pull request is the source for what the feature does, but not for which release ships it: that can only be checked once it merges. So when a page or blog post names that release, like "available from 2026.12", do not flag it while the code pull request is still open. Once it is merged, check the release against something like:
+
+- The version in `homeassistant/const.py` at the merge commit, for core. A merge into `dev` at `2026.12.0.dev0` ships in 2026.12.
+- A release tag that contains the merge commit.
+- The milestone of the pull request. Most pull requests merged into `dev` have none, so a missing milestone is not a finding.
+
+Find the code pull request in the description, under "This PR documents an open pull request". Read its changes with:
+
+```shell
+gh pr view <number> --repo home-assistant/<repository>
+gh pr diff <number> --repo home-assistant/<repository>
+```
 
 For anything about the organization (who owns, funds, employs, or decides), the source is an official page, like [the structure of the Open Home Foundation](https://www.openhomefoundation.org/structure/). For the community, it is [home-assistant.io/community](https://www.home-assistant.io/community/) and the [code of conduct](https://www.home-assistant.io/code_of_conduct/). For roles and processes, it is the page or repository of the team that runs them, like the [architecture repository](https://github.com/home-assistant/architecture) for architecture decisions.
 

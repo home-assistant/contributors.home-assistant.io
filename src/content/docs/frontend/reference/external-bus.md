@@ -95,6 +95,8 @@ The frontend asks what the app can do, right after it connects. Payload: none. T
 | `hasExoPlayer` | boolean | The app can play HLS video natively with ExoPlayer. |
 | `canCommissionMatter` | boolean | The app can commission Matter devices. |
 | `hasMatterStatusReport` | boolean | The app reports the end of Matter commissioning with `matter/commission/finish`. |
+| `canShareMatterDeviceToAppleHome` | boolean | The app can add a Matter device that Home Assistant already has to Apple Home, with `matter/share_device`. |
+| `canShareMatterDeviceToOtherApps` | boolean | The app can share a Matter device that Home Assistant already has with an app the user picks in the Matter share sheet of the platform, with `matter/share_device`. |
 | `canImportThreadCredentials` | boolean | The app can import Thread credentials. |
 | `canTransferThreadCredentialsToKeychain` | boolean | The app can store Thread credentials in the keychain of the platform. Apple only. |
 | `hasAssist` | boolean | The app has a native Assist interface, used instead of the one of the frontend. |
@@ -130,6 +132,44 @@ Answer:
 ```
 
 `name` and `details` are shown as they are, so translate them in the app. `mdi_icon` is an icon name like `mdi:car`. `app_payload` is any string, which the frontend sends back with `entity/add_to` when the user picks the action.
+
+#### matter/share_device
+
+The frontend asks the app to share a Matter device with another platform, like Apple Home. The device is already set up in Home Assistant, and Home Assistant has opened a commissioning window for it: a short time in which another platform can add the device too. The frontend offers this in the dialog that opens that window.
+
+The frontend only sends this message when the app supports it:
+
+- With `canShareMatterDeviceToAppleHome`, it always offers to add the device to Apple Home. When the app sets both keys, this one wins.
+- With `canShareMatterDeviceToOtherApps`, it only offers the share sheet when the Matter server reported the `discriminator` and the timeout of the window. The share sheet opens a window of its own, and needs both.
+
+Payload:
+
+```ts
+{
+  setup_qr_code: string;
+  setup_pin_code: number;
+  discriminator?: number;
+  vendor_id?: number;
+  product_id?: number;
+  device_name?: string;
+  remaining_seconds?: number;
+}
+```
+
+| Key | Meaning |
+| --- | --- |
+| `setup_qr_code` | The QR code payload of the commissioning window, starting with `MT:`. Always sent. |
+| `setup_pin_code` | The setup passcode of the commissioning window. Always sent. |
+| `discriminator` | The discriminator the device advertises while the window is open, when the Matter server reported it. |
+| `vendor_id` | The vendor ID of the device, when the Matter server reported it. |
+| `product_id` | The product ID of the device, when the Matter server reported it. |
+| `device_name` | The name of the device in Home Assistant, to suggest to the other platform. |
+| `remaining_seconds` | Estimated seconds until the window closes, when the Matter server reported its timeout. When 30 seconds or less remain, the frontend treats the code as expired, does not send the message, and asks you to get a new code. When sent, this value is greater than 30. |
+
+Answer: an empty object once the flow of the platform has completed. When it did not work, answer with an error result:
+
+- `canceled`: the user closed the sheet of the platform. The frontend takes that as a choice, not an error.
+- Any other code, like `failed`: the frontend shows that sharing failed, with its own text. It does not show your `message`.
 
 ### Messages without an answer
 

@@ -1,11 +1,11 @@
 {
   "commits": {
-    "core": "6883a0c95d6dccb18e551aab794b18648a793cc5",
-    "frontend": "5cfaf7ed40e4df459fa65dc5722101eef631f40e"
+    "core": "0dc24540ce48f65f616230857e2cf21ceec92b80",
+    "frontend": "afcf7d4e080b86bc2bf01e32070099e60dc74dab"
   },
   "totals": {
-    "symbols": 1680,
-    "resolved": 1579
+    "symbols": 1770,
+    "resolved": 1662
   },
   "areas": {
     "apps": {
@@ -20,13 +20,13 @@
     },
     "companion": {
       "index": null,
-      "symbols": 122,
+      "symbols": 129,
       "resolved": 0
     },
     "core": {
       "index": "core",
-      "symbols": 1437,
-      "resolved": 1384
+      "symbols": 1525,
+      "resolved": 1467
     },
     "data": {
       "index": null,
@@ -40,13 +40,18 @@
     },
     "frontend": {
       "index": "frontend",
-      "symbols": 129,
+      "symbols": 131,
       "resolved": 100
     },
     "glossary": {
       "index": "core",
       "symbols": 11,
       "resolved": 11
+    },
+    "marketplace": {
+      "index": null,
+      "symbols": 2,
+      "resolved": 0
     },
     "os": {
       "index": null,
@@ -113,6 +118,24 @@
       ]
     },
     {
+      "text": "generate()",
+      "index": "frontend",
+      "count": 4,
+      "pages": [
+        "src/content/docs/frontend/custom-ui/strategy.md"
+      ]
+    },
+    {
+      "text": "getStubConfig()",
+      "index": "frontend",
+      "count": 4,
+      "pages": [
+        "src/content/docs/frontend/custom-ui/badge.md",
+        "src/content/docs/frontend/custom-ui/card-editor.md",
+        "src/content/docs/frontend/custom-ui/strategy.md"
+      ]
+    },
+    {
       "text": "actionError()",
       "index": "frontend",
       "count": 3,
@@ -131,14 +154,6 @@
       ]
     },
     {
-      "text": "generate()",
-      "index": "frontend",
-      "count": 3,
-      "pages": [
-        "src/content/docs/frontend/custom-ui/strategy.md"
-      ]
-    },
-    {
       "text": "getConfigForm()",
       "index": "frontend",
       "count": 3,
@@ -146,15 +161,6 @@
         "src/content/docs/frontend/custom-ui/badge.md",
         "src/content/docs/frontend/custom-ui/card-editor.md",
         "src/content/docs/frontend/custom-ui/card-feature.md"
-      ]
-    },
-    {
-      "text": "getStubConfig()",
-      "index": "frontend",
-      "count": 3,
-      "pages": [
-        "src/content/docs/frontend/custom-ui/badge.md",
-        "src/content/docs/frontend/custom-ui/card-editor.md"
       ]
     },
     {
@@ -198,6 +204,14 @@
       "count": 2,
       "pages": [
         "src/content/docs/core/internals/lorawan.md"
+      ]
+    },
+    {
+      "text": "ModulationType.OOK",
+      "index": "core",
+      "count": 2,
+      "pages": [
+        "src/content/docs/core/entities/radio-frequency.md"
       ]
     },
     {
@@ -256,6 +270,14 @@
       "count": 1,
       "pages": [
         "src/content/docs/core/entities/lifecycle.md"
+      ]
+    },
+    {
+      "text": "async_cancel()",
+      "index": "core",
+      "count": 1,
+      "pages": [
+        "src/content/docs/core/integrations/repairs.md"
       ]
     },
     {
@@ -419,6 +441,14 @@
       ]
     },
     {
+      "text": "hash()",
+      "index": "core",
+      "count": 1,
+      "pages": [
+        "src/content/docs/core/integrations/repairs.md"
+      ]
+    },
+    {
       "text": "hass.config.location_name",
       "index": "core",
       "count": 1,
@@ -483,11 +513,27 @@
       ]
     },
     {
+      "text": "issues()",
+      "index": "core",
+      "count": 1,
+      "pages": [
+        "src/content/docs/core/integrations/repairs.md"
+      ]
+    },
+    {
       "text": "loadCardHelpers()",
       "index": "frontend",
       "count": 1,
       "pages": [
         "src/content/docs/frontend/custom-ui/card.md"
+      ]
+    },
+    {
+      "text": "MediaPlayerState.STANDBY",
+      "index": "core",
+      "count": 1,
+      "pages": [
+        "src/content/docs/core/entities/media-player.md"
       ]
     },
     {
@@ -524,14 +570,6 @@
     },
     {
       "text": "ModulationType",
-      "index": "core",
-      "count": 1,
-      "pages": [
-        "src/content/docs/core/entities/radio-frequency.md"
-      ]
-    },
-    {
-      "text": "ModulationType.OOK",
       "index": "core",
       "count": 1,
       "pages": [

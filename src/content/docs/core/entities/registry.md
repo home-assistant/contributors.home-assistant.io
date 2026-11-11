@@ -73,10 +73,12 @@ Some devices are made of logical parts, like the outlets of a power strip. Use `
 
 ## Entity categories
 
-Not every entity is a main feature of its device. Mark the others with an [entity category](/glossary/entity-category/) from `homeassistant.const`:
+Not every entity is a main feature of its device. Mark the others with an [entity category](/glossary/entity-category/) from `homeassistant.const`. The value column is what you put in YAML, for example as `entity_category` of an [MQTT switch](https://www.home-assistant.io/integrations/switch.mqtt/).
 
-- `EntityCategory.CONFIG`: the entity changes a setting of the device, like a switch for the status LED, or a number for the sensitivity of a motion sensor.
-- `EntityCategory.DIAGNOSTIC`: the entity shows information about the device without changing it, like the signal strength or the IP address. Also use it for a button that makes a device identify itself.
+| Entity category | Value | Use it for |
+| --- | --- | --- |
+| `EntityCategory.CONFIG` | `config` | The entity changes a setting of the device, like a switch for the status LED, or a number for the sensitivity of a motion sensor. |
+| `EntityCategory.DIAGNOSTIC` | `diagnostic` | The entity shows information about the device without changing it, like the signal strength or the IP address. Also use it for a button that makes a device identify itself. |
 
 Categorized entities are shown in their own sections on the device page, aren't added to auto-generated dashboards, aren't exposed to voice assistants by default, and aren't targeted when an action targets a whole device or area. Sensors and binary sensors can't use the `CONFIG` category.
 
