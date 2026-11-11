@@ -12,7 +12,7 @@ As of Home Assistant Core 2026.12, setting `issue_id` in a `RepairsFlow` and the
 
 ## Background
 
-To align the repairs flow and repairs flow manager with other data entry flows and flow managers in Home Assistant the use of a flow context is now required to initiate a repairs flow. This will also allow repairs flow to support great flexibility in offering more advanced repairs to the user.
+To align the repairs flow and repairs flow manager with other data entry flows and flow managers in Home Assistant, the use of a flow context is now required to initiate a repairs flow. This will also give repairs flows greater flexibility to offer more advanced repairs.
 
 ## `issue_id` attribute in repairs flows
 
