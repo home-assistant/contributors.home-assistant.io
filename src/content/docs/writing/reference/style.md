@@ -83,7 +83,7 @@ Use emphasis sparingly. When everything stands out, nothing does.
 
 ## UI elements and steps
 
-Write the names of UI elements in bold, using double asterisks: `**Settings**`. Write them exactly as they appear in the interface.
+Write the names of UI elements or displayed UI text, such as a sensor state, in bold, using double asterisks: `**Settings**`. Write them exactly as they appear in the interface.
 
 To describe a path through the interface, use a greater-than sign (`>`) between the steps. The `>` itself is not bold:
 
@@ -91,6 +91,8 @@ To describe a path through the interface, use a greater-than sign (`>`) between 
 1. Go to **Settings** > **Devices & services**.
 2. Select **Restart Home Assistant** > **Quick reload**.
 ```
+
+To write an error message that you see in the UI, don't use bold. Enclose the message in quotation marks.
 
 When the path starts at a page in Home Assistant, use a [My link](/writing/reference/liquid/#my-links) so the reader can jump straight to that page in their own installation. To point at an icon in the interface, use an [inline icon](/writing/reference/liquid/#inline-icons).
 
