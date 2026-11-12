@@ -44,7 +44,12 @@ The automated checks enforce a long list of brand and product spellings. That li
 
 ## Formatting basics
 
-- **Write in flowing text.** There is no line length limit. Keep each paragraph on a single line, and do not wrap lines at a fixed width. This makes pages easier to edit, especially in the online editor on GitHub.
+- **Write each sentence on its own line.** There is no line length limit, so do not wrap lines at a fixed width.
+  Instead, start each sentence of a paragraph on a new line, with a single line break.
+  Markdown still renders the lines as one paragraph.
+  This makes reviews easier: when you change a sentence, the diff shows only that line, and reviewers can comment on or suggest a change to exactly that sentence.
+  This is optional, but recommended.
+  Keeping a whole paragraph on a single line is still fine, and we do not accept pull requests that only rewrite existing pages to change how their paragraphs are split into lines.
 - **Prefer Markdown over HTML.** Use HTML only when Markdown cannot do the job, like for an image with a caption.
 - **Surround blocks with blank lines.** Headings, lists, code blocks, and text boxes all need an empty line before and after them.
 
