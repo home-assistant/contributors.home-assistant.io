@@ -32,7 +32,7 @@ async def _async_update_data(self) -> MyData:
         ) from err
 ```
 
-When the device being unavailable is expected, like a device that the user turned off, raise `DeviceUnavailable` instead. It is a subclass of `UpdateFailed`, so everything else works the same, but the coordinator logs the first failure at `info` level:
+When it is expected that the device or service cannot be reached, like a device that the user turned off, raise `UpdateFailedUnreachable` instead. It is a subclass of `UpdateFailed`, so everything else works the same, but the coordinator logs the first failure at `info` level:
 
 ```python
 async def _async_update_data(self) -> MyData:
@@ -40,13 +40,13 @@ async def _async_update_data(self) -> MyData:
     try:
         return await self.client.get_data()
     except MyDeviceOffError as err:
-        raise DeviceUnavailable(
+        raise UpdateFailedUnreachable(
             translation_domain=DOMAIN,
             translation_key="device_off",
         ) from err
 ```
 
-Only use `DeviceUnavailable` when nothing is wrong. A device that should be reachable but is not, or a service that fails, is an error: keep raising `UpdateFailed` for those.
+Only use `UpdateFailedUnreachable` when nothing is wrong. A device or service that should be reachable but is not, or that returns an error, has an actual problem: keep raising `UpdateFailed` for those.
 
 ### With async_update
 
