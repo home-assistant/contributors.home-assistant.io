@@ -26,7 +26,7 @@ Every integration lives in a folder named after its [domain](/glossary/domain/).
 | `icons.json` | Icons for entities, actions, and form sections |
 | `services.yaml` | The description of the [actions](/core/integrations/actions/) your integration registers |
 | `quality_scale.yaml` | The status of each [quality scale](/core/quality-scale/) rule for your integration |
-| `issue_context.md` | Guidance the issue bot adds to new issues for your integration, like which versions to mention. Up to 2000 characters, read from the `dev` branch. |
+| `issue_context.md` | Guidance the issue bot adds to new issues for your integration, like which versions to mention. Keep it short. |
 
 ## Platform files
 
