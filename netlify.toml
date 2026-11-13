@@ -5,6 +5,9 @@
 # (public/static/) are committed, so a build needs no frontend checkout.
 # Redirects are generated from redirects/ by `pnpm redirects`, which the
 # build runs first: public/_redirects ends up in dist/.
+#
+# netlify/edge-functions/markdown.ts sends the Markdown version of a page to
+# agents that ask for it with `Accept: text/markdown`.
 
 [build]
   command = "pnpm build"

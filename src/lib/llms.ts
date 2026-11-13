@@ -5,11 +5,27 @@
 // - /llms.txt: every area with its pages, or its starting points when the
 //   area is large.
 // - /<area>/llms.txt: every page of one area.
-// - /llms-full.txt and /<area>/llms-full.txt: the full text of the pages.
+// - /<area>/<folder>/llms.txt: every page of one folder of an area.
+// - /llms-full.txt, /<area>/llms-full.txt, and /<area>/<folder>/llms-full.txt:
+//   the full text of the pages.
+// - /blog/llms.txt: every blog post.
+//
+// Links to a full text file say how large it is, so an agent can pick the
+// smallest one that has what it needs.
 import { getCollection } from "astro:content";
 import { AREAS, type Area } from "../data/areas";
 import { SITE } from "../data/site";
-import { buildSidebar, type DocsEntry, getAreaEntries, hrefOf, markdownHref, type NavNode, pathOf } from "./docs";
+import { BLOG_DESCRIPTION, BLOG_TITLE, getPosts, postHref } from "./blog";
+import {
+  buildSidebar,
+  type DocsEntry,
+  folderOf,
+  getAreaEntries,
+  hrefOf,
+  markdownHref,
+  type NavNode,
+  pathOf,
+} from "./docs";
 import { absoluteUrl, pageMarkdown } from "./markdown-export";
 
 // Areas with more pages than this only list their starting points in
@@ -54,8 +70,72 @@ function pageLink(entry: DocsEntry): string {
   return `- [${entry.data.title}](${absoluteUrl(markdownHref(entry))}): ${entry.data.description}`;
 }
 
-function areaLinks(area: Area): string {
-  return `The pages of this area: [${area.title}](${absoluteUrl(`/${area.id}/llms.txt`)}). Their full text: [${area.title}, full text](${absoluteUrl(`/${area.id}/llms-full.txt`)}).`;
+// The full text files hold every page, and the indexes give their size, so
+// in a build each page is turned into Markdown once.
+const markdownCache = new Map<string, Promise<string>>();
+
+function markdownOf(entry: DocsEntry): Promise<string> {
+  if (!import.meta.env.PROD) {
+    return pageMarkdown(entry);
+  }
+
+  let markdown = markdownCache.get(entry.id);
+  if (!markdown) {
+    markdown = pageMarkdown(entry);
+    markdownCache.set(entry.id, markdown);
+  }
+  return markdown;
+}
+
+function sizeOf(text: string): string {
+  const kilobytes = Math.round(new TextEncoder().encode(text).length / 1000);
+  return `${kilobytes.toLocaleString("en-US")} kB`;
+}
+
+async function areaLinks(area: Area): Promise<string> {
+  const size = sizeOf(await areaLlmsFull(area));
+  return `The pages of this area: [${area.title}](${absoluteUrl(`/${area.id}/llms.txt`)}). Their full text (${size}): [${area.title}, full text](${absoluteUrl(`/${area.id}/llms-full.txt`)}).`;
+}
+
+// A folder of an area, like core/integrations, with its pages in the order
+// of the sidebar. Its overview, when it has one, gives the title.
+export interface LlmsFolder {
+  area: Area;
+  path: string;
+  title: string;
+  description?: string;
+  pages: OrderedPage[];
+}
+
+export async function areaFolders(area: Area): Promise<LlmsFolder[]> {
+  const folders = new Map<string, OrderedPage[]>();
+  for (const page of await areaPages(area.id)) {
+    const folder = folderOf(page.entry);
+    if (folder) {
+      folders.set(folder, [...(folders.get(folder) ?? []), page]);
+    }
+  }
+
+  return [...folders].map(([path, pages]) => {
+    const overview = pages.find(({ entry }) => pathOf(entry) === path)?.entry;
+    return {
+      area,
+      path,
+      title: overview?.data.title ?? path.split("/")[1],
+      description: overview?.data.description,
+      pages,
+    };
+  });
+}
+
+export async function allFolders(): Promise<LlmsFolder[]> {
+  const areas = await areasWithPages();
+  return (await Promise.all(areas.map((area) => areaFolders(area)))).flat();
+}
+
+async function folderLinks(folder: LlmsFolder): Promise<string> {
+  const size = sizeOf(await folderLlmsFull(folder));
+  return `Only this folder: [its pages](${absoluteUrl(`/${folder.path}/llms.txt`)}), and [their full text](${absoluteUrl(`/${folder.path}/llms-full.txt`)}) (${size}).`;
 }
 
 // The overview, the pages at the top of the area, like "Your first
@@ -66,12 +146,13 @@ function isStartingPoint({ entry, groups }: OrderedPage): boolean {
 }
 
 export async function llmsIndex(): Promise<string> {
+  const fullSize = sizeOf(await llmsFull());
   const lines = [
     `# ${SITE.title}`,
     "",
     `> ${SITE.description} This is the contributor site of Home Assistant, the open source home automation platform, for everyone who contributes: developers, designers, documentation writers, translators, community moderators, and the people who run releases. It replaces developers.home-assistant.io, design.home-assistant.io, and data.home-assistant.io.`,
     "",
-    `Every page is also available as Markdown: add \`index.md\` to its URL, like ${absoluteUrl("/core/integrations/config-flow/index.md")}. The links below go to those Markdown versions. Each area has its own list of all its pages at \`/<area>/llms.txt\`, and the full text of its pages at \`/<area>/llms-full.txt\`. The full text of every page of the site is in ${absoluteUrl("/llms-full.txt")}. That file is large, so prefer the file of the area you need.`,
+    `Every page is also available as Markdown: add \`index.md\` to its URL, like ${absoluteUrl("/core/integrations/config-flow/index.md")}, or ask for its URL with \`Accept: text/markdown\`. The links below go to those Markdown versions. Each area has its own list of all its pages at \`/<area>/llms.txt\`, and the full text of its pages at \`/<area>/llms-full.txt\`. Each folder of an area has the same two files, like ${absoluteUrl("/core/integrations/llms.txt")}. The full text of every page of the site is in ${absoluteUrl("/llms-full.txt")} (${fullSize}). The links to full text files give their size: prefer the smallest file that has what you need.`,
   ];
 
   for (const area of AREAS.filter((area) => !OPTIONAL_AREAS.includes(area.id))) {
@@ -85,12 +166,12 @@ export async function llmsIndex(): Promise<string> {
     if (pages.length > LARGE_AREA) {
       lines.push(
         "",
-        `This area has ${pages.length} pages. Below are its starting points. ${areaLinks(area)}`,
+        `This area has ${pages.length} pages. Below are its starting points. ${await areaLinks(area)}`,
         "",
         ...pages.filter(isStartingPoint).map(({ entry }) => pageLink(entry)),
       );
     } else {
-      lines.push("", ...pages.map(({ entry }) => pageLink(entry)), "", areaLinks(area));
+      lines.push("", ...pages.map(({ entry }) => pageLink(entry)), "", await areaLinks(area));
     }
   }
 
@@ -98,7 +179,7 @@ export async function llmsIndex(): Promise<string> {
     "",
     "## Optional",
     "",
-    `- [Blog](${absoluteUrl("/blog/")}): News for everyone who contributes to Home Assistant. The feed is at ${absoluteUrl("/blog/rss.xml")}.`,
+    `- [Blog](${absoluteUrl("/blog/llms.txt")}): Every post of the blog, newest first, with news for everyone who contributes to Home Assistant, like breaking changes for developers. The feed is at ${absoluteUrl("/blog/rss.xml")}.`,
   );
 
   for (const area of AREAS.filter((area) => OPTIONAL_AREAS.includes(area.id))) {
@@ -109,7 +190,7 @@ export async function llmsIndex(): Promise<string> {
     }
     lines.push(
       `- [${area.title}, every page](${absoluteUrl(`/${area.id}/llms.txt`)}): Every page of the ${area.title.toLowerCase()}, with its description.`,
-      `- [${area.title}, full text](${absoluteUrl(`/${area.id}/llms-full.txt`)}): The full text of every page of the ${area.title.toLowerCase()}.`,
+      `- [${area.title}, full text](${absoluteUrl(`/${area.id}/llms-full.txt`)}): The full text of every page of the ${area.title.toLowerCase()} (${sizeOf(await areaLlmsFull(area))}).`,
     );
   }
 
@@ -118,12 +199,13 @@ export async function llmsIndex(): Promise<string> {
 
 export async function areaLlmsIndex(area: Area): Promise<string> {
   const pages = await areaPages(area.id);
+  const folders = new Map((await areaFolders(area)).map((folder) => [folder.path, folder]));
   const lines = [
     `# ${area.title}`,
     "",
     `> ${area.description}`,
     "",
-    `An area of ${SITE.title}, the contributor site of Home Assistant. The index of the whole site is at ${absoluteUrl("/llms.txt")}. The links below go to the Markdown version of each page, in the order of the sidebar. The full text of every page of this area is in ${absoluteUrl(`/${area.id}/llms-full.txt`)}.`,
+    `An area of ${SITE.title}, the contributor site of Home Assistant. The index of the whole site is at ${absoluteUrl("/llms.txt")}. The links below go to the Markdown version of each page, in the order of the sidebar. The full text of every page of this area is in ${absoluteUrl(`/${area.id}/llms-full.txt`)} (${sizeOf(await areaLlmsFull(area))}). Each folder has its own files too, linked under its heading.`,
   ];
 
   // A heading for each sidebar group: H2 for a folder, H3 for a group
@@ -147,6 +229,12 @@ export async function areaLlmsIndex(area: Area): Promise<string> {
     }
     if (folder && folder !== section) {
       lines.push("", `## ${folder}`, "");
+      // A group of the sidebar can also be a sidebarGroup at the top of the
+      // area, which has no files of its own.
+      const ownFolder = folders.get(folderOf(entry) ?? "");
+      if (ownFolder) {
+        lines.push(await folderLinks(ownFolder), "");
+      }
       section = folder;
       subsection = undefined;
       inTopLevel = false;
@@ -162,8 +250,59 @@ export async function areaLlmsIndex(area: Area): Promise<string> {
   return `${lines.join("\n").replace(/\n{3,}/g, "\n\n")}\n`;
 }
 
+export async function folderLlmsIndex(folder: LlmsFolder): Promise<string> {
+  const lines = [
+    `# ${folder.title}`,
+    "",
+    ...(folder.description ? [`> ${folder.description}`, ""] : []),
+    `A folder of the ${folder.area.title} area of ${SITE.title}, the contributor site of Home Assistant. The index of this area is at ${absoluteUrl(`/${folder.area.id}/llms.txt`)}, and of the whole site at ${absoluteUrl("/llms.txt")}. The links below go to the Markdown version of each page, in the order of the sidebar. The full text of every page of this folder is in ${absoluteUrl(`/${folder.path}/llms-full.txt`)} (${sizeOf(await folderLlmsFull(folder))}).`,
+  ];
+
+  // A heading for each sidebar group in the folder. Pages outside a group go
+  // under the folder's own name, continued when they come after a group.
+  let section: string | undefined;
+  const used = new Set<string>();
+
+  for (const { entry, groups } of folder.pages) {
+    const name = groups[1] ?? folder.title;
+    if (name !== section) {
+      lines.push("", `## ${used.has(name) ? `${name}, continued` : name}`, "");
+      section = name;
+      used.add(name);
+    }
+
+    lines.push(pageLink(entry));
+  }
+
+  return `${lines.join("\n").replace(/\n{3,}/g, "\n\n")}\n`;
+}
+
+export async function blogLlmsIndex(): Promise<string> {
+  const lines = [
+    `# ${BLOG_TITLE}`,
+    "",
+    `> ${BLOG_DESCRIPTION}`,
+    "",
+    `The blog of ${SITE.title}, the contributor site of Home Assistant. The index of the whole site is at ${absoluteUrl("/llms.txt")}, and the feed of the blog at ${absoluteUrl("/blog/rss.xml")}. The links below go to the Markdown version of each post, newest first.`,
+  ];
+
+  let year: number | undefined;
+  for (const post of await getPosts()) {
+    const postYear = post.data.date.getUTCFullYear();
+    if (postYear !== year) {
+      lines.push("", `## ${postYear}`, "");
+      year = postYear;
+    }
+
+    const date = post.data.date.toISOString().slice(0, 10);
+    lines.push(`- [${post.data.title}](${absoluteUrl(`${postHref(post)}index.md`)}): ${date}. ${post.data.description}`);
+  }
+
+  return `${lines.join("\n").replace(/\n{3,}/g, "\n\n")}\n`;
+}
+
 async function fullText(title: string, intro: string, entries: DocsEntry[]): Promise<string> {
-  const pages = await Promise.all(entries.map((entry) => pageMarkdown(entry)));
+  const pages = await Promise.all(entries.map((entry) => markdownOf(entry)));
   return `# ${title}\n\n> ${intro}\n\n${pages.join("\n---\n\n")}`;
 }
 
@@ -187,6 +326,14 @@ export async function areaLlmsFull(area: Area): Promise<string> {
     `${area.title}: full text`,
     `Every page of the ${area.title} area of ${SITE.title}, in the order of the sidebar. Each page starts with its title as a heading and its URL. The index of this area is at ${absoluteUrl(`/${area.id}/llms.txt`)}.`,
     entries,
+  );
+}
+
+export async function folderLlmsFull(folder: LlmsFolder): Promise<string> {
+  return fullText(
+    `${folder.title}: full text`,
+    `Every page of the ${folder.title} folder of the ${folder.area.title} area of ${SITE.title}, in the order of the sidebar. Each page starts with its title as a heading and its URL. The index of this folder is at ${absoluteUrl(`/${folder.path}/llms.txt`)}.`,
+    folder.pages.map(({ entry }) => entry),
   );
 }
 

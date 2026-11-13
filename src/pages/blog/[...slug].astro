@@ -45,6 +45,8 @@ const { Content } = await render(post);
   description={post.data.description}
   image={ogImagePath(postCardSlug(post))}
   article={{ published: post.data.date, authors: post.data.authors }}
+  markdown={`${postHref(post)}index.md`}
+  llms="/blog/llms.txt"
 >
   <main class="page" id="main-content" tabindex="-1">
     <article data-pagefind-body>
