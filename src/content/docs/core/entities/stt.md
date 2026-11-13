@@ -50,6 +50,23 @@ Voice satellites send 16 kHz, 16-bit, mono PCM audio in a WAV format, so support
 | `prefers_auto_gain_enabled` | `True` | The audio should get automatic gain control. |
 | `prefers_noise_reduction_enabled` | `True` | The audio should get noise reduction. |
 
+#### Audio processing per request
+
+The pipeline doesn't read the `audio_processing` property directly. It calls `async_get_audio_processing` with the `SpeechMetadata` of the stream, and by default that returns `audio_processing`. Override it only when the settings depend on the request metadata, for example when your engine detects the end of speech for some languages but not for others.
+
+```python
+@callback
+def async_get_audio_processing(
+    self, metadata: SpeechMetadata
+) -> SpeechAudioProcessing:
+    """Return the audio processing settings for a request."""
+    return SpeechAudioProcessing(
+        requires_external_vad=metadata.language in EXTERNAL_VAD_LANGUAGES,
+        prefers_auto_gain_enabled=True,
+        prefers_noise_reduction_enabled=True,
+    )
+```
+
 ## Methods
 
 ### Process an audio stream
