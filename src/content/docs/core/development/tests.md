@@ -7,6 +7,8 @@ order: 4.5
 
 Every integration in core comes with tests, and every change to it comes with tests too. Tests prove that your change works, and more importantly, that it keeps working when someone else changes something next year. This page is about writing those tests. The commands to run them, check coverage, and update snapshots are on [running the tests](/core/development/testing/).
 
+The fixtures and helpers on this page come from `pytest-homeassistant`, a package in core that is also published on PyPI. A custom integration can use it to test in its own repository: see [test a custom integration](/marketplace/guides/testing/).
+
 ## The test folder
 
 Tests live in `tests/components/<domain>/`, next to the tests of all other integrations. The tests of the AirGradient integration look like this:
