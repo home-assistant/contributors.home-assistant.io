@@ -50,6 +50,6 @@ A custom card looks best when it fits in with the built-in ones. Use the [theme 
 
 ## Share it
 
-To publish what you built, so others can install it from the Marketplace, see [dashboard cards and plugins](/marketplace/guides/dashboard/).
+To publish what you built, so others can install it from the Marketplace, see [dashboard cards and plugins](/marketplace/guides/dashboard/). To let people try your card on a web page first, see [live demos](/frontend/custom-ui/demo/).
 
 Think your card belongs in the frontend itself? The project recommends that you publish a new card in the [Marketplace](/marketplace/) first. You gain experience, and you can iterate faster. Once it has matured and has a user base, reach out to the maintainers, for example in the **#frontend** channel on [Discord](https://www.home-assistant.io/join-chat/), to see whether it should ship built in.
