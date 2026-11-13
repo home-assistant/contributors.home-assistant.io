@@ -194,6 +194,10 @@ set_speed:
 
 ### Show fields only when they apply
 
+Fields that only make sense in some cases can be hidden in the action editor, based on the selected entities or on the values of other fields. Hiding a field only changes the UI.
+
+#### Based on the selected entities
+
 A `filter` on a field shows it only when at least one selected entity supports it. Filters only work in actions with a `target`, because they look at the selected entities: hassfest refuses them in other actions. Use either `supported_features` or `attribute`, not both:
 
 ```yaml
@@ -210,6 +214,37 @@ color_temp:
 ```
 
 With an `attribute` filter, the field is shown when the attribute of a selected entity has one of the listed values. If the attribute is a list, one matching item is enough.
+
+#### Based on another field
+
+A `visible` condition shows a field only while other fields of the same action have certain values. It takes the same conditions and operators as [fields that show based on another field](/core/integrations/flow-steps/#fields-that-show-based-on-another-field) in config flows:
+
+```yaml
+mode:
+  required: true
+  default: snapshot
+  selector:
+    select:
+      options:
+        - snapshot
+        - clip
+duration:
+  required: true
+  visible:
+    field: mode
+    value: clip
+  selector:
+    duration:
+```
+
+Here, **Duration** only shows while **Mode** is set to `clip`.
+
+- `visible` takes one condition, a list of conditions that all have to match, or a plain `true` or `false`.
+- A field without a value is evaluated with its default.
+- On a section, `visible` hides the whole section.
+- Hassfest checks that a condition refers to another field of the same action, and that a section does not depend on its own fields.
+
+A hidden field is not shown and not required. When a field gets hidden while the action is edited, the UI removes its value from the action data. Opening an existing action keeps its values. This only happens in the UI: actions written in YAML can still pass any field. Your schema in Python still validates every call, so make it accept the data without the hidden field, and reject combinations that make no sense.
 
 ### Names and descriptions
 
