@@ -4,7 +4,7 @@ description: The Open Home Foundation AI policy. You can use AI tools when you c
 order: 7.5
 ---
 
-This is the AI policy of the [Open Home Foundation](/glossary/open-home-foundation/). It applies to every contribution to Home Assistant and the other projects of the foundation: code, documentation, issues, pull requests, comments, and reviews.
+This is the AI policy of the [Open Home Foundation](/glossary/open-home-foundation/). It applies to every contribution to Home Assistant and the other projects of the foundation: code, documentation, design, issues, pull requests, comments, and reviews.
 
 ## In short
 
@@ -56,9 +56,17 @@ AI can be a helpful tool to write code and documentation. But our projects are o
 
 Review and understand every contribution before you submit it. You should be able to explain every change in your pull request. Pull requests that look like unreviewed AI output are closed without review.
 
+## Design
+
+AI can be a helpful tool to explore ideas and build mockups and prototypes. But AI tends to give the most common answer, not the one that fits Home Assistant and its users. So we require a human who brings the point of view and owns the design decisions.
+
+You should be able to explain the problem your design solves and why you made your choices. If a mockup or prototype was mostly generated with AI, say so when you share it. Check your work against the [design guidelines](/design/), as AI tools often make up components, colors, or spacing that don't exist in Home Assistant. Design proposals that look like unreviewed AI output may be closed or hidden.
+
 ## How we use AI
 
 Some of our projects use AI tools to help with code reviews, triaging issues, reporting, and other project management tasks. These tools may leave comments on your pull requests or issues. Like any automated tool, they aren't always right.
+
+We also use AI to help keep the design system, the Figma kit, and the code in sync. The design decisions behind them are made by people.
 
 Treat a comment from an AI tool like any other review comment. If you think it's wrong, say so. A short explanation is enough. Maintainers always have the final say. If in doubt, ask a maintainer.
 
