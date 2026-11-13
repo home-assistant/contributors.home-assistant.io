@@ -47,7 +47,7 @@ declare global {
 
 ## Components to use
 
-Build with the shared components in `src/components/` before you write your own. Many of them, like `ha-button`, `ha-dialog`, `ha-switch`, and `ha-tooltip`, wrap [Web Awesome](https://webawesome.com/) components. Don't add new `mwc-*` Material components: those are being replaced.
+Build with the shared components in `src/components/` before you write your own. Many of them, like `ha-button`, `ha-dialog`, `ha-switch`, and `ha-tooltip`, wrap [Web Awesome](https://webawesome.com/) components. Don't add `mwc-*` Material components: the frontend no longer uses them.
 
 - **Dialogs**: use `ha-dialog` with the `DialogMixin` from `src/dialogs/dialog-mixin.ts`. Open a dialog by firing `show-dialog` with the tag, an import function, and the parameters. Put actions in `ha-dialog-footer`, in the `primaryAction` and `secondaryAction` slots.
 - **Buttons**: `ha-button` has a `variant` (`brand`, `neutral`, `danger`, `warning`, `success`), an `appearance` (`accent`, `filled`, `outlined`, `plain`), and a `size`. Use `appearance="plain"` for cancel, and `variant="danger"` for destructive actions.
