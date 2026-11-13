@@ -8,7 +8,7 @@ areas:
   - core
 ---
 
-As of Home Assistant Core 2026.12, using a `DeviceInfo` or `ChildDeviceInfo` like a dict is deprecated. This is the compatibility layer announced in [DeviceInfo is now a dataclass](/blog/2026/10/13/device-info-class/). It will stop working in Home Assistant Core 2027.12. Until then, it logs a warning. These uses are deprecated:
+As of Home Assistant Core 2026.12, using a `DeviceInfo` or `ChildDeviceInfo` like a dict is deprecated. It will stop working in Home Assistant Core 2027.12. Until then, it logs a warning. This is the compatibility layer announced in [DeviceInfo is now a dataclass](/blog/2026/10/13/device-info-class/). These uses are deprecated:
 
 - Reading or setting a field by key, like `device_info["name"]`
 - Testing a field with `in`
@@ -22,6 +22,7 @@ Since Home Assistant Core 2026.11, `DeviceInfo` is a dataclass with typed fields
 To check whether you are affected, search your logs for `which is deprecated as device infos are dataclasses`. Each warning names the use it found, and what to use instead.
 
 `as_dict()`, comparing two device infos, and the representation of a device info are not deprecated. An entity can also still return a plain dict as its `device_info`: only a `DeviceInfo` or `ChildDeviceInfo` used like a dict is affected.
+
 ## Reading and setting fields
 
 Read and set the attributes instead:
