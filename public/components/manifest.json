@@ -1,15 +1,15 @@
 {
-  "generatedBy": "scripts/build-components.mjs",
-  "date": "2026-10-26T04:12:35.712Z",
+  "generatedBy": "scripts/build-components.ts",
+  "date": "2026-11-09T04:08:36.254Z",
   "frontend": {
-    "commit": "4c9a05ef5b7d90434a83d1ab53aad032d7c8931c",
+    "commit": "afcf7d4e080b86bc2bf01e32070099e60dc74dab",
     "ref": "origin/dev",
     "lockfileMatchesCheckout": true
   },
   "translations": {
-    "artifactId": 12621743255,
-    "createdAt": "2026-10-26T01:33:48Z",
-    "workflowRunId": 40254006239
+    "artifactId": 13642279905,
+    "createdAt": "2026-11-09T01:17:07Z",
+    "workflowRunId": 42543741001
   },
   "components": [
     "ha-progress-button",
