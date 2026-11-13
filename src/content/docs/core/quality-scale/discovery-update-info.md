@@ -18,7 +18,7 @@ Discovery already sees the device at its new address. Using that information mak
 
 ## Example
 
-In the discovery step, set the unique ID of the flow, and pass the new address to `_abort_if_unique_id_configured`. If an entry with that unique ID exists, Home Assistant updates its data, reloads it when something changed, and aborts the flow:
+In the discovery step, set the unique ID of the flow, and pass the new address as `updates`. If an entry with that unique ID exists, Home Assistant updates its data, reloads it when something changed, and aborts the flow:
 
 ```python
 async def async_step_zeroconf(
@@ -28,8 +28,7 @@ async def async_step_zeroconf(
     host = discovery_info.host
     serial = discovery_info.properties["serialno"]
 
-    await self.async_set_unique_id(serial)
-    self._abort_if_unique_id_configured(updates={CONF_HOST: host})
+    await self.async_set_unique_id_or_abort(serial, updates={CONF_HOST: host})
 
     # Only a new device gets this far.
     self.host = host

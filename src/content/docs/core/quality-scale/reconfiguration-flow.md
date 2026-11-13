@@ -33,8 +33,7 @@ async def async_step_reconfigure(
         except MyConnectionError:
             errors["base"] = "cannot_connect"
         else:
-            await self.async_set_unique_id(serial)
-            self._abort_if_unique_id_mismatch(reason="wrong_device")
+            await self.async_set_unique_id_or_abort(serial, reason="wrong_device")
             return self.async_update_reload_and_abort(
                 self._get_reconfigure_entry(),
                 data_updates=user_input,
@@ -47,7 +46,7 @@ async def async_step_reconfigure(
     )
 ```
 
-`_abort_if_unique_id_mismatch` stops a user from pointing the entry at a different device. `async_update_reload_and_abort` updates the data, reloads the entry, and ends the flow with the `reconfigure_successful` reason.
+`async_set_unique_id_or_abort` stops a user from pointing the entry at a different device. `async_update_reload_and_abort` updates the data, reloads the entry, and ends the flow with the `reconfigure_successful` reason.
 
 Pre-fill the form with the current values, with `self.add_suggested_values_to_schema`, so users only change what they need to.
 
