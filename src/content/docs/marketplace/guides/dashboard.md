@@ -32,7 +32,7 @@ The Marketplace looks for one file, and finds it by its name. Without a `filenam
 
 It looks for them in the assets of your latest GitHub release first. Without a release that has one of them, it looks in the root of your repository, and then in the `dist` folder. With `content_in_root` set to `true` in `hacs.json`, it only looks in the root.
 
-If your card needs other files, like images or translations, put them in `dist` together with the card, or attach them all to the release.
+If your card needs other files, like images or translations, put them in `dist` together with the card, attach them all to the release, or [ship them in a ZIP file](/marketplace/guides/releases/#ship-a-zip-file) together with the card.
 
 A file with any other name needs `filename` in `hacs.json`:
 
