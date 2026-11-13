@@ -35,7 +35,7 @@ This part of the site walks through all of it, task by task. It is written for p
 - [Forms, menus, and progress](/core/integrations/flow-steps/): the building blocks of every flow.
 - [Options flow](/core/integrations/options-flow/): let users change how the integration behaves.
 - [Subentries](/core/integrations/subentries/): store repeatable parts of a config entry, like locations.
-- [Reauthentication and reconfiguration](/core/integrations/reauth-reconfigure/): fix credentials and connection details without removing the integration.
+- [Reauthentication and reconfiguration](/core/integrations/reauth-reconfigure/): fix credentials that stop working, and change the settings the integration needs to work, without removing the integration.
 - [OAuth 2.0 and application credentials](/core/integrations/oauth2/): link a user's account at a cloud service.
 - [YAML configuration](/core/integrations/yaml/): when it is still allowed, and how it works.
 - [Setup failures and exceptions](/core/integrations/setup-failures/): retry when a device is offline, and raise the right errors.
