@@ -388,6 +388,8 @@ async function renderComponent(
       return demo(attributes, children);
     case "DoDont":
       return doDont(attributes, children);
+    case "EmbedDemo":
+      return embedDemo(attributes);
     case "StackDiagram":
       return stackDiagram(propValue(attributes.layers) as DiagramLayer[], propValue(attributes.caption) as string);
     case "ArchitectureMap":
@@ -441,6 +443,37 @@ function demo(attributes: Attributes, children: string): string {
   const note = `Live demo${of}${home}.${caption ? ` ${caption}` : ""}`;
 
   return `${note}\n\n${codeBlock(children)}`;
+}
+
+// The cards of an <EmbedDemo> as the HTML that shows them on any page. The
+// markup sets the same 12-column section as EmbedDemo.astro. Each card's span
+// matches the one the embed works out from its `grid_options`, so the layout
+// holds before the script of the demo loads.
+function embedDemo(attributes: Attributes): string {
+  const json = (value: unknown, indent: string) =>
+    JSON.stringify(value, null, 2).replaceAll("<", "\\u003c").replaceAll("\n", `\n${indent}`);
+  const span = (card: Record<string, unknown>) => {
+    const options = card.grid_options as { columns?: unknown } | undefined;
+    return typeof options?.columns === "number" ? Math.min(options.columns, 12) : 12;
+  };
+  const cards = (propValue(attributes.cards) as Record<string, unknown>[])
+    .map(
+      (card) =>
+        `  <ha-embed-card style="grid-column: span ${span(card)}">\n    <script type="application/json">\n      ${json(card, "      ")}\n    </script>\n  </ha-embed-card>`,
+    )
+    .join("\n");
+  const section = [
+    "display: grid;",
+    "grid-template-columns: repeat(12, minmax(0, 1fr));",
+    "gap: 8px;",
+    "align-items: start;",
+    "max-width: 500px;",
+  ]
+    .map((declaration) => `\n    ${declaration}`)
+    .join("");
+  const markup = `<ha-embed-provider\n  style="${section}\n  "\n>\n  <script type="application/json">\n    ${json(propValue(attributes.entities), "    ")}\n  </script>\n${cards}\n</ha-embed-provider>`;
+
+  return `Live demo of dashboard cards, from the embed of the Home Assistant demo.\n\n${codeBlock(markup)}`;
 }
 
 // The top level elements of a piece of HTML, as written.
