@@ -5,11 +5,41 @@ sidebarLabel: Water heater
 sidebarGroup: Lights and climate
 ---
 
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
+
 A water heater entity controls a device that heats water: a boiler, a hot water tank, or a heat pump water heater. It has a target temperature, operation modes, and optionally an away mode. Inherit from `WaterHeaterEntity` in `homeassistant.components.water_heater`.
 
 If the device heats or cools a room, use a [climate entity](/core/entities/climate/) instead.
 
 For how the frontend shows a water heater, see the [water heater more-info view](/design/more-info/water-heater/).
+
+<EmbedDemo
+  entities={[
+    {
+      entity_id: "water_heater.boiler",
+      state: "eco",
+      attributes: {
+        friendly_name: "Boiler",
+        current_temperature: 48,
+        temperature: 55,
+        min_temp: 40,
+        max_temp: 65,
+        target_temp_step: 1,
+        operation_list: ["eco", "electric", "performance", "off"],
+        operation_mode: "eco",
+        supported_features: 11,
+      },
+    },
+  ]}
+  cards={[
+    {
+      type: "tile",
+      entity: "water_heater.boiler",
+      features: [{ type: "target-temperature" }, { type: "water-heater-operation-modes" }],
+    },
+  ]}
+  caption="A water heater with a target temperature and operation modes, in a tile card. The card is live: change the temperature or the mode."
+/>
 
 ## Properties
 

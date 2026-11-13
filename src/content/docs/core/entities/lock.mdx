@@ -5,9 +5,32 @@ sidebarLabel: Lock
 sidebarGroup: Openings and security
 ---
 
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
+
 A lock entity controls a lock: it locks, unlocks, and on some locks, opens the door by pulling back the latch. It can ask for a code. Inherit from `LockEntity` in `homeassistant.components.lock`.
 
 For how the frontend shows a lock, see the [lock more-info view](/design/more-info/lock/).
+
+<EmbedDemo
+  entities={[
+    {
+      entity_id: "lock.front_door",
+      state: "locked",
+      attributes: {
+        friendly_name: "Front door",
+        supported_features: 1,
+      },
+    },
+  ]}
+  cards={[
+    {
+      type: "tile",
+      entity: "lock.front_door",
+      features: [{ type: "lock-commands" }, { type: "lock-open-door" }],
+    },
+  ]}
+  caption="A lock that locks, unlocks, and opens the door, in a tile card. The card is live: unlock it, or open the door."
+/>
 
 ## Properties
 

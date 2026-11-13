@@ -5,11 +5,45 @@ sidebarLabel: Fan
 sidebarGroup: Lights and climate
 ---
 
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
+
 A fan entity controls a fan: its speed, the direction it turns, whether it oscillates, and preset modes like `auto` or `breeze`. Inherit from `FanEntity` in `homeassistant.components.fan`. It builds on the toggle entity, so it has `is_on`, `turn_on`, and `turn_off`.
 
 A fan that is part of an air conditioner or a heat pump belongs to the [climate entity](/core/entities/climate/), as its fan mode. Use a fan entity for a standalone fan, a ceiling fan, or an air purifier fan.
 
 For how the frontend shows a fan, see the [fan more-info view](/design/more-info/fan/).
+
+<EmbedDemo
+  entities={[
+    {
+      entity_id: "fan.bedroom",
+      state: "on",
+      attributes: {
+        friendly_name: "Bedroom fan",
+        percentage: 50,
+        percentage_step: 25,
+        preset_modes: ["auto", "sleep"],
+        preset_mode: null,
+        oscillating: false,
+        direction: "forward",
+        supported_features: 63,
+      },
+    },
+  ]}
+  cards={[
+    {
+      type: "tile",
+      entity: "fan.bedroom",
+      features: [
+        { type: "fan-speed" },
+        { type: "fan-preset-modes" },
+        { type: "fan-oscillate" },
+        { type: "fan-direction" },
+      ],
+    },
+  ]}
+  caption="A fan with speeds, presets, oscillation, and direction, in a tile card. The card is live: change the speed or pick a preset."
+/>
 
 ## Properties
 
