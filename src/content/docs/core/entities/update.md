@@ -89,7 +89,7 @@ Some updates need the same guidance every time, like a warning not to unplug the
 
 The messages are shown together with the release notes, so the entity needs `UpdateEntityFeature.RELEASE_NOTES` too.
 
-The update platform has two shared messages:
+The update platform has shared messages:
 
 | Message | What it tells the user |
 | ------- | ---------------------- |
