@@ -1,7 +1,7 @@
 ---
 title: "Translated release notes messages for update entities"
 description: Update entities can now provide translated alert messages that Home Assistant shows before the full release notes.
-date: 2026-08-04
+date: 2026-11-14
 authors:
   - Jan-Philipp Benecke
 areas:
