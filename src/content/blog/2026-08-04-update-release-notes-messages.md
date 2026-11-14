@@ -22,7 +22,6 @@ For common update guidance, use the predefined messages exported by the update p
 
 ```python
 from homeassistant.components.update import (
-    RELEASE_NOTES_MESSAGE_BATTERY_POWERED,
     RELEASE_NOTES_MESSAGE_DO_NOT_INTERRUPT,
     UpdateEntity,
 )
@@ -30,7 +29,6 @@ from homeassistant.components.update import (
 
 class MyFirmwareUpdate(UpdateEntity):
     _attr_release_notes_messages = (
-        RELEASE_NOTES_MESSAGE_BATTERY_POWERED,
         RELEASE_NOTES_MESSAGE_DO_NOT_INTERRUPT,
     )
 ```

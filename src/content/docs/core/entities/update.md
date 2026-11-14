@@ -93,12 +93,10 @@ The update platform has two shared messages:
 
 | Message | What it tells the user |
 | ------- | ---------------------- |
-| `RELEASE_NOTES_MESSAGE_BATTERY_POWERED` | Battery-powered devices can take hours to update, and may need to be woken up before the update starts. |
 | `RELEASE_NOTES_MESSAGE_DO_NOT_INTERRUPT` | Do not restart, unplug, or otherwise interrupt the device while it updates. Shown as a warning. |
 
 ```python
 from homeassistant.components.update import (
-    RELEASE_NOTES_MESSAGE_BATTERY_POWERED,
     RELEASE_NOTES_MESSAGE_DO_NOT_INTERRUPT,
     UpdateEntity,
 )
@@ -108,7 +106,6 @@ class MyUpdate(UpdateEntity):
     """Updates for a battery-powered device."""
 
     _attr_release_notes_messages = (
-        RELEASE_NOTES_MESSAGE_BATTERY_POWERED,
         RELEASE_NOTES_MESSAGE_DO_NOT_INTERRUPT,
     )
 ```
