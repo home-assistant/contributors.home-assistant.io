@@ -267,7 +267,7 @@ Send `{"id": 19, "type": "ping"}` and the server answers `{"id": 19, "type": "po
 
 ### Work with targets
 
-These commands take a `target` in the same format as an action call, with `entity_id`, `device_id`, `area_id`, `floor_id`, and `label_id`:
+These commands take a `target` in the same format as an action call, with `entity_id`, `device_id`, `area_id`, `floor_id`, and `label_id`. The target can have an `exclude` block with the same keys, and the results leave out whatever it matches:
 
 - `extract_from_target`: resolves the target into `referenced_entities`, `referenced_devices`, and `referenced_areas`, and lists what does not exist under `missing_devices`, `missing_areas`, `missing_floors`, and `missing_labels`. With `"expand_group": true`, groups are replaced by their members. Defaults to `false`.
 - `get_triggers_for_target`, `get_conditions_for_target`, and `get_services_for_target`: return the triggers, conditions, or actions that apply to at least one entity of the target, like `light.turn_on`. Here, `expand_group` defaults to `true`.
