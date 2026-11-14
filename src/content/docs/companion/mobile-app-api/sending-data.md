@@ -122,8 +122,11 @@ Updates the device tracker of the app.
 | `altitude` | number | Altitude in meters |
 | `course` | integer | Direction of travel in degrees, relative to due north. Zero or more |
 | `vertical_accuracy` | integer | Accuracy of the altitude in meters. Zero or more |
+| `location_time` | string | When the device got the location, as an ISO 8601 date and time, like `2026-09-26T12:42:55Z`. Home Assistant 2026.11 or later |
 
 All keys are optional. When you send `in_zones`, Home Assistant ignores `location_name`.
+
+Send `location_time` when the location is older than the update itself, for example when the operating system hands you a cached or deferred location. Home Assistant converts it to UTC and stores it as the `location_time` attribute of the device tracker. Only send it to Home Assistant 2026.11 or later: older versions don't know the key, and reject the whole update.
 
 ### `register_sensor` and `update_sensor_states`
 
