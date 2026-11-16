@@ -1,7 +1,7 @@
 ---
 title: "Dict-style access to device info is deprecated"
 description: "Using a DeviceInfo or ChildDeviceInfo like a dict is deprecated in Home Assistant Core 2026.12 and will stop working in 2027.12. Read and set the attributes instead."
-date: 2026-11-13
+date: 2026-11-16
 authors:
   - epenet
 areas:
@@ -106,16 +106,14 @@ assert device_info == DeviceInfo(
 
 ## Checking which fields exist
 
-`__required_keys__` and `__optional_keys__` come from the time `DeviceInfo` was a `TypedDict`. To check which fields a device info has, for example to support older Home Assistant versions, use `dataclasses.fields()`:
+`__required_keys__` and `__optional_keys__` come from the time `DeviceInfo` was a `TypedDict`. To check whether a field exists, for example to support older Home Assistant versions, use `__annotations__`. It works both on the dataclass and on the `TypedDict` of releases before Home Assistant Core 2026.11:
 
 ```python
-import dataclasses
-
 # Old
 has_via_device_id = "via_device_id" in DeviceInfo.__optional_keys__
 
 # New
-has_via_device_id = "via_device_id" in {
-    field.name for field in dataclasses.fields(DeviceInfo)
-}
+has_via_device_id = "via_device_id" in DeviceInfo.__annotations__
 ```
+
+If your integration only supports Home Assistant Core 2026.11 and later, you can also use `dataclasses.fields(DeviceInfo)`, which the warning suggests. On older releases, it raises a `TypeError`.
