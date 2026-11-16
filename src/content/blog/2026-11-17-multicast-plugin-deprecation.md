@@ -1,7 +1,7 @@
 ---
 title: "The multicast plugin is being deprecated"
 description: The Supervisor is phasing out the multicast plugin. This post outlines the change, affected apps, and how it can be tested.
-date: 2026-11-16
+date: 2026-11-17
 authors:
   - Stefan Agner
 areas:
