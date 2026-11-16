@@ -90,7 +90,7 @@ The frontend gets two-way audio only when all of these hold:
 
 - Your entity declares two-way audio.
 - The camera streams over WebRTC, natively or through a WebRTC provider. Two-way audio is not available over HLS.
-- The user turned on the **Two-way audio** preview feature of the camera integration in [Labs](/core/development/labs/). The browser only gives access to the microphone over HTTPS, so two-way audio needs Home Assistant to be opened over HTTPS.
+- The user turned on the **Two-way audio** preview feature of the camera integration in [Labs](/core/development/labs/). The browser only gives access to the microphone over HTTPS, so in a browser, two-way audio needs Home Assistant to be opened over HTTPS. An app that embeds the frontend can capture the microphone itself instead, with [`webrtc/stream/start`](/frontend/reference/external-bus/#webrtcstreamstart) on the external bus. Two-way audio then also works without HTTPS.
 
 
 ## Methods

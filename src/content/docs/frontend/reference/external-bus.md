@@ -180,7 +180,7 @@ Answer: an empty object once the flow of the platform has completed. When it did
 
 #### webrtc/stream/start
 
-The frontend asks the app to stream the microphone to a camera entity, so the user can talk through it. The app does that in a WebRTC session of its own. This doesn't require a secure connection.
+The frontend asks the app to stream the microphone to a camera entity, so the user can talk through it. The app captures the microphone itself, and sends it in a WebRTC session of its own. That makes two-way audio work when Home Assistant is not opened over HTTPS, where the browser gives the frontend no access to the microphone.
 
 The frontend only sends this message from the microphone button in the more-info dialog of a camera, when both are true:
 
@@ -216,9 +216,9 @@ The frontend sets no timeout on the answer, and shows the microphone as connecti
 | `microphone_denied` | The user denied the microphone permission. |
 | `server_unavailable` | The app has no API for the server, or its connection never became ready. |
 | `signaling_failed` | `camera/webrtc/offer` failed, or Home Assistant sent an error event. |
-| `connection_failed` | The WebRTC connection failed, or dropped for more than 5 seconds. |
-| `timeout` | The stream was not connected 25 seconds after the permission step. |
-| `interrupted` | The app stopped the stream itself: it went to the background, a new start replaced the stream, or a page load cleared it. |
+| `connection_failed` | The WebRTC connection was lost, and the app could not restore it. |
+| `timeout` | The stream did not connect in time. The app decides how long it waits. |
+| `interrupted` | The app stopped the stream itself, for example because it went to the background. |
 | `unsupported_stream_type` | The app does not know the requested stream type. |
 | `unknown` | An unexpected error. `message` holds the error of the app. |
 
