@@ -1,11 +1,11 @@
 {
   "commits": {
-    "core": "0dc24540ce48f65f616230857e2cf21ceec92b80",
-    "frontend": "afcf7d4e080b86bc2bf01e32070099e60dc74dab"
+    "core": "aef7c996cbf2a46a37215ea768ab274f2a302506",
+    "frontend": "fc640e236dc3ad82dfdb533970aaa816ebe48c47"
   },
   "totals": {
-    "symbols": 1770,
-    "resolved": 1662
+    "symbols": 1775,
+    "resolved": 1667
   },
   "areas": {
     "apps": {
@@ -25,8 +25,8 @@
     },
     "core": {
       "index": "core",
-      "symbols": 1525,
-      "resolved": 1467
+      "symbols": 1530,
+      "resolved": 1472
     },
     "data": {
       "index": null,
@@ -227,8 +227,8 @@
       "index": "core",
       "count": 2,
       "pages": [
-        "src/content/docs/core/entities/lawn-mower.md",
-        "src/content/docs/core/entities/vacuum.md"
+        "src/content/docs/core/entities/lawn-mower.mdx",
+        "src/content/docs/core/entities/vacuum.mdx"
       ]
     },
     {
@@ -397,7 +397,7 @@
       "index": "core",
       "count": 1,
       "pages": [
-        "src/content/docs/core/entities/lawn-mower.md"
+        "src/content/docs/core/entities/lawn-mower.mdx"
       ]
     },
     {
@@ -501,7 +501,7 @@
       "index": "core",
       "count": 1,
       "pages": [
-        "src/content/docs/core/entities/media-player.md"
+        "src/content/docs/core/entities/media-player.mdx"
       ]
     },
     {
@@ -533,7 +533,7 @@
       "index": "core",
       "count": 1,
       "pages": [
-        "src/content/docs/core/entities/media-player.md"
+        "src/content/docs/core/entities/media-player.mdx"
       ]
     },
     {
@@ -629,7 +629,7 @@
       "index": "core",
       "count": 1,
       "pages": [
-        "src/content/docs/core/entities/vacuum.md"
+        "src/content/docs/core/entities/vacuum.mdx"
       ]
     },
     {
@@ -637,7 +637,7 @@
       "index": "core",
       "count": 1,
       "pages": [
-        "src/content/docs/core/entities/lawn-mower.md"
+        "src/content/docs/core/entities/lawn-mower.mdx"
       ]
     },
     {
@@ -653,7 +653,7 @@
       "index": "core",
       "count": 1,
       "pages": [
-        "src/content/docs/core/entities/climate.md"
+        "src/content/docs/core/entities/climate.mdx"
       ]
     }
   ]
