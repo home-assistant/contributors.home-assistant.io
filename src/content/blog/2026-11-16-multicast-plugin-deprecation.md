@@ -16,7 +16,7 @@ If you develop or maintain an app, this is what we ask of you: if your app runs 
 
 ## How to test your app today
 
-Supervisor 2026.10.0 and newer has an `enabled` option for the plugin, on by default. Turn it off with the `ha` CLI (5.6.0 or newer, included in the CLI plugin since 2026.10.1):
+Supervisor 2026.10.0 and newer has an `enabled` option for the plugin, on by default. Turn it off with the `ha` CLI:
 
 ```shell
 ha multicast options --enabled=false
@@ -64,7 +64,7 @@ Plugin usage cannot be measured directly, because copying packets leaves no trac
 
 `host_network: true` gives an app access to all host interfaces and ports, which is more than most apps with a discovery role need. Two proposals aim to provide the capabilities the multicast plugin was originally meant to cover in a more targeted way. Neither is a prerequisite for this deprecation.
 
-- Isolated physical network access ([architecture#1034](https://github.com/home-assistant/architecture/discussions/1034), [home-assistant/supervisor#6937](https://github.com/home-assistant/supervisor/pull/6937)) gives an app its own address on the LAN with multicast in both directions, IPv6 included, while keeping it isolated from the host and other containers. This covers device discovery through mDNS, SSDP, and other multicast protocols.
+- Isolated physical network access ([architecture#1034](https://github.com/home-assistant/architecture/discussions/1034), [home-assistant/supervisor#6937](https://github.com/home-assistant/supervisor/pull/6937)) gives an app its own address on the LAN with multicast in both directions, IPv6 included, without sharing the network namespace of the host. The app stays attached to the internal `hassio` network. This covers device discovery through mDNS, SSDP, and other multicast protocols.
 - A Supervisor API for service announcements ([architecture#1458](https://github.com/home-assistant/architecture/discussions/1458)) publishes an app's services through the DNS-SD registration of systemd-resolved. An app on the internal network could then be discoverable on the LAN without `host_network` or `host_dbus`.
 
 ## Rollout
