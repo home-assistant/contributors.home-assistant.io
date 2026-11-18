@@ -225,6 +225,26 @@ Aborting does not remove the issue. Delete it yourself once the fix is done, for
 
 If the migration of a config entry failed and the user can fix the cause, call `hass.config_entries.async_retry_migration(entry_id)` from the repair flow once it is fixed. See [migrate a config entry](/core/integrations/config-entries/#migrate-a-config-entry).
 
+### Continue in another repair flow
+
+When the current repair flow requires another repair flow, it can continue in that flow using `next_flow`. An issue corresponding to the next repair flow must exist in the issue registry.
+
+```python
+from homeassistant.components.repairs import FlowType, repairs_flow_manager
+
+if user_input is not None:
+    flow_manager = repairs_flow_manager(self.hass)
+    result = await flow_manager.async_init(
+        DOMAIN, 
+        context={"issue_id": "next_repair_issue_id"}
+    )
+
+    return self.async_create_entry(
+        data={},
+        next_flow=(FlowType.REPAIRS_FLOW, result["flow_id"]),
+    )
+```
+
 ## Refresh a set of issues
 
 Often, your integration checks a whole set of issues at once: one per device, per vehicle, or per item in the configuration. After the check, the issues of problems that are still there must stay, the issues of new problems must be created, and the issues of problems that are gone must be deleted. That includes issues from before a restart, of devices that no longer exist.
