@@ -192,15 +192,12 @@ async def async_oauth_create_entry(
 ) -> ConfigFlowResult:
     """Create an entry, or update it during reauthentication."""
     account = await get_account(self.hass, data["token"])
-    await self.async_set_unique_id(account.id)
+    await self.async_set_unique_id_or_abort(account.id)
 
     if self.source == SOURCE_REAUTH:
-        self._abort_if_unique_id_mismatch()
         return self.async_update_reload_and_abort(
             self._get_reauth_entry(), data_updates=data
         )
-
-    self._abort_if_unique_id_configured()
 
     return self.async_create_entry(title=account.name, data=data)
 ```
