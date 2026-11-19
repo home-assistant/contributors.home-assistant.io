@@ -19,7 +19,7 @@ Not up for editing yourself? That is fine too. Select **Provide feedback** under
 2. Scroll to **Help us improve our documentation** at the bottom, and select **Edit**.
 3. GitHub shows the source of the page. Select the pencil icon, **Edit this file**, at the top right of the file.
 
-   If the pencil icon doesn't show up, sign in to your GitHub account first.
+   If the pencil icon doesn't show up, sign in to your GitHub account.
 4. The first time, GitHub offers to create your own copy of the repository, called a [fork](/start/github/#fork). Accept it. You don't have to do anything else with it.
 
 ## 2. Make your change
