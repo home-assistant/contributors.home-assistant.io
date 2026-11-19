@@ -70,8 +70,6 @@ const COMPONENTS = [
   "ha-expansion-panel",
   "ha-gauge",
   "ha-label-badge",
-  "ha-list",
-  "ha-list-item",
   "ha-marquee-text",
   "ha-select-box",
   "ha-slider",
@@ -82,6 +80,12 @@ const COMPONENTS = [
   "ha-toast",
   "ha-tooltip",
   "input/ha-input",
+  "item/ha-list-item-base",
+  "item/ha-list-item-button",
+  "item/ha-list-item-option",
+  "list/ha-list-base",
+  "list/ha-list-nav",
+  "list/ha-list-selectable",
   "skeleton/ha-skeleton",
   "skeleton/ha-skeleton-icon",
   "skeleton/ha-skeleton-text",
@@ -385,9 +389,17 @@ if (document.querySelector(".ha-demo ha-demo-hass")) {
   await import("${demoHass}");
 }
 
-function loadComponents(stage) {
+// The rows of a list register with it when they connect. Here the rows can
+// be defined before their list, which then never hears of them: in the app,
+// the components are defined before anything renders. Inserting a list again
+// at the same place connects it first, and then its rows.
+async function loadComponents(stage) {
   const used = new Set([...stage.querySelectorAll("*")].filter(isComponent).map((element) => element.localName));
-  return Promise.all([...used].map((name) => COMPONENTS[name]()));
+  await Promise.all([...used].map((name) => COMPONENTS[name]()));
+
+  for (const list of stage.querySelectorAll("[ha-list]")) {
+    list.parentNode.insertBefore(list, list.nextSibling);
+  }
 }
 
 // A margin of a screen or so, so a demo is usually ready by the time it
