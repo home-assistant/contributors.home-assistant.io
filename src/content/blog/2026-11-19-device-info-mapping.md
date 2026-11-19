@@ -1,7 +1,7 @@
 ---
 title: "Dict-style access to device info is deprecated"
 description: "Using a DeviceInfo or ChildDeviceInfo like a dict is deprecated in Home Assistant Core 2026.12 and will stop working in 2027.12. Read and set the attributes instead."
-date: 2026-11-16
+date: 2026-11-19
 authors:
   - epenet
 areas:
