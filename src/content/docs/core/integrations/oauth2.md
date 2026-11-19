@@ -23,6 +23,8 @@ OAuth 2.0 needs a client ID and a client secret: the credentials of an applicati
 
 Both end up as an implementation, a subclass of `AbstractOAuth2Implementation`. The config flow lets the user pick one if there are several, and uses it to log in.
 
+Both use the authorization code grant, which almost every service offers. For a service that only offers the device authorization grant, see [the device authorization grant](#the-device-authorization-grant).
+
 Your library has to be built so that Home Assistant can refresh tokens for it: it asks for a valid token before each request, instead of handling the refresh itself. See [OAuth 2 in your API library](/core/integrations/api-library/#oauth-2) for how to build that.
 
 ## Application credentials
@@ -206,6 +208,81 @@ async def async_oauth_create_entry(
 ```
 
 Always implement reauthentication, so users can link their account again without removing the integration.
+
+## The device authorization grant
+
+Some services have no authorization code grant, and only offer the [device authorization grant](https://www.rfc-editor.org/rfc/rfc8628): Home Assistant shows the user a code and a verification URL, the user enters the code on the website of the service, and Home Assistant polls the service until the user has approved. The helpers handle all of that too.
+
+An integration implements exactly one grant. Only use the device authorization grant when the service offers no authorization code grant; when it offers both, use the authorization code grant ([architecture discussion #1299](https://github.com/home-assistant/architecture/discussions/1299)).
+
+The client is public: requests carry only a client ID, never a secret. The integration ships the client ID in code, so users never enter credentials for it.
+
+### Application credentials for the device flow
+
+Add `application_credentials` to the `dependencies` in your manifest as usual, but implement these two functions in `application_credentials.py` instead of `async_get_authorization_server`:
+
+```python
+from homeassistant.components.application_credentials import (
+    DeviceFlowAuthorizationServer,
+    DeviceFlowClientCredential,
+)
+from homeassistant.core import HomeAssistant
+
+
+async def async_get_device_flow_authorization_server(
+    hass: HomeAssistant,
+) -> DeviceFlowAuthorizationServer:
+    """Return the authorization server."""
+    return DeviceFlowAuthorizationServer(
+        device_authorization_url="https://example.com/oauth/device/code",
+        token_url="https://example.com/oauth/token",
+    )
+
+
+async def async_get_device_flow_client_credential(
+    hass: HomeAssistant,
+) -> DeviceFlowClientCredential:
+    """Return the public client."""
+    return DeviceFlowClientCredential(client_id="example-client-id")
+```
+
+`device_authorization_url` is where Home Assistant requests the device and user codes. `token_url` is where it polls for the token, and refreshes it later. A platform implements one grant, never both.
+
+### The device flow config flow
+
+Extend `AbstractOAuth2DeviceFlowHandler` instead of `AbstractOAuth2FlowHandler`. It requests the codes, shows the code and the verification URL, and polls until the user has approved, slowing down when the service asks for it. The progress text is shared between all integrations, so you do not add any strings for it:
+
+```python
+import logging
+from typing import Any
+
+from homeassistant.helpers import config_entry_oauth2_flow
+
+
+class OAuth2FlowHandler(
+    config_entry_oauth2_flow.AbstractOAuth2DeviceFlowHandler, domain=DOMAIN
+):
+    """Handle the OAuth 2.0 device flow of Example."""
+
+    DOMAIN = DOMAIN
+
+    @property
+    def logger(self) -> logging.Logger:
+        """Return the logger."""
+        return logging.getLogger(__name__)
+
+    @property
+    def extra_authorize_data(self) -> dict[str, Any]:
+        """Return extra parameters for the device authorization request."""
+        return {"scope": "read write offline_access"}
+```
+
+When the user has approved, the helper calls `async_oauth_create_entry` with the data, exactly like the authorization code flow. Override it in the same way to set a unique ID and to [handle reauthentication](#reauthentication).
+
+Everything after the login also works the same: create an `OAuth2Session` in `async_setup_entry`, and let the [errors](#errors) propagate. Two things are specific to the device flow:
+
+- A token without `expires_in` is treated as non-expiring, so services that issue permanent tokens work with `OAuth2Session`.
+- Refreshing a token without a `refresh_token` raises `ConfigEntryAuthFailed`, which starts reauthentication.
 
 ## Make authenticated requests
 
