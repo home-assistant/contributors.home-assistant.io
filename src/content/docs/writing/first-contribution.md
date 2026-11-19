@@ -20,6 +20,9 @@ Not up for editing yourself? That is fine too. Select **Provide feedback** under
 3. GitHub shows the source of the page. Select the pencil icon, **Edit this file**, at the top right of the file.
 4. The first time, GitHub offers to create your own copy of the repository, called a [fork](/start/github/#fork). Accept it. You don't have to do anything else with it.
 
+> [!NOTE]
+> If the pencil icon won't show up, make sure you are signed in to your GitHub account first.
+
 ## 2. Make your change
 
 Pages are written in Markdown. Most of it is plain text, so you can edit it like any other text. Look at how the rest of the page does things, like links and lists, and do the same.
