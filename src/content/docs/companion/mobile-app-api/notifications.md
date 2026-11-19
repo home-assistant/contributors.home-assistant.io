@@ -134,6 +134,32 @@ Home Assistant doesn't limit anything itself. Your server does, and tells Home A
 
 Home Assistant logs these numbers at debug level, with the time left until the reset. When a user hits the limit, respond with `429` until the period ends, and reject as early as you can. Home Assistant logs a warning that the limit was reached.
 
+## Push subscriptions
+
+An app can ask for a silent push when entities change state, with the [`register_push_subscription`](/companion/mobile-app-api/sending-data/#register_push_subscription) webhook request. Home Assistant sends these pushes to the same `push_url`, so they only work for registrations with a push server.
+
+Home Assistant waits until the entities of a subscription have been quiet for 5 seconds, and then sends one push for all changes in that time. It doesn't send pushes for changes while Home Assistant starts. Subscriptions survive a restart, so the app doesn't need to register them again.
+
+The request has the `push_token` of the subscription, not the one in `app_data`, and a `push_subscription` key instead of a message:
+
+```json
+{
+  "push_subscription": {
+    "subscription_id": "lock-widget",
+    "target": "lock-widget"
+  },
+  "push_token": "my-secure-token",
+  "registration_info": {
+    "app_id": "io.robbie.HomeAssistant",
+    "app_version": "2026.10.0",
+    "os_version": "26.0",
+    "webhook_id": "abcdefgh"
+  }
+}
+```
+
+`target` is only there when the app sent one. Your server should deliver this as a background push, not as a notification the user sees. These pushes are best effort: when one fails or takes longer than 10 seconds, Home Assistant logs it at debug level and doesn't try again. The next state change sends a new push.
+
 ## Live Activities
 
 The iOS app shows Live Activities, like a timer or a delivery on the Lock Screen, that notifications can start, update, and end. Each activity has its own push token, and `mobile_app` keeps track of them. This only applies to notifications that go through the push server, for registrations with `Apple` as `manufacturer`:
