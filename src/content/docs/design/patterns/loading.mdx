@@ -46,6 +46,10 @@ A progress button goes one step further. When the action is done, it shows a che
 
 A skeleton keeps the layout in place while the content loads, so nothing jumps around when it arrives. The frontend has `ha-skeleton`, with `ha-skeleton-text` and `ha-skeleton-icon` for the common shapes. Data tables, tiles, and the devices dashboard use them.
 
+A soft wave sweeps across every skeleton. It's one wave across the whole window, with each skeleton showing its own slice of it, so it flows from one skeleton into the next, and a skeleton that appears halfway through joins in rather than starting over.
+
+When the content can draw itself before its data arrives, such as a dashboard card or badge, wrap it in `ha-skeleton-overlay` instead of building a skeleton by hand. It reads the skeleton from the content itself: each line of text, icon, image, control, and drawing gets its own piece, so the skeleton always matches what will appear.
+
 <Demo layout="stack" caption="A row of a data table while it loads: ha-skeleton-icon and ha-skeleton-text.">
   <div style="display: flex; align-items: center; gap: 16px">
     <ha-skeleton-icon></ha-skeleton-icon>
@@ -63,7 +67,7 @@ Loading indicators fade in rather than pop up, but not all at the same pace:
 
 - **A skeleton** fades in straight away, over about 300 milliseconds. It stands in for the content, so waiting would leave a gap where the layout should be.
 - **A spinner or progress bar** usually waits half a second before it fades in. Some slower areas, such as backups and updates, wait a full second. When the load finishes within that time, people never see a spinner flash on and off.
-- **The content itself** appears as soon as it arrives, without a fade.
+- **The content itself** fades in over 150 milliseconds when `ha-skeleton-overlay` stands in for it, one part at a time as each skeleton piece gives way, so nothing pops in. Don't add a fade of your own on top.
 
 ### Where loading ends
 
@@ -74,7 +78,7 @@ Dashboard cards follow the same rule. Every card handles loading, an error, an u
 ## Accessibility
 
 - The spinner has the role of a progress bar, with a translated "Loading" label. Give a group of skeletons the same role and label, rather than visible "Loading" text.
-- Skeletons and spinners keep their meaning without motion. Skeletons stop pulsing when people ask for reduced motion. See [Motion](/design/foundations/motion/).
+- Skeletons and spinners keep their meaning without motion. When people ask for reduced motion, the wave stops and content appears without fading. See [Motion](/design/foundations/motion/).
 - When loading ends in an error, show it as text people can read, not only as a red button.
 
 ## Components
@@ -109,3 +113,17 @@ html`
   <ha-fade-in .delay=${500}><ha-spinner></ha-spinner></ha-fade-in>
 `;
 ```
+
+Wrap content that draws before its data arrives in `ha-skeleton-overlay`, also in `src/components/skeleton/`. It gives the skeleton the progress bar role and the translated label itself:
+
+```ts
+html`
+  <ha-skeleton-overlay .loading=${this._loading}>
+    <my-content></my-content>
+  </ha-skeleton-overlay>
+`;
+```
+
+- Turn it on with `loading`, or fire a `skeleton-loading` event with `{ loading: true }` from inside the content, then `{ loading: false }` when it's done. The nearest overlay picks it up.
+- Mark an element with `data-skeleton="none"` to leave it out and showing, `keep` to leave it showing but read what's inside it, or `text`, `round`, or `block` to draw it as one piece of that shape.
+- Put your own skeleton in the `skeleton` slot to use it instead of the one read from the content.
