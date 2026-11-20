@@ -124,7 +124,8 @@ html`
 `;
 ```
 
-- Turn it on with `loading`, or fire a `skeleton-loading` event with `{ loading: true }` from inside the content, then `{ loading: false }` when it's done. The nearest overlay picks it up.
+- Turn it on with `loading`, or fire a `skeleton-loading` event with `{ loading: true }` from inside the content, then `{ loading: false }` when it's done. The nearest overlay picks it up. In a Lit component, `SkeletonLoadingController` from `src/components/skeleton/skeleton-loading-controller.ts` fires these for you from a function that says whether it's loading.
+- Every dashboard card and badge is already wrapped in an overlay, which shows a plain wave while the card's code loads. A card that fetches data only has to say when it's loading.
 - Mark an element with `data-skeleton="none"` to leave it out and showing, `keep` to leave it showing but read what's inside it, or `text`, `round`, or `block` to draw it as one piece of that shape.
 - Put your own skeleton in the `skeleton` slot to use it instead of the one read from the content.
 
