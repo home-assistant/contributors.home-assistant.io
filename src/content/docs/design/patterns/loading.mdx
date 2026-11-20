@@ -46,7 +46,7 @@ A progress button goes one step further. When the action is done, it shows a che
 
 A skeleton keeps the layout in place while the content loads, so nothing jumps around when it arrives. The frontend has `ha-skeleton`, with `ha-skeleton-text` and `ha-skeleton-icon` for the common shapes. Data tables, tiles, and the devices dashboard use them.
 
-A soft wave sweeps across every skeleton. It's one wave across the whole window, with each skeleton showing its own slice of it, so it flows from one skeleton into the next, and a skeleton that appears halfway through joins in rather than starting over.
+A soft wave sweeps across every skeleton. It's one wave across all the skeletons on the page, from the leftmost to the rightmost, with each skeleton showing its own slice of it. It flows from one skeleton into the next, starts again as soon as it reaches the end, and a skeleton that appears halfway through joins in rather than starting over.
 
 When the content can draw itself before its data arrives, such as a dashboard card or badge, wrap it in `ha-skeleton-overlay` instead of building a skeleton by hand. It reads the skeleton from the content itself: each line of text, icon, image, control, and drawing gets its own piece, so the skeleton always matches what will appear.
 
