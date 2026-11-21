@@ -1,5 +1,8 @@
 # Packages that may run a build script when they install. pnpm blocks all
 # others, and fails the install when a blocked one has a script.
+overrides:
+  "@emnapi/runtime": "1.11.3"
+
 allowBuilds:
   # Checks that its platform binary is in place.
   esbuild: true
