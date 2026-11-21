@@ -8,7 +8,8 @@
 // - Every row of redirects/fragments.tsv goes to a heading that exists.
 // - The share card of every page (og:image) is a file in dist/.
 // - Every docs page has a Markdown version for agents, at <page>index.md,
-//   and points to it with <link rel="alternate">.
+//   points to it with <link rel="alternate">, and to the llms.txt that
+//   lists it with <link rel="describedby">.
 // - Every link to this site in those Markdown versions and in the llms.txt
 //   files goes to a page or file that exists.
 //
@@ -143,6 +144,11 @@ for (const entry of readdirSync(DOCS, { recursive: true, withFileTypes: true }))
   }
   if (!hasAlternate) {
     report(markdown, `${pagePath} (no <link rel="alternate"> to it)`);
+  }
+
+  const llms = html.match(/<link\s[^>]*rel="describedby"[^>]*href="([^"]+)"/)?.[1];
+  if (!llms || !existsSync(path.join(DIST, llms))) {
+    report(llms ?? "llms.txt", `${pagePath} (<link rel="describedby"> is missing, or its file)`);
   }
 }
 
