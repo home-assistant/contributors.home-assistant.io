@@ -1,6 +1,6 @@
 ---
 title: Reauthentication and reconfiguration
-description: Let users fix expired credentials and change connection details of an existing config entry, without removing and adding it again.
+description: Let users fix expired credentials and change the settings the integration needs to work, without removing and adding the config entry again.
 sidebarLabel: Reauth and reconfigure
 sidebarGroup: Setup and configuration
 order: 6
@@ -8,10 +8,10 @@ order: 6
 
 Things change after setup. A password expires, a token gets revoked, a device moves to a new IP address. Two special steps of your config flow handle that, and both update the existing config entry instead of creating a new one:
 
-- **Reauthentication** (`reauth`) fixes credentials. Home Assistant starts it when your integration reports that authentication failed.
-- **Reconfiguration** (`reconfigure`) changes other setup data, like a host. Users start it from the menu of the config entry.
+- **Reauthentication** (`reauth`) asks for new credentials when the old ones stop working. Home Assistant starts it when your integration reports that authentication failed, so users do not have to find the problem themselves.
+- **Reconfiguration** (`reconfigure`) changes the settings the integration needs to work, like a host or a password. Users start it themselves, from the menu of the config entry, whenever they want.
 
-Neither is for options. Settings that change how the integration behaves belong in an [options flow](/core/integrations/options-flow/).
+Neither is for options. Optional settings that adjust how the integration behaves belong in an [options flow](/core/integrations/options-flow/).
 
 Both are rules of the [quality scale](/core/quality-scale/): reauthentication is part of Silver, reconfiguration of Gold.
 
@@ -121,6 +121,10 @@ To try it by hand, stop Home Assistant, edit the stored credentials in `config/.
 ## Reconfiguration
 
 Add an `async_step_reconfigure` to let users change setup data of an entry, like the host. Users find **Reconfigure** in the menu of the config entry as soon as the step exists.
+
+The reconfigure step asks for the settings the integration needs to work, whether users entered them during setup or discovery found them. Examples are the host of a device, or the zone the [Proximity integration](https://www.home-assistant.io/integrations/proximity/) measures the distance to. Because the integration cannot do without these settings, they cannot move to an options flow.
+
+The reconfigure step also covers credentials users typed in, like a password. Users can change those whenever they want, for example right after they change the password at the service. Reauthentication is only for when your integration detects that the credentials no longer work.
 
 ```python
 async def async_step_reconfigure(

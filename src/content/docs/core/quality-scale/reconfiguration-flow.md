@@ -8,7 +8,7 @@ order: 19
 
 This is a Gold rule. In `quality_scale.yaml`, it is called `reconfiguration-flow`.
 
-The config flow has a [reconfigure step](/glossary/reconfigure-flow/): `async_step_reconfigure`. It lets users change what they entered during setup, like the host of a device, from the menu of the integration entry, without removing it and setting it up again.
+The config flow has a [reconfigure step](/glossary/reconfigure-flow/): `async_step_reconfigure`. It lets users change the settings the integration needs to work, like the host of a device, from the menu of the integration entry, without removing it and setting it up again. Optional settings belong in an [options flow](/glossary/options-flow/).
 
 ## Why it matters
 

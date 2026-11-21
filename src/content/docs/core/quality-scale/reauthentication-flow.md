@@ -1,6 +1,6 @@
 ---
 title: Reauthenticate from the UI
-description: "Silver rule reauthentication-flow: users can enter new credentials without removing the integration."
+description: "Silver rule reauthentication-flow: the integration asks for new credentials when the old ones stop working."
 sidebarLabel: reauthentication-flow
 sidebarGroup: Silver
 order: 9
@@ -12,9 +12,9 @@ When the credentials of the integration stop working, the integration must start
 
 ## Why it matters
 
-People change passwords, and API tokens expire. Without a reauthentication flow, the integration just stops working, and the only fix is to remove it and set it up again. That loses the entity customizations, and breaks dashboards and automations on the way.
+People change passwords and forget that Home Assistant still uses the old one, and API tokens expire. Users can fix that themselves, with a reconfigure flow if the integration has one, but first they have to notice the error, understand it, and find where to enter the new credentials.
 
-With a reauthentication flow, the integration shows up under **Settings** > **Devices & services** as needing attention. The user enters the new password, and everything keeps working as before.
+A reauthentication flow takes those steps away: the integration asks for new credentials as soon as the old ones stop working. It shows up under **Settings** > **Devices & services** as needing attention, the user enters the new password, and everything keeps working as before.
 
 ## Example
 
