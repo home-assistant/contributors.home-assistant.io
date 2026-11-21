@@ -147,7 +147,7 @@ Ends any subscription. `subscription` is the `id` of the command that started it
 
 ### Subscribe to entities
 
-`subscribe_entities` is how the frontend follows states. It sends all states the user may read first, then only the changes, in a compact format. Pass `entity_ids` to limit it.
+`subscribe_entities` is how the frontend follows states. It sends all states the user may read first, then only the changes, in a compact format. Pass `entity_ids` to limit it, or an `include` and `exclude` filter, described under [limit the entities](#limit-the-entities).
 
 ```json
 {
@@ -282,7 +282,7 @@ These commands don't come from `websocket_api` itself, but from integrations tha
 
 ### List entities for display
 
-`config/entity_registry/list_for_display` comes from the `config` integration. It returns the entity registry in a compact format: just what a client needs to show entities, with short keys to keep the message small. Any authenticated user can call it. It takes no parameters.
+`config/entity_registry/list_for_display` comes from the `config` integration. It returns the entity registry in a compact format: just what a client needs to show entities, with short keys to keep the message small. Any authenticated user can call it.
 
 ```json
 {
@@ -290,6 +290,8 @@ These commands don't come from `websocket_api` itself, but from integrations tha
   "type": "config/entity_registry/list_for_display"
 }
 ```
+
+Without parameters, it returns every entity that isn't disabled. To get only some of them, [limit the entities](#limit-the-entities) with the same fields as `subscribe_entities`.
 
 ```json
 {
@@ -346,6 +348,31 @@ These commands don't come from `websocket_api` itself, but from integrations tha
 | `dp` | number | Sensors only: the number of decimals to show. The precision the user set, otherwise the precision the integration suggests. |
 
 For the full registry entries, with all fields, use `config/entity_registry/list` (all entries) or `config/entity_registry/get_entries` (the entries for a list of `entity_ids`).
+
+#### Limit the entities
+
+`config/entity_registry/list_for_display` and `subscribe_entities` take the same optional fields to limit the entities they return. A client that follows a few entities can send the same fields to both commands, and gets the states and the registry entries of the same entities.
+
+```json
+{
+  "id": 42,
+  "type": "config/entity_registry/list_for_display",
+  "include": {
+    "domains": ["light"],
+    "entities": ["switch.fan"]
+  }
+}
+```
+
+| Field | Type | Meaning |
+| --- | --- | --- |
+| `entity_ids` | list of strings | Optional. Only these entities. IDs that don't exist are ignored. |
+| `include` | map | Optional. The entities to keep, with any of `domains`, `entities`, and `entity_globs`, each a list of strings. An entity is kept when it matches one of them. |
+| `exclude` | map | Optional. The entities to leave out, with the same three keys as `include`. |
+
+An empty list or an empty map limits nothing, so a command without any of these fields, or with only empty ones, returns every entity. When both `entity_ids` and a filter are given, an entity has to match both. When `include` and `exclude` both match an entity, the rules are the ones of the [`EntityFilter` helper](https://github.com/home-assistant/core/blob/dev/homeassistant/helpers/entityfilter.py): for example, an entity listed under `include` `entities` is kept even when its domain is excluded.
+
+`list_for_display` accepts these fields since Home Assistant 2026.12. Older versions reject the command with `invalid_format` when they are present.
 
 ### Expose entities to voice assistants
 
