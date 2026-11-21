@@ -1,4 +1,4 @@
-// A ready-made environment for the site: Node.js 24, pnpm, and the dependencies
+// A ready-made environment for the site: Node.js 26, pnpm, and the dependencies
 // installed. Open the repository in VS Code and choose "Reopen in Container",
 // or open it in a GitHub Codespace. Then run pnpm dev.
 {
