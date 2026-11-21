@@ -41,12 +41,28 @@ An exemption is a claim, like `done`. Each rule page has an "Exceptions" section
 
 Good comments are specific: "The device has no authentication" is better than "Not applicable".
 
+### Describe the gap, not the pull request
+
+A comment should still be true a year from now. Describe what is missing, or why the rule does not apply, and leave out links to pull requests.
+
+This comes up a lot with new integrations. A reviewer asks you to split a feature, like the reconfiguration flow, into its own pull request. It is tempting to write "Will be added in #12345", but that comment goes stale the moment the pull request merges, and nobody comes back to update the rule. Write what is missing instead:
+
+```yaml
+rules:
+  reconfiguration-flow:
+    status: todo
+    comment: There is no reconfiguration flow yet.
+```
+
+The pull request that adds the reconfiguration flow then sets the rule to `done` and removes the comment, in the same change. The same goes for documentation and brands: once the rule is `done`, the link to the pull request that did it adds nothing.
+
 ## What hassfest checks
 
 [Hassfest](/core/development/checks/) runs in CI on every pull request, and you can run it locally with `python3 -m script.hassfest`. For the quality scale, it checks:
 
 - That an integration in core has a `quality_scale.yaml`. New integrations must reach Bronze, so hassfest fails when the file is missing. Older integrations without one are listed in `script/hassfest/quality_scale.py`, and that list only gets shorter.
 - That the file matches the format above, with every rule and a valid status.
+- That no comment refers to a specific pull request, like a pull request URL, `owner/repo#123`, or `PR #123`. See [Describe the gap, not the pull request](#describe-the-gap-not-the-pull-request).
 - That every rule of the tier in `manifest.json`, and of the tiers below it, is `done` or `exempt`. When one is not, hassfest lists the missing rules.
 - That Silver and higher integrations have at least one integration owner in `manifest.json`.
 - That virtual integrations, and internal integrations listed as having no scale, do not have the file.
