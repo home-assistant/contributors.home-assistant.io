@@ -505,6 +505,18 @@
       "type": "file"
     },
     {
+      "path": "demo/src/embed/",
+      "repository": "home-assistant/frontend",
+      "branch": "dev",
+      "type": "folder"
+    },
+    {
+      "path": "demo/src/html/components.html.template",
+      "repository": "home-assistant/frontend",
+      "branch": "dev",
+      "type": "file"
+    },
+    {
       "path": "demo/src/stubs/",
       "repository": "home-assistant/frontend",
       "branch": "dev",
