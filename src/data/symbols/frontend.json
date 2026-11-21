@@ -1,6 +1,6 @@
 {
   "repository": "home-assistant/frontend",
-  "commit": "afcf7d4e080b86bc2bf01e32070099e60dc74dab",
+  "commit": "fc640e236dc3ad82dfdb533970aaa816ebe48c47",
   "symbols": [
     {
       "id": "src/common/decorators/consume-context-entry.ts:consumeEntityStates",
@@ -584,7 +584,7 @@
       "kind": "function",
       "module": "src/data/timer.ts",
       "path": "src/data/timer.ts",
-      "line": 103,
+      "line": 106,
       "signature": "computeDisplayTimer(\n  formatEntityState: FormatEntityStateFunc,\n  stateObj: HassEntity,\n  timeRemaining?: number\n): string | null",
       "doc": null,
       "bare": true
@@ -991,7 +991,7 @@
       "kind": "function",
       "module": "src/panels/lovelace/create-element/create-card-element.ts",
       "path": "src/panels/lovelace/create-element/create-card-element.ts",
-      "line": 126,
+      "line": 127,
       "signature": "createCardElement(config: LovelaceCardConfig)",
       "doc": null,
       "bare": true
