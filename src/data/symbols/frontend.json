@@ -1,6 +1,6 @@
 {
   "repository": "home-assistant/frontend",
-  "commit": "fc640e236dc3ad82dfdb533970aaa816ebe48c47",
+  "commit": "9eb51a8c06ddf223a936630591d93d873e6f94eb",
   "symbols": [
     {
       "id": "src/common/decorators/consume-context-entry.ts:consumeEntityStates",
@@ -107,6 +107,18 @@
       "path": "src/components/input/wa-input-mixin.ts",
       "line": 207,
       "signature": "WaInputMixin.reportValidity(): boolean",
+      "doc": null,
+      "bare": true
+    },
+    {
+      "id": "src/components/list/ha-list-selectable-mixin.ts:SelectableMixin.clearSelection",
+      "name": "clearSelection",
+      "qualname": "SelectableMixin.clearSelection",
+      "kind": "method",
+      "module": "src/components/list/ha-list-selectable-mixin.ts",
+      "path": "src/components/list/ha-list-selectable-mixin.ts",
+      "line": 43,
+      "signature": "SelectableMixin.clearSelection()",
       "doc": null,
       "bare": true
     },
@@ -991,7 +1003,7 @@
       "kind": "function",
       "module": "src/panels/lovelace/create-element/create-card-element.ts",
       "path": "src/panels/lovelace/create-element/create-card-element.ts",
-      "line": 127,
+      "line": 126,
       "signature": "createCardElement(config: LovelaceCardConfig)",
       "doc": null,
       "bare": true
