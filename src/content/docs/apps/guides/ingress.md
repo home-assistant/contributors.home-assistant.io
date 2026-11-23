@@ -34,8 +34,8 @@ Your web interface is served under a path that changes per installation, like `/
 
 - Use relative URLs everywhere: `static/app.js`, not `/static/app.js`.
 - From Home Assistant 2026.12, Home Assistant adds the header `X-Forwarded-Prefix` to every request, with the path your app is served under. Use it when you need to build absolute URLs, or to set a base path in software that supports one. Many web frameworks and reverse proxies apply it for you once you turn that on, like Werkzeug with `ProxyFix(x_prefix=1)` or Spring Boot with `server.forward-headers-strategy=framework`.
-- The older header `X-Ingress-Path` has the same value. It is deprecated and will be removed in Home Assistant 2027.12, so switch to `X-Forwarded-Prefix`. If your app still supports releases before 2026.12, keep `X-Ingress-Path` until you raise the minimum version with `homeassistant: 2026.12.0` in `config.yaml`. Those releases pass on any `X-Forwarded-Prefix` the client sends.
-- Read only one of the two headers. If your app adds `X-Ingress-Path` to its URLs and its framework also applies `X-Forwarded-Prefix`, the URLs get the path twice.
+- The older header `X-Ingress-Path` has the same value. It is deprecated and will be removed in Home Assistant 2027.12. If your app also supports releases before 2026.12, read `X-Forwarded-Prefix` if it is available, and fall back to `X-Ingress-Path` if it is not. Never apply both, or your URLs get the path twice.
+- Releases before 2026.12 pass on any `X-Forwarded-Prefix` the client sends. Set `homeassistant: 2026.12.0` in `config.yaml` before you trust the header.
 - The ingress URL is also available from the Supervisor API, as `ingress_url` and `ingress_entry` in `GET /addons/self/info`.
 
 If the start page of your app is not at `/`, set `ingress_entry` to its path.
