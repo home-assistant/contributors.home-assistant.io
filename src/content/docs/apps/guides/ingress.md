@@ -33,13 +33,8 @@ After installing, the app page shows **Open Web UI**, and the user can turn on *
 Your web interface is served under a path that changes per installation, like `/api/hassio_ingress/Xs3V.../`. This is where most ingress problems come from. Absolute links, like `/static/app.js` or a redirect to `/login`, point to Home Assistant instead of your app and fail.
 
 - Use relative URLs everywhere: `static/app.js`, not `/static/app.js`.
-- Home Assistant adds the header `X-Forwarded-Prefix` to every request, with the path your app is served under.
-  Use it when you need to build absolute URLs, or to set a base path in software that supports one.
-  Many web frameworks and reverse proxies read `X-Forwarded-Prefix` by themselves, like Werkzeug with `ProxyFix(x_prefix=1)` or Spring, so you may not need any code for it.
-- Home Assistant also adds the header `X-Ingress-Path`, with the same value.
-  It is deprecated and will be removed in Home Assistant 2028.1.
-  If your app reads it, switch to `X-Forwarded-Prefix`.
-  Do not use both: if your app adds `X-Ingress-Path` to its URLs and its framework also applies `X-Forwarded-Prefix`, the URLs end up with the path twice.
+- Home Assistant adds the header `X-Forwarded-Prefix` to every request, with the path your app is served under. Use it when you need to build absolute URLs, or to set a base path in software that supports one. Many web frameworks and reverse proxies can apply `X-Forwarded-Prefix` for you once you turn it on, like Werkzeug with `ProxyFix(x_prefix=1)` or Spring Boot with `server.forward-headers-strategy=framework`.
+- Home Assistant also adds the header `X-Ingress-Path`, with the same value. It is deprecated and will be removed in Home Assistant 2028.1. If your app reads it, switch to `X-Forwarded-Prefix`. Do not use both: if your app adds `X-Ingress-Path` to its URLs and its framework also applies `X-Forwarded-Prefix`, the URLs end up with the path twice.
 - The ingress URL is also available from the Supervisor API, as `ingress_url` and `ingress_entry` in `GET /addons/self/info`.
 
 If the start page of your app is not at `/`, set `ingress_entry` to its path.
