@@ -44,7 +44,7 @@ The writing rules are in `.github/copilot-instructions.md`. For an in-depth revi
 - Em dashes or en dashes, anywhere.
 - "e.g.", "i.e.", "etc.", "click" (unless it is a mouse action), "HA" or "HASS", "master/slave".
 - Title case in headings, British spelling, "the user" instead of "you", CAPS or bold for emphasis.
-- Hard-wrapped paragraphs. Write one line per paragraph.
+- Paragraphs wrapped at a fixed width, with line breaks in the middle of sentences. Each sentence on its own line, or a whole paragraph on one line, is fine.
 - Callouts that are not GitHub alerts (`> [!NOTE]`), or a page full of them.
 - YAML examples that break the YAML style: truthy booleans, flow mappings, single quotes, a list with one item.
 - Images without meaningful alt text.

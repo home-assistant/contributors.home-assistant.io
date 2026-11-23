@@ -28,7 +28,7 @@ All other sections describe this site. Review them against the repository:
 
 - Preserve the existing structure and wording where possible.
 - Prefer small, reviewable edits over broad rewrites.
-- Write in flowing text. Do not hard wrap lines.
+- Do not wrap lines at a fixed width. Write each sentence on its own line, or keep a paragraph on a single line.
 - Do not edit any other files, except to keep them in step: the checklists in `.github/instructions/` repeat some rules in short form, and the skills in `.github/skills/` link to sections of the instructions by name. When you change a rule or rename a section, update those too.
 
 If a remote source cannot be fetched, stop and report the missing source instead of guessing.

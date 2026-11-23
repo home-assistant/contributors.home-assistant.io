@@ -63,11 +63,12 @@ Some other rules:
 - Use the Oxford comma.
 - Follow grammar and syntax rules. End sentences with a period.
 - Do not put two spaces after a period.
-- There is no limit for the line length. We preferably write in a flowing text
-  style in our Markdown files, as this makes it easier to edit in the online
-  editors.
-- If a paragraph/markdown isn't written in a flowing text style, it must
-  be adjusted.
+- There is no limit for the line length, so do not wrap lines at a fixed width.
+  Write each sentence of a paragraph on its own line, with a single line break.
+  This is recommended, but optional, and keeping a whole paragraph on a single line is still fine.
+- If a paragraph is wrapped at a fixed width, with line breaks in the middle of sentences, it must be adjusted.
+  When you change a paragraph that is on a single line, split only that paragraph into sentences, and leave the other paragraphs as they are.
+  Do not make edits that only change how paragraphs are split into lines.
 - Do not use CAPS for emphasis. Use italics instead.
 - Do not use **bold** for emphasis or to replace a heading. Bold is mainly used for
   UI strings.
