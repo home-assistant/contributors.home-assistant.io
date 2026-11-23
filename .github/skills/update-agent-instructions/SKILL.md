@@ -7,24 +7,28 @@ description: Use this if the user wants to update the agent instructions for the
 
 Update `.github/copilot-instructions.md`, the agent instructions for this site. `CLAUDE.md` and `AGENTS.md` are symlinks to it.
 
-## Shared sections
+## Shared section
 
-The "Brand personality" and "YAML" sections (including "Home Assistant YAML") are shared with home-assistant.io.
-Their sources are the writing skills of home-assistant.io:
+The "Brand personality" section is shared with home-assistant.io.
+Its source is the "Brand personality" section of the writing style skill of home-assistant.io:
 
-- "Brand personality": the "Brand personality" section of `https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/.claude/skills/home-assistant-docs-writing-style/SKILL.md`
-- "YAML" and "Home Assistant YAML": `https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/.claude/skills/home-assistant-yaml-style/SKILL.md`
+- `https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/.claude/skills/home-assistant-docs-writing-style/SKILL.md`
 
-The skills use different headings and shorter wording than this file, so do not copy them verbatim.
-Update each shared section so that its rules match its source: add new rules, change rules that changed, and remove rules that the source dropped.
-Keep the structure and examples of this file, and its notes about this site, like that it has no Liquid.
-Leave out rules that only apply to the home-assistant.io website, like its Jekyll and Liquid setup or its textlint configuration.
-Do not edit the shared sections in any other way.
-If the writing style skill has a new rule that applies to all Home Assistant writing, outside the shared sections, mention it to the user instead of adding it.
+The skill uses shorter wording than this file, so do not copy it verbatim.
+Update the section so that its rules match its source: add new rules, change rules that changed, and remove rules that the source dropped.
+Do not edit the section in any other way.
+If the writing style skill has a new rule that applies to all Home Assistant writing, mention it to the user instead of adding it.
 
-The "General language" section is no longer shared, because home-assistant.io moved its writing rules into skills and rewrote them.
-It is maintained in this repository.
-Keep it in step with the style guide in `src/content/docs/writing/reference/style.md`.
+## Style guide imports
+
+The "General language" and "YAML" sections import the style guide pages of this site, `src/content/docs/writing/reference/style.md` and `src/content/docs/writing/reference/yaml.md`.
+Do not copy rules from those pages into the instructions.
+Keep the import paths relative to `.github/copilot-instructions.md`, like `@../src/content/docs/writing/reference/style.md`, because Claude Code resolves them from there.
+
+Copilot code review does not load imported files.
+It reviews the writing with `.github/instructions/review-writing.instructions.md`, a short form of both pages.
+When a rule on one of those pages changes, update that checklist too.
+Copilot code review may read only the first 4,000 characters of each instruction file, so keep every file in `.github/instructions/` under 4,000 characters.
 
 ## Site specific sections
 

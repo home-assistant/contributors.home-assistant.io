@@ -7,7 +7,7 @@ description: Use this to review a pull request, a set of pages, or site code of 
 
 Review a pull request, or a set of pages or files, of this site. You can be a person, Copilot, Claude, or another agent: the steps are the same.
 
-The rules live in [`.github/copilot-instructions.md`](../../copilot-instructions.md). The short checklists live in [`.github/instructions/review-content.instructions.md`](../../instructions/review-content.instructions.md) (pages) and [`.github/instructions/review-site.instructions.md`](../../instructions/review-site.instructions.md) (site code). This skill is how you work through them in depth. Do not copy the rules into your review: link the section.
+The rules live in [`.github/copilot-instructions.md`](../../copilot-instructions.md), and the writing rules in the [style guide](../../../src/content/docs/writing/reference/style.md) and the [YAML style guide](../../../src/content/docs/writing/reference/yaml.md). The short checklists live in [`.github/instructions/review-content.instructions.md`](../../instructions/review-content.instructions.md) (pages), [`.github/instructions/review-writing.instructions.md`](../../instructions/review-writing.instructions.md) (words, formatting, and YAML), and [`.github/instructions/review-site.instructions.md`](../../instructions/review-site.instructions.md) (site code). This skill is how you work through them in depth. Do not copy the rules into your review: link the section.
 
 Just review. Do not change files unless you are asked to fix what you find.
 
