@@ -20,11 +20,11 @@ Starting with Home Assistant 2027.1, requests that reach your app through [ingre
 
 If your app does not read `X-Ingress-Path`, no change is necessary.
 
-If it does, switch to `X-Forwarded-Prefix` before Home Assistant 2028.1. If your app also supports releases before 2027.1, fall back to `X-Ingress-Path` when `X-Forwarded-Prefix` is missing. If your web framework or a reverse proxy inside your app can apply `X-Forwarded-Prefix` for you, you may be able to remove that code completely.
+If it does, switch to `X-Forwarded-Prefix` before Home Assistant 2028.1. If your app also supports releases before 2027.1, keep reading `X-Ingress-Path` until it requires 2027.1 or later, with `homeassistant: 2027.1.0` in `config.yaml`: those releases pass on an `X-Forwarded-Prefix` sent by the client. If your web framework or a reverse proxy inside your app can apply `X-Forwarded-Prefix` for you, you may be able to remove that code completely.
 
 Check this soon, even if you plan to switch later. From Home Assistant 2027.1, an app that adds `X-Ingress-Path` to its URLs, while its framework also applies `X-Forwarded-Prefix`, gets the path twice, like `/api/hassio_ingress/<token>/api/hassio_ingress/<token>/static/app.js`. Use one of the two headers, not both.
 
-Home Assistant replaces any `X-Forwarded-Prefix` a client sends, so your app can trust the value, as long as it only accepts connections from `172.30.32.2`.
+From Home Assistant 2027.1, Home Assistant replaces any `X-Forwarded-Prefix` a client sends, so your app can trust the value, as long as it only accepts connections from `172.30.32.2`.
 
 ## Timeline
 
