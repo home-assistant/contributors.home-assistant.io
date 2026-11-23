@@ -1,7 +1,7 @@
 ---
 title: "X-Ingress-Path is deprecated in favor of X-Forwarded-Prefix"
 description: "Home Assistant 2027.1 adds the standard X-Forwarded-Prefix header to ingress requests and deprecates X-Ingress-Path, which will be removed in Home Assistant 2028.1."
-date: 2026-11-23
+date: 2026-11-25
 authors:
   - Felipe Santos
 areas:
