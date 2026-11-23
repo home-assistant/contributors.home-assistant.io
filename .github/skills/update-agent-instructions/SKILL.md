@@ -28,7 +28,6 @@ Keep the import paths relative to `.github/copilot-instructions.md`, like `@../s
 Copilot code review does not load imported files.
 It reviews the writing with `.github/instructions/review-writing.instructions.md`, a short form of both pages.
 When a rule on one of those pages changes, update that checklist too.
-Copilot code review may read only the first 4,000 characters of each instruction file, so keep every file in `.github/instructions/` under 4,000 characters.
 
 ## Site specific sections
 
