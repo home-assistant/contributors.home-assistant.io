@@ -10,7 +10,7 @@ areas:
 
 As of Home Assistant Core 2026.12, `CoverEntity` has three new optional properties that describe what the tilt position of a cover means: `open_tilt_position`, `tilt_start_angle`, and `tilt_end_angle`.
 
-The tilt position is a number from 0 to 100, documented as closed at 0 and open at 100. Many covers don't work that way. The slats of a lot of blinds turn 180°, so they are closed at 0 and at 100, and open at 50. Nothing on the entity said so, and everything that reads the tilt had to guess where the slats are open.
+The tilt position is a number from 0 to 100, documented as closed at 0 and open at 100. Many covers don't work that way. The slats of a lot of blinds turn 180°, so they are closed at 0 and at 100, and open at 50. Nothing on the entity said so. The frontend and Alexa assume the slats are open at 100, and the HomeKit bridge assumes they are open at 50.
 
 If your integration sets none of the new properties, nothing changes: the cover is open at 100.
 
@@ -18,7 +18,7 @@ If your integration sets none of the new properties, nothing changes: the cover 
 
 `open_tilt_position` is the tilt where the slats are open, which is where `open_cover_tilt` moves them.
 
-`tilt_start_angle` and `tilt_end_angle` are the angle of the slats at tilt 0 and at tilt 100, from -90 to 90 degrees. 0° is a slat perpendicular to the cover, and at -90° and 90° the slat lies in the plane of the cover. Set both or neither.
+`tilt_start_angle` and `tilt_end_angle` are the angles of the slats at tilt 0 and at tilt 100, from -90 to 90 degrees. 0° is a slat perpendicular to the cover, and at -90° and 90° the slat lies in the plane of the cover. Set both or neither.
 
 When you only set the angles, the open position is the tilt where the slats are closest to perpendicular.
 
