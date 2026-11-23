@@ -46,7 +46,7 @@ A progress button goes one step further. When the action is done, it shows a che
 
 A skeleton keeps the layout in place while the content loads, so nothing jumps around when it arrives. The frontend has `ha-skeleton`, with `ha-skeleton-text` and `ha-skeleton-icon` for the common shapes. Data tables, tiles, and the devices dashboard use them.
 
-A soft wave sweeps across every skeleton. It's one slanted wave across all the skeletons on the page, from the top corner of the content on the side text starts from to the opposite bottom corner, with each skeleton showing its own slice of it. It flows from one skeleton into the next, starts again as soon as it reaches the end, and a skeleton that appears halfway through joins in rather than starting over.
+By default, a soft wave sweeps across the `effect="sheen"` skeletons on the page. It is one slanted wave from the top corner of the content on the side where text starts to the opposite bottom corner, with each skeleton showing its own slice of it. It flows from one skeleton into the next, starts again as soon as it reaches the end, and a skeleton that appears halfway through joins in rather than starting over.
 
 <Demo layout="stack" caption="A row of a data table while it loads: ha-skeleton-icon and ha-skeleton-text.">
   <div style="display: flex; align-items: center; gap: 16px">
