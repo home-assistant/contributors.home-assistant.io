@@ -52,6 +52,7 @@ Keys the Supervisor does not know are ignored without a warning, so check your s
 | `stage` | string | `stable` | Where the app is in its life: `stable`, `experimental`, or `deprecated`. |
 | `init` | bool | `true` | Run the container with Docker's default init process. Set to `false` when the image has its own init, which is the case for all Home Assistant base images (S6 overlay version 3 does not start otherwise). |
 | `timeout` | integer | `10` | Seconds the Supervisor waits for the app to stop before it kills the container. Between 10 and 300. |
+| `log_format` | string | `plain` | The format of the app's logs when a request to its [log endpoints](/apps/supervisor-api/#log-endpoints) does not ask for one: `plain` (the message only), `timestamp` (the time, then the message), or `verbose` (the time, host name, process, and message). Use `timestamp` when your app does not put a time in its own log lines. A request that asks for a format still gets that format. |
 | `breaking_versions` | list | | Versions that need the user's attention. Automatic updates never install, or cross, one of these versions. |
 | `environment` | mapping | | Extra environment variables for the container. |
 | `legacy` | bool | `false` | For images without the Home Assistant labels: also passes the top-level options, if they are a string or a number, as environment variables. |
