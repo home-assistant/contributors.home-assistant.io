@@ -9,11 +9,15 @@ Update `.github/copilot-instructions.md`, the agent instructions for this site. 
 
 ## Shared sections
 
-The "Brand personality", "General language", and "YAML" sections (including "Home Assistant YAML") are shared with home-assistant.io. Copy them verbatim from:
+The "Brand personality" and "YAML" sections (including "Home Assistant YAML") are shared with home-assistant.io. Copy them verbatim from:
 
 - `https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/.github/copilot-instructions.md`
 
 Replace each shared section in this repository with the current version of the same section from that file. Do not edit the shared sections in any other way. If the source has a new section that applies to all Home Assistant writing (not to the home-assistant.io website or its Jekyll setup), mention it to the user instead of adding it.
+
+The "General language" section is no longer shared, because home-assistant.io moved its writing rules from that file into skills.
+It is maintained in this repository.
+Keep it in step with the style guide in `src/content/docs/writing/reference/style.md`.
 
 ## Site specific sections
 

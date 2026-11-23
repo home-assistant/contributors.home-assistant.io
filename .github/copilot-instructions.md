@@ -1,8 +1,9 @@
 <!--
-  Shared with home-assistant.io: the "Brand personality", "General language",
-  and "YAML" sections are copied verbatim from the instructions in the
+  Shared with home-assistant.io: the "Brand personality" and "YAML" sections
+  are copied verbatim from the instructions in the
   home-assistant/home-assistant.io repository. Keep them identical and update
   them with the update-agent-instructions skill, not by hand.
+  The "General language" section is maintained in this repository.
 -->
 
 ## Your job description
