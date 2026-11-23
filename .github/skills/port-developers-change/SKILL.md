@@ -90,7 +90,7 @@ Changes to the old site itself, like `docusaurus.config.js`, `sidebars.js`, or `
 
 1. Read the page here in full, so the change fits what is already there.
 2. Verify the change against the source, with the [`fact-check` skill](../fact-check/SKILL.md). The pull request on the old site may be about a code change that is not merged, or that changed again since. Port only what the default branch of the code supports.
-3. Rewrite it in the style of this site. The rules are in [`.github/copilot-instructions.md`](../../copilot-instructions.md). No em or en dashes, second person, American English, short sentences, "Home Assistant" in full, no former names.
+3. Rewrite it in the style of this site. The rules are in [`.github/copilot-instructions.md`](../../copilot-instructions.md). Few em dashes, second person, American English, short sentences, "Home Assistant" in full, no former names.
 4. If the change touches a fact that another page here repeats, update that page too, or link to the one page that owns it.
 5. If you rename a heading, follow "Moving or renaming pages" in the rules.
 

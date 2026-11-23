@@ -9,7 +9,7 @@ This is the short form of the style guide (`src/content/docs/writing/reference/s
 ## Words
 
 - Former names in new text: "service" for an action, "add-on" for an app, "Lovelace" for a dashboard, "component" for an integration, "breaking change" for a backward-incompatible change, "Home Assistant Cloud" for Home Assistant Link, "core architecture meeting" for the architecture meeting. Code identifiers and quoted API paths are fine.
-- Em dashes or en dashes, anywhere.
+- Em dashes with spaces around them, or several em dashes where a period, colon, comma, or parentheses would do.
 - "e.g.", "i.e.", "etc.", "click" (unless it is a mouse action), "HA" or "HASS", "master/slave".
 - Title case in headings, British spelling, "the user" instead of "you", CAPS or bold for emphasis.
 - Names spelled differently from their owners, like "Zwave" or "Github".
