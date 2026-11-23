@@ -92,6 +92,62 @@ The frontend gets two-way audio only when all of these hold:
 - The camera streams over WebRTC, natively or through a WebRTC provider. Two-way audio is not available over HLS.
 - The user turned on the **Two-way audio** preview feature of the camera integration in [Labs](/core/development/labs/). The browser only gives access to the microphone over HTTPS, so in a browser, two-way audio needs Home Assistant to be opened over HTTPS. An app that embeds the frontend can capture the microphone itself instead, with [`webrtc/stream/start`](/frontend/reference/external-bus/#webrtcstreamstart) on the external bus. Two-way audio then also works without HTTPS.
 
+#### Declare two-way audio
+
+Two-way audio is a capability, not a supported feature.
+Do not add a flag to `CameraEntityFeature` for it: the supported features describe the actions of the camera.
+
+Declare it only when both the device and the stream you give Home Assistant can carry audio to the camera, often called the audio backchannel.
+The same camera can support it over one protocol and not over another.
+The Reolink integration, for example, declares two-way audio only when the channel has a speaker and the configured protocol is RTSP, because RTMP and FLV cannot carry the backchannel.
+
+The capability can change while the entity runs.
+Set `_attr_camera_entity_capabilities` again when the device reports a change, like the Matter integration does in `_update_from_device`.
+Home Assistant works out what the frontend gets each time the frontend asks for the capabilities of the camera, which it does when it opens the stream.
+The result is `camera_capabilities`, which is final: do not override it.
+
+#### Carry the audio to the camera
+
+How the audio reaches the camera depends on how your camera streams.
+
+If you implement `stream_source` and a WebRTC provider like go2rtc handles the stream, you have nothing else to build.
+The provider sends the audio of the microphone to the camera over the stream source, if it supports the backchannel of that source, like RTSP cameras with ONVIF Profile T.
+
+If you implement [native WebRTC](#native-webrtc), the audio arrives in the WebRTC session, and your integration must pass it on to the camera:
+
+- When the person starts talking, the frontend closes the current stream and opens a new WebRTC session. Its offer has an audio track in both directions (`sendrecv`) with the microphone, instead of the receive-only audio track (`recvonly`) of a normal stream.
+- Answer that audio track with `sendrecv`, and make sure the camera plays the audio it receives. When the person stops talking, the frontend keeps the session and stops sending audio.
+- An app that captures the microphone itself opens a separate session for it. Its offer has a single send-only audio track (`sendonly`) and no video.
+
+The Ring integration is an example where the library already does this: Ring live view sessions are full duplex, so the integration only had to declare the capability.
+
+#### Test two-way audio
+
+Turn the preview feature on or off in your test with `async_update_preview_feature`, imported from `homeassistant.components.labs`, and check the result of the `camera/capabilities` WebSocket command.
+This tests the whole chain: your entity, the WebRTC stream, and Labs.
+
+```python
+async def test_camera_two_way_audio(
+    hass: HomeAssistant,
+    hass_ws_client: WebSocketGenerator,
+) -> None:
+    """Test the two-way audio capability."""
+    assert await async_setup_component(hass, "labs", {})
+    assert await async_setup_component(hass, "camera", {})
+    await async_update_preview_feature(hass, "camera", "two_way_audio", True)
+    await setup_integration(hass)
+
+    client = await hass_ws_client(hass)
+    await client.send_json_auto_id(
+        {"type": "camera/capabilities", "entity_id": "camera.front_door"}
+    )
+    msg = await client.receive_json()
+    assert msg["success"]
+    assert msg["result"]["two_way_audio"] is True
+```
+
+Test with the preview feature turned off too, where `two_way_audio` must be `False`.
+For more on testing preview features, see [Test both states](/core/development/labs/#test-both-states).
 
 ## Methods
 
