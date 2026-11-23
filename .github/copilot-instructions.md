@@ -1,8 +1,6 @@
 <!--
-  Shared with home-assistant.io: the "Brand personality" and "YAML" sections
-  are copied verbatim from the instructions in the
-  home-assistant/home-assistant.io repository. Keep them identical and update
-  them with the update-agent-instructions skill, not by hand.
+  Shared with home-assistant.io: the "Brand personality" and "YAML" sections follow the home-assistant-docs-writing-style and home-assistant-yaml-style skills in the home-assistant/home-assistant.io repository.
+  Keep their rules in step and update them with the update-agent-instructions skill, not by hand.
   The "General language" section is maintained in this repository.
 -->
 

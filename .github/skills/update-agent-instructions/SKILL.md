@@ -9,13 +9,20 @@ Update `.github/copilot-instructions.md`, the agent instructions for this site. 
 
 ## Shared sections
 
-The "Brand personality" and "YAML" sections (including "Home Assistant YAML") are shared with home-assistant.io. Copy them verbatim from:
+The "Brand personality" and "YAML" sections (including "Home Assistant YAML") are shared with home-assistant.io.
+Their sources are the writing skills of home-assistant.io:
 
-- `https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/.github/copilot-instructions.md`
+- "Brand personality": the "Brand personality" section of `https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/.claude/skills/home-assistant-docs-writing-style/SKILL.md`
+- "YAML" and "Home Assistant YAML": `https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/.claude/skills/home-assistant-yaml-style/SKILL.md`
 
-Replace each shared section in this repository with the current version of the same section from that file. Do not edit the shared sections in any other way. If the source has a new section that applies to all Home Assistant writing (not to the home-assistant.io website or its Jekyll setup), mention it to the user instead of adding it.
+The skills use different headings and shorter wording than this file, so do not copy them verbatim.
+Update each shared section so that its rules match its source: add new rules, change rules that changed, and remove rules that the source dropped.
+Keep the structure and examples of this file, and its notes about this site, like that it has no Liquid.
+Leave out rules that only apply to the home-assistant.io website, like its Jekyll and Liquid setup or its textlint configuration.
+Do not edit the shared sections in any other way.
+If the writing style skill has a new rule that applies to all Home Assistant writing, outside the shared sections, mention it to the user instead of adding it.
 
-The "General language" section is no longer shared, because home-assistant.io moved its writing rules from that file into skills.
+The "General language" section is no longer shared, because home-assistant.io moved its writing rules into skills and rewrote them.
 It is maintained in this repository.
 Keep it in step with the style guide in `src/content/docs/writing/reference/style.md`.
 
