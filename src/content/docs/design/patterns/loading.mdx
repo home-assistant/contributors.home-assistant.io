@@ -48,7 +48,7 @@ A skeleton keeps the layout in place while the content loads, so nothing jumps a
 
 A soft wave sweeps across every skeleton. It's one wave across all the skeletons on the page, from the leftmost to the rightmost, with each skeleton showing its own slice of it. It flows from one skeleton into the next, starts again as soon as it reaches the end, and a skeleton that appears halfway through joins in rather than starting over.
 
-When the content can draw itself before its data arrives, such as a dashboard card or badge, wrap it in `ha-skeleton-overlay` instead of building a skeleton by hand. It reads the skeleton from the content itself: each line of text, icon, image, control, and drawing gets its own piece, so the skeleton always matches what will appear.
+When the content can draw itself before its data arrives, such as a dashboard card or badge, wrap it in `ha-skeleton-overlay` instead of building a skeleton by hand. It reads the skeleton from the content itself: each line of text, icon, image, control, and drawing gets its own piece, so the skeleton always matches what will appear. It also keeps the space the content took last time, so a card that grows once its data arrives doesn't push the rest of the page down.
 
 <Demo layout="stack" caption="A row of a data table while it loads: ha-skeleton-icon and ha-skeleton-text.">
   <div style="display: flex; align-items: center; gap: 16px">
@@ -126,6 +126,8 @@ html`
 
 - Turn it on with `loading`, or fire a `skeleton-loading` event with `{ loading: true }` from inside the content, then `{ loading: false }` when it's done. The nearest overlay picks it up. In a Lit component, `SkeletonLoadingController` from `src/components/skeleton/skeleton-loading-controller.ts` fires these for you from a function that says whether it's loading.
 - Every dashboard card and badge is already wrapped in an overlay, which shows a plain wave while the card's code loads. A card that fetches data only has to say when it's loading.
+- With a `skeleton-key`, the overlay remembers how tall the content was once loaded and holds that height the next time it loads, so nothing jumps. Cards set one from their config. Make your own with `skeletonKey()` from `src/components/skeleton/skeleton-sizes.ts`.
+- The first time, there's nothing remembered, so draw placeholders as big as the content will be. A chart with `loading` set reads as one block with a line for its legend, and `chartPlaceholderStyles` from `src/components/chart/chart-placeholder.ts` holds a chart's space before it exists.
 - Mark an element with `data-skeleton="none"` to leave it out and showing, `keep` to leave it showing but read what's inside it, or `text`, `round`, or `block` to draw it as one piece of that shape.
 - Put your own skeleton in the `skeleton` slot to use it instead of the one read from the content.
 
