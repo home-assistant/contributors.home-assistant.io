@@ -57,39 +57,17 @@ When you set `supported_speeds` to a list, Home Assistant adds it as the `suppor
 
 ## Tilt position
 
-The tilt is a number from 0 to 100. By default, the slats are closed at 0 and open at 100. Not every cover works that way. The slats of many blinds turn 180°, so they are closed at 0 and at 100, and open at 50. Three properties tell Home Assistant what the number means for your cover. If you set none of them, the default applies.
+The tilt is a number from 0 to 100. By default, the slats are closed at 0 and open at 100. Many blinds have slats that turn 180°, so they are closed at 0 and at 100, and open at 50. Set `open_tilt_position` to say where your cover is open. It is where your `open_cover_tilt` moves the slats. An end of the scale, 0 or 100, is closed unless it is the open position.
 
-`open_tilt_position` is the tilt where the slats are open. It is where your `open_cover_tilt` moves them. An end of the scale, 0 or 100, is closed unless it is the open position.
-
-`tilt_start_angle` and `tilt_end_angle` are the angle of the slats at tilt 0 and at tilt 100, in degrees. The tilt is linear between the two. Set both or neither, because a single angle is ignored.
+If you know the angle of the slats, set `tilt_start_angle` and `tilt_end_angle`: the angle at tilt 0 and at tilt 100, in degrees. Set both or neither.
 
 - 0° is a slat perpendicular to the cover, which is the maximum opening.
 - At -90° and at 90°, the slat lies in the plane of the cover.
 - A negative angle means the user-facing edge of the slat is higher. If you do not know the side, put tilt 0 on the negative side.
 
-When you do not set `open_tilt_position`, Home Assistant uses the tilt where the angle is closest to 0°, or 100 when you did not set the angles. Set it yourself when your cover opens somewhere else.
+Without an `open_tilt_position`, the cover is open where the angle is closest to 0°, or at 100 when you did not set the angles. A blind with angles from -90 to 90 is open at 50.
 
-| Cover | `tilt_start_angle` | `tilt_end_angle` | `open_tilt_position` | Open at | Closed at |
-| ----- | ------------------ | ---------------- | -------------------- | ------- | --------- |
-| Blind with slats that turn 180° | `-90` | `90` | Not set | 50 | 0 and 100 |
-| Blind with slats that turn 90° and close downward | `90` | `0` | Not set | 100 | 0 |
-| Pergola that opens to the end of its 135° | `-90` | `45` | `100` | 100 | 0 |
-| Cover that only knows it opens in the middle | Not set | Not set | `50` | 50 | 0 and 100 |
-| Cover that sets nothing | Not set | Not set | Not set | 100 | 0 |
-
-```python
-class MyBlind(CoverEntity):
-    """A blind with slats that turn 180 degrees."""
-
-    _attr_tilt_start_angle = -90
-    _attr_tilt_end_angle = 90
-
-    async def async_open_cover_tilt(self, **kwargs: Any) -> None:
-        """Open the slats."""
-        await self._device.set_tilt(50)
-```
-
-When the cover supports a tilt feature, Home Assistant adds the open position as the `open_tilt_position` attribute, with the default filled in. It adds the angles as the `tilt_start_angle` and `tilt_end_angle` attributes when you set both. A scene that opens the slats moves them to the open position.
+When the cover supports a tilt feature, Home Assistant adds the open position as the `open_tilt_position` attribute, with the default filled in. It adds the angles as the `tilt_start_angle` and `tilt_end_angle` attributes when you set both.
 
 ## Device classes
 
