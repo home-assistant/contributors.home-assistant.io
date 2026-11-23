@@ -46,11 +46,50 @@ Cover entities have these properties on top of the [generic entity properties](/
 | `is_opening` | `bool \| None` | `None` | Whether the cover is opening. Used for the state. |
 | `is_closing` | `bool \| None` | `None` | Whether the cover is closing. Used for the state. |
 | `current_cover_position` | `int \| None` | `None` | The position, from 0 (closed) to 100 (fully open). |
-| `current_cover_tilt_position` | `int \| None` | `None` | The tilt, from 0 (closed or no tilt) to 100 (open or maximum tilt). |
+| `current_cover_tilt_position` | `int \| None` | `None` | The tilt, from 0 to 100. Closed at 0 and open at 100, unless you describe it differently. See [Tilt position](#tilt-position). |
+| `open_tilt_position` | `int \| None` | `None` | The tilt where the slats are open, which is where `open_cover_tilt` moves them. `None` means the default. See [Tilt position](#tilt-position). |
+| `tilt_start_angle` | `int \| None` | `None` | The angle of the slats at tilt 0, from -90 to 90 degrees. Set it together with `tilt_end_angle`. |
+| `tilt_end_angle` | `int \| None` | `None` | The angle of the slats at tilt 100, from -90 to 90 degrees. Set it together with `tilt_start_angle`. |
 | `device_class` | `CoverDeviceClass \| None` | `None` | What kind of cover it is. See [Device classes](#device-classes). |
 | `supported_speeds` | `list[str] \| None` | `None` | The speeds the cover can move at when it opens, closes, or moves to a position. `None` or an empty list means no speed selection. Use the standard speeds `CoverSpeed.FAST`, `CoverSpeed.MEDIUM`, and `CoverSpeed.SLOW` from `homeassistant.components.cover` where they fit your device. An action without a speed moves the cover at the device's default speed. |
 
 When you set `supported_speeds` to a list, Home Assistant adds it as the `supported_speeds` attribute, and checks the `speed` in an action against it before it calls you. A speed that is not in the list is dropped, and the cover moves at its default speed. Without speeds, a `speed` in an action is dropped.
+
+## Tilt position
+
+The tilt is a number from 0 to 100. By default, the slats are closed at 0 and open at 100. Not every cover works that way. The slats of many blinds turn 180°, so they are closed at 0 and at 100, and open at 50. Three properties tell Home Assistant what the number means for your cover. If you set none of them, the default applies.
+
+`open_tilt_position` is the tilt where the slats are open. It is where your `open_cover_tilt` moves them. An end of the scale, 0 or 100, is closed unless it is the open position.
+
+`tilt_start_angle` and `tilt_end_angle` are the angle of the slats at tilt 0 and at tilt 100, in degrees. The tilt is linear between the two. Set both or neither, because a single angle is ignored.
+
+- 0° is a slat perpendicular to the cover, which is the maximum opening.
+- At -90° and at 90°, the slat lies in the plane of the cover.
+- A negative angle means the user-facing edge of the slat is higher. If you do not know the side, put tilt 0 on the negative side.
+
+When you do not set `open_tilt_position`, Home Assistant uses the tilt where the angle is closest to 0°, or 100 when you did not set the angles. Set it yourself when your cover opens somewhere else.
+
+| Cover | `tilt_start_angle` | `tilt_end_angle` | `open_tilt_position` | Open at | Closed at |
+| ----- | ------------------ | ---------------- | -------------------- | ------- | --------- |
+| Blind with slats that turn 180° | `-90` | `90` | Not set | 50 | 0 and 100 |
+| Blind with slats that turn 90° and close downward | `90` | `0` | Not set | 100 | 0 |
+| Pergola that opens to the end of its 135° | `-90` | `45` | `100` | 100 | 0 |
+| Cover that only knows it opens in the middle | Not set | Not set | `50` | 50 | 0 and 100 |
+| Cover that sets nothing | Not set | Not set | Not set | 100 | 0 |
+
+```python
+class MyBlind(CoverEntity):
+    """A blind with slats that turn 180 degrees."""
+
+    _attr_tilt_start_angle = -90
+    _attr_tilt_end_angle = 90
+
+    async def async_open_cover_tilt(self, **kwargs: Any) -> None:
+        """Open the slats."""
+        await self._device.set_tilt(50)
+```
+
+When the cover supports a tilt feature, Home Assistant adds the open position as the `open_tilt_position` attribute, with the default filled in. It adds the angles as the `tilt_start_angle` and `tilt_end_angle` attributes when you set both. A scene that opens the slats moves them to the open position.
 
 ## Device classes
 
@@ -104,7 +143,7 @@ Implement the sync or the async variant of each method, not both.
 
 `set_cover_position` receives `ATTR_POSITION`, and `set_cover_tilt_position` receives `ATTR_TILT_POSITION`, both from 0 to 100. `open_cover`, `close_cover`, and `set_cover_position` can receive `ATTR_SPEED` when the cover has `supported_speeds`.
 
-Toggling is handled for you. `toggle` stops a moving cover when it supports `STOP`, opens a closed or closing cover, and closes an opening or fully open one. A cover that stopped partly open moves the other way from the last direction it reported, and closes when it never reported one. `toggle_tilt` opens the tilt when it is at 0, and closes it otherwise.
+Toggling is handled for you. `toggle` stops a moving cover when it supports `STOP`, opens a closed or closing cover, and closes an opening or fully open one. A cover that stopped partly open moves the other way from the last direction it reported, and closes when it never reported one. `toggle_tilt` opens the tilt when it is at a closed end of the scale, and closes it otherwise. See [Tilt position](#tilt-position).
 
 ## States
 
