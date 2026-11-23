@@ -95,7 +95,7 @@ The frontend gets two-way audio only when all of these hold:
 #### Declare two-way audio
 
 Two-way audio is a capability, not a supported feature.
-Do not add a flag to `CameraEntityFeature` for it: the supported features describe the actions of the camera.
+Do not add a flag to `CameraEntityFeature` for it: Home Assistant reads two-way audio only from `camera_entity_capabilities`.
 
 Declare it only when both the device and the stream you give Home Assistant can carry audio to the camera, often called the audio backchannel.
 The same camera can support it over one protocol and not over another.
@@ -115,8 +115,9 @@ The provider sends the audio of the microphone to the camera over the stream sou
 
 If you implement [native WebRTC](#native-webrtc), the audio arrives in the WebRTC session, and your integration must pass it on to the camera:
 
-- When the person starts talking, the frontend closes the current stream and opens a new WebRTC session. Its offer has an audio track in both directions (`sendrecv`) with the microphone, instead of the receive-only audio track (`recvonly`) of a normal stream.
-- Answer that audio track with `sendrecv`, and make sure the camera plays the audio it receives. When the person stops talking, the frontend keeps the session and stops sending audio.
+- The first time the person starts talking, the frontend closes the current stream and opens a new WebRTC session. Its offer has an audio track in both directions (`sendrecv`) with the microphone, instead of the receive-only audio track (`recvonly`) of a normal stream.
+- Answer that audio track with `sendrecv`, and make sure the camera plays the audio it receives.
+- When the person stops talking, the frontend keeps the session and stops sending audio. When they start talking again, the frontend sends the microphone over the same session, without a new offer.
 - An app that captures the microphone itself opens a separate session for it. Its offer has a single send-only audio track (`sendonly`) and no video.
 
 The Ring integration is an example where the library already does this: Ring live view sessions are full duplex, so the integration only had to declare the capability.
@@ -124,7 +125,8 @@ The Ring integration is an example where the library already does this: Ring liv
 #### Test two-way audio
 
 Turn the preview feature on or off in your test with `async_update_preview_feature`, imported from `homeassistant.components.labs`, and check the result of the `camera/capabilities` WebSocket command.
-This tests the whole chain: your entity, the WebRTC stream, and Labs.
+This tests how Home Assistant resolves the capability from your entity, the WebRTC stream, and Labs.
+It does not test the audio itself: check that the camera plays the audio from a real session with a test of your own, or by hand.
 
 ```python
 async def test_camera_two_way_audio(
