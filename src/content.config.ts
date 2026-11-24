@@ -59,13 +59,36 @@ const docs = defineCollection({
   }),
 });
 
+const blogFiles = glob({ base: "./src/content/blog", pattern: "**/*.{md,mdx}" });
+
+// In production, a post with a date in the future waits for a build on or
+// after that date, unless it sets `publishEarly`. Everywhere else, like
+// deploy previews and `pnpm dev`, every post shows, so it can be reviewed.
+// Netlify sets CONTEXT to "production" only for production builds.
+//
+// The post is removed here, and not where posts are read, because Astro
+// copies the images of every post in the collection to the site.
 const blog = defineCollection({
-  loader: glob({ base: "./src/content/blog", pattern: "**/*.{md,mdx}" }),
+  loader: {
+    name: "blog",
+    load: async (context) => {
+      await blogFiles.load(context);
+
+      if (process.env.CONTEXT !== "production") {
+        return;
+      }
+
+      for (const [id, { data }] of context.store.entries()) {
+        if (!data.publishEarly && (data.date as Date).valueOf() > Date.now()) {
+          context.store.delete(id);
+        }
+      }
+    },
+  },
   schema: z.object({
     title: z.string(),
     description: z.string(),
-    // Midnight UTC. A post with a date in the future is left out of production
-    // builds until that date: see getPosts() in src/lib/blog.ts.
+    // Midnight UTC. Production leaves the post out until then, see above.
     date: z.coerce.date(),
     // Publishes the post right away, whatever its date.
     publishEarly: z.boolean().optional(),

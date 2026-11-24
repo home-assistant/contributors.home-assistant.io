@@ -11,6 +11,8 @@
 //   and points to it with <link rel="alternate">.
 // - Every link to this site in those Markdown versions and in the llms.txt
 //   files goes to a page or file that exists.
+// - No page or post links to a blog post that goes live after it does. This
+//   one reads src/content/, because only production leaves those posts out.
 //
 // Links to other sites are not checked: they fail for reasons that have
 // nothing to do with this site, and would make the check flaky.
@@ -21,10 +23,12 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { parse as parseYaml } from "yaml";
 import { readFragments } from "./generate-redirects.ts";
 
 const DIST = fileURLToPath(new URL("../dist/", import.meta.url));
 const DOCS = fileURLToPath(new URL("../src/content/docs/", import.meta.url));
+const CONTENT = fileURLToPath(new URL("../src/content/", import.meta.url));
 const SITE = "https://contributors.home-assistant.io";
 
 // Generated assets, not pages. Links into these are not checked.
@@ -166,6 +170,42 @@ for (const entry of readdirSync(DIST, { recursive: true, withFileTypes: true }))
 
   for (const link of links) {
     checkLink(link.slice(SITE.length), relative);
+  }
+}
+
+// Scheduled blog posts: a build outside production has them, so the links to
+// them above are fine, but production leaves them out until their date (see
+// src/content.config.ts). A post may link to one that goes live with it or
+// before it.
+function readSources(folder: string) {
+  return readdirSync(path.join(CONTENT, folder), { recursive: true, withFileTypes: true })
+    .filter((entry) => entry.isFile() && /\.mdx?$/.test(entry.name))
+    .map((entry) => {
+      const file = path.join(entry.parentPath, entry.name);
+      const relative = path.relative(CONTENT, file).split(path.sep).join("/");
+      // When it goes live: docs, and posts published early, already are.
+      return { file: `src/content/${relative}`, name: entry.name, text: readFileSync(file, "utf8"), live: 0 };
+    });
+}
+
+const posts = readSources("blog").map((post) => {
+  const { date, publishEarly } = parseYaml(/^---\n([\s\S]*?)\n---/.exec(post.text)?.[1] ?? "") ?? {};
+  return { ...post, live: publishEarly ? 0 : new Date(date).valueOf() };
+});
+
+const scheduled = new Map(
+  posts
+    .filter(({ live }) => live > Date.now())
+    .map(({ name, live }) => [name.replace(/^(\d+)-(\d+)-(\d+)-(.+)\.mdx?$/, "/blog/$1/$2/$3/$4/"), live]),
+);
+
+// Usually nothing is scheduled, and then there is nothing to look for.
+for (const { file, text, live } of scheduled.size > 0 ? [...posts, ...readSources("docs")] : []) {
+  for (const [link] of text.matchAll(/\/blog\/\d{4}\/\d{2}\/\d{2}\/[^/\s)"'#?]+/g)) {
+    const target = scheduled.get(`${link}/`);
+    if (target && target > live) {
+      report(`${link}/ (not published until ${new Date(target).toISOString().slice(0, 10)})`, file);
+    }
   }
 }
 

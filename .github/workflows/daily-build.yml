@@ -5,7 +5,7 @@ name: Daily build
 # (src/lib/events.ts). Without a push to `main`, those only change when the
 # site builds, so this keeps them fresh. It also publishes scheduled blog
 # posts: a post with a date in the future is left out of production builds
-# until that date (getPosts() in src/lib/blog.ts).
+# until that date (src/content.config.ts).
 #
 # It calls a Netlify build hook: a URL that starts a build when it gets a
 # POST. The URL is in the repository secret NETLIFY_BUILD_HOOK. Anyone with

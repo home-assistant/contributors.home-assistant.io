@@ -6,22 +6,9 @@ export const BLOG_TITLE = "Contributors blog";
 export const BLOG_DESCRIPTION =
   "News for contributors: breaking changes for developers, design updates, and what is happening in the community.";
 
-// One moment for the whole build, so a post whose date arrives during the
-// build is on every page or on none.
-const BUILD_TIME = Date.now();
-
-// Newest first. In production, a post with a date in the future waits for a
-// build on or after that date, unless it sets `publishEarly`. Everywhere else,
-// like deploy previews and `pnpm dev`, every post shows, so it can be
-// reviewed. Netlify sets CONTEXT to "production" only for production builds.
+// Newest first.
 export async function getPosts(): Promise<BlogPost[]> {
-  const posts = await getCollection(
-    "blog",
-    ({ data }) =>
-      process.env.CONTEXT !== "production" ||
-      data.publishEarly ||
-      data.date.valueOf() <= BUILD_TIME,
-  );
+  const posts = await getCollection("blog");
   return posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 }
 
