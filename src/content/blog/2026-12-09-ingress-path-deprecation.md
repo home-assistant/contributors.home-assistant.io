@@ -8,7 +8,7 @@ areas:
   - apps
 ---
 
-If you develop an app that uses [ingress](/apps/guides/ingress/), you may need to update it. Since Home Assistant 2026.12, every ingress request has a new header, `X-Forwarded-Prefix`, that tells your app which path it is served under. Until now, apps got that path from `X-Ingress-Path`, which is deprecated and will be removed in Home Assistant 2027.12.
+If you develop an app that uses [ingress](/apps/guides/ingress/), you may need to update it. Since Home Assistant 2026.12, every ingress request has a new header, `X-Forwarded-Prefix`, that tells your app which path it is served under. Until now, apps usually got that path from `X-Ingress-Path`, which is deprecated and will be removed in Home Assistant 2027.12.
 
 <!--truncate-->
 
@@ -16,9 +16,9 @@ If you develop an app that uses [ingress](/apps/guides/ingress/), you may need t
 
 With ingress, the browser opens your app under a path like `/api/hassio_ingress/<token>/`. That path, also called the prefix, is removed before the request reaches your app. When the browser asks for `/api/hassio_ingress/<token>/static/app.js`, your web server only sees `/static/app.js`.
 
-Relative URLs work without knowing the prefix. Your app does need it to build an absolute URL, for example for a redirect to its login page. The token is different on every installation, so Home Assistant sends the prefix in a header.
+Relative URLs work without knowing the prefix. Your app does need it to build an absolute URL, for example for a redirect. The Supervisor generates a random token for each installed app, so you cannot hardcode the prefix. Home Assistant sends it in a header instead.
 
-`X-Ingress-Path` is a header that only Home Assistant uses, so every app has to handle it in its own code or proxy configuration. `X-Forwarded-Prefix` has the same value, and many web frameworks and reverse proxies can apply it for you, like Werkzeug with `ProxyFix(x_prefix=1)` or Spring Boot with `server.forward-headers-strategy=framework`.
+`X-Ingress-Path` is specific to Home Assistant, so apps have to handle it in their own code or proxy configuration. `X-Forwarded-Prefix` has the same value, and many web frameworks and reverse proxies can apply it for you, like Werkzeug with `ProxyFix(x_prefix=1)` or Spring Boot with `server.forward-headers-strategy=framework`.
 
 ## Check if your app is affected
 
@@ -59,7 +59,7 @@ Releases before 2026.12 do not set `X-Forwarded-Prefix`, but they do pass it on 
 homeassistant: 2026.12.0
 ```
 
-From that release, Home Assistant replaces any `X-Forwarded-Prefix` the client sends. Your app can then trust the value, as long as it only accepts connections from `172.30.32.2`, and you can remove the fallback to `X-Ingress-Path`.
+From that release, Home Assistant replaces any `X-Forwarded-Prefix` the client sends. Your app can then trust it as much as `X-Ingress-Path`, as long as it only accepts connections from `172.30.32.2`, and you can remove the fallback.
 
 Users on an older release cannot update to a version of your app that requires 2026.12.0 until they update Home Assistant. If you want to keep supporting them for now, keep the fallback and do not rely on the value for anything security related.
 
