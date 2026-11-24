@@ -61,7 +61,7 @@ When you set `supported_speeds` to a list, Home Assistant adds it as the `suppor
 The tilt is a number from 0 to 100. By default, the slats are closed at 0 and open at 100. If your cover works differently, describe it with these properties:
 
 - `open_tilt_position` is the tilt where the slats are open. Your `open_cover_tilt` moves the slats there.
-- `closed_tilt_positions` holds the tilts where the slats are closed: `[0]`, `[100]`, or `[0, 100]`. Your `close_cover_tilt` moves the slats to one of them, and leaves slats that are already closed where they are.
+- `closed_tilt_positions` holds the tilts where the slats are closed: `[0]`, `[100]`, or `[0, 100]`. Your `close_cover_tilt` moves the slats to one of them, and leaves slats that are known to be closed where they are. A cover with an assumed state closes anyway.
 - `tilt_start_angle` and `tilt_end_angle` are the angles of the slats at tilt 0 and at tilt 100, in degrees. Set both or neither.
 
 A blind with slats that turn 180° is open at 50, and closed at 0 and at 100:
