@@ -67,7 +67,7 @@ Loading indicators fade in rather than pop up, but not all at the same pace:
 
 - **A skeleton** fades in straight away, over about 300 milliseconds. It stands in for the content, so waiting would leave a gap where the layout should be.
 - **A spinner or progress bar** usually waits half a second before it fades in. Some slower areas, such as backups and updates, wait a full second. When the load finishes within that time, people never see a spinner flash on and off.
-- **The content itself** fades in over 150 milliseconds wherever a skeleton stood in for it, so nothing pops in. Under `ha-skeleton-overlay`, each part fades in as its skeleton piece gives way. Content that shows up without a skeleton before it, such as table rows that appear as you scroll, shows at once.
+- **The content itself** fades in wherever a skeleton stood in for it, so nothing pops in. It takes `--ha-animation-duration-fast`: 150 milliseconds by default, and no time at all with reduced motion. Under `ha-skeleton-overlay`, each part fades in as its skeleton piece gives way. Content that shows up without a skeleton before it, such as table rows that appear as you scroll, shows at once.
 
 ### Where loading ends
 
