@@ -23,6 +23,9 @@ The [My link creator](https://my.home-assistant.io/create-link/?redirect=marketp
 
 The `marketplace_repository` link is new in Home Assistant 2026.11. The older `hacs_repository` link takes the same `owner`, `repository`, and `category`. It opens HACS before 2026.11, and the Marketplace after, so it reaches users on both. HACS documents it on its [My Home Assistant](https://hacs.xyz/docs/use/my/) page.
 
+> [!TIP]
+> The badge is for GitHub. On the page of your repository in the Marketplace, users already have an install button. Mark the badge, and any installation steps, to [leave them out of the Marketplace](/marketplace/reference/repository-structure/#leave-part-of-your-readme-out-of-the-marketplace).
+
 ## Who can submit
 
 Only the owner of the repository, or a major contributor, can submit it.
