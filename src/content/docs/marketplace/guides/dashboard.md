@@ -55,7 +55,7 @@ A single bundled file is the easiest to install. Bundle your dependencies, like 
 
 When your card is more than one file, like a build that splits its code into chunks that load when they are needed, ship the whole card as one ZIP file attached to your release. Release assets can not have folders, a ZIP file can, and users download one file instead of many.
 
-Name the ZIP file like your JavaScript file, with `.zip` instead of `.js`. For `awesome-card.js`, that is `awesome-card.zip`. Nothing changes in `hacs.json`: `filename`, if you have one, still names the JavaScript file.
+Give the ZIP file the same name as your JavaScript file, with `.zip` instead of `.js`. Without `filename` in `hacs.json`, that is a [name made from your repository](#name-your-file-after-your-repository): for the repository `awesome-card`, that is `awesome-card.zip`. With `filename`, it is that name, so `"filename": "my-card.js"` gives `my-card.zip`. Nothing else changes in `hacs.json`: `filename` still names the JavaScript file, not the ZIP file.
 
 Put the JavaScript file in the root of the ZIP file, or in a single folder at its root, like `dist`. The Marketplace extracts that folder, with everything in it, into the folder of your card, and adds the JavaScript file as the resource:
 

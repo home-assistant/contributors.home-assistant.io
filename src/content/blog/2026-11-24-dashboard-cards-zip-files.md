@@ -15,7 +15,7 @@ Starting with Home Assistant 2026.12, the Marketplace can install your whole car
 
 ## How it works
 
-Attach a ZIP file to your release, named like your JavaScript file, with `.zip` instead of `.js`. For `awesome-card.js`, that is `awesome-card.zip`. Put the JavaScript file in its root, or in a single folder at its root, like `dist`. Nothing changes in `hacs.json`.
+Attach a ZIP file to your release, with the same name as your JavaScript file, but `.zip` instead of `.js`. That is usually the name of your repository: for `awesome-card`, it is `awesome-card.zip`. With `filename` in `hacs.json`, it is that name instead. Put the JavaScript file in its root, or in a single folder at its root, like `dist`. Nothing changes in `hacs.json`.
 
 ```text title="awesome-card.zip"
 awesome-card.js
