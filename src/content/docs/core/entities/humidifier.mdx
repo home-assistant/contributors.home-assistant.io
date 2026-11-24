@@ -1,0 +1,162 @@
+---
+title: Humidifier entity
+description: Build a humidifier entity for devices that add moisture to the air or remove it.
+sidebarLabel: Humidifier
+sidebarGroup: Lights and climate
+---
+
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
+
+A humidifier entity controls a device that adds moisture to the air (a humidifier) or removes it (a dehumidifier), toward a target humidity. Inherit from `HumidifierEntity` in `homeassistant.components.humidifier`. It builds on the toggle entity, so it has `is_on`, `turn_on`, and `turn_off`.
+
+If the device also heats or cools, use a [climate entity](/core/entities/climate/) with the `TARGET_HUMIDITY` feature instead.
+
+For how the frontend shows a humidifier, see the [humidifier more-info view](/design/more-info/humidifier/).
+
+<EmbedDemo
+  entities={[
+    {
+      entity_id: "humidifier.bedroom",
+      state: "on",
+      attributes: {
+        friendly_name: "Bedroom humidifier",
+        device_class: "humidifier",
+        action: "humidifying",
+        current_humidity: 38,
+        humidity: 45,
+        min_humidity: 30,
+        max_humidity: 70,
+        available_modes: ["normal", "eco", "sleep"],
+        mode: "normal",
+        supported_features: 1,
+      },
+    },
+  ]}
+  cards={[
+    {
+      type: "tile",
+      entity: "humidifier.bedroom",
+      features: [{ type: "target-humidity" }, { type: "humidifier-modes" }],
+    },
+    {
+      type: "humidifier",
+      entity: "humidifier.bedroom",
+      features: [{ type: "humidifier-toggle" }],
+    },
+  ]}
+  caption="A humidifier with a target humidity and modes, in a tile card and a humidifier card. The cards are live: change the target, the mode, or turn it off."
+/>
+
+## Properties
+
+Humidifier entities have these properties on top of the [generic entity properties](/core/entities/entity-class/). Every property can be set with its `_attr_` attribute, like `_attr_target_humidity`.
+
+| Name | Type | Default | Description |
+| ---- | ---- | ------- | ----------- |
+| `is_on` | `bool \| None` | `None` | Whether the device is on. |
+| `device_class` | `HumidifierDeviceClass \| None` | `None` | Whether the device is a humidifier or a dehumidifier. See [Device classes](#device-classes). |
+| `action` | `HumidifierAction \| None` | `None` | What the device is doing right now. See [Actions](#actions). |
+| `current_humidity` | `float \| None` | `None` | The measured humidity. |
+| `target_humidity` | `float \| None` | `None` | The humidity to reach. |
+| `target_humidity_step` | `float \| None` | `None` | The step size for the target humidity. |
+| `min_humidity` | `float` | `0` | The lowest target humidity. |
+| `max_humidity` | `float` | `100` | The highest target humidity. |
+| `mode` | `str \| None` | Required with `MODES` | The active mode. |
+| `available_modes` | `list[str] \| None` | Required with `MODES` | The modes the device supports. |
+
+## Device classes
+
+Set a [device class](/glossary/device-class/) from `HumidifierDeviceClass`, so the frontend and voice assistants know which way the device works.
+
+| Value | Description |
+| ----- | ----------- |
+| `HUMIDIFIER` | Adds moisture to the air. |
+| `DEHUMIDIFIER` | Removes moisture from the air. |
+
+## Actions
+
+The `action` tells what the device is doing right now. Use the `HumidifierAction` enum. When the device is off, Home Assistant reports `off` for you, whatever `action` returns.
+
+| Value | Description |
+| ----- | ----------- |
+| `HumidifierAction.HUMIDIFYING` | The device adds moisture. |
+| `HumidifierAction.DRYING` | The device removes moisture. |
+| `HumidifierAction.IDLE` | The device is on, but does nothing right now. |
+| `HumidifierAction.OFF` | The device is off. |
+
+Only implement `action` when the device reports it.
+
+## Modes
+
+Modes are strings. Home Assistant has constants with built-in translations for common modes: `MODE_NORMAL`, `MODE_ECO`, `MODE_AWAY`, `MODE_BOOST`, `MODE_COMFORT`, `MODE_HOME`, `MODE_SLEEP`, `MODE_AUTO`, and `MODE_BABY`. You can add your own values, and give them a translation and an icon with the [translation key](/core/entities/naming/) of the entity (see [icons](/core/entities/icons/)).
+
+## Supported features
+
+Set the `HumidifierEntityFeature` flags as `supported_features`. See [supported features](/glossary/supported-features/).
+
+| Value | Description |
+| ----- | ----------- |
+| `MODES` | The device has modes. Set `mode` and `available_modes`, and implement `set_mode`. |
+
+## Methods
+
+Implement the sync or the async variant of each method, not both.
+
+| Method | Async variant | Description |
+| ------ | ------------- | ----------- |
+| `turn_on(**kwargs: Any)` | `async_turn_on` | Turn the device on. |
+| `turn_off(**kwargs: Any)` | `async_turn_off` | Turn the device off. |
+| `set_humidity(humidity: int)` | `async_set_humidity` | Set the target humidity. Home Assistant checks it against `min_humidity` and `max_humidity` first. |
+| `set_mode(mode: str)` | `async_set_mode` | Set the mode. Requires `MODES`. |
+
+## States
+
+The state is `on` or `off`, from `is_on`. When `is_on` is `None`, the state is `unknown`.
+
+## Example
+
+```python
+from typing import Any
+
+from homeassistant.components.humidifier import (
+    HumidifierDeviceClass,
+    HumidifierEntity,
+)
+
+
+class MyDehumidifier(HumidifierEntity):
+    """A dehumidifier with a target humidity."""
+
+    _attr_has_entity_name = True
+    _attr_name = None
+    _attr_device_class = HumidifierDeviceClass.DEHUMIDIFIER
+    _attr_min_humidity = 30
+    _attr_max_humidity = 80
+
+    def __init__(self, device: MyDevice) -> None:
+        """Set up the dehumidifier."""
+        self._device = device
+        self._attr_unique_id = device.serial
+
+    @property
+    def is_on(self) -> bool:
+        """Return if the device is on."""
+        return self._device.is_on
+
+    @property
+    def target_humidity(self) -> float:
+        """Return the target humidity."""
+        return self._device.target
+
+    async def async_set_humidity(self, humidity: int) -> None:
+        """Set the target humidity."""
+        await self._device.set_target(humidity)
+
+    async def async_turn_on(self, **kwargs: Any) -> None:
+        """Turn the device on."""
+        await self._device.turn_on()
+
+    async def async_turn_off(self, **kwargs: Any) -> None:
+        """Turn the device off."""
+        await self._device.turn_off()
+```

@@ -83,7 +83,7 @@ export class HaButton extends Button {
 
 Always use the `ha-*` element, never the Web Awesome element directly. The wrapper is where the theme, the translations, and fixes for Home Assistant live, and it is what keeps every screen consistent.
 
-Older parts of the frontend still use Material Web Components (`mwc-*`). They are being replaced. Don't add new ones.
+The frontend no longer uses Material Web Components (`mwc-*`). Don't add them back. Some `--mdc-*` CSS properties are still read for theming, but new code uses the `--ha-*` ones.
 
 Each shared component has a page in the [Design area](/design/components/), with usage guidance, live examples, and its attributes. Look there before you build something new.
 

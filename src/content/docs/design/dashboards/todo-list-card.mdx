@@ -4,11 +4,12 @@ description: The to-do list card shows the items of a to-do list, to check them 
 sidebarGroup: Controls
 ---
 
-import Demo from "../../../../components/docs/Demo.astro";
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
 
-<Demo hass>
-  <hui-card style="width: 360px" data-props='{"config": {"type": "todo-list", "entity": "todo.shopping_list"}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[{ type: "todo-list", entity: "todo.shopping_list" }]}
+/>
 
 ## Usage
 
@@ -22,9 +23,10 @@ Use the to-do list card for a list people work with every day, like groceries or
 
 With `hide_completed: true`, the card only shows what's left to do. Use it for a list that grows long, like a shopping list that is never cleared. With `hide_create: true`, the field to add items goes away, for a list that is read on a wall tablet more than it is edited.
 
-<Demo hass>
-  <hui-card style="width: 360px" data-props='{"config": {"type": "todo-list", "entity": "todo.shopping_list", "hide_completed": true, "hide_create": true}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[{ type: "todo-list", entity: "todo.shopping_list", hide_completed: true, hide_create: true }]}
+/>
 
 ### Order
 

@@ -26,7 +26,7 @@ The site rules are in `.github/copilot-instructions.md` ("The tech behind the we
 
 - A comment that promises behavior the code does not deliver: a fallback, "only loads", "a specific commit", "never". The comment and the code must agree.
 - State transitions that were not handled: repeated activation, overlapping requests, theme changes after load, blocked `localStorage`.
-- A new request to an external service at runtime. Fonts, search, and scripts are served by the site itself. The only outside call is the analytics in `src/components/PlausibleAnalytics.astro`.
+- A new request to an external service at runtime. Fonts, search, and scripts are served by the site itself. The only outside calls are the analytics in `src/components/PlausibleAnalytics.astro`, and `embed.js` from demo.home-assistant.io in `src/components/docs/EmbedDemo.astro`, which shows the hosted embed that the page tells card authors to use.
 - A UI framework. Interactive parts are small web components or native elements like `<dialog>` and `<details>`.
 - An `is:inline` script that grows beyond a few lines. Move it to a module.
 

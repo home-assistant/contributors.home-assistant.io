@@ -1,0 +1,140 @@
+---
+title: Switch entity
+description: Build a switch entity for something you can turn on and off, like a relay or a smart plug.
+sidebarLabel: Switch
+sidebarGroup: Inputs and helpers
+---
+
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
+
+A switch entity turns something on or off: a relay, a smart plug, or a setting on a device like "child lock" or "LED indicator". Inherit from `SwitchEntity` in `homeassistant.components.switch`.
+
+Pick the platform that matches what the thing really is:
+
+- It has an on and off state, but Home Assistant can't change it, like a wall switch that only reports: use a [binary sensor](/core/entities/binary-sensor/).
+- It has no state and only triggers something, like restarting a device: use a [button](/core/entities/button/).
+- It is a physical push button that people press: use an [event](/core/entities/event/) entity.
+- It is a light, a fan, or a valve: use that platform. It gives users the right controls, voice assistants the right device type, and you the right features.
+
+For how the frontend shows a switch, see the [switch more-info view](/design/more-info/switch/).
+
+<EmbedDemo
+  entities={[
+    {
+      entity_id: "switch.coffee_machine",
+      state: "on",
+      attributes: {
+        friendly_name: "Coffee machine",
+        device_class: "outlet",
+      },
+    },
+  ]}
+  cards={[
+    {
+      type: "tile",
+      entity: "switch.coffee_machine",
+      features: [{ type: "toggle" }],
+    },
+  ]}
+  caption="A smart plug in a tile card. The card is live: turn it off and on."
+/>
+
+## Properties
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `is_on` | `bool \| None` | `None` | Whether the switch is on. `None` means the state is unknown. |
+| `device_class` | `SwitchDeviceClass \| None` | `None` | What kind of switch this is. See [device classes](#device-classes). |
+
+The generic properties every entity has, like `name`, `available`, and `unique_id`, are on [the entity class](/core/entities/entity-class/).
+
+## Supported features
+
+This entity has no supported features.
+
+## Device classes
+
+| Constant | Description |
+| --- | --- |
+| `SwitchDeviceClass.OUTLET` | A power outlet, like a smart plug or a socket on a power strip. |
+| `SwitchDeviceClass.SWITCH` | A generic switch. |
+
+Voice assistants use the device class to pick the matching device type.
+
+## Methods
+
+### Turn on and off
+
+Implement both, either the sync or the async variant. Home Assistant passes extra arguments as keyword arguments, so keep `**kwargs` in the signature.
+
+```python
+class MySwitch(SwitchEntity):
+    # Implement one of each pair.
+
+    def turn_on(self, **kwargs: Any) -> None:
+        """Turn the switch on."""
+
+    async def async_turn_on(self, **kwargs: Any) -> None:
+        """Turn the switch on."""
+
+    def turn_off(self, **kwargs: Any) -> None:
+        """Turn the switch off."""
+
+    async def async_turn_off(self, **kwargs: Any) -> None:
+        """Turn the switch off."""
+```
+
+### Toggle
+
+You usually don't need this. The base class already implements `async_toggle`: it calls your turn off method when `is_on` is true, and your turn on method otherwise. Only override `async_toggle` when the device has a native toggle command. The sync `toggle` is final: Home Assistant never calls it, so don't implement it.
+
+## States
+
+The base class builds the state from `is_on`:
+
+| State | When |
+| --- | --- |
+| `on` | `is_on` is `True` |
+| `off` | `is_on` is `False` |
+| `unknown` | `is_on` is `None` |
+
+You don't set the state yourself. `unavailable` comes from the `available` property, like for every entity.
+
+## Example
+
+```python
+from typing import Any
+
+from homeassistant.components.switch import (
+    SwitchDeviceClass,
+    SwitchEntity,
+)
+
+
+class ExampleOutlet(SwitchEntity):
+    """A smart plug."""
+
+    _attr_has_entity_name = True
+    _attr_name = None
+    _attr_device_class = SwitchDeviceClass.OUTLET
+
+    def __init__(self, device: ExampleDevice) -> None:
+        """Initialize the outlet."""
+        self._device = device
+        self._attr_unique_id = device.serial
+        self._attr_is_on = device.is_on
+
+    async def async_turn_on(self, **kwargs: Any) -> None:
+        """Turn the outlet on."""
+        await self._device.turn_on()
+        self._attr_is_on = True
+        self.async_write_ha_state()
+
+    async def async_turn_off(self, **kwargs: Any) -> None:
+        """Turn the outlet off."""
+        await self._device.turn_off()
+        self._attr_is_on = False
+        self.async_write_ha_state()
+```
+
+The plug is the main feature of its device, so `_attr_name = None` gives the entity the name of the device. See [naming entities](/core/entities/naming/).

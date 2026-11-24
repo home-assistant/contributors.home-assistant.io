@@ -71,7 +71,7 @@ Commit both files. The pull request is reviewed like any other. It helps a lot t
 - **Bot commands.** That comment lists commands only the integration owners of that integration can use, by commenting `@home-assistant <command>`: close, reopen, or rename the issue, remove your integration's label, and add or remove a few triage labels like `needs-more-information`. On pull requests, you can also mark it as a draft, mark it ready for review, or update its branch. Commands that don't name an integration only work when the issue or pull request has the label of a single integration.
 - **Task issues.** In Core and home-assistant.io, only members of the GitHub organization and people listed in `CODEOWNERS` can open issues of the Task type. Task issues from anyone else are closed automatically.
 
-The bot is the [service hub](https://github.com/home-assistant/service-hub) of Home Assistant. Its source shows exactly what each command does.
+The bot's source is in [OpenHomeFoundation/bots](https://github.com/OpenHomeFoundation/bots). It shows exactly what each command does.
 
 ## 3. Take on a role in your area
 

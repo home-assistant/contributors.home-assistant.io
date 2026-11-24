@@ -9,8 +9,8 @@ Every integration in Home Assistant has a page on [home-assistant.io](https://ww
 ## Before you start
 
 - Target the `next` branch. Your integration is not released yet, so neither is its page.
-- Open one documentation pull request per core pull request, and link them to each other.
-- Add the icon and logo of the integration to the [brands repository](https://github.com/home-assistant/brands), and link that pull request too.
+- Open one documentation pull request per core pull request, and list each under **This PR belongs together with** in the other.
+- Add the icon and logo of the integration to the [brands repository](https://github.com/home-assistant/brands), and pair that pull request with the core pull request the same way.
 
 ## Create the page
 

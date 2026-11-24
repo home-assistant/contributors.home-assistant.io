@@ -4,11 +4,12 @@ description: The sensor card shows the value of one numeric sensor in large type
 sidebarGroup: Information
 ---
 
-import Demo from "../../../../components/docs/Demo.astro";
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
 
-<Demo hass>
-  <hui-card style="width: 340px" data-props='{"config": {"type": "sensor", "entity": "sensor.living_room_temperature", "graph": "line"}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[{ type: "sensor", entity: "sensor.living_room_temperature", graph: "line" }]}
+/>
 
 ## Usage
 
@@ -22,10 +23,13 @@ Use the [tile card](/design/dashboards/tile-card/) when the value is one of many
 
 With `graph: line`, the card adds the graph. Without it, the card only shows the value. That plain version is the same as the [entity card](/design/dashboards/entity-card/), so if you don't want the graph, use that card instead.
 
-<Demo hass>
-  <hui-card style="width: 300px" data-props='{"config": {"type": "sensor", "entity": "sensor.desk_plug_power", "graph": "line"}}'></hui-card>
-  <hui-card style="width: 300px" data-props='{"config": {"type": "sensor", "entity": "sensor.outdoor_humidity"}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    { type: "sensor", entity: "sensor.desk_plug_power", graph: "line" },
+    { type: "sensor", entity: "sensor.outdoor_humidity" },
+  ]}
+/>
 
 The graph is a sparkline: no axes, no labels, no tooltip. It shows the shape of the trend, not the numbers. That keeps the card calm, and it works because the current value sits right above it.
 
@@ -35,10 +39,13 @@ The graph is a sparkline: no axes, no labels, no tooltip. It shows the shape of 
 
 With `detail: 2`, the graph uses more points and follows every change. The default, `detail: 1`, averages the values per hour, which gives a smoother line. Pick the smooth line unless the peaks are the point.
 
-<Demo hass>
-  <hui-card style="width: 300px" data-props='{"config": {"type": "sensor", "entity": "sensor.desk_plug_power", "graph": "line", "hours_to_show": 6, "detail": 2}}'></hui-card>
-  <hui-card style="width: 300px" data-props='{"config": {"type": "sensor", "entity": "sensor.desk_plug_power", "graph": "line", "hours_to_show": 6}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    { type: "sensor", entity: "sensor.desk_plug_power", graph: "line", hours_to_show: 6, detail: 2 },
+    { type: "sensor", entity: "sensor.desk_plug_power", graph: "line", hours_to_show: 6 },
+  ]}
+/>
 
 ### Content
 

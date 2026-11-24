@@ -30,6 +30,8 @@ conditions:
       phase: full_moon
 ```
 
+A `target` can also leave out part of what it matches with an `exclude` block, like all lights on a floor except the kitchen. See [targets and exclusions](#targets-and-exclusions).
+
 ## Triggers
 
 ### The trigger class
@@ -290,6 +292,28 @@ is_phase:
 ```
 
 For conditions on entity states, `homeassistant.helpers.condition` has `make_entity_state_condition` and base classes like `EntityNumericalConditionBase`. See `homeassistant/components/light/condition.py`.
+
+## Targets and exclusions
+
+A target can have an `exclude` block, with the same keys as the target itself. Home Assistant removes whatever it matches from the resolved target, also when entities are added to an excluded area or label later:
+
+```yaml
+triggers:
+  - trigger: light.turned_on
+    target:
+      floor_id: ground_floor
+      exclude:
+        area_id: kitchen
+```
+
+The entity triggers and conditions from the helpers handle this for you. So does `cv.TARGET_FIELDS`, which accepts the `exclude` block when you validate a `target`.
+
+If your trigger or condition resolves the target itself, use the target helpers in `homeassistant.helpers.target`, never the IDs in the target directly. Reading `area_id` or `entity_id` yourself silently ignores the exclude block, and your trigger then reacts to entities the user left out:
+
+- `async_extract_referenced_entity_ids` resolves a `TargetSelection` to entities, devices, and areas, with the exclusions removed.
+- `async_track_target_selector_state_change_event` and `TargetEntityChangeTracker` follow the entities of a target as they change, exclusions included.
+
+If your trigger or condition can't support exclusions, validate the target with `cv.TARGET_ID_FIELDS` instead. It has the same keys without `exclude`, so an exclude block fails validation instead of being ignored.
 
 ## Naming
 

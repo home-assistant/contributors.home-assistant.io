@@ -1,0 +1,130 @@
+---
+title: Lawn mower entity
+description: Build a lawn mower entity for a robot mower that mows, pauses, and returns to its dock.
+sidebarLabel: Lawn mower
+sidebarGroup: Appliances
+---
+
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
+
+A lawn mower entity controls a robotic lawn mower: start mowing, pause, stop, and send it back to its dock. Inherit from `LawnMowerEntity` in `homeassistant.components.lawn_mower`. The entity only covers these commands. Settings like the cutting height go in other entities of the same device, such as a [number](/core/entities/number/) or a [select](/core/entities/select/).
+
+For how the frontend shows a lawn mower, see the [lawn mower more-info view](/design/more-info/lawn-mower/).
+
+<EmbedDemo
+  entities={[
+    {
+      entity_id: "lawn_mower.garden",
+      state: "docked",
+      attributes: {
+        friendly_name: "Garden mower",
+        supported_features: 7,
+      },
+    },
+  ]}
+  cards={[
+    {
+      type: "tile",
+      entity: "lawn_mower.garden",
+      features: [{ type: "lawn-mower-commands" }],
+    },
+  ]}
+  caption="A lawn mower that starts, pauses, and docks, in a tile card. The card is live: send it out to mow, or back to its dock."
+/>
+
+## Properties
+
+Lawn mower entities have this property on top of the [generic entity properties](/core/entities/entity-class/). Set it with `_attr_activity`, or override the property.
+
+| Name | Type | Default | Description |
+| ---- | ---- | ------- | ----------- |
+| `activity` | `LawnMowerActivity \| None` | `None` | What the mower is doing right now. See [States](#states). |
+
+## Supported features
+
+Combine the values of `LawnMowerEntityFeature` with the bitwise or (`|`) operator. Home Assistant only offers the actions of the features you set.
+
+| Value | Description |
+| ----- | ----------- |
+| `START_MOWING` | The mower can start or resume mowing. Implement `start_mowing`. |
+| `PAUSE` | The mower can pause. Implement `pause`. |
+| `STOP` | The mower can stop where it is. Implement `stop`. |
+| `DOCK` | The mower can return to its dock. Implement `dock`. |
+
+## Methods
+
+Each method has a sync variant and an `async_` variant. Implement one of them.
+
+| Method | Async variant | Feature |
+| ------ | ------------- | ------- |
+| `start_mowing()` | `async_start_mowing()` | `START_MOWING` |
+| `pause()` | `async_pause()` | `PAUSE` |
+| `stop()` | `async_stop()` | `STOP` |
+| `dock()` | `async_dock()` | `DOCK` |
+
+## States
+
+The state is the `activity` of the mower, a value of `LawnMowerActivity`. The `state` property is final: set `activity` instead.
+
+| Value | Description |
+| ----- | ----------- |
+| `MOWING` | The mower is mowing. |
+| `PAUSED` | The mower was mowing and is paused. |
+| `RETURNING` | The mower is on its way back to the dock. |
+| `DOCKED` | The mower is in its dock. |
+| `IDLE` | The mower is stopped, but not docked and not paused. |
+| `ERROR` | The mower ran into a problem and needs help. |
+
+## Example
+
+```python
+from homeassistant.components.lawn_mower import (
+    LawnMowerActivity,
+    LawnMowerEntity,
+    LawnMowerEntityFeature,
+)
+
+
+class MyLawnMower(MyEntity, LawnMowerEntity):
+    """A robot lawn mower."""
+
+    _attr_name = None
+    _attr_supported_features = (
+        LawnMowerEntityFeature.START_MOWING
+        | LawnMowerEntityFeature.PAUSE
+        | LawnMowerEntityFeature.DOCK
+    )
+
+    def __init__(self, coordinator: MyCoordinator) -> None:
+        """Set up the entity."""
+        super().__init__(coordinator)
+        self._attr_unique_id = coordinator.mower.serial
+
+    @property
+    def activity(self) -> LawnMowerActivity:
+        """Return what the mower is doing."""
+        if self.coordinator.data.error:
+            return LawnMowerActivity.ERROR
+        if self.coordinator.data.mowing:
+            return LawnMowerActivity.MOWING
+        if self.coordinator.data.charging:
+            return LawnMowerActivity.DOCKED
+        return LawnMowerActivity.IDLE
+
+    async def async_start_mowing(self) -> None:
+        """Start mowing."""
+        await self.coordinator.mower.start()
+        await self.coordinator.async_request_refresh()
+
+    async def async_pause(self) -> None:
+        """Pause mowing."""
+        await self.coordinator.mower.pause()
+        await self.coordinator.async_request_refresh()
+
+    async def async_dock(self) -> None:
+        """Send the mower back to its dock."""
+        await self.coordinator.mower.dock()
+        await self.coordinator.async_request_refresh()
+```
+
+`MyEntity` is the shared base entity of the integration, a `CoordinatorEntity` that sets `_attr_has_entity_name = True` and the device info.

@@ -4,11 +4,19 @@ description: The entity filter card shows only the entities from a list that mat
 sidebarGroup: Entity cards
 ---
 
-import Demo from "../../../../components/docs/Demo.astro";
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
 
-<Demo hass>
-  <hui-card style="width: 380px" data-props='{"config": {"type": "entity-filter", "entities": ["light.living_room_lamp", "light.hallway", "light.kitchen_ceiling"], "conditions": [{"condition": "state", "state": "on"}], "card": {"title": "Lights on"}}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    {
+      type: "entity-filter",
+      entities: ["light.living_room_lamp", "light.hallway", "light.kitchen_ceiling"],
+      conditions: [{ condition: "state", state: "on" }],
+      card: { title: "Lights on" },
+    },
+  ]}
+/>
 
 ## Usage
 
@@ -16,9 +24,17 @@ The entity filter card takes a list of entities, and only shows the ones that ma
 
 It does not show anything itself. It hands the matching entities to another card, an [entities card](/design/dashboards/entities-card/) unless you pick another one, like a [glance card](/design/dashboards/glance-card/). Anything you put in `card` goes to that card, like a `title`.
 
-<Demo hass>
-  <hui-card style="width: 400px" data-props='{"config": {"type": "entity-filter", "entities": ["sensor.living_room_humidity", "sensor.outdoor_humidity", "sensor.monstera_moisture"], "conditions": [{"condition": "numeric_state", "below": 50}], "card": {"type": "glance", "title": "Running dry"}}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    {
+      type: "entity-filter",
+      entities: ["sensor.living_room_humidity", "sensor.outdoor_humidity", "sensor.monstera_moisture"],
+      conditions: [{ condition: "numeric_state", below: 50 }],
+      card: { type: "glance", title: "Running dry" },
+    },
+  ]}
+/>
 
 To show or hide a whole card based on a state, use the [conditional card](/design/dashboards/conditional-card/), or the visibility options of the card itself in the sections view.
 

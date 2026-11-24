@@ -4,12 +4,15 @@ description: The light card shows one light as a big round button, with a ring a
 sidebarGroup: Controls
 ---
 
-import Demo from "../../../../components/docs/Demo.astro";
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
 
-<Demo hass>
-  <hui-card style="width: 300px" data-props='{"config": {"type": "light", "entity": "light.living_room_lamp"}}'></hui-card>
-  <hui-card style="width: 300px" data-props='{"config": {"type": "light", "entity": "light.kitchen_ceiling"}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    { type: "light", entity: "light.living_room_lamp" },
+    { type: "light", entity: "light.kitchen_ceiling" },
+  ]}
+/>
 
 ## Usage
 
@@ -19,9 +22,10 @@ The icon takes the color of the light, and gets brighter or dimmer with it. A li
 
 Use the light card when one light is the main thing on a dashboard or in a section, like a wall tablet next to a door. For most lights, a [tile card](/design/dashboards/tile-card/) with the brightness feature fits better: it takes a quarter of the room, and sits nicely next to the other lights in the same area.
 
-<Demo hass>
-  <hui-card style="width: 340px" data-props='{"config": {"type": "tile", "entity": "light.living_room_lamp", "features": [{"type": "light-brightness"}]}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[{ type: "tile", entity: "light.living_room_lamp", features: [{ type: "light-brightness" }] }]}
+/>
 
 ### Lights without brightness
 

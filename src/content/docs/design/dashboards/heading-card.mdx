@@ -4,12 +4,23 @@ description: The heading card puts a title above a group of cards, with optional
 sidebarGroup: Grouping and layout
 ---
 
-import Demo from "../../../../components/docs/Demo.astro";
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
 
-<Demo hass layout="stack">
-  <hui-card style="width: 420px" data-props='{"config": {"type": "heading", "heading": "Living room", "icon": "mdi:sofa", "badges": [{"type": "entity", "entity": "sensor.living_room_temperature"}, {"type": "entity", "entity": "sensor.living_room_humidity"}]}}'></hui-card>
-  <hui-card style="width: 420px" data-props='{"config": {"type": "tile", "entity": "light.living_room_lamp"}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    {
+      type: "heading",
+      heading: "Living room",
+      icon: "mdi:sofa",
+      badges: [
+        { type: "entity", entity: "sensor.living_room_temperature" },
+        { type: "entity", entity: "sensor.living_room_humidity" },
+      ],
+    },
+    { type: "tile", entity: "light.living_room_lamp" },
+  ]}
+/>
 
 ## Usage
 
@@ -21,11 +32,14 @@ Use a heading to say what the cards below it have in common, like a room or a to
 
 The `title` style is the default, for the top of a section. The `subtitle` style is smaller and lighter, for a group inside a section. Use a subtitle to split a long section, like the lights and the climate of the same room.
 
-<Demo hass layout="stack">
-  <hui-card style="width: 420px" data-props='{"config": {"type": "heading", "heading": "Bedroom"}}'></hui-card>
-  <hui-card style="width: 420px" data-props='{"config": {"type": "heading", "heading": "Climate", "heading_style": "subtitle"}}'></hui-card>
-  <hui-card style="width: 420px" data-props='{"config": {"type": "tile", "entity": "climate.bedroom_air_conditioner"}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    { type: "heading", heading: "Bedroom" },
+    { type: "heading", heading: "Climate", heading_style: "subtitle" },
+    { type: "tile", entity: "climate.bedroom_air_conditioner" },
+  ]}
+/>
 
 ### Badges
 
@@ -33,17 +47,37 @@ Badges sit on the other side of the heading and summarize the group at a glance,
 
 Keep it to a few badges. When they don't fit, they scroll sideways, and the ones out of view are easy to miss.
 
-<Demo hass>
-  <hui-card style="width: 420px" data-props='{"config": {"type": "heading", "heading": "Hallway", "heading_style": "subtitle", "badges": [{"type": "entity", "entity": "binary_sensor.front_door"}, {"type": "entity", "entity": "lock.front_door"}, {"type": "entity", "entity": "light.hallway", "show_state": false}]}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    {
+      type: "heading",
+      heading: "Hallway",
+      heading_style: "subtitle",
+      badges: [
+        { type: "entity", entity: "binary_sensor.front_door" },
+        { type: "entity", entity: "lock.front_door" },
+        { type: "entity", entity: "light.hallway", show_state: false },
+      ],
+    },
+  ]}
+/>
 
 ### Action
 
 By default, the heading does nothing when you select it. Give it a `tap_action`, like navigating to the dashboard of the room, and a chevron appears next to the title to show it leads somewhere.
 
-<Demo hass>
-  <hui-card style="width: 420px" data-props='{"config": {"type": "heading", "heading": "Garden", "icon": "mdi:flower", "tap_action": {"action": "navigate", "navigation_path": "/dashboard-garden"}}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    {
+      type: "heading",
+      heading: "Garden",
+      icon: "mdi:flower",
+      tap_action: { action: "navigate", navigation_path: "/dashboard-garden" },
+    },
+  ]}
+/>
 
 ### Content
 

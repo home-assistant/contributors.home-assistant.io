@@ -1,6 +1,6 @@
 {
   "repository": "home-assistant/core",
-  "commit": "0dc24540ce48f65f616230857e2cf21ceec92b80",
+  "commit": "aef7c996cbf2a46a37215ea768ab274f2a302506",
   "symbols": [
     {
       "id": "homeassistant.auth.AuthManager",
@@ -567,7 +567,7 @@
       "kind": "enum",
       "module": "homeassistant.components.assist_pipeline.models",
       "path": "homeassistant/components/assist_pipeline/models.py",
-      "line": 103,
+      "line": 104,
       "signature": "class PipelineStage(StrEnum):",
       "doc": "Stages of a pipeline.",
       "bare": true,
@@ -651,7 +651,7 @@
       "module": "homeassistant.components.assist_satellite.entity",
       "path": "homeassistant/components/assist_satellite/entity.py",
       "line": 443,
-      "signature": "async def async_accept_pipeline_from_satellite(\n    audio_stream: AsyncIterable[bytes],\n    start_stage: PipelineStage = PipelineStage.STT,\n    end_stage: PipelineStage = PipelineStage.TTS,\n    wake_word_phrase: str | None = None,\n    *,\n    context: Context | None = None,\n    audio_settings: AudioSettings | None = None,\n) -> None:",
+      "signature": "async def async_accept_pipeline_from_satellite(\n    audio_stream: AsyncIterable[bytes],\n    start_stage: PipelineStage = PipelineStage.STT,\n    end_stage: PipelineStage = PipelineStage.TTS,\n    wake_word_phrase: str | None = None,\n    *,\n    context: Context | None = None,\n    audio_settings: AudioSettings | None = None,\n    wake_word_audio_ms: int | None = None,\n) -> None:",
       "doc": "Triggers an Assist pipeline in Home Assistant from a satellite.",
       "bare": true
     },
@@ -698,7 +698,7 @@
       "kind": "method",
       "module": "homeassistant.components.assist_satellite.entity",
       "path": "homeassistant/components/assist_satellite/entity.py",
-      "line": 563,
+      "line": 565,
       "signature": "def on_pipeline_event(event: PipelineEvent) -> None:",
       "doc": "Handle pipeline events.",
       "bare": true
@@ -710,7 +710,7 @@
       "kind": "method",
       "module": "homeassistant.components.assist_satellite.entity",
       "path": "homeassistant/components/assist_satellite/entity.py",
-      "line": 611,
+      "line": 613,
       "signature": "def tts_response_finished() -> None:",
       "doc": "Tell entity that the text-to-speech response has finished playing.",
       "bare": true
@@ -1040,7 +1040,7 @@
       "kind": "class",
       "module": "homeassistant.components.bluetooth.passive_update_processor",
       "path": "homeassistant/components/bluetooth/passive_update_processor.py",
-      "line": 130,
+      "line": 132,
       "signature": "class PassiveBluetoothDataUpdate:",
       "doc": "Generic bluetooth data.",
       "bare": true
@@ -1052,7 +1052,7 @@
       "kind": "class",
       "module": "homeassistant.components.bluetooth.passive_update_processor",
       "path": "homeassistant/components/bluetooth/passive_update_processor.py",
-      "line": 291,
+      "line": 293,
       "signature": "PassiveBluetoothProcessorCoordinator(\n    hass: HomeAssistant,\n    logger: logging.Logger,\n    address: str,\n    mode: BluetoothScanningMode,\n    update_method: Callable[\n        [BluetoothServiceInfoBleak], _DataT\n    ],\n    connectable: bool = False,\n    scan_interval: float | None = None,\n    scan_duration: float | None = None,\n)",
       "doc": "Passive bluetooth processor coordinator for bluetooth advertisements.",
       "bare": true
@@ -1495,7 +1495,7 @@
       "kind": "enum",
       "module": "homeassistant.components.climate.const",
       "path": "homeassistant/components/climate/const.py",
-      "line": 200,
+      "line": 205,
       "signature": "class ClimateEntityFeature(IntFlag):",
       "doc": "Supported features of the climate entity.",
       "bare": true,
@@ -2089,7 +2089,7 @@
       "kind": "method",
       "module": "homeassistant.components.cover.entity",
       "path": "homeassistant/components/cover/entity.py",
-      "line": 214,
+      "line": 221,
       "signature": "async def async_close_cover(**kwargs: Any) -> None:",
       "doc": "Close cover.",
       "bare": true
@@ -2101,7 +2101,7 @@
       "kind": "method",
       "module": "homeassistant.components.cover.entity",
       "path": "homeassistant/components/cover/entity.py",
-      "line": 266,
+      "line": 273,
       "signature": "async def async_close_cover_tilt(**kwargs: Any) -> None:",
       "doc": "Close the cover tilt.",
       "bare": true
@@ -2113,7 +2113,7 @@
       "kind": "method",
       "module": "homeassistant.components.cover.entity",
       "path": "homeassistant/components/cover/entity.py",
-      "line": 206,
+      "line": 213,
       "signature": "async def async_open_cover(**kwargs: Any) -> None:",
       "doc": "Open the cover.",
       "bare": true
@@ -2125,7 +2125,7 @@
       "kind": "method",
       "module": "homeassistant.components.cover.entity",
       "path": "homeassistant/components/cover/entity.py",
-      "line": 257,
+      "line": 264,
       "signature": "async def async_open_cover_tilt(**kwargs: Any) -> None:",
       "doc": "Open the cover tilt.",
       "bare": true
@@ -2137,7 +2137,7 @@
       "kind": "method",
       "module": "homeassistant.components.cover.entity",
       "path": "homeassistant/components/cover/entity.py",
-      "line": 241,
+      "line": 248,
       "signature": "async def async_set_cover_position(**kwargs: Any) -> None:",
       "doc": "Move the cover to a specific position.",
       "bare": true
@@ -2149,7 +2149,7 @@
       "kind": "method",
       "module": "homeassistant.components.cover.entity",
       "path": "homeassistant/components/cover/entity.py",
-      "line": 275,
+      "line": 282,
       "signature": "async def async_set_cover_tilt_position(\n    **kwargs: Any,\n) -> None:",
       "doc": "Move the cover tilt to a specific position.",
       "bare": true
@@ -2161,7 +2161,7 @@
       "kind": "method",
       "module": "homeassistant.components.cover.entity",
       "path": "homeassistant/components/cover/entity.py",
-      "line": 250,
+      "line": 257,
       "signature": "async def async_stop_cover(**kwargs: Any) -> None:",
       "doc": "Stop the cover.",
       "bare": true
@@ -2173,7 +2173,7 @@
       "kind": "method",
       "module": "homeassistant.components.cover.entity",
       "path": "homeassistant/components/cover/entity.py",
-      "line": 284,
+      "line": 291,
       "signature": "async def async_stop_cover_tilt(**kwargs: Any) -> None:",
       "doc": "Stop the cover.",
       "bare": true
@@ -2185,7 +2185,7 @@
       "kind": "method",
       "module": "homeassistant.components.cover.entity",
       "path": "homeassistant/components/cover/entity.py",
-      "line": 210,
+      "line": 217,
       "signature": "def close_cover(**kwargs: Any) -> None:",
       "doc": "Close cover.",
       "bare": true
@@ -2197,7 +2197,7 @@
       "kind": "method",
       "module": "homeassistant.components.cover.entity",
       "path": "homeassistant/components/cover/entity.py",
-      "line": 263,
+      "line": 270,
       "signature": "def close_cover_tilt(**kwargs: Any) -> None:",
       "doc": "Close the cover tilt.",
       "bare": true
@@ -2209,7 +2209,7 @@
       "kind": "method",
       "module": "homeassistant.components.cover.entity",
       "path": "homeassistant/components/cover/entity.py",
-      "line": 202,
+      "line": 209,
       "signature": "def open_cover(**kwargs: Any) -> None:",
       "doc": "Open the cover.",
       "bare": true
@@ -2221,7 +2221,7 @@
       "kind": "method",
       "module": "homeassistant.components.cover.entity",
       "path": "homeassistant/components/cover/entity.py",
-      "line": 254,
+      "line": 261,
       "signature": "def open_cover_tilt(**kwargs: Any) -> None:",
       "doc": "Open the cover tilt.",
       "bare": true
@@ -2233,7 +2233,7 @@
       "kind": "method",
       "module": "homeassistant.components.cover.entity",
       "path": "homeassistant/components/cover/entity.py",
-      "line": 238,
+      "line": 245,
       "signature": "def set_cover_position(**kwargs: Any) -> None:",
       "doc": "Move the cover to a specific position.",
       "bare": true
@@ -2245,7 +2245,7 @@
       "kind": "method",
       "module": "homeassistant.components.cover.entity",
       "path": "homeassistant/components/cover/entity.py",
-      "line": 272,
+      "line": 279,
       "signature": "def set_cover_tilt_position(**kwargs: Any) -> None:",
       "doc": "Move the cover tilt to a specific position.",
       "bare": true
@@ -2257,7 +2257,7 @@
       "kind": "method",
       "module": "homeassistant.components.cover.entity",
       "path": "homeassistant/components/cover/entity.py",
-      "line": 247,
+      "line": 254,
       "signature": "def stop_cover(**kwargs: Any) -> None:",
       "doc": "Stop the cover.",
       "bare": true
@@ -2269,7 +2269,7 @@
       "kind": "method",
       "module": "homeassistant.components.cover.entity",
       "path": "homeassistant/components/cover/entity.py",
-      "line": 281,
+      "line": 288,
       "signature": "def stop_cover_tilt(**kwargs: Any) -> None:",
       "doc": "Stop the cover.",
       "bare": true
@@ -2281,7 +2281,7 @@
       "kind": "method",
       "module": "homeassistant.components.cover.entity",
       "path": "homeassistant/components/cover/entity.py",
-      "line": 290,
+      "line": 297,
       "signature": "def toggle_tilt(**kwargs: Any) -> None:",
       "doc": "Toggle the entity.",
       "bare": true
@@ -4723,7 +4723,7 @@
       "kind": "class",
       "module": "homeassistant.components.sensor.entity",
       "path": "homeassistant/components/sensor/entity.py",
-      "line": 955,
+      "line": 953,
       "signature": "class RestoreSensor(SensorEntity, RestoreEntity):",
       "doc": "Mixin class for restoring previous sensor state.",
       "bare": true
@@ -4735,7 +4735,7 @@
       "kind": "method",
       "module": "homeassistant.components.sensor.entity",
       "path": "homeassistant/components/sensor/entity.py",
-      "line": 964,
+      "line": 962,
       "signature": "async def async_get_last_sensor_data() -> SensorExtraStoredData | None:",
       "doc": "Restore native_value and native_unit_of_measurement.",
       "bare": true
@@ -5931,7 +5931,7 @@
       "kind": "enum",
       "module": "homeassistant.components.water_heater.const",
       "path": "homeassistant/components/water_heater/const.py",
-      "line": 65,
+      "line": 70,
       "signature": "class WaterHeaterEntityFeature(IntFlag):",
       "doc": "Supported features of the water heater entity.",
       "bare": true,
@@ -6123,7 +6123,7 @@
       "kind": "enum",
       "module": "homeassistant.components.weather.const",
       "path": "homeassistant/components/weather/const.py",
-      "line": 28,
+      "line": 29,
       "signature": "class WeatherEntityFeature(IntFlag):",
       "doc": "Supported features of the update entity.",
       "bare": true,
@@ -6140,7 +6140,7 @@
       "kind": "class",
       "module": "homeassistant.components.weather.entity",
       "path": "homeassistant/components/weather/entity.py",
-      "line": 918,
+      "line": 925,
       "signature": "CoordinatorWeatherEntity(\n    observation_coordinator: _ObservationUpdateCoordinatorT,\n    *,\n    context: Any = None,\n    daily_coordinator: _DailyForecastUpdateCoordinatorT | None = None,\n    hourly_coordinator: _HourlyForecastUpdateCoordinatorT | None = None,\n    twice_daily_coordinator: _TwiceDailyForecastUpdateCoordinatorT | None = None,\n    daily_forecast_valid: timedelta | None = None,\n    hourly_forecast_valid: timedelta | None = None,\n    twice_daily_forecast_valid: timedelta | None = None,\n)",
       "doc": "A class for weather entities using DataUpdateCoordinators.",
       "bare": true
@@ -6152,7 +6152,7 @@
       "kind": "method",
       "module": "homeassistant.components.weather.entity",
       "path": "homeassistant/components/weather/entity.py",
-      "line": 1048,
+      "line": 1055,
       "signature": "def _async_forecast_daily() -> list[Forecast] | None:",
       "doc": "Return the daily forecast in native units.",
       "bare": true
@@ -6164,7 +6164,7 @@
       "kind": "method",
       "module": "homeassistant.components.weather.entity",
       "path": "homeassistant/components/weather/entity.py",
-      "line": 1053,
+      "line": 1060,
       "signature": "def _async_forecast_hourly() -> list[Forecast] | None:",
       "doc": "Return the hourly forecast in native units.",
       "bare": true
@@ -6176,7 +6176,7 @@
       "kind": "method",
       "module": "homeassistant.components.weather.entity",
       "path": "homeassistant/components/weather/entity.py",
-      "line": 1058,
+      "line": 1065,
       "signature": "def _async_forecast_twice_daily() -> list[Forecast] | None:",
       "doc": "Return the twice daily forecast in native units.",
       "bare": true
@@ -6188,7 +6188,7 @@
       "kind": "class",
       "module": "homeassistant.components.weather.entity",
       "path": "homeassistant/components/weather/entity.py",
-      "line": 117,
+      "line": 118,
       "signature": "class Forecast(TypedDict):",
       "doc": "Typed weather forecast dict.",
       "bare": true
@@ -6200,7 +6200,7 @@
       "kind": "class",
       "module": "homeassistant.components.weather.entity",
       "path": "homeassistant/components/weather/entity.py",
-      "line": 1095,
+      "line": 1102,
       "signature": "SingleCoordinatorWeatherEntity(\n    coordinator: _ObservationUpdateCoordinatorT,\n    context: Any = None,\n)",
       "doc": "A class for weather entities using a single DataUpdateCoordinators.",
       "bare": true
@@ -6212,7 +6212,7 @@
       "kind": "class",
       "module": "homeassistant.components.weather.entity",
       "path": "homeassistant/components/weather/entity.py",
-      "line": 192,
+      "line": 193,
       "signature": "class WeatherEntity(Entity, PostInit):",
       "doc": "ABC for weather data.",
       "bare": true
@@ -6224,7 +6224,7 @@
       "kind": "method",
       "module": "homeassistant.components.weather.entity",
       "path": "homeassistant/components/weather/entity.py",
-      "line": 418,
+      "line": 419,
       "signature": "async def async_forecast_daily() -> list[Forecast] | None:",
       "doc": "Return the daily forecast in native units.",
       "bare": true
@@ -6236,7 +6236,7 @@
       "kind": "method",
       "module": "homeassistant.components.weather.entity",
       "path": "homeassistant/components/weather/entity.py",
-      "line": 426,
+      "line": 427,
       "signature": "async def async_forecast_hourly() -> list[Forecast] | None:",
       "doc": "Return the hourly forecast in native units.",
       "bare": true
@@ -6248,7 +6248,7 @@
       "kind": "method",
       "module": "homeassistant.components.weather.entity",
       "path": "homeassistant/components/weather/entity.py",
-      "line": 422,
+      "line": 423,
       "signature": "async def async_forecast_twice_daily() -> list[\n    Forecast\n] | None:",
       "doc": "Return the daily forecast in native units.",
       "bare": true
@@ -6332,7 +6332,7 @@
       "kind": "class",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 2261,
+      "line": 2280,
       "signature": "ConfigEntries(hass: HomeAssistant, hass_config: ConfigType)",
       "doc": "Manage the configuration entries.",
       "bare": true
@@ -6344,7 +6344,7 @@
       "kind": "method",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 2329,
+      "line": 2348,
       "signature": "def async_entries(\n    domain: str | None = None,\n    include_ignore: bool = True,\n    include_disabled: bool = True,\n) -> list[ConfigEntry]:",
       "doc": "Return all entries or entries for a specific domain.",
       "bare": true
@@ -6356,7 +6356,7 @@
       "kind": "method",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 2971,
+      "line": 2993,
       "signature": "async def async_forward_entry_setups(\n    entry: ConfigEntry,\n    platforms: Iterable[Platform | str],\n) -> None:",
       "doc": "Forward the setup of an entry to platforms.",
       "bare": true
@@ -6368,7 +6368,7 @@
       "kind": "method",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 2352,
+      "line": 2371,
       "signature": "def async_loaded_entries(domain: str) -> list[ConfigEntry]:",
       "doc": "Return loaded entries for a specific domain.",
       "bare": true
@@ -6380,7 +6380,7 @@
       "kind": "method",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 2565,
+      "line": 2583,
       "signature": "async def async_setup(\n    entry_id: str,\n    _lock: bool = True,\n) -> bool:",
       "doc": "Set up a config entry.",
       "bare": false
@@ -6392,7 +6392,7 @@
       "kind": "method",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 3077,
+      "line": 3099,
       "signature": "async def async_unload_platforms_or_raise(\n    entry: ConfigEntry,\n    platforms: Iterable[Platform | str],\n) -> None:",
       "doc": "Forward the unloading of an entry to platforms, raising on failure.",
       "bare": true
@@ -6404,7 +6404,7 @@
       "kind": "method",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 2726,
+      "line": 2748,
       "signature": "def async_update_entry(\n    entry: ConfigEntry,\n    *,\n    data: Mapping[str, Any] | Undefined = Undefined,\n    discovery_keys: MappingProxyType[\n        str, tuple[DiscoveryKey, ...]\n    ] | Undefined = Undefined,\n    minor_version: int | Undefined = Undefined,\n    options: Mapping[str, Any] | Undefined = Undefined,\n    pref_disable_new_entities: bool | Undefined = Undefined,\n    pref_disable_polling: bool | Undefined = Undefined,\n    title: str | Undefined = Undefined,\n    unique_id: str | Undefined | None = Undefined,\n    version: int | Undefined = Undefined,\n) -> bool:",
       "doc": "Update a config entry.",
       "bare": true
@@ -6416,7 +6416,7 @@
       "kind": "method",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 2906,
+      "line": 2928,
       "signature": "def async_update_subentry(\n    entry: ConfigEntry,\n    subentry: ConfigSubentry,\n    *,\n    data: Mapping[str, Any] | Undefined = Undefined,\n    title: str | Undefined = Undefined,\n    unique_id: str | Undefined | None = Undefined,\n) -> bool:",
       "doc": "Update a config subentry.",
       "bare": true
@@ -6486,7 +6486,7 @@
       "kind": "class",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 3224,
+      "line": 3246,
       "signature": "class ConfigFlow(ConfigEntryBaseFlow):",
       "doc": "Base class for config flows with some helpers.",
       "bare": true
@@ -6498,7 +6498,7 @@
       "kind": "method",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 3327,
+      "line": 3349,
       "signature": "def _abort_if_unique_id_configured(\n    updates: dict[str, Any] | None = None,\n    reload_on_update: bool = True,\n    *,\n    error: str = 'already_configured',\n    description_placeholders: Mapping[\n        str, str\n    ] | None = None,\n) -> None:",
       "doc": "Abort if the unique ID is already configured.",
       "bare": true
@@ -6510,7 +6510,7 @@
       "kind": "method",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 3306,
+      "line": 3328,
       "signature": "def _abort_if_unique_id_mismatch(\n    *,\n    reason: str = 'unique_id_mismatch',\n    description_placeholders: Mapping[\n        str, str\n    ] | None = None,\n) -> None:",
       "doc": "Abort if the unique ID does not match the reauth/reconfigure context.",
       "bare": true
@@ -6522,7 +6522,7 @@
       "kind": "method",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 3846,
+      "line": 3868,
       "signature": "def _get_reauth_entry() -> ConfigEntry:",
       "doc": "Return the reauth config entry linked to the current context.",
       "bare": true
@@ -6534,7 +6534,7 @@
       "kind": "method",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 3858,
+      "line": 3880,
       "signature": "def _get_reconfigure_entry() -> ConfigEntry:",
       "doc": "Return the reconfigure config entry linked to the current context.",
       "bare": true
@@ -6546,7 +6546,7 @@
       "kind": "method",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 3420,
+      "line": 3442,
       "signature": "def _set_confirm_only() -> None:",
       "doc": "Deprecated no-op; the confirm only flag it used to set was never read.",
       "bare": true
@@ -6558,7 +6558,7 @@
       "kind": "method",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 3244,
+      "line": 3266,
       "signature": "def async_get_options_flow(\n    config_entry: ConfigEntry,\n) -> OptionsFlow:",
       "doc": "Get the options flow for this handler.",
       "bare": true
@@ -6570,7 +6570,7 @@
       "kind": "method",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 3627,
+      "line": 3649,
       "signature": "async def async_on_create_entry(\n    result: ConfigFlowResult,\n) -> ConfigFlowResult:",
       "doc": "Runs after a config flow has created a config entry.",
       "bare": true
@@ -6582,7 +6582,7 @@
       "kind": "method",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 3383,
+      "line": 3405,
       "signature": "async def async_set_unique_id(\n    unique_id: str | None = None,\n    *,\n    raise_on_progress: bool = True,\n) -> ConfigEntry | None:",
       "doc": "Set a unique ID for the config flow.",
       "bare": true
@@ -6594,7 +6594,7 @@
       "kind": "method",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 3834,
+      "line": 3856,
       "signature": "def is_matching(other_flow: Self) -> bool:",
       "doc": "Return True if other_flow is matching this flow.",
       "bare": true
@@ -6618,7 +6618,7 @@
       "kind": "method",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 4107,
+      "line": 4129,
       "signature": "def _get_entry() -> ConfigEntry:",
       "doc": "Return the config entry linked to the current context.",
       "bare": true
@@ -6630,7 +6630,7 @@
       "kind": "method",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 4119,
+      "line": 4141,
       "signature": "def _get_reconfigure_subentry() -> ConfigSubentry:",
       "doc": "Return the reconfigure config subentry linked to the current context.",
       "bare": true
@@ -6642,7 +6642,7 @@
       "kind": "class",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 4205,
+      "line": 4227,
       "signature": "class OptionsFlow(ConfigEntryBaseFlow):",
       "doc": "Base class for config options flows.",
       "bare": true
@@ -6654,7 +6654,7 @@
       "kind": "class",
       "module": "homeassistant.config_entries",
       "path": "homeassistant/config_entries.py",
-      "line": 4279,
+      "line": 4301,
       "signature": "class OptionsFlowWithReload(OptionsFlow):",
       "doc": "Automatic reloading class for config options flows.",
       "bare": true
@@ -6993,7 +6993,7 @@
       "kind": "method",
       "module": "homeassistant.core",
       "path": "homeassistant/core.py",
-      "line": 2927,
+      "line": 2929,
       "signature": "async def async_call(\n    domain: str,\n    service: str,\n    service_data: dict[str, Any] | None = None,\n    blocking: bool = False,\n    context: Context | None = None,\n    target: dict[str, Any] | None = None,\n    return_response: bool = False,\n) -> ServiceResponse:",
       "doc": "Call a service.",
       "bare": false
@@ -7005,7 +7005,7 @@
       "kind": "method",
       "module": "homeassistant.core",
       "path": "homeassistant/core.py",
-      "line": 2786,
+      "line": 2788,
       "signature": "def async_register(\n    domain: str,\n    service: str,\n    service_func: Callable[\n        [ServiceCall],\n        Coroutine[\n            Any,\n            Any,\n            ServiceResponse | EntityServiceResponse,\n        ] | ServiceResponse | EntityServiceResponse | None,\n    ],\n    schema: VolSchemaType | None = None,\n    supports_response: SupportsResponse = SupportsResponse.NONE,\n    job_type: HassJobType | None = None,\n    *,\n    description_placeholders: Mapping[\n        str, str\n    ] | None = None,\n) -> None:",
       "doc": "Register a service.",
       "bare": false
@@ -7017,7 +7017,7 @@
       "kind": "method",
       "module": "homeassistant.core",
       "path": "homeassistant/core.py",
-      "line": 2871,
+      "line": 2873,
       "signature": "def async_remove(domain: str, service: str) -> None:",
       "doc": "Remove a registered service from service handler.",
       "bare": false
@@ -7041,7 +7041,7 @@
       "kind": "method",
       "module": "homeassistant.core",
       "path": "homeassistant/core.py",
-      "line": 2759,
+      "line": 2761,
       "signature": "def register(\n    domain: str,\n    service: str,\n    service_func: Callable[\n        [ServiceCall],\n        Coroutine[\n            Any, Any, ServiceResponse\n        ] | ServiceResponse | None,\n    ],\n    schema: probatio.Schema | None = None,\n    supports_response: SupportsResponse = SupportsResponse.NONE,\n) -> None:",
       "doc": "Register a service.",
       "bare": false
@@ -7053,7 +7053,7 @@
       "kind": "method",
       "module": "homeassistant.core",
       "path": "homeassistant/core.py",
-      "line": 2863,
+      "line": 2865,
       "signature": "def remove(domain: str, service: str) -> None:",
       "doc": "Remove a registered service from service handler.",
       "bare": false
@@ -7658,7 +7658,7 @@
       "kind": "function",
       "module": "homeassistant.helpers.config_validation",
       "path": "homeassistant/helpers/config_validation.py",
-      "line": 316,
+      "line": 336,
       "signature": "def entity_id(value: Any) -> str:",
       "doc": "Validate Entity ID.",
       "bare": false
@@ -7670,7 +7670,7 @@
       "kind": "function",
       "module": "homeassistant.helpers.config_validation",
       "path": "homeassistant/helpers/config_validation.py",
-      "line": 360,
+      "line": 380,
       "signature": "def entity_ids(value: str | list) -> list[str]:",
       "doc": "Validate Entity IDs.",
       "bare": false
@@ -7682,7 +7682,7 @@
       "kind": "function",
       "module": "homeassistant.helpers.config_validation",
       "path": "homeassistant/helpers/config_validation.py",
-      "line": 454,
+      "line": 474,
       "signature": "def icon(value: Any) -> str:",
       "doc": "Validate icon.",
       "bare": false
@@ -7706,7 +7706,7 @@
       "kind": "function",
       "module": "homeassistant.helpers.config_validation",
       "path": "homeassistant/helpers/config_validation.py",
-      "line": 615,
+      "line": 635,
       "signature": "def slug(value: Any) -> str:",
       "doc": "Validate value is a valid slug.",
       "bare": false
@@ -7718,7 +7718,7 @@
       "kind": "function",
       "module": "homeassistant.helpers.config_validation",
       "path": "homeassistant/helpers/config_validation.py",
-      "line": 666,
+      "line": 686,
       "signature": "def string(value: Any) -> str:",
       "doc": "Coerce value to string, except for None, list or dict.",
       "bare": false
@@ -7730,7 +7730,7 @@
       "kind": "function",
       "module": "homeassistant.helpers.config_validation",
       "path": "homeassistant/helpers/config_validation.py",
-      "line": 693,
+      "line": 713,
       "signature": "def temperature_unit(value: Any) -> UnitOfTemperature:",
       "doc": "Validate and transform temperature unit.",
       "bare": false
@@ -7742,7 +7742,7 @@
       "kind": "function",
       "module": "homeassistant.helpers.config_validation",
       "path": "homeassistant/helpers/config_validation.py",
-      "line": 703,
+      "line": 723,
       "signature": "def template(value: Any) -> template_helper.Template:",
       "doc": "Validate a jinja2 template.",
       "bare": false
@@ -7754,7 +7754,7 @@
       "kind": "function",
       "module": "homeassistant.helpers.config_validation",
       "path": "homeassistant/helpers/config_validation.py",
-      "line": 504,
+      "line": 524,
       "signature": "def time(value: Any) -> time_sys:",
       "doc": "Validate and transform a time.",
       "bare": false
@@ -7766,7 +7766,7 @@
       "kind": "function",
       "module": "homeassistant.helpers.config_validation",
       "path": "homeassistant/helpers/config_validation.py",
-      "line": 796,
+      "line": 824,
       "signature": "def time_zone(value: str) -> str:",
       "doc": "Validate timezone.",
       "bare": false
@@ -7778,7 +7778,7 @@
       "kind": "function",
       "module": "homeassistant.helpers.config_validation",
       "path": "homeassistant/helpers/config_validation.py",
-      "line": 829,
+      "line": 857,
       "signature": "def url(\n    value: Any,\n    _schema_list: frozenset[\n        UrlProtocolSchema\n    ] = EXTERNAL_URL_PROTOCOL_SCHEMA_LIST,\n) -> str:",
       "doc": "Validate a URL.",
       "bare": false
@@ -9411,7 +9411,7 @@
       "kind": "class",
       "module": "homeassistant.helpers.update_coordinator",
       "path": "homeassistant/helpers/update_coordinator.py",
-      "line": 706,
+      "line": 716,
       "signature": "CoordinatorEntity(\n    coordinator: _DataUpdateCoordinatorT,\n    context: Any = None,\n)",
       "doc": "A class for entities using DataUpdateCoordinator.",
       "bare": true
@@ -9423,7 +9423,7 @@
       "kind": "class",
       "module": "homeassistant.helpers.update_coordinator",
       "path": "homeassistant/helpers/update_coordinator.py",
-      "line": 72,
+      "line": 80,
       "signature": "DataUpdateCoordinator(\n    hass: HomeAssistant,\n    logger: logging.Logger,\n    *,\n    config_entry: config_entries.ConfigEntry | Undefined | None = Undefined,\n    name: str,\n    update_interval: timedelta | None = None,\n    update_method: Callable[\n        [], Awaitable[_DataT]\n    ] | None = None,\n    setup_method: Callable[\n        [], Awaitable[None]\n    ] | None = None,\n    request_refresh_debouncer: Debouncer[\n        Coroutine[Any, Any, None]\n    ] | None = None,\n    always_update: bool = True,\n)",
       "doc": "Class to manage fetching data from single endpoint.",
       "bare": true
@@ -9435,7 +9435,7 @@
       "kind": "method",
       "module": "homeassistant.helpers.update_coordinator",
       "path": "homeassistant/helpers/update_coordinator.py",
-      "line": 332,
+      "line": 340,
       "signature": "async def async_config_entry_first_refresh() -> None:",
       "doc": "Refresh data for the first time when a config entry is setup.",
       "bare": true
@@ -9447,7 +9447,7 @@
       "kind": "method",
       "module": "homeassistant.helpers.update_coordinator",
       "path": "homeassistant/helpers/update_coordinator.py",
-      "line": 230,
+      "line": 238,
       "signature": "def async_contexts() -> Generator[Any]:",
       "doc": "Return all registered contexts.",
       "bare": true
@@ -9459,7 +9459,7 @@
       "kind": "method",
       "module": "homeassistant.helpers.update_coordinator",
       "path": "homeassistant/helpers/update_coordinator.py",
-      "line": 634,
+      "line": 644,
       "signature": "def async_set_updated_data(data: _DataT) -> None:",
       "doc": "Manually update data, notify listeners and reset refresh interval.",
       "bare": true
@@ -9471,7 +9471,7 @@
       "kind": "class",
       "module": "homeassistant.helpers.update_coordinator",
       "path": "homeassistant/helpers/update_coordinator.py",
-      "line": 652,
+      "line": 662,
       "signature": "class TimestampDataUpdateCoordinator(\n    DataUpdateCoordinator[_DataT],\n):",
       "doc": "DataUpdateCoordinator which keeps track of the last successful update.",
       "bare": true
@@ -9486,6 +9486,18 @@
       "line": 48,
       "signature": "class UpdateFailed(HomeAssistantError):",
       "doc": "Raised when an update has failed.",
+      "bare": true
+    },
+    {
+      "id": "homeassistant.helpers.update_coordinator.UpdateFailedUnreachable",
+      "name": "UpdateFailedUnreachable",
+      "qualname": "UpdateFailedUnreachable",
+      "kind": "exception",
+      "module": "homeassistant.helpers.update_coordinator",
+      "path": "homeassistant/helpers/update_coordinator.py",
+      "line": 62,
+      "signature": "class UpdateFailedUnreachable(UpdateFailed):",
+      "doc": "Raised when an update failed because the device or service is unreachable.",
       "bare": true
     },
     {

@@ -4,12 +4,20 @@ description: The gauge card shows one numeric value on a dial, with colors for t
 sidebarGroup: Information
 ---
 
-import Demo from "../../../../components/docs/Demo.astro";
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
 
-<Demo hass>
-  <hui-card style="width: 300px" data-props='{"config": {"type": "gauge", "entity": "sensor.living_room_humidity"}}'></hui-card>
-  <hui-card style="width: 300px" data-props='{"config": {"type": "gauge", "entity": "sensor.monstera_battery", "name": "Monstera sensor battery", "severity": {"red": 0, "yellow": 20, "green": 40}}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    { type: "gauge", entity: "sensor.living_room_humidity" },
+    {
+      type: "gauge",
+      entity: "sensor.monstera_battery",
+      name: "Monstera sensor battery",
+      severity: { red: 0, yellow: 20, green: 40 },
+    },
+  ]}
+/>
 
 ## Usage
 
@@ -27,11 +35,26 @@ The scale runs from `min` to `max`, by default 0 to 100. That fits percentages. 
 
 The dial color can say whether the value is good or bad. With `severity`, you set where green, yellow, and red start. Each color runs from its value up to the next one. Without severity, the dial uses the info color, which carries no meaning.
 
-<Demo hass>
-  <hui-card style="width: 240px" data-props='{"config": {"type": "gauge", "entity": "sensor.living_room_humidity", "severity": {"green": 30, "yellow": 60, "red": 70}}}'></hui-card>
-  <hui-card style="width: 240px" data-props='{"config": {"type": "gauge", "entity": "sensor.outdoor_humidity", "severity": {"green": 30, "yellow": 60, "red": 70}}}'></hui-card>
-  <hui-card style="width: 240px" data-props='{"config": {"type": "gauge", "entity": "sensor.monstera_moisture", "severity": {"red": 0, "yellow": 15, "green": 25}}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    {
+      type: "gauge",
+      entity: "sensor.living_room_humidity",
+      severity: { green: 30, yellow: 60, red: 70 },
+    },
+    {
+      type: "gauge",
+      entity: "sensor.outdoor_humidity",
+      severity: { green: 30, yellow: 60, red: 70 },
+    },
+    {
+      type: "gauge",
+      entity: "sensor.monstera_moisture",
+      severity: { red: 0, yellow: 15, green: 25 },
+    },
+  ]}
+/>
 
 Green doesn't have to be at the low end. For a battery or the moisture of a plant, low is bad, so red comes first.
 
@@ -41,10 +64,30 @@ For more than three ranges, or other colors, use `segments` instead: a list of r
 
 With `needle: true`, the dial shows all the ranges at once, and a needle points at the value. People see where the value is, and how close it is to the next range. Use it with severity or segments, without them the whole dial has a single color.
 
-<Demo hass>
-  <hui-card style="width: 300px" data-props='{"config": {"type": "gauge", "entity": "sensor.living_room_humidity", "needle": true, "severity": {"green": 30, "yellow": 60, "red": 70}}}'></hui-card>
-  <hui-card style="width: 300px" data-props='{"config": {"type": "gauge", "entity": "sensor.living_room_temperature", "needle": true, "min": 10, "max": 30, "segments": [{"from": 10, "color": "var(--info-color)"}, {"from": 18, "color": "var(--success-color)"}, {"from": 24, "color": "var(--warning-color)"}, {"from": 27, "color": "var(--error-color)"}]}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    {
+      type: "gauge",
+      entity: "sensor.living_room_humidity",
+      needle: true,
+      severity: { green: 30, yellow: 60, red: 70 },
+    },
+    {
+      type: "gauge",
+      entity: "sensor.living_room_temperature",
+      needle: true,
+      min: 10,
+      max: 30,
+      segments: [
+        { from: 10, color: "var(--info-color)" },
+        { from: 18, color: "var(--success-color)" },
+        { from: 24, color: "var(--warning-color)" },
+        { from: 27, color: "var(--error-color)" },
+      ],
+    },
+  ]}
+/>
 
 A segment can have a `label`. With the needle, the label replaces the number in the middle when the value is in that segment, like **Comfortable** or **Too warm**.
 

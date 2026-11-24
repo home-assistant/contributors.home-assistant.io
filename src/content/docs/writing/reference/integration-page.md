@@ -387,7 +387,7 @@ The build checks these rules. A missing description, an unknown type, a `require
 
 The icon and logo of an integration come from the [brands repository](https://github.com/home-assistant/brands). You do not add anything to the documentation for them. The page picks them up by the domain of the integration.
 
-- Open a pull request in the brands repository that adds the images to `core_integrations/<domain>/`, and link it in your documentation pull request.
+- Open a pull request in the brands repository that adds the images to `core_integrations/<domain>/`. List it under **This PR belongs together with** in the core pull request, and the core pull request on the same line of the brands pull request.
 - At minimum, add an `icon.png`. A `logo.png`, versions for dark backgrounds, and high-resolution `@2x` versions are welcome. The [brands README](https://github.com/home-assistant/brands/blob/master/README.md) lists the exact sizes and requirements.
 - If the integration started as a custom integration and is now part of Home Assistant, move its images from `custom_integrations` to `core_integrations`.
 

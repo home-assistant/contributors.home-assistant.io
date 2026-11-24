@@ -4,13 +4,16 @@ description: The button card is a big, square button with an icon and a name. It
 sidebarGroup: Entity cards
 ---
 
-import Demo from "../../../../components/docs/Demo.astro";
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
 
-<Demo hass>
-  <hui-card style="width: 180px" data-props='{"config": {"type": "button", "entity": "light.living_room_lamp"}}'></hui-card>
-  <hui-card style="width: 180px" data-props='{"config": {"type": "button", "entity": "scene.movie_night"}}'></hui-card>
-  <hui-card style="width: 180px" data-props='{"config": {"type": "button", "entity": "lock.front_door"}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    { type: "button", entity: "light.living_room_lamp" },
+    { type: "button", entity: "scene.movie_night" },
+    { type: "button", entity: "lock.front_door" },
+  ]}
+/>
 
 ## Usage
 
@@ -24,20 +27,35 @@ A button card does not need an entity. Without one, it is a plain button that ru
 
 The button shows the name and the icon. Add `show_state: true` to show the state below the name, and use `show_name` and `show_icon` to hide either one. An icon-only button needs an entity whose icon says enough on its own.
 
-<Demo hass>
-  <hui-card style="width: 180px" data-props='{"config": {"type": "button", "entity": "light.hallway", "show_state": true}}'></hui-card>
-  <hui-card style="width: 180px" data-props='{"config": {"type": "button", "entity": "switch.desk_plug", "show_name": false}}'></hui-card>
-  <hui-card style="width: 180px" data-props='{"config": {"type": "button", "entity": "light.kitchen_ceiling", "show_icon": false, "show_state": true}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    { type: "button", entity: "light.hallway", show_state: true },
+    { type: "button", entity: "switch.desk_plug", show_name: false },
+    {
+      type: "button",
+      entity: "light.kitchen_ceiling",
+      show_icon: false,
+      show_state: true,
+    },
+  ]}
+/>
 
 ### Icon size
 
 By default, the icon scales with the card: it takes 40% of the width of the card. Set `icon_height`, like `40px`, for a fixed, smaller icon and a calmer button. A grid of buttons reads better when all of them use the same height.
 
-<Demo hass>
-  <hui-card style="width: 180px" data-props='{"config": {"type": "button", "entity": "light.living_room_lamp", "icon_height": "40px"}}'></hui-card>
-  <hui-card style="width: 180px" data-props='{"config": {"type": "button", "entity": "light.hallway", "icon_height": "40px"}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    {
+      type: "button",
+      entity: "light.living_room_lamp",
+      icon_height: "40px",
+    },
+    { type: "button", entity: "light.hallway", icon_height: "40px" },
+  ]}
+/>
 
 ### Content
 

@@ -1,0 +1,183 @@
+---
+title: To-do list entity
+description: Build a to-do list entity for a shopping list, a task list, or any other ordered list of items with a status.
+sidebarLabel: To-do list
+sidebarGroup: Inputs and helpers
+---
+
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
+
+A to-do list entity represents a list of items, each with a status: open or done. Think of a shopping list, the tasks in a task manager, or the chores a robot vacuum app keeps track of. Inherit from `TodoListEntity` in `homeassistant.components.todo`.
+
+People see the list in the to-do panel, and automations, scripts, and Assist can read it and add to it. What they can change depends on the [supported features](#supported-features) you set.
+
+<EmbedDemo
+  entities={[
+    {
+      entity_id: "todo.shopping_list",
+      state: "3",
+      attributes: {
+        friendly_name: "Shopping list",
+      },
+    },
+  ]}
+  cards={[
+    {
+      type: "tile",
+      entity: "todo.shopping_list",
+    },
+    {
+      type: "todo-list",
+      entity: "todo.shopping_list",
+    },
+  ]}
+  caption="A read-only shopping list in a tile card and a to-do list card. The state is the number of open items. The items are sample items of the demo."
+/>
+
+## Properties
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `todo_items` | `list[TodoItem] \| None` | `None` | The items on the list, in order. `None` means the list is not known. |
+
+The generic properties every entity has, like `name`, `available`, and `unique_id`, are on [the entity class](/core/entities/entity-class/).
+
+## Supported features
+
+Combine the flags of `TodoListEntityFeature` with `|`, and set them with `_attr_supported_features`. Without any, the list is read only. See [supported features](/glossary/supported-features/).
+
+| Constant | What it enables |
+| --- | --- |
+| `CREATE_TODO_ITEM` | Adding items. Implement `async_create_todo_item`. |
+| `DELETE_TODO_ITEM` | Removing items, and removing all completed items at once. Implement `async_delete_todo_items`. |
+| `UPDATE_TODO_ITEM` | Changing items, like renaming them or marking them as done. Implement `async_update_todo_item`. |
+| `MOVE_TODO_ITEM` | Reordering items. Implement `async_move_todo_item`. |
+| `SET_DUE_DATE_ON_ITEM` | Setting `due` to a date when an item is created or updated. |
+| `SET_DUE_DATETIME_ON_ITEM` | Setting `due` to a date and time when an item is created or updated. |
+| `SET_DESCRIPTION_ON_ITEM` | Setting `description` when an item is created or updated. |
+
+When an action uses a field that you don't support, like a due date, the action fails with a validation error before your method is called.
+
+## To-do items
+
+Each item is a `TodoItem`, a dataclass from `homeassistant.components.todo`.
+
+| Field | Type | Default | Description |
+| --- | --- | --- | --- |
+| `uid` | `str \| None` | `None` | A unique ID for the item. Needed to update, delete, or move it. |
+| `summary` | `str \| None` | `None` | The text of the item. |
+| `status` | `TodoItemStatus \| None` | `None` | `TodoItemStatus.NEEDS_ACTION` or `TodoItemStatus.COMPLETED`. |
+| `due` | `datetime.date \| datetime.datetime \| None` | `None` | When the item is due. A `datetime` must have a time zone. |
+| `description` | `str \| None` | `None` | A longer description than the summary. |
+| `completed` | `datetime.datetime \| None` | `None` | When the item was last marked as completed. |
+
+Every item that you return needs a `uid`, a `summary`, and a `status`.
+
+## Methods
+
+All methods are async only. Each one is needed only for the matching feature.
+
+### Create an item
+
+```python
+async def async_create_todo_item(self, item: TodoItem) -> None:
+    """Add an item to the list."""
+```
+
+The new item has a `summary` and the status `NEEDS_ACTION`, plus the optional fields you support. It has no `uid` yet: your service or your integration gives it one.
+
+### Update an item
+
+```python
+async def async_update_todo_item(self, item: TodoItem) -> None:
+    """Update an item on the list."""
+```
+
+The item always has its `uid`. It is a copy of the item as you last returned it, with the changed fields filled in. A field set to `None` was cleared on purpose, so clear it on your side too.
+
+### Delete items
+
+```python
+async def async_delete_todo_items(self, uids: list[str]) -> None:
+    """Delete items from the list."""
+```
+
+You get a list of IDs. Delete all of them, not only the first.
+
+### Move an item
+
+```python
+async def async_move_todo_item(
+    self, uid: str, previous_uid: str | None = None
+) -> None:
+    """Move an item on the list."""
+```
+
+Move the item with `uid` so it comes right after the item with `previous_uid`. When `previous_uid` is `None`, move it to the top of the list.
+
+After any change, update `todo_items` and write the state, or refresh it from your service. The base class sends the new items to the frontend each time the state is written.
+
+## States
+
+The state is the number of items with the status `NEEDS_ACTION`. It is `unknown` when `todo_items` is `None`.
+
+## Example
+
+```python
+from homeassistant.components.todo import (
+    TodoItem,
+    TodoItemStatus,
+    TodoListEntity,
+    TodoListEntityFeature,
+)
+
+
+class ExampleShoppingList(TodoListEntity):
+    """A shopping list kept by a cloud service."""
+
+    _attr_has_entity_name = True
+    _attr_translation_key = "shopping_list"
+    _attr_supported_features = (
+        TodoListEntityFeature.CREATE_TODO_ITEM
+        | TodoListEntityFeature.DELETE_TODO_ITEM
+        | TodoListEntityFeature.UPDATE_TODO_ITEM
+    )
+
+    def __init__(self, client: ExampleClient) -> None:
+        """Initialize the list."""
+        self._client = client
+        self._attr_unique_id = f"{client.account_id}_shopping_list"
+
+    async def async_update(self) -> None:
+        """Fetch the items from the service."""
+        self._attr_todo_items = [
+            TodoItem(
+                uid=entry.id,
+                summary=entry.text,
+                status=(
+                    TodoItemStatus.COMPLETED
+                    if entry.done
+                    else TodoItemStatus.NEEDS_ACTION
+                ),
+            )
+            for entry in await self._client.get_items()
+        ]
+
+    async def async_create_todo_item(self, item: TodoItem) -> None:
+        """Add an item to the list."""
+        await self._client.add_item(item.summary)
+        await self.async_update_ha_state(force_refresh=True)
+
+    async def async_update_todo_item(self, item: TodoItem) -> None:
+        """Update an item on the list."""
+        done = item.status == TodoItemStatus.COMPLETED
+        await self._client.update_item(item.uid, item.summary, done)
+        await self.async_update_ha_state(force_refresh=True)
+
+    async def async_delete_todo_items(self, uids: list[str]) -> None:
+        """Delete items from the list."""
+        await self._client.delete_items(uids)
+        await self.async_update_ha_state(force_refresh=True)
+```
+
+This example polls. When your service pushes changes, or you use a [coordinator](/glossary/coordinator/), refresh through that instead. See [updating state](/core/entities/state-updates/).

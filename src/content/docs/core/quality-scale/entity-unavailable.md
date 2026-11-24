@@ -82,6 +82,8 @@ For example, a media player that can only be turned on with an infrared blaster:
 - Once the user sets up an automation to turn it on, it is `off` while in standby.
 - Once it is turned on and the connection is back, it is `on`.
 
+When you report a device in standby as unavailable with a coordinator, raise `UpdateFailedUnreachable`, like for any device that cannot be reached. It is a subclass of `UpdateFailed`, so the entities become unavailable the same way, and the coordinator logs it at `info` level, as [log-when-unavailable](/core/quality-scale/log-when-unavailable/) asks.
+
 ## Related rules
 
 - [log-when-unavailable](/core/quality-scale/log-when-unavailable/): log once when unavailable, and once when back.

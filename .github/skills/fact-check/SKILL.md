@@ -44,7 +44,7 @@ The open code pull request is the source for what the feature does, but not for 
 - A release tag that contains the merge commit.
 - The milestone of the pull request. Most pull requests merged into `dev` have none, so a missing milestone is not a finding.
 
-Find the code pull request in the description, under "This PR documents an open pull request". Read its changes with:
+Find the code pull request in the description, under "This PR belongs together with". Read its changes with:
 
 ```shell
 gh pr view <number> --repo home-assistant/<repository>

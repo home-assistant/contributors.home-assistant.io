@@ -4,11 +4,12 @@ description: The humidifier card shows a humidifier or dehumidifier as a dial, t
 sidebarGroup: Controls
 ---
 
-import Demo from "../../../../components/docs/Demo.astro";
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
 
-<Demo hass>
-  <hui-card style="width: 340px" data-props='{"config": {"type": "humidifier", "entity": "humidifier.bedroom_humidifier"}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[{ type: "humidifier", entity: "humidifier.bedroom_humidifier" }]}
+/>
 
 ## Usage
 
@@ -22,17 +23,25 @@ Use the humidifier card when the humidity is the main thing in a section, like i
 
 With `show_current_as_primary: true`, the big number is the current humidity, and the target moves to the smaller line.
 
-<Demo hass>
-  <hui-card style="width: 340px" data-props='{"config": {"type": "humidifier", "entity": "humidifier.bedroom_humidifier", "show_current_as_primary": true}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[{ type: "humidifier", entity: "humidifier.bedroom_humidifier", show_current_as_primary: true }]}
+/>
 
 ### Features
 
 The humidifier card takes features below the dial. The dial has no button to turn the device on or off, so when you add the card in the dashboard editor, it comes with the toggle feature. The modes feature is the other good fit.
 
-<Demo hass>
-  <hui-card style="width: 340px" data-props='{"config": {"type": "humidifier", "entity": "humidifier.bedroom_humidifier", "features": [{"type": "humidifier-toggle"}, {"type": "humidifier-modes", "style": "icons"}]}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    {
+      type: "humidifier",
+      entity: "humidifier.bedroom_humidifier",
+      features: [{ type: "humidifier-toggle" }, { type: "humidifier-modes", style: "icons" }],
+    },
+  ]}
+/>
 
 ### Content
 

@@ -18,7 +18,7 @@ When entities go [unavailable](/glossary/unavailable/), users look in the logs t
 
 ### With a coordinator
 
-The coordinator does this for you. Raise `UpdateFailed` when the update fails. The coordinator logs the first failure, stays quiet while the failures continue, and logs at `info` level when fetching the data recovers:
+The coordinator does this for you. Raise `UpdateFailedUnreachable` when the update fails. The coordinator logs the first failure at `info` level, stays quiet while the failures continue, and logs at `info` level when fetching the data recovers:
 
 ```python
 async def _async_update_data(self) -> MyData:
@@ -26,9 +26,9 @@ async def _async_update_data(self) -> MyData:
     try:
         return await self.client.get_data()
     except MyConnectionError as err:
-        raise UpdateFailed(
+        raise UpdateFailedUnreachable(
             translation_domain=DOMAIN,
-            translation_key="update_failed",
+            translation_key="update_unreachable",
         ) from err
 ```
 

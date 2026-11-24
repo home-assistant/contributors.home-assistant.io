@@ -70,8 +70,6 @@ const COMPONENTS = [
   "ha-expansion-panel",
   "ha-gauge",
   "ha-label-badge",
-  "ha-list",
-  "ha-list-item",
   "ha-marquee-text",
   "ha-select-box",
   "ha-slider",
@@ -82,6 +80,12 @@ const COMPONENTS = [
   "ha-toast",
   "ha-tooltip",
   "input/ha-input",
+  "item/ha-list-item-base",
+  "item/ha-list-item-button",
+  "item/ha-list-item-option",
+  "list/ha-list-base",
+  "list/ha-list-nav",
+  "list/ha-list-selectable",
   "skeleton/ha-skeleton",
   "skeleton/ha-skeleton-icon",
   "skeleton/ha-skeleton-text",
@@ -98,10 +102,10 @@ const COMPONENTS = [
   "ha-state-icon",
 ];
 
-// Elements for dashboards and dialogs, outside src/components. Their paths
-// are relative to the root of the frontend.
+// Elements outside the list above, by their path relative to the root of the
+// frontend. Dashboard cards are not bundled here: their demos load them from
+// the embed of the frontend demo (EmbedDemo).
 const EXTRA_ELEMENTS = {
-  "hui-card": "src/panels/lovelace/cards/hui-card",
   "ha-card": "src/components/ha-card",
 };
 
@@ -263,8 +267,9 @@ function frontendFixes(frontend: string, applied: Set<string>): Plugin {
 //    Assistant would normally provide.
 // 3. Loads the fake Home Assistant, when a demo on the page needs it.
 // 4. Loads the components a demo uses when that demo comes near the
-//    viewport, and nothing else. Some elements, like hui-card, pull in a big
-//    part of the app, so a demo far down the page does not slow down the top.
+//    viewport, and nothing else. Some elements, like the more-info wrapper,
+//    pull in a big part of the app, so a demo far down the page does not
+//    slow down the top.
 function loaderSource(frontend: string) {
   const theme = `${frontend}/src/resources/theme`;
 
@@ -384,9 +389,17 @@ if (document.querySelector(".ha-demo ha-demo-hass")) {
   await import("${demoHass}");
 }
 
-function loadComponents(stage) {
+// The rows of a list register with it when they connect. Here the rows can
+// be defined before their list, which then never hears of them: in the app,
+// the components are defined before anything renders. Inserting a list again
+// at the same place connects it first, and then its rows.
+async function loadComponents(stage) {
   const used = new Set([...stage.querySelectorAll("*")].filter(isComponent).map((element) => element.localName));
-  return Promise.all([...used].map((name) => COMPONENTS[name]()));
+  await Promise.all([...used].map((name) => COMPONENTS[name]()));
+
+  for (const list of stage.querySelectorAll("[ha-list]")) {
+    list.parentNode.insertBefore(list, list.nextSibling);
+  }
 }
 
 // A margin of a screen or so, so a demo is usually ready by the time it

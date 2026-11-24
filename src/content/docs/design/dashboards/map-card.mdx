@@ -4,11 +4,12 @@ description: The map card shows where people, devices, and zones are, on an inte
 sidebarGroup: Information
 ---
 
-import Demo from "../../../../components/docs/Demo.astro";
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
 
-<Demo hass>
-  <hui-card style="width: 420px" data-props='{"config": {"type": "map", "entities": ["person.alex", "person.sam", "zone.home", "zone.work"]}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[{ type: "map", entities: ["person.alex", "person.sam", "zone.home", "zone.work"] }]}
+/>
 
 ## Usage
 
@@ -32,9 +33,10 @@ With `hours_to_show`, the map draws a line through where each entity has been in
 
 With `theme_mode`, the map is always `light` or always `dark`, whatever the theme. The default, `auto`, follows the theme. A dark map can work well on a wall tablet at night, but forcing a mode means it no longer matches the rest of the dashboard.
 
-<Demo hass>
-  <hui-card style="width: 420px" data-props='{"config": {"type": "map", "entities": ["person.alex", "person.sam"], "theme_mode": "dark"}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[{ type: "map", entities: ["person.alex", "person.sam"], theme_mode: "dark" }]}
+/>
 
 ### Map style
 

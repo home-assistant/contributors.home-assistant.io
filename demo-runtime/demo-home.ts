@@ -25,7 +25,9 @@ const HOUR = 60 * MINUTE;
 
 // States about time, like a running timer or the next sunrise, are relative
 // to the moment the page loads. A fixed date would be in the past soon.
-const fromNow = (milliseconds: number) => new Date(Date.now() + milliseconds).toISOString();
+// Rendered on the server, they are relative to LOADED_AT instead.
+export const LOADED_AT = Date.now();
+const fromNow = (milliseconds: number) => new Date(LOADED_AT + milliseconds).toISOString();
 
 export const FLOORS: DemoFloor[] = [
   { floor_id: "ground", name: "Ground floor", level: 0, icon: "mdi:home-floor-0" },

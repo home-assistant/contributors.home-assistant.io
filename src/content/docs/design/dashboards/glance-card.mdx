@@ -4,11 +4,22 @@ description: The glance card shows the state of several entities side by side, e
 sidebarGroup: Entity cards
 ---
 
-import Demo from "../../../../components/docs/Demo.astro";
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
 
-<Demo hass>
-  <hui-card style="width: 400px" data-props='{"config": {"type": "glance", "entities": ["binary_sensor.front_door", "lock.front_door", "binary_sensor.hallway_motion", "light.hallway"]}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    {
+      type: "glance",
+      entities: [
+        "binary_sensor.front_door",
+        "lock.front_door",
+        "binary_sensor.hallway_motion",
+        "light.hallway",
+      ],
+    },
+  ]}
+/>
 
 ## Usage
 
@@ -20,25 +31,62 @@ The glance card has no controls. Selecting an entity opens its more-info dialog,
 
 The card fits up to five entities in a row, and wraps the rest to the next row. Set `columns` to pick the number yourself. Fewer columns give longer names more room.
 
-<Demo hass>
-  <hui-card style="width: 400px" data-props='{"config": {"type": "glance", "title": "Climate", "columns": 3, "entities": ["sensor.living_room_temperature", "sensor.living_room_humidity", "sensor.monstera_temperature", "sensor.outdoor_temperature", "sensor.outdoor_humidity"]}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    {
+      type: "glance",
+      title: "Climate",
+      columns: 3,
+      entities: [
+        "sensor.living_room_temperature",
+        "sensor.living_room_humidity",
+        "sensor.monstera_temperature",
+        "sensor.outdoor_temperature",
+        "sensor.outdoor_humidity",
+      ],
+    },
+  ]}
+/>
 
 ### Showing less
 
 Use `show_name`, `show_icon`, and `show_state` to hide a part for all entities. A row of icons with their states, without names, works well when the icons say enough, like doors and windows.
 
-<Demo hass>
-  <hui-card style="width: 400px" data-props='{"config": {"type": "glance", "show_name": false, "entities": ["binary_sensor.front_door", "binary_sensor.kitchen_window", "cover.garage_door", "lock.front_door"]}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    {
+      type: "glance",
+      show_name: false,
+      entities: [
+        "binary_sensor.front_door",
+        "binary_sensor.kitchen_window",
+        "cover.garage_door",
+        "lock.front_door",
+      ],
+    },
+  ]}
+/>
 
 ### Last changed
 
 With `show_last_changed: true` on an entity, it shows how long ago the state changed, instead of the state itself. Use it for things like a door, where "when" is often more interesting than "what".
 
-<Demo hass>
-  <hui-card style="width: 400px" data-props='{"config": {"type": "glance", "entities": [{"entity": "binary_sensor.front_door", "show_last_changed": true}, {"entity": "binary_sensor.hallway_motion", "show_last_changed": true}, "person.alex", "person.sam"]}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    {
+      type: "glance",
+      entities: [
+        { entity: "binary_sensor.front_door", show_last_changed: true },
+        { entity: "binary_sensor.hallway_motion", show_last_changed: true },
+        "person.alex",
+        "person.sam",
+      ],
+    },
+  ]}
+/>
 
 ### Content
 

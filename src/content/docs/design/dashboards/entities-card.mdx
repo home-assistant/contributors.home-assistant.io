@@ -4,11 +4,24 @@ description: The entities card shows a list of entities, one per row, each with 
 sidebarGroup: Entity cards
 ---
 
-import Demo from "../../../../components/docs/Demo.astro";
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
 
-<Demo hass>
-  <hui-card style="width: 380px" data-props='{"config": {"type": "entities", "title": "Living room", "entities": ["light.living_room_lamp", "media_player.living_room_speaker", "climate.thermostat", "sensor.living_room_temperature", "sensor.living_room_humidity"]}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    {
+      type: "entities",
+      title: "Living room",
+      entities: [
+        "light.living_room_lamp",
+        "media_player.living_room_speaker",
+        "climate.thermostat",
+        "sensor.living_room_temperature",
+        "sensor.living_room_humidity",
+      ],
+    },
+  ]}
+/>
 
 ## Usage
 
@@ -20,17 +33,38 @@ Use it when you want to show many entities in little room, like the settings of 
 
 The row is picked by the domain of the entity. You don't configure that; the entities card does it for you.
 
-<Demo hass>
-  <hui-card style="width: 380px" data-props='{"config": {"type": "entities", "entities": ["input_boolean.guest_mode", "input_number.comfort_temperature", "input_select.house_mode", "lock.front_door", "cover.bedroom_blinds", "scene.movie_night", "timer.laundry"]}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    {
+      type: "entities",
+      entities: [
+        "input_boolean.guest_mode",
+        "input_number.comfort_temperature",
+        "input_select.house_mode",
+        "lock.front_door",
+        "cover.bedroom_blinds",
+        "scene.movie_night",
+        "timer.laundry",
+      ],
+    },
+  ]}
+/>
 
 ### Title and header toggle
 
 With a `title`, the card gets a header. When the card has at least two entities that can be toggled, the header gets a toggle that switches them all at once. Set `show_header_toggle: false` when that toggle makes no sense, like for a list that mixes lights and a lock.
 
-<Demo hass>
-  <hui-card style="width: 380px" data-props='{"config": {"type": "entities", "title": "Lights", "entities": ["light.living_room_lamp", "light.hallway", "light.kitchen_ceiling"]}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    {
+      type: "entities",
+      title: "Lights",
+      entities: ["light.living_room_lamp", "light.hallway", "light.kitchen_ceiling"],
+    },
+  ]}
+/>
 
 ### Special rows
 
@@ -46,9 +80,35 @@ Not every row is an entity. Special rows have a `type` and structure the list, o
 - `conditional`: a row that only shows when its conditions are met.
 - `cast`: starts casting a dashboard to a Google Cast device.
 
-<Demo hass>
-  <hui-card style="width: 380px" data-props='{"config": {"type": "entities", "title": "Hallway", "show_header_toggle": false, "entities": ["light.hallway", "lock.front_door", {"type": "divider"}, {"type": "attribute", "entity": "lock.front_door", "attribute": "changed_by", "name": "Last locked by"}, {"type": "section", "label": "Sensors"}, "binary_sensor.front_door", "binary_sensor.hallway_motion", {"type": "weblink", "name": "Smart lock manual", "url": "https://www.home-assistant.io/integrations/nuki/"}]}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    {
+      type: "entities",
+      title: "Hallway",
+      show_header_toggle: false,
+      entities: [
+        "light.hallway",
+        "lock.front_door",
+        { type: "divider" },
+        {
+          type: "attribute",
+          entity: "lock.front_door",
+          attribute: "changed_by",
+          name: "Last locked by",
+        },
+        { type: "section", label: "Sensors" },
+        "binary_sensor.front_door",
+        "binary_sensor.hallway_motion",
+        {
+          type: "weblink",
+          name: "Smart lock manual",
+          url: "https://www.home-assistant.io/integrations/nuki/",
+        },
+      ],
+    },
+  ]}
+/>
 
 Use dividers and sections sparingly. If a list needs many sections, it is probably several cards.
 
@@ -56,18 +116,40 @@ Use dividers and sections sparingly. If a list needs many sections, it is probab
 
 The card can have a header and a footer. A `graph` shows the history of one entity, `buttons` shows a row of buttons, and `picture` shows an image. A graph footer turns a list of readings into a small overview.
 
-<Demo hass>
-  <hui-card style="width: 380px" data-props='{"config": {"type": "entities", "title": "Office", "entities": ["switch.desk_plug", "sensor.desk_plug_power", "sensor.desk_plug_energy"], "footer": {"type": "graph", "entity": "sensor.desk_plug_power", "hours_to_show": 12}}}'></hui-card>
-  <hui-card style="width: 380px" data-props='{"config": {"type": "entities", "entities": ["input_select.house_mode", "input_boolean.guest_mode"], "header": {"type": "buttons", "entities": ["scene.movie_night", "scene.good_night"]}}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    {
+      type: "entities",
+      title: "Office",
+      entities: ["switch.desk_plug", "sensor.desk_plug_power", "sensor.desk_plug_energy"],
+      footer: { type: "graph", entity: "sensor.desk_plug_power", hours_to_show: 12 },
+    },
+    {
+      type: "entities",
+      entities: ["input_select.house_mode", "input_boolean.guest_mode"],
+      header: { type: "buttons", entities: ["scene.movie_night", "scene.good_night"] },
+    },
+  ]}
+/>
 
 ### Row options
 
 A row can override the name and the icon of its entity, and show `secondary_info` below the name, like the time of the last change or an attribute. With `color: none`, the icon of a row no longer follows the state.
 
-<Demo hass>
-  <hui-card style="width: 380px" data-props='{"config": {"type": "entities", "entities": [{"entity": "light.living_room_lamp", "secondary_info": "brightness"}, {"entity": "binary_sensor.front_door", "secondary_info": "last_changed"}, {"entity": "sensor.living_room_temperature", "name": "Temperature", "icon": "mdi:sofa"}]}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    {
+      type: "entities",
+      entities: [
+        { entity: "light.living_room_lamp", secondary_info: "brightness" },
+        { entity: "binary_sensor.front_door", secondary_info: "last_changed" },
+        { entity: "sensor.living_room_temperature", name: "Temperature", icon: "mdi:sofa" },
+      ],
+    },
+  ]}
+/>
 
 ### Content
 

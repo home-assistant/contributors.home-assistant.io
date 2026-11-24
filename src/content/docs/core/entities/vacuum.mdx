@@ -1,0 +1,184 @@
+---
+title: Vacuum entity
+description: Build a vacuum entity for a robot vacuum that cleans, docks, and can clean specific areas of the home.
+sidebarLabel: Vacuum
+sidebarGroup: Appliances
+---
+
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
+
+A vacuum entity controls a robot vacuum cleaner: start and pause cleaning, send it back to its dock, and, where the robot supports it, set the suction power, find it, or clean specific rooms. Inherit from `StateVacuumEntity` in `homeassistant.components.vacuum`. Robot mops and combined vacuum and mop robots use the same entity.
+
+For how the frontend shows a vacuum, see the [vacuum more-info view](/design/more-info/vacuum/).
+
+<EmbedDemo
+  entities={[
+    {
+      entity_id: "vacuum.downstairs",
+      state: "docked",
+      attributes: {
+        friendly_name: "Downstairs vacuum",
+        fan_speed_list: ["quiet", "standard", "max"],
+        fan_speed: "standard",
+        supported_features: 12348,
+      },
+    },
+  ]}
+  cards={[
+    {
+      type: "tile",
+      entity: "vacuum.downstairs",
+      features: [{ type: "vacuum-commands" }, { type: "vacuum-fan-speed" }],
+    },
+  ]}
+  caption="A robot vacuum that starts, pauses, stops, returns to its dock, and has fan speeds, in a tile card. The card is live: start cleaning, or change the fan speed."
+/>
+
+## Properties
+
+Vacuum entities have these properties on top of the [generic entity properties](/core/entities/entity-class/). Every property can be set with its `_attr_` attribute, like `_attr_activity`.
+
+| Name | Type | Default | Description |
+| ---- | ---- | ------- | ----------- |
+| `activity` | `VacuumActivity \| None` | `None` | What the vacuum is doing right now. See [States](#states). |
+| `fan_speed` | `str \| None` | `None` | The current fan speed. Requires `VacuumEntityFeature.FAN_SPEED`. |
+| `fan_speed_list` | `list[str]` | Required with `FAN_SPEED` | The fan speeds the vacuum supports. |
+
+Older vacuum entities reported the battery level and a status text. Those properties are gone: expose the battery as a [sensor](/core/entities/sensor/) with the `battery` device class, and errors or detailed status as separate sensors or an [event](/core/entities/event/).
+
+## Supported features
+
+Combine the values of `VacuumEntityFeature` with the bitwise or (`|`) operator. Home Assistant only offers the actions of the features you set.
+
+| Value | Description |
+| ----- | ----------- |
+| `STATE` | The vacuum reports its activity. Set it on every vacuum entity. |
+| `START` | The vacuum can start or resume cleaning. Implement `start`. |
+| `PAUSE` | The vacuum can pause cleaning. Implement `pause`. |
+| `STOP` | The vacuum can stop where it is. Implement `stop`. |
+| `RETURN_HOME` | The vacuum can return to its dock. Implement `return_to_base`. |
+| `FAN_SPEED` | The vacuum has fan speeds. Implement `set_fan_speed` and provide `fan_speed` and `fan_speed_list`. |
+| `LOCATE` | The vacuum can make itself known, usually with a sound. Implement `locate`. |
+| `CLEAN_SPOT` | The vacuum can clean the spot it is on. Implement `clean_spot`. |
+| `CLEAN_AREA` | The vacuum can clean specific areas. Implement `async_get_segments` and `clean_segments`. See [Cleaning areas](#cleaning-areas). |
+| `SEND_COMMAND` | The vacuum accepts raw commands. Implement `send_command`. |
+| `MAP` | The vacuum has a map. Home Assistant has no method for it, so this flag is information only. |
+
+`TURN_ON`, `TURN_OFF`, and `STATUS` are deprecated and do nothing for a `StateVacuumEntity`.
+
+Prefer a dedicated action of your integration over `SEND_COMMAND`. The `vacuum.send_command` action takes free form input, which is hard to use and impossible to document well.
+
+## Cleaning areas
+
+With `CLEAN_AREA`, users can tell the vacuum to clean Home Assistant [areas](/glossary/area/), like the kitchen, instead of rooms in the app of the manufacturer. The robot knows its own rooms, called segments here. The user maps areas to segments once, in the entity settings, and Home Assistant stores that mapping in the entity registry options of the entity.
+
+Your part:
+
+- `async_get_segments()` returns the segments the robot knows, as a list of `Segment(id, name, group)`. The `id` must be unique within the entity. `group` only groups segments in the mapping dialog, like per floor or per map. Home Assistant calls it when the user opens the mapping, so return fresh data.
+- `clean_segments(segment_ids)` or `async_clean_segments(segment_ids)` cleans the given segments. Home Assistant calls it from the `vacuum.clean_area` action, after it translated the areas to segments.
+
+Robots change their maps: a new room shows up, two rooms are merged. To catch that, compare what the robot reports now with `last_seen_segments`, the segments that existed when the user last saved the mapping. When they differ, call `async_create_segments_issue()`. That creates a [repair](/glossary/repair/) that asks the user to update the mapping. `last_seen_segments` is `None` until a mapping is saved; don't raise the issue then.
+
+## Methods
+
+Each method has a sync variant and an `async_` variant. Implement one of them, depending on whether your library is blocking or async.
+
+| Method | Async variant | Feature |
+| ------ | ------------- | ------- |
+| `start()` | `async_start()` | `START` |
+| `pause()` | `async_pause()` | `PAUSE` |
+| `stop(**kwargs)` | `async_stop(**kwargs)` | `STOP` |
+| `return_to_base(**kwargs)` | `async_return_to_base(**kwargs)` | `RETURN_HOME` |
+| `set_fan_speed(fan_speed, **kwargs)` | `async_set_fan_speed(fan_speed, **kwargs)` | `FAN_SPEED` |
+| `locate(**kwargs)` | `async_locate(**kwargs)` | `LOCATE` |
+| `clean_spot(**kwargs)` | `async_clean_spot(**kwargs)` | `CLEAN_SPOT` |
+| `clean_segments(segment_ids, **kwargs)` | `async_clean_segments(segment_ids, **kwargs)` | `CLEAN_AREA` |
+| | `async_get_segments()` | `CLEAN_AREA` |
+| `send_command(command, params, **kwargs)` | `async_send_command(command, params, **kwargs)` | `SEND_COMMAND` |
+
+## States
+
+The state is the `activity` of the vacuum, a value of `VacuumActivity`. The `state` property is final: set `activity` instead.
+
+| Value | Description |
+| ----- | ----------- |
+| `CLEANING` | The vacuum is cleaning. |
+| `DOCKED` | The vacuum is in its dock. Docked usually also means charging. |
+| `IDLE` | The vacuum is not cleaning, not paused, not docked, and has no error. |
+| `PAUSED` | The vacuum was cleaning and was paused, without going back to its dock. |
+| `RETURNING` | The vacuum is on its way back to the dock. |
+| `ERROR` | The vacuum ran into a problem and needs help. |
+
+## Example
+
+```python
+from typing import Any
+
+from homeassistant.components.vacuum import (
+    StateVacuumEntity,
+    VacuumActivity,
+    VacuumEntityFeature,
+)
+
+ACTIVITIES = {
+    "cleaning": VacuumActivity.CLEANING,
+    "charging": VacuumActivity.DOCKED,
+    "paused": VacuumActivity.PAUSED,
+    "returning": VacuumActivity.RETURNING,
+}
+
+
+class MyVacuum(MyEntity, StateVacuumEntity):
+    """A robot vacuum."""
+
+    _attr_name = None
+    _attr_fan_speed_list = ["quiet", "standard", "max"]
+    _attr_supported_features = (
+        VacuumEntityFeature.STATE
+        | VacuumEntityFeature.START
+        | VacuumEntityFeature.PAUSE
+        | VacuumEntityFeature.RETURN_HOME
+        | VacuumEntityFeature.FAN_SPEED
+    )
+
+    def __init__(self, coordinator: MyCoordinator) -> None:
+        """Set up the entity."""
+        super().__init__(coordinator)
+        self._attr_unique_id = coordinator.robot.serial
+
+    @property
+    def activity(self) -> VacuumActivity:
+        """Return what the robot is doing."""
+        return ACTIVITIES.get(
+            self.coordinator.data.status, VacuumActivity.IDLE
+        )
+
+    @property
+    def fan_speed(self) -> str:
+        """Return the current fan speed."""
+        return self.coordinator.data.fan_speed
+
+    async def async_start(self) -> None:
+        """Start or resume cleaning."""
+        await self.coordinator.robot.start()
+        await self.coordinator.async_request_refresh()
+
+    async def async_pause(self) -> None:
+        """Pause cleaning."""
+        await self.coordinator.robot.pause()
+        await self.coordinator.async_request_refresh()
+
+    async def async_return_to_base(self, **kwargs: Any) -> None:
+        """Send the robot back to its dock."""
+        await self.coordinator.robot.dock()
+        await self.coordinator.async_request_refresh()
+
+    async def async_set_fan_speed(
+        self, fan_speed: str, **kwargs: Any
+    ) -> None:
+        """Set the fan speed."""
+        await self.coordinator.robot.set_fan_speed(fan_speed)
+        await self.coordinator.async_request_refresh()
+```
+
+`MyEntity` is the shared base entity of the integration, a `CoordinatorEntity` that sets `_attr_has_entity_name = True` and the device info.

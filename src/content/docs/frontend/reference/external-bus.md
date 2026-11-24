@@ -106,6 +106,13 @@ The frontend asks what the app can do, right after it connects. Payload: none. T
 | `hasEntityAddTo` | boolean | The app can add entities to places of its own, like a widget, from the more-info dialog. |
 | `hasSplashscreen` | boolean | The app covers the frontend with its own loading screen until `frontend/loaded`. |
 | `appVersion` | string | The version of the app. |
+| `webrtc` | object | The WebRTC features of the app. See the keys below. |
+
+Keys of `webrtc`, all optional:
+
+| Key | Type | Meaning |
+| --- | --- | --- |
+| `hasCameraMicrophoneStream` | boolean | The app can stream the microphone to a camera entity, with `webrtc/stream/start`. |
 
 #### entity/add_to/get_actions
 
@@ -171,6 +178,54 @@ Answer: an empty object once the flow of the platform has completed. When it did
 - `canceled`: the user closed the sheet of the platform. The frontend takes that as a choice, not an error.
 - Any other code, like `failed`: the frontend shows that sharing failed, with its own text. It does not show your `message`.
 
+#### webrtc/stream/start
+
+The frontend asks the app to stream the microphone to a camera entity, so the user can talk through it. The app captures the microphone itself, and sends it in a WebRTC session of its own. That makes two-way audio work when Home Assistant is not opened over HTTPS, where the browser gives the frontend no access to the microphone.
+
+The frontend only sends this message from the microphone button in the more-info dialog of a camera, when both are true:
+
+- The page is not a secure context. In a secure context, the frontend captures the microphone itself.
+- The app set `webrtc.hasCameraMicrophoneStream` in its answer to `config/get`.
+
+Payload:
+
+```ts
+{
+  stream_type: "microphone";
+  entity_id: string;
+}
+```
+
+| Key | Meaning |
+| --- | --- |
+| `stream_type` | What to stream. `"microphone"`. Reject a type you don't know with `unsupported_stream_type`. |
+| `entity_id` | The camera entity to stream to. |
+
+Answer, once the stream is connected:
+
+```ts
+{ session_id: string }
+```
+
+The app makes up the `session_id`. The frontend sends it back with `webrtc/stream/stop`, and the app sends it with `webrtc/stream/stopped`.
+
+The frontend sets no timeout on the answer, and shows the microphone as connecting until it comes. So always answer: with the session ID, or with an error result when the stream could not start. The error codes are `WEBRTC_STREAM_ERROR_CODES` in [`src/external_app/external_messaging.ts`](https://github.com/home-assistant/frontend/blob/dev/src/external_app/external_messaging.ts):
+
+| Code | Meaning |
+| --- | --- |
+| `microphone_denied` | The user denied the microphone permission. |
+| `server_unavailable` | The app has no API for the server, or its connection never became ready. |
+| `signaling_failed` | `camera/webrtc/offer` failed, or Home Assistant sent an error event. |
+| `connection_failed` | The WebRTC connection was lost, and the app could not restore it. |
+| `timeout` | The stream did not connect in time. The app decides how long it waits. |
+| `interrupted` | The app stopped the stream itself, for example because it went to the background. |
+| `unsupported_stream_type` | The app does not know the requested stream type. |
+| `unknown` | An unexpected error. `message` holds the error of the app. |
+
+The frontend shows a text of its own for each code. It only shows `message` with `unknown`, or with a code that is not in the list.
+
+When the user turns the microphone off while the app is still connecting, the frontend sends nothing, because it has no session ID yet. It waits for the answer, and then sends `webrtc/stream/stop` for that session.
+
 ### Messages without an answer
 
 | Type | Payload | Meaning |
@@ -201,6 +256,7 @@ Answer: an empty object once the flow of the platform has completed. When it did
 | `theme-update` | | The theme changed. Update the colors of the status bar and navigation bar. |
 | `thread/import_credentials` | | Import Thread credentials from the device, and send them to Home Assistant over the WebSocket API. |
 | `thread/store_in_platform_keychain` | `{ mac_extended_address, border_agent_id, active_operational_dataset, extended_pan_id }` | Store Thread credentials in the keychain of the platform. |
+| `webrtc/stream/stop` | `{ session_id }` | Stop the stream that `webrtc/stream/start` answered with this `session_id`. Don't send `webrtc/stream/stopped` for it. |
 
 ## From the app to the frontend
 
@@ -220,3 +276,4 @@ All commands get a result back. On success, `result` is `null`.
 | `restart` | | Reconnect the frontend to Home Assistant. |
 | `sidebar/show` | | Open the sidebar. Fails with `not_allowed` while a dialog is open. |
 | `sidebar/toggle` | | Open or close the sidebar. Fails with `not_allowed` while a dialog is open. |
+| `webrtc/stream/stopped` | `{ session_id, code, message }` | A connected stream ended without the frontend stopping it. `code` is one of the error codes of [`webrtc/stream/start`](#webrtcstreamstart), and `message` is a fallback text. With `interrupted`, the frontend turns the microphone off without a message. With any other code, it also shows the error. A stream that fails before it is connected is not reported with this command, but with an error result for `webrtc/stream/start`. |

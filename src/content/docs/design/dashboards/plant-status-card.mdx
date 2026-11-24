@@ -4,11 +4,12 @@ description: The plant status card shows the readings of a plant, like moisture 
 sidebarGroup: Information
 ---
 
-import Demo from "../../../../components/docs/Demo.astro";
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
 
-<Demo hass>
-  <hui-card style="width: 380px" data-props='{"config": {"type": "plant-status", "entity": "plant.monstera"}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[{ type: "plant-status", entity: "plant.monstera" }]}
+/>
 
 ## Usage
 

@@ -1,6 +1,6 @@
 # The Node.js major must match .node-version. The build fails when it
 # does not, so a bump of .node-version cannot be forgotten here.
-ARG VARIANT="24"
+ARG VARIANT="26"
 FROM mcr.microsoft.com/devcontainers/typescript-node:4-${VARIANT}-trixie
 
 COPY .node-version /tmp/.node-version

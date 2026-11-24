@@ -4,11 +4,12 @@ description: The alarm panel card arms and disarms an alarm, with a keypad for t
 sidebarGroup: Controls
 ---
 
-import Demo from "../../../../components/docs/Demo.astro";
+import EmbedDemo from "../../../../components/docs/EmbedDemo.astro";
 
-<Demo hass>
-  <hui-card style="width: 340px" data-props='{"config": {"type": "alarm-panel", "entity": "alarm_control_panel.home_alarm"}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[{ type: "alarm-panel", entity: "alarm_control_panel.home_alarm" }]}
+/>
 
 ## Usage
 
@@ -18,17 +19,31 @@ When the alarm needs a code, the card shows a field for it. For a numeric code, 
 
 Use the alarm panel card for a dashboard that is the alarm panel, like a tablet at the front door. For a quick look at the state, or to arm it from the room you're in, a [tile card](/design/dashboards/tile-card/) with the alarm modes feature is a lot smaller.
 
-<Demo hass>
-  <hui-card style="width: 340px" data-props='{"config": {"type": "tile", "entity": "alarm_control_panel.home_alarm", "features": [{"type": "alarm-modes", "modes": ["armed_home", "armed_away", "disarmed"]}]}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    {
+      type: "tile",
+      entity: "alarm_control_panel.home_alarm",
+      features: [{ type: "alarm-modes", modes: ["armed_home", "armed_away", "disarmed"] }],
+    },
+  ]}
+/>
 
 ### Arm buttons
 
 The card shows **Arm home** and **Arm away** by default, if the alarm supports them. With `states`, you pick which buttons show, and in which order. Show the modes people actually use. Every extra button is one more thing to read in a hurry.
 
-<Demo hass>
-  <hui-card style="width: 340px" data-props='{"config": {"type": "alarm-panel", "entity": "alarm_control_panel.home_alarm", "states": ["arm_home", "arm_away", "arm_night"]}}'></hui-card>
-</Demo>
+<EmbedDemo
+  home
+  cards={[
+    {
+      type: "alarm-panel",
+      entity: "alarm_control_panel.home_alarm",
+      states: ["arm_home", "arm_away", "arm_night"],
+    },
+  ]}
+/>
 
 ### Content
 
