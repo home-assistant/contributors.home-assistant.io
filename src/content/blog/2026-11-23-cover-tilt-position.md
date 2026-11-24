@@ -18,7 +18,7 @@ If your integration sets none of the new properties, nothing changes: the cover 
 
 `open_tilt_position` is the tilt where the slats are open, which is where `open_cover_tilt` moves them.
 
-`closed_tilt_positions` is a list of the one or two tilts where the slats are closed. `close_cover_tilt` moves the slats to one of them, and leaves slats that are already closed where they are.
+`closed_tilt_positions` is the list of the tilts where the slats are closed: 0, 100, or both. `close_cover_tilt` moves the slats to one of them, and leaves slats that are already closed where they are.
 
 `tilt_start_angle` and `tilt_end_angle` are the angles of the slats at tilt 0 and at tilt 100, from -90 to 90 degrees. 0° is a slat perpendicular to the cover, and at -90° and 90° the slat lies flat in the plane of the cover. Set both or neither.
 

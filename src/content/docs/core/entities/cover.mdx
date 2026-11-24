@@ -48,7 +48,7 @@ Cover entities have these properties on top of the [generic entity properties](/
 | `current_cover_position` | `int \| None` | `None` | The position, from 0 (closed) to 100 (fully open). |
 | `current_cover_tilt_position` | `int \| None` | `None` | The tilt, from 0 to 100. Closed at 0 and open at 100, unless you describe it differently. See [Tilt position](#tilt-position). |
 | `open_tilt_position` | `int \| None` | `None` | The tilt where the slats are open, which is where `open_cover_tilt` moves them. `None` means the default. See [Tilt position](#tilt-position). |
-| `closed_tilt_positions` | `list[int] \| None` | `None` | The one or two tilts where the slats are closed. `close_cover_tilt` moves them to one of these. `None` means the default. See [Tilt position](#tilt-position). |
+| `closed_tilt_positions` | `list[int] \| None` | `None` | The tilts where the slats are closed: 0, 100, or both. `close_cover_tilt` moves them to one of these. `None` means the default. See [Tilt position](#tilt-position). |
 | `tilt_start_angle` | `int \| None` | `None` | The angle of the slats at tilt 0, from -90 to 90 degrees. Set it together with `tilt_end_angle`. |
 | `tilt_end_angle` | `int \| None` | `None` | The angle of the slats at tilt 100, from -90 to 90 degrees. Set it together with `tilt_start_angle`. |
 | `device_class` | `CoverDeviceClass \| None` | `None` | What kind of cover it is. See [Device classes](#device-classes). |
@@ -58,7 +58,7 @@ When you set `supported_speeds` to a list, Home Assistant adds it as the `suppor
 
 ## Tilt position
 
-The tilt is a number from 0 to 100. By default, the slats are closed at 0 and open at 100. Many blinds have slats that turn 180°, so they are closed at 0 and at 100, and open at 50. Set `open_tilt_position` and `closed_tilt_positions` to say where your cover is open and closed. A cover has one or two closed positions, and a closed position doesn't have to be an end of the scale.
+The tilt is a number from 0 to 100. By default, the slats are closed at 0 and open at 100. Many blinds have slats that turn 180°, so they are closed at 0 and at 100, and open at 50. Set `open_tilt_position` and `closed_tilt_positions` to say where your cover is open and closed. A closed position is always an end of the scale: the list holds 0, 100, or both.
 
 Your `open_cover_tilt` moves the slats to the open position. If the open command of the device goes somewhere else, send the position instead. Your `close_cover_tilt` moves them to a closed position, and leaves slats that are already closed where they are. With two closed positions, prefer the one the slats reach without passing the open position.
 
