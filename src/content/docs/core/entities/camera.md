@@ -120,35 +120,6 @@ The Ring integration is an example where the library already does this: Ring liv
 When Home Assistant is not opened over HTTPS, an app that captures the microphone itself is the fallback.
 It opens a separate session for the microphone, and its offer has a single send-only audio track (`sendonly`) and no video.
 
-#### Test two-way audio
-
-Turn the preview feature on or off in your test with `async_update_preview_feature`, imported from `homeassistant.components.labs`, and check the result of the `camera/capabilities` WebSocket command.
-This tests how Home Assistant resolves the capability from your entity, the WebRTC stream, and Labs.
-It does not test the audio itself: check that the camera plays the audio from a real session with a test of your own, or by hand.
-
-```python
-async def test_camera_two_way_audio(
-    hass: HomeAssistant,
-    hass_ws_client: WebSocketGenerator,
-) -> None:
-    """Test the two-way audio capability."""
-    assert await async_setup_component(hass, "labs", {})
-    assert await async_setup_component(hass, "camera", {})
-    await async_update_preview_feature(hass, "camera", "two_way_audio", True)
-    await setup_integration(hass)
-
-    client = await hass_ws_client(hass)
-    await client.send_json_auto_id(
-        {"type": "camera/capabilities", "entity_id": "camera.front_door"}
-    )
-    msg = await client.receive_json()
-    assert msg["success"]
-    assert msg["result"]["two_way_audio"] is True
-```
-
-Test with the preview feature turned off too, where `two_way_audio` must be `False`.
-For more on testing preview features, see [Test both states](/core/development/labs/#test-both-states).
-
 ## Methods
 
 Each method has a sync and an async variant. Implement one of them.
