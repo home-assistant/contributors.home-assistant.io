@@ -113,14 +113,12 @@ How the audio reaches the camera depends on how your camera streams.
 If you implement `stream_source` and a WebRTC provider like go2rtc handles the stream, you have nothing else to build.
 The provider sends the audio of the microphone to the camera over the stream source, if it supports the backchannel of that source, like RTSP cameras with ONVIF Profile T.
 
-If you implement [native WebRTC](#native-webrtc), the audio arrives in the WebRTC session, and your integration must pass it on to the camera:
-
-- The first time the person starts talking, the frontend closes the current stream and opens a new WebRTC session. Its offer has an audio track in both directions (`sendrecv`) with the microphone, instead of the receive-only audio track (`recvonly`) of a normal stream.
-- Answer that audio track with `sendrecv`, and make sure the camera plays the audio it receives.
-- When the person stops talking, the frontend keeps the session and stops sending audio. When they start talking again, the frontend sends the microphone over the same session, without a new offer.
-- An app that captures the microphone itself opens a separate session for it. Its offer has a single send-only audio track (`sendonly`) and no video.
+If you implement [native WebRTC](#native-webrtc), follow the WebRTC specification: answer the audio track the frontend sends with `sendrecv`, and make sure the camera plays the audio it receives.
 
 The Ring integration is an example where the library already does this: Ring live view sessions are full duplex, so the integration only had to declare the capability.
+
+When Home Assistant is not opened over HTTPS, an app that captures the microphone itself is the fallback.
+It opens a separate session for the microphone, and its offer has a single send-only audio track (`sendonly`) and no video.
 
 #### Test two-way audio
 
