@@ -74,7 +74,9 @@ class MyBlind(CoverEntity):
 
 For the angles, 0° is a slat perpendicular to the cover, and -90° and 90° are a slat that lies flat. A negative angle means the inside edge of the slat is higher than the outside edge. If you don't know how the cover is mounted, make the angle go up with the tilt, like -90 and 90. When you only set the angles, the cover is open where the angle is closest to 0°, and closed where the slats lie the flattest.
 
-When the cover supports `SET_TILT_POSITION`, Home Assistant adds these values as state attributes, with the defaults filled in.
+When the cover supports `SET_TILT_POSITION`, Home Assistant adds the open and closed positions as state attributes, with the defaults filled in. It adds the angles when you set them.
+
+Home Assistant raises a `ValueError` when the values are invalid or contradict each other, like an open position that is also a closed position. Check the values you read from a device before you set them.
 
 ## Device classes
 
