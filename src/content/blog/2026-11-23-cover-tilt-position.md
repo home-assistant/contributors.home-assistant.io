@@ -22,7 +22,7 @@ If your integration sets none of the new properties, nothing changes: the cover 
 
 `tilt_start_angle` and `tilt_end_angle` are the angles of the slats at tilt 0 and at tilt 100, from -90 to 90 degrees. 0° is a slat perpendicular to the cover, and at -90° and 90° the slat lies flat in the plane of the cover. Set both or neither.
 
-When you only set the angles, Home Assistant works out the positions: the cover is open where the angle is 0°, and closed at the ends where the angle is -90° or 90°.
+When you only set the angles, Home Assistant works out the positions: the cover is open where the angle is 0°, and closed at the ends where the angle is -90° or 90°. The [cover entity documentation](/core/entities/cover/#tilt-position) says what happens when the slats never reach these angles.
 
 A blind that is open in the middle of the scale:
 
