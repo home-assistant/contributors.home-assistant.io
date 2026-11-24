@@ -38,4 +38,4 @@ Earlier versions of Home Assistant don't know about the ZIP file, and only look 
 
 Both install as `awesome-card.js`, so the dashboard resource is the same either way. The single-file build is also the fallback when the Marketplace can't use your ZIP file, for example because it is damaged.
 
-In about six months, when most users are on 2026.12 or later, you can drop the single-file build. Then set `"homeassistant": "2026.12.0"` in `hacs.json`, so earlier versions aren't offered a release they can't install. See [require a Home Assistant version](/marketplace/guides/releases/#require-a-home-assistant-version).
+When to drop the single-file build is up to you. It depends on how many of your users are still on an earlier version, and how much the extra build costs you to maintain. Keeping it for around six months gives most users time to update. Once you drop it, set `"homeassistant": "2026.12.0"` in `hacs.json`, so earlier versions aren't offered a release they can't install. See [require a Home Assistant version](/marketplace/guides/releases/#require-a-home-assistant-version).
