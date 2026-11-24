@@ -32,7 +32,7 @@ The Marketplace looks for one file, and finds it by its name. Without a `filenam
 
 It looks for them in the assets of your latest GitHub release first. Without a release that has one of them, it looks in the root of your repository, and then in the `dist` folder. With `content_in_root` set to `true` in `hacs.json`, it only looks in the root.
 
-If your card needs other files, like images or translations, put them in `dist` together with the card, attach them all to the release, or [ship them in a ZIP file](/marketplace/guides/releases/#ship-a-zip-file) together with the card.
+If your card needs other files, like images or translations, put them in `dist` together with the card, attach them all to the release, or [ship it as a ZIP file](#ship-it-as-a-zip-file).
 
 A file with any other name needs `filename` in `hacs.json`:
 
@@ -50,6 +50,28 @@ The [repository structure](/marketplace/reference/repository-structure/#dashboar
 Users get exactly the file you publish: the Marketplace does not build anything. Commit the built file to `dist`, or better, build it in a GitHub Action when you publish a release, and attach it to the release as an asset. Then your repository holds only the source, and every release carries its own build.
 
 A single bundled file is the easiest to install. Bundle your dependencies, like Lit, into it: the frontend does not share its own copy, as [which tools to use](/frontend/custom-ui/#which-tools-to-use) explains.
+
+## Ship it as a ZIP file
+
+When your card is more than one file, like a build that splits its code into chunks that load when they are needed, ship the whole card as one ZIP file attached to your release. Release assets can not have folders, a ZIP file can, and users download one file instead of many.
+
+Name the ZIP file like your JavaScript file, with `.zip` instead of `.js`. For `awesome-card.js`, that is `awesome-card.zip`. Nothing changes in `hacs.json`: `filename`, if you have one, still names the JavaScript file.
+
+Put the JavaScript file in the root of the ZIP file, or in a single folder at its root, like `dist`. The Marketplace extracts that folder, with everything in it, into the folder of your card, and adds the JavaScript file as the resource:
+
+```text title="awesome-card.zip"
+awesome-card.js
+chunks/
+  editor-a1b2c3.js
+  translations/
+    en-d4e5f6.js
+```
+
+- When your release has the JavaScript file and the ZIP file, the Marketplace installs the ZIP file.
+- When it can not use the ZIP file, like when the ZIP file is damaged, too large, or has no JavaScript file where it looks, it installs the other assets of the release instead, as long as your JavaScript file is one of them. Without it, the install fails and the installed version stays.
+- The ZIP file only comes from a release. Installed from your default branch or a commit, your card comes from the repository, as described above.
+
+Home Assistant 2026.12 is the first version that installs the ZIP file. Earlier versions only look for the JavaScript file. To support them, attach a single-file build as the JavaScript file next to the ZIP file. If your release only has the ZIP file, set `"homeassistant": "2026.12.0"` in `hacs.json`, so earlier versions are not offered it. See [require a Home Assistant version](/marketplace/guides/releases/#require-a-home-assistant-version).
 
 ## Two cards can not share a folder
 

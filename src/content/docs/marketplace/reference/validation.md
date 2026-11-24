@@ -98,7 +98,8 @@ The Marketplace checks before an install, and again after it wrote the files. Wh
 | Replaces a built-in integration | Integration | The domain is one of core, and the user did not confirm. |
 | Loadable manifest | Integration | After writing: the `manifest.json` has another domain, or no `version` the loader accepts. |
 | Owner of the folder | Dashboard, theme | Another installed repository uses the same folder. |
-| Module present | Dashboard | After writing: the JavaScript file is missing. With `zip_release`, the root of the ZIP file has no JavaScript file with one of the expected names. |
+| Module present | Dashboard | After writing: the JavaScript file is missing. |
+| ZIP file of the module | Dashboard | A release asset named like the JavaScript file, ending in `.zip`, is damaged, too large, has a file outside the folder of the card, or has no JavaScript file in its root or in a single folder at its root. The Marketplace installs the other assets of the release instead, and fails when the JavaScript file is not one of them. |
 | Theme YAML | Theme | After writing: a YAML file with tags, or one that does not pass the validation of themes. |
 | Template file | Template | `filename` is not a `.jinja` file in the root, `zip_release` is set, or another repository has a file with that name. After writing: the file is not UTF-8, or larger than 5 MiB. |
 | Download size | All | A download, or a ZIP file unpacked, of more than 100 MiB, or more than 50,000 files. |
