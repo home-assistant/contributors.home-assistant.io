@@ -173,38 +173,31 @@ for (const entry of readdirSync(DIST, { recursive: true, withFileTypes: true }))
   }
 }
 
-// Scheduled blog posts: a build outside production has them, so the links to
-// them above are fine, but production leaves them out until their date (see
-// src/content.config.ts). A post may link to one that goes live with it or
-// before it.
-function readSources(folder: string) {
-  return readdirSync(path.join(CONTENT, folder), { recursive: true, withFileTypes: true })
-    .filter((entry) => entry.isFile() && /\.mdx?$/.test(entry.name))
-    .map((entry) => {
-      const file = path.join(entry.parentPath, entry.name);
-      const relative = path.relative(CONTENT, file).split(path.sep).join("/");
-      // When it goes live: docs, and posts published early, already are.
-      return { file: `src/content/${relative}`, name: entry.name, text: readFileSync(file, "utf8"), live: 0 };
-    });
-}
-
-const posts = readSources("blog").map((post) => {
-  const { date, publishEarly } = parseYaml(/^---\n([\s\S]*?)\n---/.exec(post.text)?.[1] ?? "") ?? {};
-  return { ...post, live: publishEarly ? 0 : new Date(date).valueOf() };
-});
+// Links to scheduled blog posts, see src/content.config.ts. A post may link
+// to one that goes live with it or before it.
+const sources = readdirSync(CONTENT, { recursive: true, encoding: "utf8" })
+  .filter((file) => /\.mdx?$/.test(file))
+  .map((file) => {
+    const text = readFileSync(path.join(CONTENT, file), "utf8");
+    const frontMatter = file.startsWith("blog") ? /^---\n([\s\S]*?)\n---/.exec(text)?.[1] : undefined;
+    const { date, publishEarly } = parseYaml(frontMatter ?? "") ?? {};
+    return { file, text, live: date && !publishEarly ? new Date(date).valueOf() : 0 };
+  });
 
 const scheduled = new Map(
-  posts
+  sources
     .filter(({ live }) => live > Date.now())
-    .map(({ name, live }) => [name.replace(/^(\d+)-(\d+)-(\d+)-(.+)\.mdx?$/, "/blog/$1/$2/$3/$4/"), live]),
+    .map(({ file, live }) => [
+      path.basename(file).replace(/^(\d+)-(\d+)-(\d+)-(.+)\.mdx?$/, "/blog/$1/$2/$3/$4/"),
+      live,
+    ]),
 );
 
-// Usually nothing is scheduled, and then there is nothing to look for.
-for (const { file, text, live } of scheduled.size > 0 ? [...posts, ...readSources("docs")] : []) {
+for (const { file, text, live } of sources) {
   for (const [link] of text.matchAll(/\/blog\/\d{4}\/\d{2}\/\d{2}\/[^/\s)"'#?]+/g)) {
     const target = scheduled.get(`${link}/`);
     if (target && target > live) {
-      report(`${link}/ (not published until ${new Date(target).toISOString().slice(0, 10)})`, file);
+      report(`${link}/ (not published until ${new Date(target).toISOString().slice(0, 10)})`, `src/content/${file}`);
     }
   }
 }
