@@ -46,8 +46,8 @@ README.md
 ```
 
 - A JavaScript file named after the repository: `<name>.js`, `<name>.umd.js`, or `<name>-bundle.js`. For `<name>.js`, the name is also tried without `lovelace-` in it. Any other name goes in `filename` in `hacs.json`.
-- The file is attached to your latest release, or is in the root, or in `dist`.
-- Files the module needs, like images, go in `dist` with it, or are attached to the release.
+- The file is attached to your latest release, or is in the root, or in `dist`. A release can also ship it in a [ZIP file named like it](/marketplace/guides/dashboard/#ship-it-as-a-zip-file), which needs Home Assistant 2026.12 or later.
+- Files the module needs, like images, go in `dist` with it, are attached to the release, or are in the ZIP file.
 - Installed to `www/community/<repository name>/`, and added as a dashboard resource.
 
 See [dashboard cards and plugins](/marketplace/guides/dashboard/).

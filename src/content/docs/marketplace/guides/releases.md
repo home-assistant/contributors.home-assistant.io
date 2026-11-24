@@ -60,6 +60,8 @@ An integration can ship as a ZIP file attached to each release, instead of the f
 
 The Marketplace downloads that asset and extracts it into the integration folder. Use this when you build or generate files in your release workflow. HACS supports this for integrations only, and the Marketplace refuses it for templates.
 
+Dashboard cards do not use `zip_release`. They ship a ZIP file with the same name as their JavaScript file, which is usually named after the repository: for `awesome-card`, that is `awesome-card.zip`. See [ship it as a ZIP file](/marketplace/guides/dashboard/#ship-it-as-a-zip-file).
+
 ## Older versions
 
 Users can install another version than the latest, from the menu of your repository in the Marketplace. They pick from your releases, so keep the old ones.
