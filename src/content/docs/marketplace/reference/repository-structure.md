@@ -49,7 +49,7 @@ GitHub doesn't show HTML comments, so there your README reads as before.
 - Markers inside a code block or inline code are text, not markers. That way, a template README can show them as an example.
 - You can mark as many sections as you like.
 
-The Marketplace leaves the marked sections out from Home Assistant 2026.12. Older versions show the whole README, so you can add the markers now.
+Starting with Home Assistant 2026.12, the Marketplace leaves the marked sections out. Older versions show the whole README, so you can add the markers now.
 
 ## Integrations
 

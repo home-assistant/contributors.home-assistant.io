@@ -41,7 +41,7 @@ GitHub doesn't show HTML comments, so there your README reads as before.
 
 ## When it works
 
-The Marketplace leaves the marked sections out from Home Assistant 2026.12, starting with the beta. Older versions show the whole README, as they do today, so you can add the markers now. Plenty of repositories already have.
+Starting with Home Assistant 2026.12 and its beta, the Marketplace leaves the marked sections out. Older versions show the whole README, as they do today, so you can add the markers now.
 
 ## Read more
 
