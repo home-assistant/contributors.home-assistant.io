@@ -78,9 +78,6 @@ An integration can also offer WebRTC for cameras of other integrations, based on
 
 When the camera has a speaker, people can talk through it while they watch the live stream. To offer this, set `camera_entity_capabilities` to a `CameraEntityCapabilities` with `two_way_audio` as `True`, imported from `homeassistant.components.camera`.
 
-Two-way audio is a capability, not a supported feature.
-Do not add a flag to `CameraEntityFeature` for it: Home Assistant reads two-way audio only from `camera_entity_capabilities`.
-
 Declare it only when both the device and the stream you give Home Assistant can carry audio to the camera, often called the audio backchannel.
 The same camera can support it over one protocol and not over another.
 The Reolink integration, for example, declares two-way audio only when the channel has a speaker and the configured protocol is RTSP, because RTMP and FLV cannot carry the backchannel.
