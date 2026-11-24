@@ -64,7 +64,11 @@ const blog = defineCollection({
   schema: z.object({
     title: z.string(),
     description: z.string(),
+    // Midnight UTC. A post with a date in the future is left out of production
+    // builds until that date: see getPosts() in src/lib/blog.ts.
     date: z.coerce.date(),
+    // Publishes the post right away, whatever its date.
+    publishEarly: z.boolean().optional(),
     authors: z.array(z.string()).min(1),
     // Areas this post is about, or a topic of the blog itself, like
     // "announcements": see src/data/blog-topics.ts. Drives the tags, the

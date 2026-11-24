@@ -106,7 +106,7 @@ Every docs page ends with "Was this page helpful?". A vote goes to Plausible, an
 
 ### Daily build
 
-The events page and the homepage show upcoming events from public calendar feeds, read at build time ([`src/lib/events.ts`](src/lib/events.ts)). [A daily workflow](.github/workflows/daily-build.yml) starts a Netlify build so they stay current. A feed that can't be read never fails the build.
+The events page and the homepage show upcoming events from public calendar feeds, read at build time ([`src/lib/events.ts`](src/lib/events.ts)). [A daily workflow](.github/workflows/daily-build.yml) starts a Netlify build so they stay current, and so [scheduled blog posts](.github/copilot-instructions.md#blog-posts) go live on their date. A feed that can't be read never fails the build.
 
 ### Design tokens
 

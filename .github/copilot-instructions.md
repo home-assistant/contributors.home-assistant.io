@@ -729,6 +729,10 @@ Blog posts live in `src/content/blog/` and are named `YYYY-MM-DD-slug.md`.
 
 - `authors` is a list of names.
 - `areas` is a list of IDs from `BLOG_TOPIC_IDS` in `src/data/blog-topics.ts`: the areas of the site, plus topics of the blog itself, like `announcements`. Each has its own RSS feed, so pick the ones whose readers need to read the post.
+- `date` means midnight UTC. A post with a date in the future can be merged early: production builds leave it out until that date. The daily build (`.github/workflows/daily-build.yml`, at 04:15 UTC) then publishes it, unless an earlier build that day already did. Deploy previews, CI, and local builds show all posts.
+- `publishEarly: true` publishes a post right away, whatever its `date`. Leave it out to let the date decide.
+
+Scheduling only delays when a post is shown on the site. Its source is public in the repository from the moment it is pushed, so it is not a way to keep something secret. Do not link to a post that is not published yet from a page or another post: the link is broken in production until the post goes live. CI shows all posts, so `pnpm links` does not catch it there.
 
 ### Skills and review instructions
 
