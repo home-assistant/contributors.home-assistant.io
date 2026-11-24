@@ -15,6 +15,7 @@ Two-way audio starts as a preview feature in Home Assistant Labs. Users turn it 
 ## What your integration needs
 
 Set the new `camera_entity_capabilities` property to a `CameraEntityCapabilities` instance with `two_way_audio` as `True`. This property defaults to `CameraEntityCapabilities()`, where `two_way_audio` is `False`.
+Two-way audio is a capability, not a supported feature, so do not add a flag to `CameraEntityFeature` for it.
 
 Only declare two-way audio when the camera can actually receive audio over the stream Home Assistant uses. For example, the Reolink integration declares it only when the camera supports two-way audio and Home Assistant streams from it over RTSP ([home-assistant/core#184716](https://github.com/home-assistant/core/pull/184716)).
 
@@ -42,6 +43,16 @@ class MyCamera(Camera):
         )
 ```
 
+The capability can change while the entity runs.
+Set `_attr_camera_entity_capabilities` again when the device reports a change, like the Matter integration does.
+
+## How the audio reaches the camera
+
+If your camera has a `stream_source` and a WebRTC provider like go2rtc handles the stream, the provider sends the audio to the camera, and you have nothing else to build.
+
+If your camera implements native WebRTC, follow the WebRTC specification: answer the audio track the frontend sends with `sendrecv`, and make sure the camera plays the audio it receives.
+The Ring integration is an example where the library already does this, so the integration only had to declare the capability.
+
 ## When the frontend gets two-way audio
 
 Your entity declares what the camera can do. The camera platform decides what the frontend gets. It reports two-way audio only when all of these hold:
@@ -50,7 +61,9 @@ Your entity declares what the camera can do. The camera platform decides what th
 - The camera streams over WebRTC, natively or through a WebRTC provider like go2rtc. Two-way audio is not available over HLS.
 - The user turned on the **Two-way audio** preview feature in Labs.
 
-Browsers only give access to the microphone over a secure connection. For now, two-way audio only works when Home Assistant is opened over HTTPS.
+Browsers only give access to the microphone over a secure connection, so in a browser, two-way audio needs Home Assistant to be opened over HTTPS.
+The Home Assistant apps can capture the microphone themselves instead, with [`webrtc/stream/start`](/frontend/reference/external-bus/#webrtcstreamstart) on the external bus.
+In the app for iPhone and iPad, version 2026.10.3 or later, and the app for Android, version 2026.12.1 or later, two-way audio also works without HTTPS.
 
 ## More information
 
