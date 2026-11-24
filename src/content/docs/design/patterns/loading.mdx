@@ -48,7 +48,9 @@ A skeleton keeps the layout in place while the content loads, so nothing jumps a
 
 By default, a soft wave sweeps across the `effect="sheen"` skeletons on the page. It is one slanted wave from the top corner of the content on the side where text starts to the opposite bottom corner, with each skeleton showing its own slice of it. It flows from one skeleton into the next, starts again as soon as it reaches the end, and a skeleton that appears halfway through joins in rather than starting over.
 
-When the content can draw itself before its data arrives, wrap it in `ha-skeleton-overlay` instead of building a skeleton by hand. It reads the skeleton from the content itself: each line of text, icon, image, drawing, and card feature gets its own piece, so the skeleton matches what will appear. Mark anything else that should be a piece, such as another control, with `data-skeleton`.
+When the content can draw itself before its data arrives, wrap it in `ha-skeleton-overlay` instead of building a skeleton by hand. It reads the skeleton from the content itself: each line of text, icon, image, drawing, and card feature gets its own piece, so the skeleton matches what will appear. Mark anything else that should be a piece, such as another control, with `data-skeleton`. It also remembers how much space the content took last time and holds it while it loads again, so nothing jumps when it arrives.
+
+Every dashboard card and badge is already wrapped in one. While a card's code is still loading, it shows a plain wave as tall as the card was last time. On a first visit, it borrows the height of another card of the same type, or uses a typical height for that type.
 
 <Demo layout="stack" caption="A row of a data table while it loads: ha-skeleton-icon and ha-skeleton-text.">
   <div style="display: flex; align-items: center; gap: 16px">
@@ -125,6 +127,9 @@ html`
 ```
 
 - Turn it on with `loading`, or fire a `skeleton-loading` event from inside the content with `fireEvent(this, "skeleton-loading", { loading: true })`, then `{ loading: false }` when it's done. The nearest overlay picks it up. Use `fireEvent`, as the event has to bubble and cross shadow roots to get there.
+- Every dashboard card and badge is already wrapped in an overlay through `hui-card` and `hui-badge`. Don't add another one inside a card.
+- With a `skeleton-key`, the overlay remembers how tall the content was once loaded and holds that height the next time it loads. Cards set one from their config. Make your own with `skeletonKey()` from `src/components/skeleton/skeleton-sizes.ts`.
+- When you add a card type that loads its own code and is taller than one row, add its typical height to `LAZY_LOAD_HEIGHTS` in `src/panels/lovelace/create-element/create-card-element.ts`, for its first visit.
 - Mark an element with `data-skeleton="none"` to leave it out and showing, `keep` to leave it showing but read what's inside it, or `text`, `round`, or `block` to draw it as one piece of that shape.
 - Put your own skeleton in the `skeleton` slot to use it instead of the one read from the content.
 - Call `refresh()` when the content changes without changing size, so the skeleton is read again.
