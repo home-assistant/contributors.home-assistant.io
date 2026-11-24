@@ -48,9 +48,9 @@ A skeleton keeps the layout in place while the content loads, so nothing jumps a
 
 By default, a soft wave sweeps across the `effect="sheen"` skeletons on the page. It is one slanted wave from the top corner of the content on the side where text starts to the opposite bottom corner, with each skeleton showing its own slice of it. It flows from one skeleton into the next, starts again as soon as it reaches the end, and a skeleton that appears halfway through joins in rather than starting over.
 
-When the content can draw itself before its data arrives, wrap it in `ha-skeleton-overlay` instead of building a skeleton by hand. It reads the skeleton from the content itself: each line of text, icon, image, drawing, and card feature gets its own piece, so the skeleton matches what will appear. Mark anything else that should be a piece, such as another control, with `data-skeleton`. It also remembers how much space the content took last time and holds it while it loads again, so nothing jumps when it arrives.
+When the content can draw itself before its data arrives, wrap it in `ha-skeleton-overlay` instead of building a skeleton by hand. It reads the skeleton from the content itself: each line of text, icon, image, drawing, and card feature gets its own piece, so the skeleton matches what will appear. Mark anything else that should be a piece, such as another control, with `data-skeleton`. Give it a `skeleton-key` and it also remembers how much space the content took last time and holds it while it loads again, so nothing jumps when it arrives.
 
-Every dashboard card and badge is already wrapped in one. While a card's code is still loading, it shows a plain wave as tall as the card was last time. On a first visit, it borrows the height of another card of the same type, or uses a typical height for that type.
+Every dashboard card and badge is already wrapped in one. While a card's code is still loading, it shows a plain wave as tall as the card was last time. On a first visit, it borrows the height of another card of the same type, or uses a typical height for that type. A type with no typical height, such as a custom card, holds one row.
 
 <Demo layout="stack" caption="A row of a data table while it loads: ha-skeleton-icon and ha-skeleton-text.">
   <div style="display: flex; align-items: center; gap: 16px">
