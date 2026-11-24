@@ -70,6 +70,7 @@ chunks/
 - When your release has the JavaScript file and the ZIP file, the Marketplace installs the ZIP file.
 - When it can not use the ZIP file, like when the ZIP file is damaged, too large, or has no JavaScript file where it looks, it installs the other assets of the release instead, as long as your JavaScript file is one of them. Without it, the install fails and the installed version stays.
 - The ZIP file only comes from a release. Installed from your default branch or a commit, your card comes from the repository, as described above.
+- With `content_in_root` set to `true` in `hacs.json`, the Marketplace does not look at release assets, so it does not use the ZIP file either. Remove the setting, or set it to `false`.
 
 Home Assistant 2026.12 is the first version that installs the ZIP file. Earlier versions only look for the JavaScript file. To support them, attach a single-file build as the JavaScript file next to the ZIP file. If your release only has the ZIP file, set `"homeassistant": "2026.12.0"` in `hacs.json`, so earlier versions are not offered it. See [require a Home Assistant version](/marketplace/guides/releases/#require-a-home-assistant-version).
 

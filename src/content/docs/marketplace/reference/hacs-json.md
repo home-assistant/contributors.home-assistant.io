@@ -19,7 +19,7 @@ order: 1
 | Key | Type | What it does |
 | --- | --- | --- |
 | `name` | string | The name users see. Required by HACS and by the catalog. Without it, the Marketplace shows the `name` from the manifest of an integration, or a name made from your repository name. |
-| `content_in_root` | boolean | Your content is in the root of the repository, instead of in `custom_components/<domain>/` or `themes/`. For a dashboard plugin, the file is then only looked for in the root, not in a release or in `dist`. |
+| `content_in_root` | boolean | Your content is in the root of the repository, instead of in `custom_components/<domain>/` or `themes/`. For a dashboard plugin, the file is then only looked for in the root, not in a release or in `dist`, so a [ZIP file](/marketplace/guides/dashboard/#ship-it-as-a-zip-file) is not used either. |
 | `filename` | string | The name of the file to install, for a dashboard plugin or a template. With `zip_release`, the name of the ZIP asset. Required for templates. For a dashboard plugin, a release asset with the same name ending in `.zip` instead of `.js` is installed in its place, see [ship it as a ZIP file](/marketplace/guides/dashboard/#ship-it-as-a-zip-file). |
 | `zip_release` | boolean | Install from a ZIP file attached to each release, named by `filename`. HACS supports it for integrations only, the Marketplace refuses it for templates. |
 | `persistent_directory` | string | A folder inside an integration that is kept across updates, as a path relative to the integration folder. Integrations only. |
