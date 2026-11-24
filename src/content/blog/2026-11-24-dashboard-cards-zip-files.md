@@ -27,7 +27,7 @@ chunks/
 
 The Marketplace extracts it into the folder of your card, folders included, and adds the JavaScript file as the dashboard resource, like it always does. [Ship it as a ZIP file](/marketplace/guides/dashboard/#ship-it-as-a-zip-file) has the details.
 
-Already attaching a ZIP file named like your card to your releases? Then your users get it starting with 2026.12, without you changing anything.
+Already attaching a ZIP file named like your card to your releases? Then your users get it starting with 2026.12, provided `content_in_root` is not set to `true` in `hacs.json`. If it is, remove that setting or set it to `false` so the Marketplace looks at release assets.
 
 ## Keep a single-file build for now
 
