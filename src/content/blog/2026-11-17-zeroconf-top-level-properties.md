@@ -13,10 +13,12 @@ The `macaddress`, `model`, and `manufacturer` filters at the top level of a `zer
 Until then, Home Assistant moves each of these keys into the `properties` of the matcher when it loads your integration, and logs a warning:
 
 ```text
-Matching the zeroconf property "manufacturer" at top-level is deprecated and will stop working in Home Assistant 2027.12.0; it should be moved into a properties dict, check the developer documentation
+Matching the zeroconf property "manufacturer" at top-level is deprecated and
+will stop working in Home Assistant 2027.12.0; it should be moved into a
+properties dict, check the developer documentation
 ```
 
-After the removal, Home Assistant no longer moves these keys. A filter that is still at the top level is then not applied, and the matcher matches every device that announces the service type.
+After the removal, Home Assistant no longer moves these keys. A filter that is still at the top level is then not applied. If the matcher has no other filters, such as `name` or `properties`, it matches every device that announces the service type.
 
 ## Moving the filters
 
