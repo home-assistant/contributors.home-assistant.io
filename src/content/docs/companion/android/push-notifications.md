@@ -26,13 +26,13 @@ You only need your own setup if you work on that path. For everything else, the 
 5. Point the app at your service. Add the URL of the deployed `androidV1` function to `gradle.properties` in your Gradle user home (`~/.gradle/gradle.properties`), not the one in the repository:
 
    ```properties
-   homeAssistantAndroidPushUrl=https://push.example.com/androidV1
+   homeAssistantAndroidPushUrl=https://push.example.com/api/sendPush/android/v1
    ```
 
    Optionally, also point the rate limit check at your service:
 
    ```properties
-   homeAssistantAndroidRateLimitUrl=https://push.example.com/checkRateLimits
+   homeAssistantAndroidRateLimitUrl=https://push.example.com/api/checkRateLimits
    ```
 
    Without these overrides, the app uses the project's own push service, set in the `gradle.properties` of the repository.
