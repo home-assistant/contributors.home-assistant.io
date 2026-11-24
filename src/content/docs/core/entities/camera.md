@@ -78,22 +78,6 @@ An integration can also offer WebRTC for cameras of other integrations, based on
 
 When the camera has a speaker, people can talk through it while they watch the live stream. To offer this, set `camera_entity_capabilities` to a `CameraEntityCapabilities` with `two_way_audio` as `True`, imported from `homeassistant.components.camera`.
 
-Only declare it when the camera can receive audio over the stream Home Assistant uses.
-
-```python
-self._attr_camera_entity_capabilities = CameraEntityCapabilities(
-    two_way_audio=device.supports_two_way_audio and device.protocol == "rtsp"
-)
-```
-
-The frontend gets two-way audio only when all of these hold:
-
-- Your entity declares two-way audio.
-- The camera streams over WebRTC, natively or through a WebRTC provider. Two-way audio is not available over HLS.
-- The user turned on the **Two-way audio** preview feature of the camera integration in [Labs](/core/development/labs/). The browser only gives access to the microphone over HTTPS, so in a browser, two-way audio needs Home Assistant to be opened over HTTPS. An app that embeds the frontend can capture the microphone itself instead, with [`webrtc/stream/start`](/frontend/reference/external-bus/#webrtcstreamstart) on the external bus. Two-way audio then also works without HTTPS.
-
-#### Declare two-way audio
-
 Two-way audio is a capability, not a supported feature.
 Do not add a flag to `CameraEntityFeature` for it: Home Assistant reads two-way audio only from `camera_entity_capabilities`.
 
@@ -101,10 +85,22 @@ Declare it only when both the device and the stream you give Home Assistant can 
 The same camera can support it over one protocol and not over another.
 The Reolink integration, for example, declares two-way audio only when the channel has a speaker and the configured protocol is RTSP, because RTMP and FLV cannot carry the backchannel.
 
+```python
+self._attr_camera_entity_capabilities = CameraEntityCapabilities(
+    two_way_audio=device.supports_two_way_audio and device.protocol == "rtsp"
+)
+```
+
 The capability can change while the entity runs.
 Set `_attr_camera_entity_capabilities` again when the device reports a change, like the Matter integration does in `_update_from_device`.
 Home Assistant works out what the frontend gets each time the frontend asks for the capabilities of the camera, which it does when it opens the stream.
 The result is `camera_capabilities`, which is final: do not override it.
+
+The frontend gets two-way audio only when all of these hold:
+
+- Your entity declares two-way audio.
+- The camera streams over WebRTC, natively or through a WebRTC provider. Two-way audio is not available over HLS.
+- The user turned on the **Two-way audio** preview feature of the camera integration in [Labs](/core/development/labs/). The browser only gives access to the microphone over HTTPS, so in a browser, two-way audio needs Home Assistant to be opened over HTTPS. An app that embeds the frontend can capture the microphone itself instead, with [`webrtc/stream/start`](/frontend/reference/external-bus/#webrtcstreamstart) on the external bus. Two-way audio then also works without HTTPS.
 
 #### Carry the audio to the camera
 
