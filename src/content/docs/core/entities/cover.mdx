@@ -48,6 +48,7 @@ Cover entities have these properties on top of the [generic entity properties](/
 | `current_cover_position` | `int \| None` | `None` | The position, from 0 (closed) to 100 (fully open). |
 | `current_cover_tilt_position` | `int \| None` | `None` | The tilt, from 0 to 100. Closed at 0 and open at 100, unless you describe it differently. See [Tilt position](#tilt-position). |
 | `open_tilt_position` | `int \| None` | `None` | The tilt where the slats are open, which is where `open_cover_tilt` moves them. `None` means the default. See [Tilt position](#tilt-position). |
+| `closed_tilt_positions` | `list[int] \| None` | `None` | The one or two tilts where the slats are closed. `close_cover_tilt` moves them to one of these. `None` means the default. See [Tilt position](#tilt-position). |
 | `tilt_start_angle` | `int \| None` | `None` | The angle of the slats at tilt 0, from -90 to 90 degrees. Set it together with `tilt_end_angle`. |
 | `tilt_end_angle` | `int \| None` | `None` | The angle of the slats at tilt 100, from -90 to 90 degrees. Set it together with `tilt_start_angle`. |
 | `device_class` | `CoverDeviceClass \| None` | `None` | What kind of cover it is. See [Device classes](#device-classes). |
@@ -57,17 +58,22 @@ When you set `supported_speeds` to a list, Home Assistant adds it as the `suppor
 
 ## Tilt position
 
-The tilt is a number from 0 to 100. By default, the slats are closed at 0 and open at 100. Many blinds have slats that turn 180°, so they are closed at 0 and at 100, and open at 50. Set `open_tilt_position` to say where your cover is open. It is where your `open_cover_tilt` moves the slats. An end of the scale, 0 or 100, is closed unless it is the open position.
+The tilt is a number from 0 to 100. By default, the slats are closed at 0 and open at 100. Many blinds have slats that turn 180°, so they are closed at 0 and at 100, and open at 50. Set `open_tilt_position` and `closed_tilt_positions` to say where your cover is open and closed. A cover has one or two closed positions, and a closed position doesn't have to be an end of the scale.
 
-If you know the angle of the slats, set `tilt_start_angle` and `tilt_end_angle`: the angle at tilt 0 and at tilt 100, in degrees. Set both or neither.
+Your `open_cover_tilt` moves the slats to the open position. If the open command of the device goes somewhere else, send the position instead. Your `close_cover_tilt` moves them to a closed position, and leaves slats that are already closed where they are. With two closed positions, prefer the one the slats reach without passing the open position.
 
-- 0° is a slat perpendicular to the cover, which is the maximum opening.
-- At -90° and at 90°, the slat lies in the plane of the cover.
-- A negative angle means the user-facing edge of the slat is higher. If you do not know the side, put tilt 0 on the negative side.
+If you know the angle of the slats, set `tilt_start_angle` and `tilt_end_angle`: the angle at tilt 0 and at tilt 100, in degrees. Set both or neither. The angles are approximate. They are good enough to draw the slats, not to follow the sun.
 
-Without an `open_tilt_position`, the cover is open where the angle is closest to 0°, or at 100 when you did not set the angles. A blind with angles from -90 to 90 is open at 50.
+- 0° is a slat perpendicular to the cover, which is the most open it can be.
+- At -90° and at 90°, the slat lies flat in the plane of the cover.
+- A negative angle means the inside edge of the slat is higher than the outside edge. For vertical slats, seen from inside, it means the inside edge is to the left of the outside edge.
+- If you don't know how the blind is mounted, make the angle go up with the tilt, like -90 and 90. Do the same for a cover with no inside and outside, like a pergola roof.
 
-When the cover supports a tilt feature, Home Assistant adds the open position as the `open_tilt_position` attribute, with the default filled in. It adds the angles as the `tilt_start_angle` and `tilt_end_angle` attributes when you set both.
+When you set the angles and not the positions, Home Assistant works the positions out. The cover is open where the angle is 0°, or at the end nearest to 0° when the slats never reach it. It is closed at the ends where the angle is -90° or 90°, or at the end farthest from 0° when the slats never lie flat. A blind with angles from -90 to 90 is open at 50 and closed at 0 and 100. Still set `open_tilt_position` when the device reports a slightly different number once open, like 51 instead of 50.
+
+Without angles and positions, the cover is open at 100 and closed at 0.
+
+When the cover supports `SET_TILT_POSITION`, Home Assistant adds the `open_tilt_position` and `closed_tilt_positions` attributes, with the defaults filled in. It adds the angles as the `tilt_start_angle` and `tilt_end_angle` attributes when you set both. The values can change while Home Assistant runs.
 
 ## Device classes
 
@@ -121,7 +127,7 @@ Implement the sync or the async variant of each method, not both.
 
 `set_cover_position` receives `ATTR_POSITION`, and `set_cover_tilt_position` receives `ATTR_TILT_POSITION`, both from 0 to 100. `open_cover`, `close_cover`, and `set_cover_position` can receive `ATTR_SPEED` when the cover has `supported_speeds`.
 
-Toggling is handled for you. `toggle` stops a moving cover when it supports `STOP`, opens a closed or closing cover, and closes an opening or fully open one. A cover that stopped partly open moves the other way from the last direction it reported, and closes when it never reported one. `toggle_tilt` opens the tilt when it is at a closed end of the scale, and closes it otherwise. See [Tilt position](#tilt-position).
+Toggling is handled for you. `toggle` stops a moving cover when it supports `STOP`, opens a closed or closing cover, and closes an opening or fully open one. A cover that stopped partly open moves the other way from the last direction it reported, and closes when it never reported one. `toggle_tilt` opens the tilt when it is at a closed position, and closes it otherwise, also when the tilt is unknown. See [Tilt position](#tilt-position).
 
 ## States
 
