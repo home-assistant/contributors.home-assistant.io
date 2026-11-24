@@ -67,7 +67,7 @@ Loading indicators fade in rather than pop up, but not all at the same pace:
 
 - **A skeleton** fades in straight away, over about 300 milliseconds. It stands in for the content, so waiting would leave a gap where the layout should be.
 - **A spinner or progress bar** usually waits half a second before it fades in. Some slower areas, such as backups and updates, wait a full second. When the load finishes within that time, people never see a spinner flash on and off.
-- **The content itself** appears as soon as it arrives, without a fade of its own. Under `ha-skeleton-overlay`, each part fades in as its skeleton piece gives way, over `--ha-animation-duration-fast`: 150 milliseconds by default, and at once with reduced motion.
+- **The content itself** fades in over 150 milliseconds wherever a skeleton stood in for it, so nothing pops in. Under `ha-skeleton-overlay`, each part fades in as its skeleton piece gives way. Content that shows up without a skeleton before it, such as table rows that appear as you scroll, shows at once.
 
 ### Where loading ends
 
@@ -128,3 +128,19 @@ html`
 - Mark an element with `data-skeleton="none"` to leave it out and showing, `keep` to leave it showing but read what's inside it, or `text`, `round`, or `block` to draw it as one piece of that shape.
 - Put your own skeleton in the `skeleton` slot to use it instead of the one read from the content.
 - Call `refresh()` when the content changes without changing size, so the skeleton is read again.
+
+When you build a skeleton by hand, fade the content in with the helpers in `src/components/skeleton/skeleton-arrival.ts`:
+
+```ts
+html`
+  ${skeletonOr(
+    !this._entries,
+    html`<ha-skeleton-text></ha-skeleton-text>`,
+    () => html`<div>${this._entries!.length} entries</div>`
+  )}
+`;
+```
+
+- `skeletonOr(loading, skeleton, content)` shows the skeleton while `loading`, then the content, and fades the content in only when it replaced a skeleton. Only elements fade, so put text in an element of its own. Text passed on its own gets wrapped for you.
+- `fadeInArrival(element)` fades in an element that was already on the page and filled in while its skeleton showed, such as a log.
+- `skeletonArrivalStyles` gives you an `arriving` class, for a whole block that fades in once when it first appears.
