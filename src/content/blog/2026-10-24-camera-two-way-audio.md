@@ -49,7 +49,8 @@ Set `_attr_camera_entity_capabilities` again when the device reports a change, l
 
 If your camera has a `stream_source` and a WebRTC provider like go2rtc handles the stream, the provider sends the audio to the camera, and you have nothing else to build.
 
-If your camera implements native WebRTC, follow the WebRTC specification: answer the audio track the frontend sends with `sendrecv`, and make sure the camera plays the audio it receives.
+If your camera implements native WebRTC, follow the WebRTC specification for the direction of the audio track in your answer: answer `sendrecv` with `sendrecv`, `recvonly` with `sendonly`, and `sendonly` with `recvonly`.
+Make sure the camera plays the audio it receives.
 The Ring integration is an example where the library already does this, so the integration only had to declare the capability.
 
 ## When the frontend gets two-way audio

@@ -106,7 +106,8 @@ How the audio reaches the camera depends on how your camera streams.
 If you implement `stream_source` and a WebRTC provider like go2rtc handles the stream, you have nothing else to build.
 The provider sends the audio of the microphone to the camera over the stream source, if it supports the backchannel of that source, like RTSP cameras with ONVIF Profile T.
 
-If you implement [native WebRTC](#native-webrtc), follow the WebRTC specification: answer the audio track the frontend sends with `sendrecv`, and make sure the camera plays the audio it receives.
+If you implement [native WebRTC](#native-webrtc), follow the WebRTC specification for the direction of the audio track in your answer: answer `sendrecv` with `sendrecv`, `recvonly` with `sendonly`, and `sendonly` with `recvonly`.
+Make sure the camera plays the audio it receives.
 
 The Ring integration is an example where the library already does this: Ring live view sessions are full duplex, so the integration only had to declare the capability.
 
