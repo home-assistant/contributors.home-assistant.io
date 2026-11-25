@@ -12,9 +12,9 @@ When the credentials of the integration stop working, the integration must start
 
 ## Why it matters
 
-People change passwords and forget that Home Assistant still uses the old one, and API tokens expire. Users can fix that themselves, with a reconfigure flow if the integration has one, but first they have to notice the error, understand it, and find where to enter the new credentials.
+People change passwords and forget that Home Assistant still uses the old one, and API tokens expire. Users can fix that themselves, if the integration has a reconfigure flow that lets them change the credentials, but first they have to notice the error, understand it, and find where to enter the new credentials.
 
-A reauthentication flow takes those steps away: the integration asks for new credentials as soon as the old ones stop working. It shows up under **Settings** > **Devices & services** as needing attention, the user enters the new password, and everything keeps working as before.
+A reauthentication flow takes those steps away: the integration asks for new credentials as soon as it detects that the old ones no longer work. It shows up under **Settings** > **Devices & services** as needing attention, the user enters the new password, and everything keeps working as before.
 
 ## Example
 
