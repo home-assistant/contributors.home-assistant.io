@@ -62,10 +62,8 @@ When your integration starts to set the properties, `toggle_tilt`, scenes, and l
 
 ## Check your integration for the new names
 
-If your cover entity already has a property or an attribute named `open_tilt_position`, `closed_tilt_positions`, `tilt_start_angle`, or `tilt_end_angle` for something else, Home Assistant now reads it as the new property. A value it doesn't expect raises a `ValueError`, and the entity is not added. Rename it, or make it return what the new property expects. The Hunter Douglas PowerView integration renamed its own `open_tilt_position` for this reason.
+If your cover entity already has a property or an attribute named `open_tilt_position`, `closed_tilt_positions`, `tilt_start_angle`, or `tilt_end_angle` for something else, Home Assistant now reads it as the new property. A value it doesn't expect raises a `ValueError`, and a cover that supports `SET_TILT_POSITION` is not added. Rename it, or make it return what the new property expects. The Hunter Douglas PowerView integration renamed its own `open_tilt_position` for this reason.
 
 If your entity overrides `capability_attributes`, include `super().capability_attributes`, or the new attributes are left out.
-
-Invalid values raise a `ValueError`, for example an open position that is also a closed position. Check the values you read from a device before you set them.
 
 More details are in the [cover entity documentation](/core/entities/cover/#tilt-position).

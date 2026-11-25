@@ -104,7 +104,7 @@ When the cover supports `SET_TILT_POSITION`, Home Assistant adds the open and cl
 
 Home Assistant raises a `ValueError` when the values are invalid or contradict each other:
 
-- An angle is missing, is not a whole number from -90 to 90, or both angles are the same.
+- Only one angle is set, an angle is not a whole number from -90 to 90, or both angles are the same.
 - `open_tilt_position` is not a whole number from 0 to 100, or `closed_tilt_positions` doesn't hold 0, 100, or both.
 - The open position is also a closed position, including a default. A cover that is only closed at 100 also sets `open_tilt_position`, because the default open position is 100.
 
