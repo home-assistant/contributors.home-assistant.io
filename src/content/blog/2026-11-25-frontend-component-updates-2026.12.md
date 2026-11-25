@@ -22,11 +22,13 @@ Use the list family that also replaced `ha-md-list` in 2026.11. Pick the contain
 
 The slots and attributes of a row map like this:
 
-```
+```text
 graphic="…" + slot="graphic"  →  slot="start"
 hasMeta + slot="meta"         →  slot="end"
-twoline + slot="secondary"    →  slot="supporting-text", or the supporting-text attribute
-default slot                  →  slot="headline", or the headline attribute
+twoline + slot="secondary"    →  slot="supporting-text",
+                                 or the supporting-text attribute
+default slot                  →  slot="headline",
+                                 or the headline attribute
 noninteractive                →  ha-list-item-base
 ```
 
@@ -40,15 +42,23 @@ noninteractive                →  ha-list-item-base
 -  </ha-list-item>
 -</ha-list>
 +<ha-list-base aria-label="Settings">
-+  <ha-list-item-button headline="Network" supporting-text="Connected over Wi-Fi" @click=${this._open}>
++  <ha-list-item-button
++    headline="Network"
++    supporting-text="Connected over Wi-Fi"
++    @click=${this._open}
++  >
 +    <ha-svg-icon slot="start" .path=${mdiWifi}></ha-svg-icon>
 +    <ha-icon-next slot="end"></ha-icon-next>
 +  </ha-list-item-button>
 +</ha-list-base>
 ```
 
-The events changed too. A clickable row fires a regular `click` instead of `request-selected`. `ha-list-selectable` fires `ha-list-item-selected` and `ha-list-item-deselected` instead of `selected` and `action`, with the index of one option as `detail`, instead of the set of all selected indexes.
+The events changed too. A clickable row fires a regular `click` instead of `request-selected`. `ha-list-selectable` fires `ha-list-item-selected` and `ha-list-item-deselected` instead of `action` and `selected`:
+
+- The index is now `detail` itself, a number, instead of `detail.index`.
+- Without `multi`, `selected` had the index of the picked row. Listen to `ha-list-item-selected` instead.
+- With `multi`, `selected` had the set of all selected indexes. The new events name one option at a time, so keep track of the selection yourself, or read the `selected` property of the options.
 
 The `--mdc-list-*` CSS properties no longer have any effect; use `--ha-list-padding`, `--ha-list-gap` and the `--ha-row-item-*` properties instead. The new lists have no padding of their own, so set `--ha-list-padding: 8px 0` to keep the spacing of the old list.
 
-See [the new list family](/design/components/list/#the-new-list-family) on the list page for all attributes, slots, and events.
+See [the new list family](/design/components/list/#in-code) on the list page for all attributes, slots, and events.
