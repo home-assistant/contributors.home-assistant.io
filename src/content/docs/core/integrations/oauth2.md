@@ -16,9 +16,9 @@ python3 -m script.scaffold config_flow_oauth2
 
 ## How it fits together
 
-OAuth 2.0 needs a client ID and a client secret: the credentials of an application registered at the service. There are two ways a user gets those:
+The authorization code grant needs a client ID and a client secret: the credentials of an application registered at the service. There are two ways a user gets those:
 
-- **Application credentials**: the user registers their own application at the service, and enters its client ID and secret in Home Assistant. Every integration that supports OAuth 2.0 must support this.
+- **Application credentials**: the user registers their own application at the service, and enters its client ID and secret in Home Assistant. Every integration that uses the authorization code grant must support this.
 - **Home Assistant Link account linking**: Nabu Casa registered an application with the service, so users with a subscription can link their account without registering anything. This gives the best experience. To add your integration to it, contact [partner@openhomefoundation.org](mailto:partner@openhomefoundation.org).
 
 Both end up as an implementation, a subclass of `AbstractOAuth2Implementation`. The config flow lets the user pick one if there are several, and uses it to log in.
