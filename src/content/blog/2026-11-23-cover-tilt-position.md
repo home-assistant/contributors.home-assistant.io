@@ -18,7 +18,7 @@ If your integration sets none of the new properties, nothing changes: the cover 
 
 `open_tilt_position` is the tilt where the slats are open, which is where `open_cover_tilt` moves them.
 
-`closed_tilt_positions` is the list of the tilts where the slats are closed: 0, 100, or both. `close_cover_tilt` moves the slats to one of them, and leaves slats that are already closed where they are.
+`closed_tilt_positions` is the list of the tilts where the slats are closed: 0, 100, or both. `close_cover_tilt` moves the slats to the most closed position. With both 0 and 100, your integration decides which one.
 
 `tilt_start_angle` and `tilt_end_angle` are the angles of the slats at tilt 0 and at tilt 100, from -90 to 90 degrees. 0° is a slat perpendicular to the cover, and at -90° and 90° the slat lies flat in the plane of the cover. Set both or neither.
 
@@ -44,10 +44,12 @@ class MyBlind(CoverEntity):
 
 - A cover that supports `SET_TILT_POSITION` gets the `open_tilt_position` and `closed_tilt_positions` attributes, which are 100 and `[0]` unless the integration says otherwise. The `tilt_start_angle` and `tilt_end_angle` attributes are added when the integration sets both angles.
 - `toggle_tilt` opens the slats when they are at a closed position and closes them otherwise. It used to open them only at 0.
-- A scene that opens the slats moves them to the open position, where it used 100. A scene that closes them uses the first closed position, and leaves slats that are already closed where they are.
+- A scene that stores a tilt position still moves the slats to that position. A scene that only says open or closed uses the open position or the first closed position, where it used 100 and 0.
 
 ## Check your integration for the new names
 
 A cover entity that already has a property or an attribute named `open_tilt_position`, `closed_tilt_positions`, `tilt_start_angle`, or `tilt_end_angle` with another meaning now replaces the new one. Rename it, or make it return what the new property expects.
+
+Invalid values raise a `ValueError`, for example an open position that is also a closed position. Check the values you read from a device before you set them.
 
 More details are in the [cover entity documentation](/core/entities/cover/#tilt-position).
