@@ -112,7 +112,7 @@ A *virtual integration* is a product that works through another integration. Its
 The "supported by" kind points to the integration that does the work. For example, Dacia cars work through the Renault integration.
 
 - `ha_supporting_domain`: the domain of the integration that does the work, like `renault`. It must match `supported_by` in the manifest of the virtual integration. The setup button and links on the page use this domain.
-- `ha_supporting_integration`: the name of that integration, like `Renault`. The generated page uses it to tell readers which integration to set up.
+- `ha_supporting_integration`: the name of that integration, like `Renault`. The page uses it to tell readers which integration to set up.
 
 The "IoT standard" kind is a brand whose devices use a standard protocol:
 
