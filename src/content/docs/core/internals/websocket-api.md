@@ -250,7 +250,7 @@ The value of a key is a list of items or a single item.
   "type": "validate_config",
   "triggers": [{"trigger": "state", "entity_id": "light.kitchen"}],
   "actions": [
-    {"delay": "abc"},
+    {"delay": 1, "bogus": 2},
     {"wait_for_trigger": [{"trigger": "state"}]}
   ]
 }
@@ -265,13 +265,13 @@ The value of a key is a list of items or a single item.
     "triggers": {"valid": true, "error": null, "errors": []},
     "actions": {
       "valid": false,
-      "error": "offset abc should be format 'HH:MM', 'HH:MM:SS' or 'HH:MM:SS.F' at '[0].delay'",
+      "error": "not a valid option at '[0].bogus'",
       "errors": [
         {
-          "message": "offset abc should be format 'HH:MM', 'HH:MM:SS' or 'HH:MM:SS.F'",
-          "path": [0, "delay"],
-          "code": null,
-          "translation_key": null,
+          "message": "not a valid option",
+          "path": [0, "bogus"],
+          "code": "extra_keys_not_allowed",
+          "translation_key": "not_a_valid_option",
           "translation_domain": null,
           "translation_placeholders": {}
         },
@@ -294,7 +294,8 @@ The result of each key has three fields:
 - `valid`: `true` when the value of the key is valid.
 - `errors`: the errors Home Assistant found in the value of the key.
   When the value is valid, it is an empty list.
-- `error`: the first entry of `errors` as one line of text, with its path at the end, or `null` when the value is valid.
+- `error`: the first entry of `errors` as one line of text, or `null` when the value is valid.
+  When the entry has a path, the line ends with it.
   It is there for clients that do not read `errors`.
 
 Every entry of `errors` has the same fields:
@@ -309,7 +310,7 @@ Every entry of `errors` has the same fields:
   When the key is `null`, or you have no translation for it, show `message`.
 
 A `path` starts at the value you sent for the key, and follows that value exactly as you sent it.
-In the example, `[0, "delay"]` is the `delay` of the first action.
+In the example, `[0, "bogus"]` is the `bogus` key of the first action.
 The name of the key, `actions`, is not part of the path.
 When you send a single item instead of a list, the path has no list index:
 
