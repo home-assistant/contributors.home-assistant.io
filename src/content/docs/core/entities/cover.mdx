@@ -47,10 +47,10 @@ Cover entities have these properties on top of the [generic entity properties](/
 | `is_closing` | `bool \| None` | `None` | Whether the cover is closing. Used for the state. |
 | `current_cover_position` | `int \| None` | `None` | The position, from 0 (closed) to 100 (fully open). |
 | `current_cover_tilt_position` | `int \| None` | `None` | The tilt, from 0 to 100. Closed at 0 and open at 100, unless you describe it differently. See [Tilt position](#tilt-position). |
-| `open_tilt_position` | `int \| None` | `None` | The tilt where the slats are open. `None` means the default. See [Tilt position](#tilt-position). |
+| `open_tilt_position` | `int \| None` | `None` | The tilt where the slats are open, from 0 to 100. `None` means the default. See [Tilt position](#tilt-position). |
 | `closed_tilt_positions` | `list[int] \| None` | `None` | The tilts where the slats are closed: 0, 100, or both. `None` means the default. See [Tilt position](#tilt-position). |
-| `tilt_start_angle` | `int \| None` | `None` | The angle of the slats at tilt 0, from -90 to 90 degrees. Set it together with `tilt_end_angle`. |
-| `tilt_end_angle` | `int \| None` | `None` | The angle of the slats at tilt 100, from -90 to 90 degrees. Set it together with `tilt_start_angle`. |
+| `tilt_start_angle` | `int \| None` | `None` | The angle of the slats at tilt 0, from -90 to 90 degrees. Set it together with `tilt_end_angle`, to a different value. |
+| `tilt_end_angle` | `int \| None` | `None` | The angle of the slats at tilt 100, from -90 to 90 degrees. Set it together with `tilt_start_angle`, to a different value. |
 | `device_class` | `CoverDeviceClass \| None` | `None` | What kind of cover it is. See [Device classes](#device-classes). |
 | `supported_speeds` | `list[str] \| None` | `None` | The speeds the cover can move at when it opens, closes, or moves to a position. `None` or an empty list means no speed selection. Use the standard speeds `CoverSpeed.FAST`, `CoverSpeed.MEDIUM`, and `CoverSpeed.SLOW` from `homeassistant.components.cover` where they fit your device. An action without a speed moves the cover at the device's default speed. |
 
@@ -61,22 +61,54 @@ When you set `supported_speeds` to a list, Home Assistant adds it as the `suppor
 The tilt is a number from 0 to 100. By default, the slats are closed at 0 and open at 100. If your cover works differently, describe it with these properties:
 
 - `open_tilt_position` is the tilt where the slats are open. Your `open_cover_tilt` moves the slats there.
-- `closed_tilt_positions` holds the tilts where the slats are closed: `[0]`, `[100]`, or `[0, 100]`. Your `close_cover_tilt` moves the slats to the most closed position. With `[0, 100]`, you decide what that means: if one end blocks more light, always close there. If both ends are equally closed, you can leave slats that are known to be closed where they are, or always close to the same end.
+- `closed_tilt_positions` holds the tilts where the slats are closed: `[0]`, `[100]`, or `[0, 100]`. Your `close_cover_tilt` moves the slats to the most closed position. With `[0, 100]`, you decide what that means: if one end blocks more light, always close there. If both ends are equally closed, you can leave slats that are known to be closed where they are, or always close to the same end. If the tilt is only assumed, because the device doesn't report it, close anyway.
 - `tilt_start_angle` and `tilt_end_angle` are the angles of the slats at tilt 0 and at tilt 100, in degrees. Set both or neither.
 
-A blind with slats that turn 180° is open at 50, and closed at 0 and at 100:
+A blind that is open in the middle of the scale, and closed at 0 and at 100:
 
 ```python
 class MyBlind(CoverEntity):
+    _attr_supported_features = (
+        CoverEntityFeature.OPEN_TILT
+        | CoverEntityFeature.CLOSE_TILT
+        | CoverEntityFeature.SET_TILT_POSITION
+    )
     _attr_open_tilt_position = 50
     _attr_closed_tilt_positions = [0, 100]
 ```
 
-For the angles, 0° is a slat perpendicular to the cover, and -90° and 90° are a slat that lies flat. A negative angle means the inside edge of the slat is higher than the outside edge. If you don't know how the cover is mounted, make the angle go up with the tilt, like -90 and 90. When you only set the angles, the cover is open where the angle is closest to 0°, and closed where the slats lie the flattest.
+If you know how the slats turn, set the angles instead. Home Assistant then works out the positions, and code that needs the shape of the slats, like the HomeKit bridge or a drawing of the cover, can use them. A blind with slats that turn 180° is open at 50, and closed at 0 and at 100:
 
-When the cover supports `SET_TILT_POSITION`, Home Assistant adds the open and closed positions as state attributes, with the defaults filled in. It adds the angles when you set them.
+```python
+class MyBlind(CoverEntity):
+    _attr_supported_features = (
+        CoverEntityFeature.OPEN_TILT
+        | CoverEntityFeature.CLOSE_TILT
+        | CoverEntityFeature.SET_TILT_POSITION
+    )
+    _attr_tilt_start_angle = -90
+    _attr_tilt_end_angle = 90
+```
 
-Home Assistant raises a `ValueError` when the values are invalid or contradict each other, like an open position that is also a closed position. Check the values you read from a device before you set them.
+Set the positions as well when the device is open or closed somewhere else than the angles say.
+
+For the angles, 0° is a slat perpendicular to the cover, and -90° and 90° are a slat that lies flat. The angle changes evenly between tilt 0 and tilt 100. A negative angle means the inside edge of the slat is higher than the outside edge. For vertical slats, seen from inside, it means the inside edge is to the left of the outside edge. If you don't know how the cover is mounted, or it has no inside and outside, like a pergola roof, make the angle go up with the tilt, like -90 and 90. The angles are approximate: good enough to draw the slats, not to follow the sun.
+
+When you only set the angles, the cover is open where the angle is closest to 0°, rounded to a whole number, and closed where the slats lie the flattest. When both ends are equally flat, both are closed positions. If the device is closed at only one end, set `closed_tilt_positions` yourself.
+
+The positions are exact. When the slats are closed, report exactly a closed position, like 100 and not 98. If the angles give 50 but the device reports 51 when it is open, set `open_tilt_position` to 51.
+
+When the cover supports `SET_TILT_POSITION`, Home Assistant adds the open and closed positions as state attributes, with the defaults filled in. It adds the angles when you set them. The recorder doesn't store these attributes. Change the values only when the device or its configuration changes, not with the position of the slats, and keep them while the device is unavailable. Set `supported_features` yourself, as the examples do. If Home Assistant [guesses the features](#supported-features), `SET_TILT_POSITION` and these attributes disappear whenever the tilt is unknown.
+
+`toggle_tilt` uses the values for every cover, also one without `SET_TILT_POSITION`.
+
+Home Assistant raises a `ValueError` when the values are invalid or contradict each other:
+
+- An angle is missing, is not a whole number from -90 to 90, or both angles are the same.
+- `open_tilt_position` is not a whole number from 0 to 100, or `closed_tilt_positions` doesn't hold 0, 100, or both.
+- The open position is also a closed position, including a default. A cover that is only closed at 100 also sets `open_tilt_position`, because the default open position is 100.
+
+Home Assistant checks the values when it writes the state of a cover that supports `SET_TILT_POSITION`, and when `toggle_tilt` runs. If the check fails while the entity is added, the entity is not added. If it fails on a later state write, the state of the entity stops updating. If it fails in `toggle_tilt`, the action fails. Check the values you read from a device before you set them.
 
 ## Device classes
 
@@ -111,7 +143,7 @@ Combine the `CoverEntityFeature` flags with `|` and set them as `supported_featu
 | `SET_TILT_POSITION` | The cover can tilt to a position. Implement `set_cover_tilt_position`. |
 | `SPEED` | The cover can move at different speeds. Set `supported_speeds`. |
 
-If you do not set `supported_features` at all, Home Assistant guesses: `OPEN`, `CLOSE`, and `STOP`, plus `SET_POSITION` when the cover reports a position, all tilt features when it reports a tilt, and `SPEED` when it has speeds. Set the features yourself, so the frontend only shows what the cover can really do.
+If you do not set `supported_features` at all, Home Assistant guesses: `OPEN`, `CLOSE`, and `STOP`, plus `SET_POSITION` when the cover reports a position, all tilt features when it reports a tilt, and `SPEED` when it has speeds. The guess follows the current state, so a cover loses `SET_POSITION` and its tilt features whenever its position or tilt is unknown, for example while the device is unavailable. Set the features yourself, so they describe what the cover can do and don't change with its state.
 
 ## Methods
 
@@ -130,7 +162,7 @@ Implement the sync or the async variant of each method, not both.
 
 `set_cover_position` receives `ATTR_POSITION`, and `set_cover_tilt_position` receives `ATTR_TILT_POSITION`, both from 0 to 100. `open_cover`, `close_cover`, and `set_cover_position` can receive `ATTR_SPEED` when the cover has `supported_speeds`.
 
-Toggling is handled for you. `toggle` stops a moving cover when it supports `STOP`, opens a closed or closing cover, and closes an opening or fully open one. A cover that stopped partly open moves the other way from the last direction it reported, and closes when it never reported one. `toggle_tilt` opens the tilt when it is at a closed position, and closes it otherwise, also when the tilt is unknown. See [Tilt position](#tilt-position).
+Toggling is handled for you. `toggle` stops a moving cover when it supports `STOP`, opens a closed or closing cover, and closes an opening or fully open one. A cover that stopped partly open moves the other way from the last direction it reported, and closes when it never reported one. `toggle_tilt` opens the tilt when it is exactly at a closed position, and closes it otherwise, also when the tilt is unknown. See [Tilt position](#tilt-position).
 
 ## States
 
