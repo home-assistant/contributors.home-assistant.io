@@ -124,7 +124,7 @@ Add an `async_step_reconfigure` to let users change setup data of an entry, like
 
 The reconfigure step asks for the settings the integration needs to work, whether users entered them during setup or discovery found them. Examples are the host of a device, or the zone an integration measures the distance to. Because the integration cannot do without these settings, they cannot move to an options flow.
 
-The reconfigure step also covers credentials users typed in, like a password. Users can change those whenever they want, for example right after they change the password at the service. Reauthentication is only for when your integration detects that the credentials no longer work.
+The reconfigure step also covers credentials users typed in, like a password. Users can change those whenever they want, for example right after they change the password at the service. Reauthentication is for when your integration detects that the credentials no longer work, or no longer grant everything it needs, like a token that lacks a required OAuth scope.
 
 ```python
 async def async_step_reconfigure(
