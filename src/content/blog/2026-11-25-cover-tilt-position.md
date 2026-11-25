@@ -1,7 +1,7 @@
 ---
 title: "Cover entities can describe their tilt position"
 description: "Home Assistant Core 2026.12 adds four optional cover properties that say where the slats are open, where they are closed and what angle they have."
-date: 2026-11-23
+date: 2026-11-25
 authors:
   - Paul Bottein
 areas:
