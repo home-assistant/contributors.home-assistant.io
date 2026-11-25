@@ -6,11 +6,18 @@ order: 5
 
 Every integration page starts with front matter: a block of YAML between two `---` lines. It is not just metadata. It drives the [integration overview](https://www.home-assistant.io/integrations/), the setup button, the discovery text, the quality scale badge, and the sidebar of the page.
 
-Many keys mirror the integration manifest in Home Assistant Core. Those must match the manifest exactly. Some of them, like `ha_quality_scale`, are updated by documentation syncs from the core codebase, so you rarely need to touch them after the first version. Getting them right in a new page is still on you.
+Many keys mirror the integration manifest in Home Assistant Core. For an integration in core, you don't maintain those keys by hand: a scheduled workflow on home-assistant.io copies the data of every manifest into the documentation, and the build fills in the keys from it. The manifest always wins, and the sync removes those keys from the front matter of the page.
+
+The keys that come from the manifest are `title`, `ha_integration_type`, `ha_codeowners`, `ha_config_flow`, `ha_iot_class`, `ha_quality_scale`, `ha_platforms`, `ha_iot_standard`, `ha_connectivity`, `ha_supporting_domain`, `ha_supporting_integration`, the discovery keys like `ha_zeroconf`, and `ha_categories` once the manifest has `categories`.
+
+Two cases still need them in the front matter:
+
+- A new page, until the first sync after its integration is merged in core. Copy the values from the manifest. The sync removes them later.
+- A page for something that is not an integration in core, like most brand pages. Nothing syncs those, so the page keeps its own keys.
 
 ## Example
 
-A typical page for an integration that is set up from the UI:
+A new page for an integration that is set up from the UI, before its first sync:
 
 ```yaml
 ---
@@ -67,7 +74,7 @@ These keys describe what the integration is and does. They power the filters on 
 - `ha_iot_class`: how the integration talks to the device or service. Use `Local Polling`, `Local Push`, `Cloud Polling`, `Cloud Push`, `Assumed State`, or `Calculated`, matching `iot_class` in the manifest. Integrations where it depends on the setup use `Configurable`. The [IoT class blog post](https://www.home-assistant.io/blog/2016/02/12/classifying-the-internet-of-things/) explains each class.
 - `ha_platforms`: the entity platforms the integration implements, like `light` and `sensor`. Also list `diagnostics` when the integration supports downloading diagnostics.
 - `ha_config_flow`: set to `true` if the integration is set up from the UI. This adds the setup button to the sidebar of the page. Leave the key out otherwise.
-- `ha_quality_scale`: the tier of the integration on the quality scale: `bronze`, `silver`, `gold`, or `platinum`. Integrations that are internal to Home Assistant use `internal`, and older integrations that have not been scored yet use `legacy`. For a new integration, use `bronze`. This key is updated by documentation syncs from the core codebase, so you normally do not edit it by hand.
+- `ha_quality_scale`: the tier of the integration on the quality scale: `bronze`, `silver`, `gold`, or `platinum`. Integrations that are internal to Home Assistant use `internal`, and older integrations that have not been scored yet use `legacy`. For a new integration, use `bronze`. Once the integration is synced, this key comes from `quality_scale` in the manifest.
 
 ### Protocols and connectors
 
@@ -107,22 +114,33 @@ A `docs` entry that points to a page that does not exist is silently dropped, so
 
 Some pages do not document an integration with code of its own. They exist so people can find a product by its brand name.
 
-A *virtual integration* is a product that works through another integration. Its manifest uses `integration_type: virtual`, and it comes in two kinds.
+A *virtual integration* is a product that works through another integration. In core, it is only a manifest with `integration_type: virtual`, and it comes in two kinds:
 
-The "supported by" kind points to the integration that does the work. For example, Dacia cars work through the Renault integration.
+- The "supported by" kind points to the integration that does the work, with `supported_by` in the manifest. For example, August Bluetooth locks work through the Yale Access Bluetooth integration.
+- The "IoT standard" kind is a brand whose devices use a standard protocol, with `iot_standards` in the manifest: `zigbee`, `zwave`, or `homekit`. For Zigbee and Z-Wave, the page shows a button that starts adding a device with that standard.
 
-- `ha_supporting_domain`: the domain of the integration that does the work, like `renault`. It must match `supported_by` in the manifest of the virtual integration. The setup button and links on the page use this domain.
-- `ha_supporting_integration`: the name of that integration, like `Renault`. The page uses it to tell readers which integration to set up.
+The page of a virtual integration is not generated. Someone writes it by hand, but it can be short, because the build takes everything that describes the integration from the manifest. For the "supported by" kind, that includes the name and domain of the supporting integration, and its codeowners, IoT class, platforms, discovery, and categories, unless the manifest of the virtual integration sets its own. So the front matter only needs `description`, `ha_release`, and `ha_domain`.
 
-The "IoT standard" kind is a brand whose devices use a standard protocol:
+For the body, the `integrations/supported_brand.md` include writes the text that sends readers to the supporting integration, with its setup button. A page for a "supported by" virtual integration looks like this:
 
-- `ha_iot_standard`: the standard the products use: `zigbee`, `zwave`, or `homekit`. It must match `iot_standards` in the manifest. Brand pages for Matter products use `matter`. For Zigbee and Z-Wave, the page shows a button that starts adding a device with that standard.
+```markdown title="source/_integrations/august_ble.markdown"
+---
+description: Connect your August Bluetooth locks with Yale Access Bluetooth.
+ha_release: 2022.9
+ha_domain: august_ble
+---
 
-A *brand* page groups several integrations or products from the same manufacturer under one name. For example, the Google brand page groups Google integrations, and the Inovelli brand page points to the Zigbee and Z-Wave standards its devices use. A brand is not the same as a virtual integration.
+Integrates [August](https://august.com/) locks over Bluetooth into Home
+Assistant.
+
+{% include integrations/supported_brand.md %}
+```
+
+A *brand* page groups several integrations or products from the same manufacturer under one name. For example, the Google brand page groups Google integrations, and the Inovelli brand page points to the Zigbee and Z-Wave standards its devices use. A brand is not the same as a virtual integration. Most brand pages have no manifest in core, so they set their keys themselves.
 
 - `ha_brand`: set to `true` if the page represents a brand rather than an actual integration. The page then takes its logo from the brand images instead of the integration images. Leave the key out on regular integration pages.
 
-A virtual integration with `ha_supporting_domain` inherits the categories of its supporting integration when it does not set `ha_categories` itself. Brand pages without a supporting integration, such as Matter, Zigbee, and Z-Wave brands, do not inherit categories and need their own `ha_categories`.
+Pages without a supporting integration, such as Matter, Zigbee, and Z-Wave brands, do not get categories from anywhere else and need their own `ha_categories`.
 
 ## Maintainer only
 

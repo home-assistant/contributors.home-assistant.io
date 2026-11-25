@@ -348,7 +348,7 @@ A virtual integration has a `domain`, a `name`, `"integration_type": "virtual"`,
 }
 ```
 
-Users find the product when they add an integration, and Home Assistant sends them to the right config flow. The product also needs a page on [home-assistant.io](https://www.home-assistant.io/). That page is not created for you: write a short one by hand. It only needs a description, the release, and the domain, because the rest, like the link to the supporting integration, comes from the manifest. Add the logo of the product to the [brands repository](/core/integrations/brands/).
+Users find the product when they add an integration, and Home Assistant sends them to the right config flow. The product also needs a page on [home-assistant.io](https://www.home-assistant.io/). That page is not generated, so open a pull request for it in the documentation repository. It can be short: the documentation takes the rest from your manifest, like the supporting integration and its categories. See [virtual integrations and brands](/writing/reference/front-matter/#virtual-integrations-and-brands) for what the page needs. Add the logo of the product to the [brands repository](/core/integrations/brands/).
 
 > [!TIP]
 > If a brand makes products that use a standard like Zigbee, set the IoT standards on the [brand](/core/integrations/brands/#brand-files) instead. Only use a virtual integration if that would confuse users.
