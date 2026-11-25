@@ -9,7 +9,7 @@ An [options flow](/glossary/options-flow/) lets users change optional settings o
 
 Options are extras that adjust how the integration behaves. The integration works without users ever opening the options flow. The settings the integration needs to work, like a host or a password, are not options: users change them with [reconfiguration](/core/integrations/reauth-reconfigure/#reconfiguration). When your integration detects that the credentials no longer work, it can also ask for new ones by itself, with [reauthentication](/core/integrations/reauth-reconfigure/#reauthentication). The polling interval is not an option either: you pick it for your users, see [appropriate polling](/core/quality-scale/appropriate-polling/).
 
-Helpers built with [`SchemaConfigFlowHandler`](/core/integrations/config-flow/#simple-flows-with-schemaconfigflowhandler) are an exception: they store all their settings in options, the required ones too, and users change all of them in the options flow.
+Helpers built with [`SchemaConfigFlowHandler`](/core/integrations/config-flow/#simple-flows-with-schemaconfigflowhandler) are an exception: they store all their settings in options, the required ones too. Which of them users can change afterwards depends on the options flow of the helper: some stay read-only, like the source entity of a Trend helper.
 
 ## Add an options flow
 

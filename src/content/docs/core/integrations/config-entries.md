@@ -15,7 +15,7 @@ A config entry holds:
 - `unique_id`: what identifies the device or account, so it is not set up twice.
 - `runtime_data`: whatever your integration needs while it runs. It is not stored.
 
-Helpers built with [`SchemaConfigFlowHandler`](/core/integrations/config-flow/#simple-flows-with-schemaconfigflowhandler) are an exception: they store all their settings in `options`, the required ones too, so users can change all of them in the options flow.
+Helpers built with [`SchemaConfigFlowHandler`](/core/integrations/config-flow/#simple-flows-with-schemaconfigflowhandler) are an exception: they store all their settings in `options`, the required ones too. Which of them users can change afterwards depends on the options flow of the helper: some stay read-only, like the source entity of a Trend helper.
 
 ## Lifecycle
 

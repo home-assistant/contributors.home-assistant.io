@@ -16,4 +16,4 @@ term:
     - "options flows"
 ---
 
-Options are optional settings that adjust how an integration behaves, like which devices to include. Users can change them at any time, and the integration works fine if they never do. What the integration needs to work is not an option: it changes with a [reconfigure flow](/glossary/reconfigure-flow/). Helpers are an exception: they keep all their settings in options.
+Options are optional settings that adjust how an integration behaves, like which devices to include. Users can change them at any time, and the integration works fine if they never do. What the integration needs to work is not an option: it changes with a [reconfigure flow](/glossary/reconfigure-flow/). Helpers built with `SchemaConfigFlowHandler` are an exception: they keep all their settings in options.
