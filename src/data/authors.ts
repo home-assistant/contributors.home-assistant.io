@@ -49,6 +49,7 @@ export const AUTHORS: Record<string, string> = {
   "davet2001": "davet2001",
   "epenet": "epenet",
   "tr4nt0r": "tr4nt0r",
+  "iluvdata": "iluvdata"
 };
 
 /** The path of an author's avatar in public/, like /images/authors/frenck.png. */
