@@ -51,4 +51,4 @@ Stored data is restored at the end of `__init__`, so it is there before `_async_
 - Raise `storage_version` when the format of your stored data changes. Data stored with another version is only restored if `_restore_data` migrates it.
 - Data is removed when its config entry is removed, when you call `async_remove_stored_data`, or after 7 days without a coordinator that uses it.
 
-For the details, see [Fetching data](/core/integrations/fetching-data/) and [core PR #173318](https://github.com/home-assistant/core/pull/173318).
+For the details, see [Fetching data](/core/integrations/fetching-data/#keep-coordinator-data-across-restarts) and [core PR #173318](https://github.com/home-assistant/core/pull/173318).
