@@ -132,7 +132,7 @@ Returns the resource usage of Home Assistant Core as a [stats model](/apps/super
 
 ## Sockets for apps
 
-The Supervisor lists the Unix sockets Home Assistant Core should listen on, one for every app with `homeassistant_api: true`. Each app gets a socket of its own, so it can call Core as its own Home Assistant user instead of through the proxy. Only Home Assistant Core can call this endpoint. The Supervisor lets Core know when the list changes, like when an app is installed, removed, or renamed.
+The Supervisor lists the Unix socket paths that Home Assistant Core should bind for apps with `homeassistant_api: true`. Core can use these sockets to identify each app as its own Home Assistant user instead of routing requests through the proxy once the Core-side socket support is available; until then, apps continue to use the proxy. Only Home Assistant Core can call this endpoint. The Supervisor lets Core know when the list changes, like when an app is installed, removed, or renamed.
 
 ### `GET /core/sockets`
 
@@ -145,7 +145,7 @@ Each entry in `sockets`:
 | Key | Type | Description |
 | --- | --- | --- |
 | `slug` | string | Slug of the app |
-| `name` | string | Name of the app. Home Assistant Core gives the app's user this name |
+| `name` | string | Name of the app |
 | `path` | string | Path of the socket, as Home Assistant Core sees it |
 | `role` | string | Access level of the app's user in Home Assistant Core: `admin` or `user`. For now, the Supervisor always sends `admin` |
 
