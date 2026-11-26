@@ -330,6 +330,26 @@ A list of matchers on USB devices: `vid` and `pid` (uppercase), and `serial_numb
 > [!WARNING]
 > Some VID and PID combinations are used by many unrelated devices. VID `10C4` with PID `EA60` is any Silicon Labs CP2102 USB-to-serial chip. Match on `description` or another value as well, or users get discovery messages for devices that are not yours.
 
+## Suggestions
+
+### locations
+
+A list of the countries your integration serves, as [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) codes. When the country set in Home Assistant is in the list, your integration is suggested to the user in the add integration dialog, under **Suggestions** > **For your location**. The country comes from the general settings, which the user fills in during onboarding. The [Location integration](https://www.home-assistant.io/integrations/location) does the matching. It runs on the user's Home Assistant, so the location is not sent anywhere.
+
+Here is how an integration that serves the Netherlands lists it:
+
+```json title="manifest.json"
+{
+  "locations": ["NL"]
+}
+```
+
+A suggestion is only a pointer to your integration. Nothing is set up until the user selects it. It then starts your config flow at the `user` step, exactly as if the user had searched for your integration, so there is nothing else to implement.
+
+Only list a country when your service works across that whole country. A service for one city or region would be suggested to many people it doesn't apply to. Territories with their own code are separate countries: Bonaire is `BQ` and Réunion is `RE`, so list those as well when you serve them.
+
+Hassfest checks that every entry is a valid country code, without duplicates. In a custom integration that replaces an integration of core, the countries of the custom manifest replace the ones of the core integration.
+
 ## Virtual integrations
 
 Some products work with an integration that is not named after them. August Bluetooth locks work with the Yale Access Bluetooth integration, and some products only use a standard like Z-Wave. A virtual integration helps users find the right integration: it is only a manifest, without any code, and only integrations in core can provide one.
