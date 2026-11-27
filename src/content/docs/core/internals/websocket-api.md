@@ -240,15 +240,19 @@ Send `{"id": 19, "type": "ping"}` and the server answers `{"id": 19, "type": "po
 
 ### Validate configuration
 
-`validate_config` checks `triggers`, `conditions`, and `actions` as if they were part of an automation. Each key is optional, and only the keys you send come back.
+`validate_config` checks `triggers`, `conditions`, and `actions` as if they were part of an automation.
+Each key is optional, and only the keys you send come back.
+The value of a key is a list of items or a single item.
 
 ```json
 {
   "id": 30,
   "type": "validate_config",
-  "triggers": [],
-  "conditions": [],
-  "actions": []
+  "triggers": [{"trigger": "state", "entity_id": "light.kitchen"}],
+  "actions": [
+    {"delay": 1, "bogus": 2},
+    {"wait_for_trigger": [{"trigger": "state"}]}
+  ]
 }
 ```
 
@@ -258,12 +262,96 @@ Send `{"id": 19, "type": "ping"}` and the server answers `{"id": 19, "type": "po
   "type": "result",
   "success": true,
   "result": {
-    "triggers": {"valid": true, "error": null},
-    "conditions": {"valid": false, "error": "Invalid condition"},
-    "actions": {"valid": true, "error": null}
+    "triggers": {"valid": true, "error": null, "errors": []},
+    "actions": {
+      "valid": false,
+      "error": "not a valid option at '[0].bogus'",
+      "errors": [
+        {
+          "message": "not a valid option",
+          "path": [0, "bogus"],
+          "code": "extra_keys_not_allowed",
+          "translation_key": "not_a_valid_option",
+          "translation_domain": null,
+          "translation_placeholders": {}
+        },
+        {
+          "message": "required key not provided",
+          "path": [1, "wait_for_trigger", 0, "entity_id"],
+          "code": "required",
+          "translation_key": "required",
+          "translation_domain": null,
+          "translation_placeholders": {}
+        }
+      ]
+    }
   }
 }
 ```
+
+The result of each key has three fields:
+
+- `valid`: `true` when the value of the key is valid.
+- `errors`: the errors Home Assistant found in the value of the key.
+  When the value is valid, it is an empty list.
+- `error`: the first entry of `errors` as one line of text, or `null` when the value is valid.
+  When the entry has a path, the line ends with it.
+  It is there for clients that do not read `errors`.
+
+Every entry of `errors` has the same fields:
+
+- `message`: the error in English, without the path.
+- `path`: where the error is, as a list of keys and list indexes.
+  An empty list means the error is about the value as a whole.
+- `code`: a short name for the kind of error, like `required` for a missing key, or `null` when the error has none.
+- `translation_key`, `translation_domain`, and `translation_placeholders`: what you need to show the error in the user's language.
+  When `translation_domain` is set, the three fields mean the same as in the [error of a command](#results-and-errors).
+  When only `translation_key` is set, the key names a general validation error, like `required`.
+  When the key is `null`, or you have no translation for it, show `message`.
+
+A `path` starts at the value you sent for the key, and follows that value exactly as you sent it.
+In the example, `[0, "bogus"]` is the `bogus` key of the first action.
+The name of the key, `actions`, is not part of the path.
+When you send a single item instead of a list, the path has no list index:
+
+```json
+{
+  "id": 31,
+  "type": "validate_config",
+  "triggers": {"trigger": "state"}
+}
+```
+
+```json
+{
+  "id": 31,
+  "type": "result",
+  "success": true,
+  "result": {
+    "triggers": {
+      "valid": false,
+      "error": "required key not provided at 'entity_id'",
+      "errors": [
+        {
+          "message": "required key not provided",
+          "path": ["entity_id"],
+          "code": "required",
+          "translation_key": "required",
+          "translation_domain": null,
+          "translation_placeholders": {}
+        }
+      ]
+    }
+  }
+}
+```
+
+The list holds the errors Home Assistant could find in one pass.
+Some checks only run on an item that is otherwise valid, so fixing the reported errors can reveal more.
+Validate again after each change, and do not rely on the order of the entries, other than that `error` is the first one.
+
+The same rule applies wherever an `errors` list like this one is returned: a path starts at the value that was validated.
+If the [error of a command](#results-and-errors) gets an `errors` list in the future, its paths start at the command message.
 
 ### Work with targets
 
