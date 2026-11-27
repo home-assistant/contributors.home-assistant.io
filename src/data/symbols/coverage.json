@@ -1,11 +1,11 @@
 {
   "commits": {
-    "core": "aef7c996cbf2a46a37215ea768ab274f2a302506",
-    "frontend": "fc640e236dc3ad82dfdb533970aaa816ebe48c47"
+    "core": "b6d170e22714866fdd8a50f865013bed9648f606",
+    "frontend": "9eb51a8c06ddf223a936630591d93d873e6f94eb"
   },
   "totals": {
-    "symbols": 1775,
-    "resolved": 1667
+    "symbols": 1785,
+    "resolved": 1675
   },
   "areas": {
     "apps": {
@@ -25,8 +25,8 @@
     },
     "core": {
       "index": "core",
-      "symbols": 1530,
-      "resolved": 1472
+      "symbols": 1537,
+      "resolved": 1479
     },
     "data": {
       "index": null,
@@ -35,8 +35,8 @@
     },
     "design": {
       "index": "frontend",
-      "symbols": 51,
-      "resolved": 42
+      "symbols": 54,
+      "resolved": 43
     },
     "frontend": {
       "index": "frontend",
@@ -425,6 +425,14 @@
       ]
     },
     {
+      "text": "focusItemAtIndex()",
+      "index": "frontend",
+      "count": 1,
+      "pages": [
+        "src/content/docs/design/components/list.mdx"
+      ]
+    },
+    {
       "text": "formatEntityAttributeValueToParts()",
       "index": "frontend",
       "count": 1,
@@ -438,6 +446,14 @@
       "count": 1,
       "pages": [
         "src/content/docs/frontend/reference/hass-object.md"
+      ]
+    },
+    {
+      "text": "getActiveItemIndex()",
+      "index": "frontend",
+      "count": 1,
+      "pages": [
+        "src/content/docs/design/components/list.mdx"
       ]
     },
     {
