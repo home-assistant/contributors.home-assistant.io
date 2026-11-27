@@ -74,6 +74,10 @@ Once you override `async_handle_async_webrtc_offer`, the frontend uses WebRTC on
 
 An integration can also offer WebRTC for cameras of other integrations, based on their stream source. Implement `CameraWebRTCProvider` and register it with `async_register_webrtc_provider(hass, provider)`. The provider tells Home Assistant which stream sources it supports with `async_is_supported`, and handles the offers and candidates for those cameras. This is how go2rtc works, and you will rarely need it.
 
+A camera with native WebRTC doesn't get a WebRTC provider for its WebRTC sessions. It can still use one for something else, like fetching still images with `webrtc_provider.async_get_image`. To do that, override `async_webrtc_provider_stream_source` and return the source for the provider. Home Assistant then looks up a provider for that source, and your camera keeps handling its WebRTC sessions itself. Home Assistant doesn't ask the provider to preload a stream for your camera. Like `stream_source`, this needs `STREAM`.
+
+By default, the method returns `stream_source()`. You can return a source that only the provider can open and leave `stream_source` returning `None`. The stream integration then never sees that source.
+
 ### Two-way audio
 
 When the camera has a speaker, people can talk through it while they watch the live stream. To offer this, set `camera_entity_capabilities` to a `CameraEntityCapabilities` with `two_way_audio` as `True`, imported from `homeassistant.components.camera`.
@@ -101,6 +105,7 @@ Each method has a sync and an async variant. Implement one of them.
 | --- | --- | --- |
 | `async_camera_image(width=None, height=None)` | `camera_image` | Return the bytes of a still image, or `None`. |
 | `stream_source()` | none | Async only. Return the stream URL, or `None`. Needs `STREAM`. |
+| `async_webrtc_provider_stream_source()` | none | Async only. Return the stream source for a WebRTC provider. Defaults to `stream_source()`. Needs `STREAM`. |
 | `async_turn_on()` | `turn_on` | Turn the camera on. Needs `ON_OFF`. |
 | `async_turn_off()` | `turn_off` | Turn the camera off. Needs `ON_OFF`. |
 | `async_enable_motion_detection()` | `enable_motion_detection` | Turn motion detection on. |
