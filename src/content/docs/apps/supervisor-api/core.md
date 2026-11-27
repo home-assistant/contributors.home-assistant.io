@@ -21,6 +21,7 @@ Most of these endpoints are also available under `/homeassistant` instead of `/c
 | `POST` | `/core/check` | Check the configuration |
 | `GET` | `/core/stats` | Resource usage of Core |
 | `GET` | `/core/logs` | Logs of Core, and the other [log endpoints](/apps/supervisor-api/#log-endpoints) |
+| `GET` | `/core/sockets` | Sockets Home Assistant Core should listen on for apps. Only Home Assistant Core can call this |
 | `GET`, `POST`, `DELETE` | `/core/api/<path>` | Proxy to the Home Assistant REST API |
 | `GET` | `/core/api/stream` | Proxy to the event stream |
 | `GET` | `/core/websocket` | Proxy to the Home Assistant WebSocket API |
@@ -128,6 +129,40 @@ Checks the Home Assistant configuration. Returns success when it is valid, and a
 ### `GET /core/stats`
 
 Returns the resource usage of Home Assistant Core as a [stats model](/apps/supervisor-api/models/#stats). Add the `one_shot` query parameter to get a single quick sample.
+
+## Sockets for apps
+
+The Supervisor lists the Unix socket paths that Home Assistant Core should bind for apps with `homeassistant_api: true`. Core can use these sockets to identify each app as its own Home Assistant user instead of routing requests through the proxy once the Core-side socket support is available; until then, apps continue to use the proxy. Only Home Assistant Core can call this endpoint. The Supervisor lets Core know when the list changes, like when an app is installed, removed, or renamed.
+
+### `GET /core/sockets`
+
+| Key | Type | Description |
+| --- | --- | --- |
+| `sockets` | list | One entry for every installed app with `homeassistant_api: true` |
+
+Each entry in `sockets`:
+
+| Key | Type | Description |
+| --- | --- | --- |
+| `slug` | string | Slug of the app |
+| `name` | string | Name of the app |
+| `path` | string | Path of the socket, as Home Assistant Core sees it |
+| `role` | string | Access level of the app's user in Home Assistant Core: `admin` or `user`. For now, the Supervisor always sends `admin` |
+
+Apps with a slug longer than 60 characters are not in the list. They keep using the proxy.
+
+```json
+{
+  "sockets": [
+    {
+      "slug": "core_ssh",
+      "name": "Terminal & SSH",
+      "path": "/run/supervisor/core/apps/core_ssh/core.sock",
+      "role": "admin"
+    }
+  ]
+}
+```
 
 ## Home Assistant Core API proxy
 
