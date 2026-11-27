@@ -9,11 +9,13 @@ A [config entry](/glossary/config-entry/) is one set-up instance of an integrati
 
 A config entry holds:
 
-- `data`: the configuration needed to connect, like a host or an API token. It does not change during normal use.
-- `options`: settings users can change, through the options flow.
+- `data`: the settings the integration needs to work, like a host or an API token. It does not change during normal use.
+- `options`: optional settings that adjust how the integration behaves, which users change through the options flow.
 - `subentries`: repeatable parts, like locations of a weather service. See [subentries](/core/integrations/subentries/).
 - `unique_id`: what identifies the device or account, so it is not set up twice.
 - `runtime_data`: whatever your integration needs while it runs. It is not stored.
+
+Helpers built with [`SchemaConfigFlowHandler`](/core/integrations/config-flow/#simple-flows-with-schemaconfigflowhandler) are an exception: they store all their settings in `options`, the required ones too. Which of them users can change afterwards depends on the options flow of the helper: some stay read-only, like the source entity of a Trend helper.
 
 ## Lifecycle
 

@@ -1,13 +1,15 @@
 ---
 title: Options flow
-description: Let users change how your integration behaves after setup, and reload it when they do.
+description: Let users change optional settings of your integration after setup, and reload it when they do.
 sidebarGroup: Setup and configuration
 order: 4
 ---
 
-An [options flow](/glossary/options-flow/) lets users change settings of a config entry after setup, like which devices to include or whether to show guests. Users open it with the **Configure** button of the entry. The options end up in `entry.options`.
+An [options flow](/glossary/options-flow/) lets users change optional settings of a config entry after setup, like which devices to include or whether to show guests. Users open it with the **Configure** button of the entry. The options end up in `entry.options`.
 
-Options are for how the integration behaves. Changing how it connects, like a new host, is [reconfiguration](/core/integrations/reauth-reconfigure/), and changing credentials is [reauthentication](/core/integrations/reauth-reconfigure/#reauthentication). The polling interval is not an option either: you pick it for your users, see [appropriate polling](/core/quality-scale/appropriate-polling/).
+Options are extras that adjust how the integration behaves. The integration works without users ever opening the options flow. The settings the integration needs to work, like a host or a password, are not options: users change them with [reconfiguration](/core/integrations/reauth-reconfigure/#reconfiguration). When your integration detects that the credentials no longer work, it can also ask for new ones by itself, with [reauthentication](/core/integrations/reauth-reconfigure/#reauthentication). The polling interval is not an option either: you pick it for your users, see [appropriate polling](/core/quality-scale/appropriate-polling/).
+
+Helpers built with [`SchemaConfigFlowHandler`](/core/integrations/config-flow/#simple-flows-with-schemaconfigflowhandler) are an exception: they store all their settings in options, the required ones too. Which of them users can change afterwards depends on the options flow of the helper: some stay read-only, like the source entity of a Trend helper.
 
 ## Add an options flow
 

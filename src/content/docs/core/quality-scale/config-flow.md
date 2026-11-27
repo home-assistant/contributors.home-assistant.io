@@ -10,13 +10,13 @@ This is a Bronze rule. In `quality_scale.yaml`, it is called `config-flow`.
 
 This page is about what the rule requires, and how it is checked. How to build a config flow, step by step, is on [config flow](/core/integrations/config-flow/) in building integrations.
 
-The integration must be set up from the UI, with a [config flow](/glossary/config-flow/). The flow must be easy to understand: the right [selectors](/glossary/selector/) for each field, validation where it is needed, and a `data_description` in `strings.json` that explains every field. Store what is needed to connect in `ConfigEntry.data`, and settings that are not needed to connect in `ConfigEntry.options`.
+The integration must be set up from the UI, with a [config flow](/glossary/config-flow/). The flow must be easy to understand: the right [selectors](/glossary/selector/) for each field, validation where it is needed, and a `data_description` in `strings.json` that explains every field. Store the settings the integration needs to work in `ConfigEntry.data`, and optional settings in `ConfigEntry.options`.
 
 ## Why it matters
 
 Since 2018, the config flow has been the standard way to set up an integration. It gives every integration the same setup experience, guides users through the steps, and means nobody has to edit YAML to get started. The config flow is the first thing a user sees of your integration, so it should be clear and friendly.
 
-Keeping connection data and options apart lets users change options later in an options flow, without touching the connection.
+Keeping the settings the integration needs to work apart from the options gives each its own flow after setup: users change the first with a [reconfigure flow](/glossary/reconfigure-flow/), and the options with an [options flow](/glossary/options-flow/).
 
 ## Example
 
