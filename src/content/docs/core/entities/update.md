@@ -122,16 +122,16 @@ Add the texts of your manual actions under `entity` > `update` > `manual_actions
 - `description`: what someone will have to do, and when. The frontend shows it before the install, and during the install until it's time. For example: "During the update, someone has to confirm it on the device's screen."
 - `instruction`: what to do now. The frontend shows it while the install is in the `WAITING_FOR_USER` phase. For example: "Confirm the update on the device's screen."
 
-Don't name the device in the texts, the frontend shows them with the name of the update entity. Both texts can have placeholders, which you pass as `translation_placeholders`.
+Don't name the device in the texts. The frontend shows them with the name of the update entity. Both texts can have placeholders, which you pass as `translation_placeholders`.
 
 ```json
 {
   "entity": {
     "update": {
       "manual_actions": {
-        "confirm_update": {
-          "description": "During the update, someone has to confirm it on the device's screen.",
-          "instruction": "Confirm the update on the device's screen."
+        "press_button": {
+          "description": "During the update, someone has to press {button}.",
+          "instruction": "Press {button} on the device."
         }
       }
     }
@@ -140,17 +140,22 @@ Don't name the device in the texts, the frontend shows them with the name of the
 ```
 
 ```python
-from homeassistant.components.update import UpdateInstallPhase, UpdateManualAction
+from homeassistant.components.update import (
+    UpdateInstallPhase,
+    UpdateManualAction,
+)
 
-MANUAL_ACTION_CONFIRM_UPDATE = UpdateManualAction(
-    translation_domain=DOMAIN, translation_key="confirm_update"
+MANUAL_ACTION_PRESS_RESET = UpdateManualAction(
+    translation_domain=DOMAIN,
+    translation_key="press_button",
+    translation_placeholders={"button": "Reset"},
 )
 
 
 class MyFirmwareUpdate(MyEntity, UpdateEntity):
-    """Firmware updates that the device asks to confirm."""
+    """Firmware updates that wait for a button press on the device."""
 
-    _attr_manual_action = MANUAL_ACTION_CONFIRM_UPDATE
+    _attr_manual_action = MANUAL_ACTION_PRESS_RESET
 
     async def async_install(
         self, version: str | None, backup: bool, **kwargs: Any
@@ -163,7 +168,7 @@ class MyFirmwareUpdate(MyEntity, UpdateEntity):
 
         self._attr_install_phase = UpdateInstallPhase.WAITING_FOR_USER
         self.async_write_ha_state()
-        await self.device.wait_for_confirmation()
+        await self.device.wait_for_button_press()
 
         self._attr_install_phase = UpdateInstallPhase.INSTALLING
         self.async_write_ha_state()

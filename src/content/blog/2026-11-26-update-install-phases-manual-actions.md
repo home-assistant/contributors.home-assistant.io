@@ -33,9 +33,9 @@ self.async_write_ha_state()
   "entity": {
     "update": {
       "manual_actions": {
-        "confirm_update": {
-          "description": "During the update, someone has to confirm it on the device's screen.",
-          "instruction": "Confirm the update on the device's screen."
+        "press_button": {
+          "description": "During the update, someone has to press {button}.",
+          "instruction": "Press {button} on the device."
         }
       }
     }
@@ -46,7 +46,8 @@ self.async_write_ha_state()
 ```python
 self._attr_manual_action = UpdateManualAction(
     translation_domain=DOMAIN,
-    translation_key="confirm_update",
+    translation_key="press_button",
+    translation_placeholders={"button": "Reset"},
 )
 ```
 
