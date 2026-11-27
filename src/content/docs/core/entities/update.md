@@ -24,7 +24,7 @@ Update entities have these properties on top of the [generic entity properties](
 | `in_progress` | `bool \| None` | `False` | Whether an install is running. Requires `UpdateEntityFeature.PROGRESS`. |
 | `update_percentage` | `int \| float \| None` | `None` | How far the install is, from 0 to 100. Requires `UpdateEntityFeature.PROGRESS`, and is only shown while `in_progress` is `True`. |
 | `install_phase` | `UpdateInstallPhase \| None` | `None` | What the install is doing right now. Requires `UpdateEntityFeature.PROGRESS`, and is only shown while `in_progress` is `True`. See [Install phases](#install-phases). |
-| `manual_action` | `UpdateManualAction \| None` | `None` | Something a person has to do outside Home Assistant for the update, like confirm it on the device. See [Manual actions](#manual-actions). |
+| `manual_action` | `UpdateManualAction \| None` | `None` | What a person has to do to install the update, like confirm it on the device. Only shown while an update is available or an install is in progress. See [Manual actions](#manual-actions). |
 | `display_precision` | `int` | `0` | The number of decimals to show for `update_percentage`. |
 | `device_class` | `UpdateDeviceClass \| None` | `None` | The kind of update. See [Device classes](#device-classes). |
 | `restart_required` | `bool` | `False` | Home Assistant needs a restart once this update is installed. See [Install](#install). |
@@ -83,7 +83,8 @@ With `UpdateEntityFeature.PROGRESS`, set `install_phase` to tell users what the 
 | ----- | -------- | ----------- |
 | `UpdateInstallPhase.PREPARING` | Preparing | The install is starting, like checking the update file or the device. |
 | `UpdateInstallPhase.BACKING_UP` | Backing up | The device or service makes a backup before it installs. |
-| `UpdateInstallPhase.WAITING` | Waiting | The install is queued, or waits for the device, like a battery-powered device that has to wake up first. |
+| `UpdateInstallPhase.WAITING` | Waiting | The install is queued, or waits for the device, like a battery-powered device that has to wake up first. Nobody has to do anything. |
+| `UpdateInstallPhase.WAITING_FOR_USER` | Waiting for user | The install can't continue until a person does the [manual action](#manual-actions). |
 | `UpdateInstallPhase.DOWNLOADING` | Downloading | The update is downloaded, or transferred to the device. |
 | `UpdateInstallPhase.INSTALLING` | Installing | The update is written to the device or applied. |
 | `UpdateInstallPhase.RESTARTING` | Restarting | The device or service restarts to run the new version. |
@@ -108,7 +109,13 @@ async def async_install(
 
 ### Manual actions
 
-Some updates need a person to do something outside Home Assistant, like confirm the update on the screen of the device, press a button, or turn the device off and on again. Set `manual_action` to an `UpdateManualAction` to tell them. Its message is a translation, so users see it in their own language.
+Some updates need a person to do something outside Home Assistant, like confirm the update on the screen of the device, press a button, or turn the device off and on again. Set `manual_action` to an `UpdateManualAction` to say what. Its message is a translation, so users see it in their own language.
+
+Set it as soon as you know the update needs it, ideally before the install starts. The frontend can then warn users before they select **Install**. They might be away from home, and the device might be unusable until someone acts. If you only find out during the install, set it then.
+
+While the install waits for the person, report the `UpdateInstallPhase.WAITING_FOR_USER` phase. The manual action stays the same during the whole install, so you don't switch it on and off. Automations can use `install_phase: waiting_for_user` to notify someone.
+
+Home Assistant only shows the manual action while an update is available or an install is in progress. You can return the same action all the time, like for a device that always asks for a confirmation, and it is gone once the update is installed.
 
 Home Assistant comes with shared manual actions for the common cases. Use them when they fit, so every integration says it the same way.
 
@@ -117,12 +124,33 @@ Home Assistant comes with shared manual actions for the common cases. Use them w
 | `MANUAL_ACTION_CONFIRM_ON_DEVICE` | Confirm the update on the device. |
 
 ```python
-from homeassistant.components.update import MANUAL_ACTION_CONFIRM_ON_DEVICE
+from homeassistant.components.update import (
+    MANUAL_ACTION_CONFIRM_ON_DEVICE,
+    UpdateInstallPhase,
+)
 
-self._attr_manual_action = MANUAL_ACTION_CONFIRM_ON_DEVICE
-self.async_write_ha_state()
-await self.device.wait_for_confirmation()
-self._attr_manual_action = None
+
+class MyFirmwareUpdate(MyEntity, UpdateEntity):
+    """Firmware updates that the device asks to confirm."""
+
+    _attr_manual_action = MANUAL_ACTION_CONFIRM_ON_DEVICE
+
+    async def async_install(
+        self, version: str | None, backup: bool, **kwargs: Any
+    ) -> None:
+        """Install the latest firmware."""
+        self._attr_in_progress = True
+        self._attr_install_phase = UpdateInstallPhase.DOWNLOADING
+        self.async_write_ha_state()
+        await self.device.download_firmware()
+
+        self._attr_install_phase = UpdateInstallPhase.WAITING_FOR_USER
+        self.async_write_ha_state()
+        await self.device.wait_for_confirmation()
+
+        self._attr_install_phase = UpdateInstallPhase.INSTALLING
+        self.async_write_ha_state()
+        await self.device.install_firmware()
 ```
 
 For a message of your own, add it under `entity` > `update` > `manual_actions` in the `strings.json` of your integration. It can have placeholders.
@@ -132,7 +160,7 @@ For a message of your own, add it under `entity` > `update` > `manual_actions` i
   "entity": {
     "update": {
       "manual_actions": {
-        "power_cycle": "Turn {device_name} off and on again to finish the update."
+        "power_cycle": "Turn {device_name} off and on again to finish."
       }
     }
   }
@@ -149,7 +177,7 @@ self._attr_manual_action = UpdateManualAction(
 )
 ```
 
-A manual action is not tied to `in_progress`, and does not need `UpdateEntityFeature.PROGRESS`. It can show up while the install runs, like a confirmation on the device, or after it ends, like an installed update that only takes effect once the device restarts. Home Assistant never clears it for you: set it back to `None` as soon as nothing is needed anymore.
+When the update only takes effect after the person does something, like turn the device off and on again, the install isn't finished yet. Keep `in_progress` at `True` and report `WAITING_FOR_USER` until it's done. To ask for a restart of Home Assistant itself, use `restart_required` instead.
 
 In the state, `manual_action` is a dictionary with `translation_domain`, `translation_key`, and `translation_placeholders`. The translation is at `component.update.entity_component.manual_actions.<key>` for the shared actions, and at `component.<domain>.entity.update.manual_actions.<key>` for the actions of an integration. The recorder does not store `install_phase` or `manual_action`.
 

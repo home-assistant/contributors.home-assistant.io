@@ -14,7 +14,7 @@ Until now, an update entity could only say that an install was running, and how 
 
 ## Install phases
 
-`install_phase` tells users what the install is doing right now. It takes a value of the new `UpdateInstallPhase` enum: `PREPARING`, `BACKING_UP`, `WAITING`, `DOWNLOADING`, `INSTALLING`, `RESTARTING`, or `FINISHING`. Home Assistant translates them, so your integration doesn't need any strings for them.
+`install_phase` tells users what the install is doing right now. It takes a value of the new `UpdateInstallPhase` enum: `PREPARING`, `BACKING_UP`, `WAITING`, `WAITING_FOR_USER`, `DOWNLOADING`, `INSTALLING`, `RESTARTING`, or `FINISHING`. Home Assistant translates them, so your integration doesn't need any strings for them.
 
 Like `update_percentage`, it requires `UpdateEntityFeature.PROGRESS` and is only shown while `in_progress` is `True`.
 
@@ -26,7 +26,7 @@ self.async_write_ha_state()
 
 ## Manual actions
 
-`manual_action` tells users that the update needs them to do something outside Home Assistant. Set it to an `UpdateManualAction`, which points to a translation of the message, with placeholders if needed. Use a shared one, like `MANUAL_ACTION_CONFIRM_ON_DEVICE`, or add your own under `entity` > `update` > `manual_actions` in your `strings.json`.
+`manual_action` tells users what they have to do outside Home Assistant to install the update. Set it to an `UpdateManualAction`, which points to a translation of the message, with placeholders if needed. Use a shared one, like `MANUAL_ACTION_CONFIRM_ON_DEVICE`, or add your own under `entity` > `update` > `manual_actions` in your `strings.json`.
 
 ```python
 self._attr_manual_action = UpdateManualAction(
@@ -36,7 +36,9 @@ self._attr_manual_action = UpdateManualAction(
 )
 ```
 
-A manual action doesn't need `UpdateEntityFeature.PROGRESS`, and is not tied to `in_progress`. It can stay after the install ends, for example when the update only takes effect once the device restarts. Home Assistant never clears it for you, so set it back to `None` when it's done.
+Set it as soon as you know the update needs it, ideally before the install starts, so users get a warning before they select **Install**. They might be away from home, and the device might be unusable until someone acts. Home Assistant only shows it while an update is available or an install is in progress, so you can return the same action all the time, and you don't clear it after the install.
+
+While the install waits for the person, report the `WAITING_FOR_USER` phase. Automations can use `install_phase: waiting_for_user` to notify someone. If the update only takes effect after the person does something, like a power cycle, keep the install in progress in that phase until it's done.
 
 ## What changes for your integration
 
