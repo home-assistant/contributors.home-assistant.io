@@ -55,6 +55,7 @@ Combine the flags of `TodoListEntityFeature` with `|`, and set them with `_attr_
 | `SET_DUE_DATE_ON_ITEM` | Setting `due` to a date when an item is created or updated. |
 | `SET_DUE_DATETIME_ON_ITEM` | Setting `due` to a date and time when an item is created or updated. |
 | `SET_DESCRIPTION_ON_ITEM` | Setting `description` when an item is created or updated. |
+| `SET_PARENT_ON_ITEM` | Setting `parent_uid` when an item is created or updated. See [subtasks](#subtasks). |
 
 When an action uses a field that you don't support, like a due date, the action fails with a validation error before your method is called.
 
@@ -70,8 +71,19 @@ Each item is a `TodoItem`, a dataclass from `homeassistant.components.todo`.
 | `due` | `datetime.date \| datetime.datetime \| None` | `None` | When the item is due. A `datetime` must have a time zone. |
 | `description` | `str \| None` | `None` | A longer description than the summary. |
 | `completed` | `datetime.datetime \| None` | `None` | When the item was last marked as completed. |
+| `parent_uid` | `str \| None` | `None` | The `uid` of the item this item is a subtask of. `None` for a top-level item. |
 
 Every item that you return needs a `uid`, a `summary`, and a `status`.
+
+### Subtasks
+
+A subtask is an item with a `parent_uid`. The list stays flat: subtasks are in `todo_items` like any other item, and point to their parent on the same list.
+
+Subtasks are one level deep, so the parent of a subtask is always a top-level item. The items you return have to follow this rule too, and their `parent_uid` has to be the `uid` of an item in `todo_items`.
+
+With `SET_PARENT_ON_ITEM`, the `todo.add_item` and `todo.update_item` actions accept a `parent`, given as the `uid` or the summary of an item. Home Assistant looks up the parent in `todo_items` and checks the one-level rule before your method is called. The item you get has the `uid` of the parent in `parent_uid`, or `None` when it has to become a top-level item. Without the flag you can still return `parent_uid`, the actions just can't set it.
+
+Home Assistant gives no meaning to the relationship beyond that. Completing or deleting a parent does not change its subtasks, unless your service does that. If your service keeps the subtasks of a deleted parent, return them as top-level items.
 
 ## Methods
 
