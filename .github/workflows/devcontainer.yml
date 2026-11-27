@@ -1,0 +1,43 @@
+name: Devcontainer
+
+# Builds the image of the devcontainer whenever something it depends on
+# changes. The Dockerfile builds its image tag from the Node.js major, and
+# nothing else checks that such a tag exists, or that the Node.js of the image
+# matches .node-version. A Node.js update by Renovate touches only
+# .node-version, so this is what makes that pull request fail until the
+# Dockerfile is updated to an image that exists.
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".devcontainer/**"
+      - ".node-version"
+      - ".github/workflows/devcontainer.yml"
+  pull_request:
+    paths:
+      - ".devcontainer/**"
+      - ".node-version"
+      - ".github/workflows/devcontainer.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build the devcontainer image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # The context is the root of the repository, as in devcontainer.json.
+      - name: Build the image
+        run: docker build --file .devcontainer/Dockerfile .

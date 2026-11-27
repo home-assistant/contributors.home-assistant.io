@@ -1,7 +1,7 @@
 # The Node.js major must match .node-version. The build fails when it
 # does not, so a bump of .node-version cannot be forgotten here.
 ARG VARIANT="26"
-FROM mcr.microsoft.com/devcontainers/typescript-node:4-${VARIANT}-trixie
+FROM mcr.microsoft.com/devcontainers/typescript-node:5-${VARIANT}-trixie
 
 COPY .node-version /tmp/.node-version
 RUN test "$(node --version | cut -d. -f1 | tr -d v)" = "$(tr -d '\r\n' < /tmp/.node-version)"
