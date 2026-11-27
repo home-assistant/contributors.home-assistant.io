@@ -26,17 +26,31 @@ self.async_write_ha_state()
 
 ## Manual actions
 
-`manual_action` tells users what they have to do outside Home Assistant to install the update. Set it to an `UpdateManualAction`, which points to a translation of the message, with placeholders if needed. Use a shared one, like `MANUAL_ACTION_CONFIRM_ON_DEVICE`, or add your own under `entity` > `update` > `manual_actions` in your `strings.json`.
+`manual_action` tells users what someone has to do outside Home Assistant to install the update. Set it to an `UpdateManualAction`, which points to two texts under `entity` > `update` > `manual_actions` in your `strings.json`: a `description` of what someone will have to do, shown before the install, and an `instruction` of what to do now, shown while the install waits for it.
+
+```json
+{
+  "entity": {
+    "update": {
+      "manual_actions": {
+        "confirm_update": {
+          "description": "During the update, someone has to confirm it on the device's screen.",
+          "instruction": "Confirm the update on the device's screen."
+        }
+      }
+    }
+  }
+}
+```
 
 ```python
 self._attr_manual_action = UpdateManualAction(
     translation_domain=DOMAIN,
-    translation_key="power_cycle",
-    translation_placeholders={"device_name": self.device.name},
+    translation_key="confirm_update",
 )
 ```
 
-Set it as soon as you know the update needs it, ideally before the install starts, so users get a warning before they select **Install**. They might be away from home, and the device might be unusable until someone acts. Home Assistant only shows it while an update is available or an install is in progress, so you can return the same action all the time, and you don't clear it after the install.
+Set it as soon as you know the update needs it, ideally before the install starts, so users get a warning before they start the install. They might be away from home, and the device might be unusable until someone acts. Home Assistant only shows it while an update is available or an install is in progress, so you can return the same action all the time, and you don't clear it after the install.
 
 While the install waits for the person, report the `WAITING_FOR_USER` phase. Automations can use `install_phase: waiting_for_user` to notify someone. If the update only takes effect after the person does something, like a power cycle, keep the install in progress in that phase until it's done.
 

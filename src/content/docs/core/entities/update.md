@@ -109,31 +109,48 @@ async def async_install(
 
 ### Manual actions
 
-Some updates need a person to do something outside Home Assistant, like confirm the update on the screen of the device, press a button, or turn the device off and on again. Set `manual_action` to an `UpdateManualAction` to say what. Its message is a translation, so users see it in their own language.
+Some updates need a person to do something outside Home Assistant, like confirm the update on the screen of the device, press a button, or turn the device off and on again. Set `manual_action` to an `UpdateManualAction` to say what. Its texts are translations, so users see them in their own language.
 
-Set it as soon as you know the update needs it, ideally before the install starts. The frontend can then warn users before they select **Install**. They might be away from home, and the device might be unusable until someone acts. If you only find out during the install, set it then.
+Set it as soon as you know the update needs it, ideally before the install starts. The frontend then warns users before they start the install. They might be away from home, and the device might be unusable until someone acts. If you only find out during the install, set it then.
 
 While the install waits for the person, report the `UpdateInstallPhase.WAITING_FOR_USER` phase. The manual action stays the same during the whole install, so you don't switch it on and off. Automations can use `install_phase: waiting_for_user` to notify someone.
 
 Home Assistant only shows the manual action while an update is available or an install is in progress. You can return the same action all the time, like for a device that always asks for a confirmation, and it is gone once the update is installed.
 
-Home Assistant comes with shared manual actions for the common cases. Use them when they fit, so every integration says it the same way.
+Add the texts of your manual actions under `entity` > `update` > `manual_actions` in the `strings.json` of your integration. Each manual action has two texts, so users always see a message that fits the moment:
 
-| Constant | Message |
-| -------- | ------- |
-| `MANUAL_ACTION_CONFIRM_ON_DEVICE` | Confirm the update on the device. |
+- `description`: what someone will have to do, and when. The frontend shows it before the install, and during the install until it's time. For example: "During the update, someone has to confirm it on the device's screen."
+- `instruction`: what to do now. The frontend shows it while the install is in the `WAITING_FOR_USER` phase. For example: "Confirm the update on the device's screen."
+
+Don't name the device in the texts, the frontend shows them with the name of the update entity. Both texts can have placeholders, which you pass as `translation_placeholders`.
+
+```json
+{
+  "entity": {
+    "update": {
+      "manual_actions": {
+        "confirm_update": {
+          "description": "During the update, someone has to confirm it on the device's screen.",
+          "instruction": "Confirm the update on the device's screen."
+        }
+      }
+    }
+  }
+}
+```
 
 ```python
-from homeassistant.components.update import (
-    MANUAL_ACTION_CONFIRM_ON_DEVICE,
-    UpdateInstallPhase,
+from homeassistant.components.update import UpdateInstallPhase, UpdateManualAction
+
+MANUAL_ACTION_CONFIRM_UPDATE = UpdateManualAction(
+    translation_domain=DOMAIN, translation_key="confirm_update"
 )
 
 
 class MyFirmwareUpdate(MyEntity, UpdateEntity):
     """Firmware updates that the device asks to confirm."""
 
-    _attr_manual_action = MANUAL_ACTION_CONFIRM_ON_DEVICE
+    _attr_manual_action = MANUAL_ACTION_CONFIRM_UPDATE
 
     async def async_install(
         self, version: str | None, backup: bool, **kwargs: Any
@@ -153,33 +170,9 @@ class MyFirmwareUpdate(MyEntity, UpdateEntity):
         await self.device.install_firmware()
 ```
 
-For a message of your own, add it under `entity` > `update` > `manual_actions` in the `strings.json` of your integration. It can have placeholders.
-
-```json
-{
-  "entity": {
-    "update": {
-      "manual_actions": {
-        "power_cycle": "Turn {device_name} off and on again to finish."
-      }
-    }
-  }
-}
-```
-
-```python
-from homeassistant.components.update import UpdateManualAction
-
-self._attr_manual_action = UpdateManualAction(
-    translation_domain=DOMAIN,
-    translation_key="power_cycle",
-    translation_placeholders={"device_name": self.device.name},
-)
-```
-
 When the update only takes effect after the person does something, like turn the device off and on again, the install isn't finished yet. Keep `in_progress` at `True` and report `WAITING_FOR_USER` until it's done. To ask for a restart of Home Assistant itself, use `restart_required` instead.
 
-In the state, `manual_action` is a dictionary with `translation_domain`, `translation_key`, and `translation_placeholders`. The translation is at `component.update.entity_component.manual_actions.<key>` for the shared actions, and at `component.<domain>.entity.update.manual_actions.<key>` for the actions of an integration. The recorder does not store `install_phase` or `manual_action`.
+In the state, `manual_action` is a dictionary with `translation_domain`, `translation_key`, and `translation_placeholders`. The texts are at `component.<domain>.entity.update.manual_actions.<key>.description` and `.instruction`. The recorder does not store `install_phase` or `manual_action`.
 
 ### Release notes
 
