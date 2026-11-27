@@ -4,7 +4,7 @@ applyTo: "src/content/**"
 
 # Reviewing pages and blog posts
 
-The writing rules are in `.github/copilot-instructions.md`. For an in-depth review, follow the `review` skill in `.github/skills/review/`. Flag these, with the line:
+The rules for words, formatting, and YAML have their own checklist in `review-writing.instructions.md`. For an in-depth review, follow the `review` skill in `.github/skills/review/`. Flag these, with the line:
 
 ## Claims
 
@@ -37,14 +37,3 @@ The writing rules are in `.github/copilot-instructions.md`. For an in-depth revi
 - A renamed heading on a page that old links point to, without checking `redirects/fragments.tsv` (`pnpm build`, then `pnpm fragments`).
 - Internal links that are not absolute with a trailing slash, links to developers.home-assistant.io, bare URLs, or tracking links.
 - A new `autolink` word in `src/content/docs/glossary/` that also means something else elsewhere on the site, like "theme" or "unavailable".
-
-## Words
-
-- Former names in new text: "service" for an action, "add-on" for an app, "Lovelace" for a dashboard, "component" for an integration, "breaking change" for a backward-incompatible change, "Home Assistant Cloud" for Home Assistant Link, "core architecture meeting" for the architecture meeting. Code identifiers and quoted API paths are fine.
-- Em dashes or en dashes, anywhere.
-- "e.g.", "i.e.", "etc.", "click" (unless it is a mouse action), "HA" or "HASS", "master/slave".
-- Title case in headings, British spelling, "the user" instead of "you", CAPS or bold for emphasis.
-- Hard-wrapped paragraphs. Write one line per paragraph.
-- Callouts that are not GitHub alerts (`> [!NOTE]`), or a page full of them.
-- YAML examples that break the YAML style: truthy booleans, flow mappings, single quotes, a list with one item.
-- Images without meaningful alt text.

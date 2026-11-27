@@ -7,13 +7,27 @@ description: Use this if the user wants to update the agent instructions for the
 
 Update `.github/copilot-instructions.md`, the agent instructions for this site. `CLAUDE.md` and `AGENTS.md` are symlinks to it.
 
-## Shared sections
+## Shared section
 
-The "Brand personality", "General language", and "YAML" sections (including "Home Assistant YAML") are shared with home-assistant.io. Copy them verbatim from:
+The "Brand personality" section is shared with home-assistant.io.
+Its source is the "Brand personality" section of the writing style skill of home-assistant.io:
 
-- `https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/.github/copilot-instructions.md`
+- `https://raw.githubusercontent.com/home-assistant/home-assistant.io/current/.claude/skills/home-assistant-docs-writing-style/SKILL.md`
 
-Replace each shared section in this repository with the current version of the same section from that file. Do not edit the shared sections in any other way. If the source has a new section that applies to all Home Assistant writing (not to the home-assistant.io website or its Jekyll setup), mention it to the user instead of adding it.
+The skill uses shorter wording than this file, so do not copy it verbatim.
+Update the section so that its rules match its source: add new rules, change rules that changed, and remove rules that the source dropped.
+Do not edit the section in any other way.
+If the writing style skill has a new rule that applies to all Home Assistant writing, mention it to the user instead of adding it.
+
+## Style guide imports
+
+The "General language" and "YAML" sections import the style guide pages of this site, `src/content/docs/writing/reference/style.md` and `src/content/docs/writing/reference/yaml.md`.
+Do not copy rules from those pages into the instructions.
+Keep the import paths relative to `.github/copilot-instructions.md`, like `@../src/content/docs/writing/reference/style.md`, because Claude Code resolves them from there.
+
+Copilot code review does not load imported files.
+It reviews the writing with `.github/instructions/review-writing.instructions.md`, a short form of both pages.
+When a rule on one of those pages changes, update that checklist too.
 
 ## Site specific sections
 
@@ -28,7 +42,7 @@ All other sections describe this site. Review them against the repository:
 
 - Preserve the existing structure and wording where possible.
 - Prefer small, reviewable edits over broad rewrites.
-- Write in flowing text. Do not hard wrap lines.
+- Do not wrap lines at a fixed width. Write each sentence on its own line, or keep a paragraph on a single line.
 - Do not edit any other files, except to keep them in step: the checklists in `.github/instructions/` repeat some rules in short form, and the skills in `.github/skills/` link to sections of the instructions by name. When you change a rule or rename a section, update those too.
 
 If a remote source cannot be fetched, stop and report the missing source instead of guessing.

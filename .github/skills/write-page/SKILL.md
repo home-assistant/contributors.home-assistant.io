@@ -5,7 +5,7 @@ description: Use this to add a page to the Home Assistant contributors website, 
 
 # Write a page
 
-Add a page to this site, or change one. The rules for language, Markdown, and YAML are in [`.github/copilot-instructions.md`](../../copilot-instructions.md). Read it first. This skill is the order to work in.
+Add a page to this site, or change one. The rules for this site are in [`.github/copilot-instructions.md`](../../copilot-instructions.md), and the rules for language, Markdown, and YAML are in the [style guide](../../../src/content/docs/writing/reference/style.md) and the [YAML style guide](../../../src/content/docs/writing/reference/yaml.md). Read them first. This skill is the order to work in.
 
 ## 1. Find the place
 
