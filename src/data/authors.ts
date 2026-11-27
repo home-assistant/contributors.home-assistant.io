@@ -15,6 +15,7 @@ export const AUTHORS: Record<string, string> = {
   "Davide Perteghella": "krahabb",
   "Erik Montnémery": "emontnemery",
   "Erwin Douna": "erwindouna",
+  "Felipe Santos": "felipecrs",
   "Franck Nijhof": "frenck",
   "G Johansson": "gjohansson-ST",
   "J. Nick Koston": "bdraco",
