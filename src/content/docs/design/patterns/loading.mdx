@@ -46,6 +46,8 @@ A progress button goes one step further. When the action is done, it shows a che
 
 A skeleton keeps the layout in place while the content loads, so nothing jumps around when it arrives. The frontend has `ha-skeleton`, with `ha-skeleton-text` and `ha-skeleton-icon` for the common shapes. Data tables, tiles, and the devices dashboard use them.
 
+By default, a soft wave sweeps across the `effect="sheen"` skeletons on the page. It is one slanted wave from the top corner of the content on the side where text starts to the opposite bottom corner, with each skeleton showing its own slice of it. It flows from one skeleton into the next, starts again as soon as it reaches the end, and a skeleton that appears halfway through joins in rather than starting over.
+
 <Demo layout="stack" caption="A row of a data table while it loads: ha-skeleton-icon and ha-skeleton-text.">
   <div style="display: flex; align-items: center; gap: 16px">
     <ha-skeleton-icon></ha-skeleton-icon>
@@ -74,7 +76,7 @@ Dashboard cards follow the same rule. Every card handles loading, an error, an u
 ## Accessibility
 
 - The spinner has the role of a progress bar, with a translated "Loading" label. Give a group of skeletons the same role and label, rather than visible "Loading" text.
-- Skeletons and spinners keep their meaning without motion. Skeletons stop pulsing when people ask for reduced motion. See [Motion](/design/foundations/motion/).
+- Skeletons and spinners keep their meaning without motion. The wave stops when people ask for reduced motion. See [Motion](/design/foundations/motion/).
 - When loading ends in an error, show it as text people can read, not only as a red button.
 
 ## Components
