@@ -42,6 +42,17 @@ class MyCamera(Camera):
         )
 ```
 
+The capability can change while the entity runs.
+Set `_attr_camera_entity_capabilities` again when the device reports a change, like the Matter integration does.
+
+## How the audio reaches the camera
+
+If your camera has a `stream_source` and a WebRTC provider like go2rtc handles the stream, the provider sends the audio to the camera, and you have nothing else to build.
+
+If your camera implements native WebRTC, follow the WebRTC specification for the direction of the audio track in your answer: answer `sendrecv` with `sendrecv`, `recvonly` with `sendonly`, and `sendonly` with `recvonly`.
+Make sure the camera plays the audio it receives.
+The Ring integration is an example where the library already does this, so the integration only had to declare the capability.
+
 ## When the frontend gets two-way audio
 
 Your entity declares what the camera can do. The camera platform decides what the frontend gets. It reports two-way audio only when all of these hold:
@@ -50,7 +61,9 @@ Your entity declares what the camera can do. The camera platform decides what th
 - The camera streams over WebRTC, natively or through a WebRTC provider like go2rtc. Two-way audio is not available over HLS.
 - The user turned on the **Two-way audio** preview feature in Labs.
 
-Browsers only give access to the microphone over a secure connection. For now, two-way audio only works when Home Assistant is opened over HTTPS.
+Browsers only give access to the microphone over a secure connection, so in a browser, two-way audio needs Home Assistant to be opened over HTTPS.
+The Home Assistant apps can capture the microphone themselves instead, with [`webrtc/stream/start`](/frontend/reference/external-bus/#webrtcstreamstart) on the external bus.
+In the app for iPhone and iPad, version 2026.10.3 or later, and the app for Android, version 2026.12.1 or later, two-way audio also works without HTTPS.
 
 ## More information
 

@@ -78,7 +78,9 @@ An integration can also offer WebRTC for cameras of other integrations, based on
 
 When the camera has a speaker, people can talk through it while they watch the live stream. To offer this, set `camera_entity_capabilities` to a `CameraEntityCapabilities` with `two_way_audio` as `True`, imported from `homeassistant.components.camera`.
 
-Only declare it when the camera can receive audio over the stream Home Assistant uses.
+Declare it only when both the device and the stream you give Home Assistant can carry audio to the camera, often called the audio backchannel.
+The same camera can support it over one protocol and not over another.
+The Reolink integration, for example, declares two-way audio only when the channel has a speaker and the configured protocol is RTSP, because RTMP and FLV cannot carry the backchannel.
 
 ```python
 self._attr_camera_entity_capabilities = CameraEntityCapabilities(
@@ -86,12 +88,31 @@ self._attr_camera_entity_capabilities = CameraEntityCapabilities(
 )
 ```
 
+The capability can change while the entity runs.
+Set `_attr_camera_entity_capabilities` again when the device reports a change, like the Matter integration does in `_update_from_device`.
+Home Assistant works out what the frontend gets each time the frontend asks for the capabilities of the camera, which it does when it opens the stream.
+The result is `camera_capabilities`, which is final: do not override it.
+
 The frontend gets two-way audio only when all of these hold:
 
 - Your entity declares two-way audio.
 - The camera streams over WebRTC, natively or through a WebRTC provider. Two-way audio is not available over HLS.
 - The user turned on the **Two-way audio** preview feature of the camera integration in [Labs](/core/development/labs/). The browser only gives access to the microphone over HTTPS, so in a browser, two-way audio needs Home Assistant to be opened over HTTPS. An app that embeds the frontend can capture the microphone itself instead, with [`webrtc/stream/start`](/frontend/reference/external-bus/#webrtcstreamstart) on the external bus. Two-way audio then also works without HTTPS.
 
+#### Carry the audio to the camera
+
+How the audio reaches the camera depends on how your camera streams.
+
+If you implement `stream_source` and a WebRTC provider like go2rtc handles the stream, you have nothing else to build.
+The provider sends the audio of the microphone to the camera over the stream source, if it supports the backchannel of that source, like RTSP cameras with ONVIF Profile T.
+
+If you implement [native WebRTC](#native-webrtc), follow the WebRTC specification for the direction of the audio track in your answer: answer `sendrecv` with `sendrecv`, `recvonly` with `sendonly`, and `sendonly` with `recvonly`.
+Make sure the camera plays the audio it receives.
+
+The Ring integration is an example where the library already does this: Ring live view sessions are full duplex, so the integration only had to declare the capability.
+
+When Home Assistant is not opened over HTTPS, an app that captures the microphone itself is the fallback.
+It opens a separate session for the microphone, and its offer has a single send-only audio track (`sendonly`) and no video.
 
 ## Methods
 
