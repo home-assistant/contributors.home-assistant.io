@@ -24,11 +24,13 @@ interface Props {
   image?: string;
   // For blog posts: shared as an article, with its date and authors.
   article?: { published: Date; authors: string[] };
-  // For docs pages: the Markdown version of the page, for agents.
+  // For docs pages and blog posts: the Markdown version of the page, for agents.
   markdown?: string;
+  // For docs pages and blog posts: the llms.txt that lists the page.
+  llms?: string;
 }
 
-const { title, description, area, wide = false, image = ogImagePath("default"), article, markdown } = Astro.props;
+const { title, description, area, wide = false, image = ogImagePath("default"), article, markdown, llms } = Astro.props;
 const pageTitle = title === SITE.title ? title : `${title} | ${SITE.title}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const imageUrl = new URL(image, Astro.site);
@@ -60,6 +62,7 @@ const imageAlt = title === SITE.title ? SITE.title : `${shareTitle}, on ${SITE.t
       href="/blog/rss.xml"
     />
     {markdown && <link rel="alternate" type="text/markdown" href={markdown} />}
+    {llms && <link rel="describedby" href={llms} />}
 
     <!--
       The browser only asks for a font once a styled text needs it, after the
