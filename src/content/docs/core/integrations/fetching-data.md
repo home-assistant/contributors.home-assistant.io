@@ -152,6 +152,121 @@ def _handle_push(self, data: ExampleData) -> None:
 
 If the coordinator also polls, this resets the time until the next poll.
 
+## Keep coordinator data across restarts
+
+Some data cannot be fetched again when Home Assistant starts. A push or webhook based API only sends data when something changes, and fetching from some devices is costly or wakes them up, like a car that is asleep. `RestoreDataUpdateCoordinator` is a coordinator that saves its `data` and restores it when it is created, so your entities have data right after a restart.
+
+Only use it when you cannot fetch fresh data on startup. If you can, keep fetching it.
+
+```python
+from datetime import timedelta
+from typing import Any
+
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers.update_coordinator import (
+    RestoreDataUpdateCoordinator,
+)
+
+
+class ExampleCoordinator(RestoreDataUpdateCoordinator[dict[str, Any]]):
+    """Keep the last known data of an Example vehicle."""
+
+    def __init__(
+        self,
+        hass: HomeAssistant,
+        config_entry: ExampleConfigEntry,
+        vehicle_id: str,
+    ) -> None:
+        """Initialize the coordinator."""
+        super().__init__(
+            hass,
+            _LOGGER,
+            config_entry=config_entry,
+            name=DOMAIN,
+            storage_key=vehicle_id,
+            update_interval=timedelta(minutes=5),
+        )
+```
+
+### When data is restored
+
+Stored data is restored at the end of `__init__`, before `_async_setup` and the first refresh. Entities that use it are available until a refresh fails. Restored data does not change how setup works: if the first refresh fails, `async_config_entry_first_refresh` still raises `ConfigEntryNotReady`.
+
+Because data is restored in `__init__`, a subclass that sets `self.data` in its own `__init__` after calling `super().__init__()` overwrites the restored data. `_restore_data` also cannot use attributes that the subclass sets after that call.
+
+### When data is saved
+
+A successful refresh, or a call to `async_set_updated_data`, marks the data as changed. Changed data is saved every 15 minutes, together with the data of all other restore coordinators, and when Home Assistant shuts down. Nothing is written when nothing changed. If Home Assistant crashes, up to 15 minutes of updates can be lost, the same as for [restored entity states](/core/entities/lifecycle/#restoring-state).
+
+Data is only serialized when it is saved, so replace `data` with a new object instead of changing it in place. If you override `_async_refresh_finished` or `async_set_updated_data`, call `super()`, or the data is no longer saved.
+
+### Which data can be stored
+
+The data must be made of JSON types: dicts with `str` keys, lists, `str`, `int`, finite `float`, `bool`, and `None`. Types are checked exactly, so tuples, enums like `StrEnum`, datetimes, and dataclasses are rejected instead of coming back as a different type after a restart. If the data cannot be stored, an error is logged once, the coordinator keeps its last saved data, and the data of other coordinators is still saved.
+
+To store other types, override `_serialize_data` and `_restore_data`:
+
+```python
+from dataclasses import dataclass
+from datetime import datetime
+from typing import Any
+
+from homeassistant.helpers.update_coordinator import (
+    RestoreDataUpdateCoordinator,
+)
+
+
+@dataclass
+class ZoneState:
+    """State of one zone."""
+
+    name: str
+    updated: datetime
+
+
+class ZoneCoordinator(RestoreDataUpdateCoordinator[dict[str, ZoneState]]):
+    """Keep the last known state of each zone."""
+
+    def _serialize_data(self, data: dict[str, ZoneState]) -> Any:
+        """Convert the data to JSON types."""
+        return {
+            zone_id: {"name": zone.name, "updated": zone.updated.isoformat()}
+            for zone_id, zone in data.items()
+        }
+
+    def _restore_data(
+        self, data: Any, version: int
+    ) -> dict[str, ZoneState] | None:
+        """Convert stored data back, or return None to restore nothing."""
+        if version != 1:
+            return None
+        return {
+            zone_id: ZoneState(
+                name=zone["name"],
+                updated=datetime.fromisoformat(zone["updated"]),
+            )
+            for zone_id, zone in data.items()
+        }
+```
+
+### Changing the stored format
+
+Pass `storage_version` (default `1`) and raise it when the format of the stored data changes. `_restore_data` receives the version the data was stored with. By default, data stored with another version is not restored. Override `_restore_data` to migrate it instead.
+
+If `_restore_data` raises an exception, the error is logged, the stored data is removed, and the coordinator starts without data. Stored data is a cache, so it never fails the setup.
+
+### Storage keys and cleanup
+
+Data is stored per config entry. A coordinator without a config entry must pass `domain`, and its data is stored per domain. Use `storage_key` (default `""`) when there is more than one coordinator in a config entry or domain, like one per device. The key must be stable, and unique within its config entry or domain: a second coordinator with the same key raises `ValueError` while the first is still in use.
+
+A coordinator with a config entry frees its key when the entry is unloaded or fails to set up. A coordinator without a config entry only frees it in `async_shutdown`, so shut the old coordinator down before you create a new one, like on a YAML reload.
+
+Stored data is removed:
+
+- When its config entry is removed.
+- When you call `async_remove_stored_data`, like when a device is removed.
+- After 7 days without a coordinator that uses its key, like after a key changes or an integration is removed.
+
 ## Push without a coordinator
 
 When each entity has its own subscription, subscribe in `async_added_to_hass` and unsubscribe when the entity is removed. Entities can be disabled, so do not subscribe before they are added. Set `_attr_should_poll = False`, and write the state yourself when data arrives:
