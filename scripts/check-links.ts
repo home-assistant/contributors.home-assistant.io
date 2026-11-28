@@ -11,6 +11,8 @@
 //   and points to it with <link rel="alternate">.
 // - Every link to this site in those Markdown versions and in the llms.txt
 //   files goes to a page or file that exists.
+// - No page or post links to a blog post that goes live after it does. This
+//   one reads src/content/, because only production leaves those posts out.
 //
 // Links to other sites are not checked: they fail for reasons that have
 // nothing to do with this site, and would make the check flaky.
@@ -21,10 +23,12 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { parse as parseYaml } from "yaml";
 import { readFragments } from "./generate-redirects.ts";
 
 const DIST = fileURLToPath(new URL("../dist/", import.meta.url));
 const DOCS = fileURLToPath(new URL("../src/content/docs/", import.meta.url));
+const CONTENT = fileURLToPath(new URL("../src/content/", import.meta.url));
 const SITE = "https://contributors.home-assistant.io";
 
 // Generated assets, not pages. Links into these are not checked.
@@ -166,6 +170,35 @@ for (const entry of readdirSync(DIST, { recursive: true, withFileTypes: true }))
 
   for (const link of links) {
     checkLink(link.slice(SITE.length), relative);
+  }
+}
+
+// Links to scheduled blog posts, see src/content.config.ts. A post may link
+// to one that goes live with it or before it.
+const sources = readdirSync(CONTENT, { recursive: true, encoding: "utf8" })
+  .filter((file) => /\.mdx?$/.test(file))
+  .map((file) => {
+    const text = readFileSync(path.join(CONTENT, file), "utf8");
+    const frontMatter = file.startsWith("blog") ? /^---\n([\s\S]*?)\n---/.exec(text)?.[1] : undefined;
+    const { date, publishEarly } = parseYaml(frontMatter ?? "") ?? {};
+    return { file, text, live: date && !publishEarly ? new Date(date).valueOf() : 0 };
+  });
+
+const scheduled = new Map(
+  sources
+    .filter(({ live }) => live > Date.now())
+    .map(({ file, live }) => [
+      path.basename(file).replace(/^(\d+)-(\d+)-(\d+)-(.+)\.mdx?$/, "/blog/$1/$2/$3/$4/"),
+      live,
+    ]),
+);
+
+for (const { file, text, live } of sources) {
+  for (const [link] of text.matchAll(/\/blog\/\d{4}\/\d{2}\/\d{2}\/[^/\s)"'#?]+/g)) {
+    const target = scheduled.get(`${link}/`);
+    if (target && target > live) {
+      report(`${link}/ (not published until ${new Date(target).toISOString().slice(0, 10)})`, `src/content/${file}`);
+    }
   }
 }
 

@@ -59,12 +59,36 @@ const docs = defineCollection({
   }),
 });
 
+const blogFiles = glob({ base: "./src/content/blog", pattern: "**/*.{md,mdx}" });
+
+// Netlify sets CONTEXT to "production" only for production builds. Everywhere
+// else, like deploy previews, posts with a date in the future show too, so
+// they can be reviewed. They are left out here, and not where posts are read,
+// because Astro copies the images of every post in the collection to the site.
 const blog = defineCollection({
-  loader: glob({ base: "./src/content/blog", pattern: "**/*.{md,mdx}" }),
+  loader: {
+    name: "blog",
+    load: async (context) => {
+      await blogFiles.load(context);
+
+      if (process.env.CONTEXT !== "production") {
+        return;
+      }
+
+      for (const [id, { data }] of context.store.entries()) {
+        if (!data.publishEarly && (data.date as Date).valueOf() > Date.now()) {
+          context.store.delete(id);
+        }
+      }
+    },
+  },
   schema: z.object({
     title: z.string(),
     description: z.string(),
+    // Midnight UTC. Production leaves the post out until then.
     date: z.coerce.date(),
+    // Publishes the post right away, whatever its date.
+    publishEarly: z.boolean().optional(),
     authors: z.array(z.string()).min(1),
     // Areas this post is about, or a topic of the blog itself, like
     // "announcements": see src/data/blog-topics.ts. Drives the tags, the
